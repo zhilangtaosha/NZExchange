@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_FF151927"
+    tools:context=".controller.home.HomeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_account_home"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/color_FF1F2532"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="2326122979@qq.com"
+            android:textColor="@color/color_FFA3AAB9" />
+
+        <com.zhuang.zbannerlibrary.ZBanner
+            android:id="@+id/carousel_home"
+            android:layout_width="match_parent"
+            android:layout_height="187dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            app:offscreenPageLimit="2"
+            app:pageGap="8dp"
+            app:widthFactor=".9" />
+
+        <com.nze.nzexchange.widget.bulletin.BulletinView
+            android:id="@+id/bulletin_view"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_radius_2536_bg" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rview_home"
+            android:layout_width="match_parent"
+            android:layout_height="111dp"
+            android:layout_marginTop="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="16dp"
+            android:text="涨幅榜"
+            android:layout_marginBottom="6dp"
+            android:textColor="@color/color_FF6D87A8"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_FF1F2532" />
+
+        <com.nze.nzexchange.widget.LinearLayoutAsListView
+            android:id="@+id/lav_rank_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" />
+    </LinearLayout>
+
+</ScrollView>

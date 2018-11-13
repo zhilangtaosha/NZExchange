@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingTop="10dp"
+    android:paddingRight="15dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/tv_order_num"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@color/color_FF019D81"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/tv_transaction_pair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_order_num"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/tv_order_num"
+        android:text="PHX/BTC"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_exchange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_transaction_pair"
+        android:layout_marginLeft="55dp"
+        android:layout_toRightOf="@+id/tv_transaction_pair"
+        android:text="823.93186"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_total24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_transaction_pair"
+        android:layout_alignLeft="@+id/tv_transaction_pair"
+        android:layout_marginTop="4dp"
+        android:text="24h量 21332"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_exchange"
+        android:layout_alignBottom="@+id/tv_total24"
+        android:text="¥3813.31"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_change"
+        android:layout_width="55dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/shape_radius_9d81_bg"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="+18.56%"/>
+</RelativeLayout>

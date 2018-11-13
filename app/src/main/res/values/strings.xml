@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">NZExchange</string>
+
+    <string name="tab_home">首页</string>
+    <string name="tab_market">行情</string>
+    <string name="tab_bibi">币币</string>
+    <string name="tab_otc">OTC</string>
+    <string name="tab_my">我的</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

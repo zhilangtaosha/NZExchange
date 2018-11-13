@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="111dp"
+    android:background="@drawable/shape_radius_2532_bg"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingTop="19dp">
+
+    <TextView
+        android:id="@+id/tv_change_rhtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+0.16%"
+        android:textColor="@color/color_FF019D81"
+        android:textSize="19sp" />
+
+    <TextView
+        android:id="@+id/tv_name_rhtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BTC/USDT"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/tv_exchange_rhtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="6362.57"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/tv_cost_rhtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="≈43733.86 CNY"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="9sp" />
+</LinearLayout>

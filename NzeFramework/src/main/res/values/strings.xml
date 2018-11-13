@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">NzeFramework</string>
+
+    <string name="common_loading_net_error">网络不给力喔</string>
+    <string name="common_reload">重新加载</string>
+    <string name="common_checknetwork">检查网络设置</string>
+    <string name="common_error_msg">网络异常，请点击屏幕重试</string>
+    <string name="common_empty_msg">暂时没有询价记录！</string>
+</resources>

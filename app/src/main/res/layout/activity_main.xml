@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".controller.main.MainActivity">
+    <FrameLayout
+        android:id="@+id/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/layout_tab_main"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/color_FF1F2532"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/tab_home_main"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/tab_icon_home"
+                style="@style/main_tab_icon"
+                android:src="@drawable/selector_main_tab_home" />
+
+            <TextView
+                style="@style/main_tab_tv"
+                android:layout_below="@+id/tab_icon_home"
+                android:text="@string/tab_home" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tab_market_main"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/tab_icon_market"
+                style="@style/main_tab_icon"
+                android:src="@drawable/selector_main_tab_market" />
+
+            <TextView
+                style="@style/main_tab_tv"
+                android:layout_below="@+id/tab_icon_market"
+                android:text="@string/tab_market" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tab_bibi_main"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/tab_icon_bibi"
+                style="@style/main_tab_icon"
+                android:src="@drawable/selector_main_tab_bibi" />
+
+            <TextView
+                style="@style/main_tab_tv"
+                android:layout_below="@+id/tab_icon_bibi"
+                android:text="@string/tab_bibi" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tab_otc_main"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/tab_icon_otc"
+                style="@style/main_tab_icon"
+                android:src="@drawable/selector_main_tab_otc" />
+
+            <TextView
+                style="@style/main_tab_tv"
+                android:layout_below="@+id/tab_icon_otc"
+                android:text="@string/tab_otc" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tab_my_main"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/tab_icon_my"
+                style="@style/main_tab_icon"
+                android:src="@drawable/selector_main_tab_my" />
+
+            <TextView
+                style="@style/main_tab_tv"
+                android:layout_below="@+id/tab_icon_my"
+                android:text="@string/tab_my" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

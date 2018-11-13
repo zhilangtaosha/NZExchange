@@ -1,0 +1,33 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/color_FF1F2532</item>
+        <item name="colorPrimaryDark">@color/color_FF1F2532</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="main_tab_tv">
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">@color/color_selector_main_tab</item>
+    </style>
+
+    <style name="main_tab_icon">
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_marginTop">9dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+
+</resources>
