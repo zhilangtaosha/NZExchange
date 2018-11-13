@@ -1,9 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
     tools:context=".controller.otc.buy.BuyActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="买入UCC" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_radius_2536_bg"
+        android:padding="9dp">
+
+        <TextView
+            android:id="@+id/tv_seller_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/shape_bulletin_tip"
+            android:drawablePadding="3dp"
+            android:text="凉白开"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_order_num_abc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_seller_ab"
+            android:text="1232单"
+            android:textColor="@color/color_FF6D87A8"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/layout_pay_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/tv_price_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="单价:"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_price_value_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="9dp"
+            android:layout_toRightOf="@+id/tv_price_ab"
+            android:text="1.992"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_price_unit_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="CNY"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+
+        <TextView
+            android:id="@+id/tv_num_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="数量:"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_num_unit_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="UCC"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/et_num_value_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/tv_num_unit_ab"
+            android:layout_toRightOf="@+id/tv_num_ab"
+            android:background="@android:color/transparent"
+            android:hint="请输入交易数量"
+            android:inputType="number"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textColorHint="@color/color_FF7F8592"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+
+        <TextView
+            android:id="@+id/tv_money_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="金额:"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_money_unit_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="UCC"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/et_money_value_ab"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/tv_money_unit_ab"
+            android:layout_toRightOf="@+id/tv_money_ab"
+            android:background="@android:color/transparent"
+            android:hint="请输入交易数量"
+            android:inputType="number"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textColorHint="@color/color_FF7F8592"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_line" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"
+        android:text="全部买入"
+        android:textColor="@color/color_FF6D87A8"
+        android:textSize="12sp" />
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_confirm_ab"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_margin="15dp"
+        android:text="确定" />
+
+    <TextView
+        android:id="@+id/btn_cancle_ab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:padding="15dp"
+        android:text="取消交易"
+        android:textColor="@color/color_FF6D87A8"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -1,13 +1,15 @@
 package com.nze.nzexchange.controller.base
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.nze.nzeframework.ui.BaseActivity
 
 
-abstract class NBaseActivity:BaseActivity()  {
+abstract class NBaseActivity : BaseActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    fun skipActivity(cls: Class<*>) {
+        startActivity(Intent(this, cls))
     }
+
 }

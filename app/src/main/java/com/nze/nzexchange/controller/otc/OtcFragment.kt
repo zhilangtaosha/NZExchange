@@ -2,8 +2,11 @@ package com.nze.nzexchange.controller.otc
 
 
 import android.support.v4.view.ViewPager
+import android.support.v4.widget.DrawerLayout
 import android.text.Html
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.utils.EventCenter
 
@@ -21,7 +24,11 @@ import kotlinx.android.synthetic.main.fragment_otc.*
 import kotlinx.android.synthetic.main.fragment_otc.view.*
 
 
-class OtcFragment : NBaseFragment() {
+class OtcFragment : NBaseFragment(), View.OnClickListener {
+    lateinit var drawer: DrawerLayout
+    lateinit var moreTv: TextView
+    lateinit var leftLayout: LinearLayout
+
     lateinit var indicatorViewPager: IndicatorViewPager
     lateinit var viewPager: ViewPager
     lateinit var scrollIndicatorView: ScrollIndicatorView
@@ -36,7 +43,15 @@ class OtcFragment : NBaseFragment() {
     override fun getRootView(): Int = R.layout.fragment_otc
 
     override fun initView(rootView: View) {
+        //title
+        moreTv = rootView.more_market
+        moreTv.setOnClickListener(this)
+        //侧边栏
+        drawer = rootView.layout_drawer_market
+        leftLayout = rootView.layout_left_market
+        rootView.layout_drawer_market.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
+        //主页
         rootView.available_home.text = Html.fromHtml("可用<font color=\"#E05760\">0.1983</font>UCC")
 
         scrollIndicatorView = rootView.siv_otc
@@ -69,5 +84,18 @@ class OtcFragment : NBaseFragment() {
 
     override fun getContainerTargetView(): View? = null
 
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.more_market -> {
+                if (drawer.isDrawerOpen(leftLayout)) {
+                    drawer.openDrawer(leftLayout)
+                } else {
+                    drawer.openDrawer(leftLayout)
+                }
+            }
+            else -> {
+            }
+        }
+    }
 
 }

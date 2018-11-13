@@ -1,21 +1,22 @@
 package com.nze.nzexchange.controller.otc.buy
 
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
+import android.widget.Toast
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.utils.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
-import kotlinx.android.synthetic.main.activity_buy.*
+import com.nze.nzexchange.widget.CommonTopBar
+import kotlinx.android.synthetic.main.activity_buy_confirm.*
 
-class BuyActivity : NBaseActivity(), View.OnClickListener {
-
-
-    override fun getRootView(): Int = R.layout.activity_buy
+class BuyConfirmActivity : NBaseActivity() {
+    override fun getRootView(): Int = R.layout.activity_buy_confirm
 
     override fun initView() {
-        btn_confirm_ab.setOnClickListener(this)
+        (topbar_abc as CommonTopBar).setRightClick {
+
+        }
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -38,20 +39,5 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
 
     override fun getContainerTargetView(): View? = null
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.btn_confirm_ab -> {
-                skipActivity(BuyConfirmActivity::class.java)
-            }
-            else -> {
-            }
-        }
-    }
-
-    fun createPayMethod():ImageView {
-        val iv: ImageView = LayoutInflater.from(this).inflate(R.layout.image_pay, null) as ImageView
-        iv.setImageResource(R.mipmap.wechat_icon)
-        return iv
-    }
 
 }

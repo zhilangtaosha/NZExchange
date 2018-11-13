@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.otc.buy.BuyConfirmActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/topbar_abc"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_right_text="交易说明"
+        app:tb_title_text="买入UCC" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_radius_2536_bg"
+        android:paddingLeft="9dp"
+        android:paddingRight="9dp">
+
+        <TextView
+            android:id="@+id/tv_order_no_abc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/shape_bulletin_tip"
+            android:drawablePadding="3dp"
+            android:text="订单编号:213524586321"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/tv_order_num_abc"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/tv_order_no_abc"
+            android:gravity="center_vertical"
+            android:paddingLeft="6dp"
+            android:paddingRight="20dp"
+            android:src="@mipmap/copy_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="待付款"
+            android:textColor="@color/color_FF6D87A8"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_name_abc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="真实姓名: 黄娟娟"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_phone_abc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="手机号: 13376351254"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_money_abc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="交易金额: 2435.42"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_num_abc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="数量: 42124.32"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_price_abc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="单价: 1.0071"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="付款方式:"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/layout_pay_abc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:orientation="horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_radius_line2536_bg"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="交易备注:"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_message_abc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="请及时打币"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_tip_abc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginRight="15dp"
+        android:text="请在19分59秒内完成付款，并点击确认付款，超时将自动取消订单"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_confirm_abc"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="15dp"
+        android:text="确认付款" />
+
+    <TextView
+        android:id="@+id/btn_cancle_abc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:padding="15dp"
+        android:text="取消交易"
+        android:textColor="@color/color_FF6D87A8"
+        android:textSize="14sp"
+        android:layout_gravity="center_horizontal"/>
+</LinearLayout>

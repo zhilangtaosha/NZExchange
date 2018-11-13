@@ -22,7 +22,7 @@
         </activity>
         <activity android:name=".controller.main.DemoActivity" />
         <activity android:name=".controller.otc.buy.BuyActivity" />
-        <activity android:name=".controller.otc.buy.ConfirmActivity"></activity>
+        <activity android:name=".controller.otc.buy.BuyConfirmActivity"></activity>
     </application>
 
 </manifest>

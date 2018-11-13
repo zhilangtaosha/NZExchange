@@ -6,7 +6,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="color_bg">#FF151927</color>
     <color name="color_title_bg">#FF1F2532</color>
-
+    <color name="color_line">#FF1F2532</color>
 
 
     <color name="color_FFFF3746">#FFFF3746</color>
@@ -22,6 +22,11 @@
     <color name="color_FF676C7A">#FF676C7A</color>
     <color name="color_FF2C3443">#FF2C3443</color>
     <color name="color_FF069F83">#FF069F83</color>
+    <color name="color_FF536680">#FF536680</color>
+    <color name="color_FFc5cee0">#FFc5cee0</color>
+    <color name="color_FF4D678C">#FF4D678C</color>
+    <color name="color_FFD3DDF0">#FFD3DDF0</color>
+    <color name="color_FF3F5F8C">#FF3F5F8C</color>
 
 
 </resources>
