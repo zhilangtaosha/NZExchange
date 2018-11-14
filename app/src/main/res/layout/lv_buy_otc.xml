@@ -2,9 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="15dp"
     android:paddingTop="23dp"
-    android:paddingRight="15dp"
     android:paddingBottom="16dp">
 
     <TextView
@@ -64,13 +62,14 @@
         android:textSize="14sp" />
 
     <Button
-        android:id="@+id/btn_buy_lbo"
+        android:id="@+id/btn_lbo"
         android:layout_width="55dp"
         android:layout_height="24dp"
         android:layout_below="@+id/tv_price_lbo"
         android:layout_alignParentRight="true"
         android:background="@drawable/shape_radius_9d81_bg"
         android:text="买入"
+        android:layout_marginTop="14dp"
         android:textColor="@color/white"
         android:textSize="12sp" />
 </RelativeLayout>

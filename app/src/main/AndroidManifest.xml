@@ -21,8 +21,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.main.DemoActivity" />
-        <activity android:name=".controller.otc.buy.BuyActivity" />
-        <activity android:name=".controller.otc.buy.BuyConfirmActivity"></activity>
+        <activity android:name=".controller.otc.BuyActivity" />
+        <activity android:name=".controller.otc.BuyConfirmActivity" />
+        <activity android:name=".controller.otc.PublishActivity" />
+        <activity android:name=".controller.otc.tradelist.TradeListActivity"></activity>
     </application>
 
 </manifest>

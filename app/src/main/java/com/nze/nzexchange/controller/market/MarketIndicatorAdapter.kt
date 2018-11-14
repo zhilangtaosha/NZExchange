@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.view.PagerAdapter
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ public class MarketIndicatorAdapter(fragmentManager: FragmentManager, val contex
         }
         val tv:TextView = cView as TextView
         tv.text = tabs[position%tabs.size]
-        val padding = dp2px(15.toFloat(),context)
+        val padding = dp2px(15.toFloat(), context)
         tv.setPadding(padding,0,padding,0)
         return cView
     }

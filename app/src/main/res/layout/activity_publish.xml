@@ -6,194 +6,160 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     android:orientation="vertical"
-    tools:context=".controller.otc.BuyActivity">
+    tools:context=".controller.otc.PublishActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
-        android:id="@+id/ctb_ab"
+        android:id="@+id/ctb_ap"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        app:tb_title_text="买入UCC" />
+        app:tb_right_text="我要出售"
+        app:tb_title_text="购买委托单" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/shape_radius_2536_bg"
-        android:padding="9dp">
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <TextView
-            android:id="@+id/tv_seller_ab"
+            android:id="@+id/tv_price_ap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/shape_bulletin_tip"
-            android:drawablePadding="3dp"
-            android:text="凉白开"
-            android:textColor="@color/color_FF7F8592"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_order_num_abc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/tv_seller_ab"
-            android:text="1232单"
-            android:textColor="@color/color_FF6D87A8"
-            android:textSize="12sp" />
-
-        <LinearLayout
-            android:id="@+id/layout_pay_ab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:orientation="horizontal" />
+            android:text="交易单价"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/et_price_value_ap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/tv_price_ap"
+            android:background="@android:color/transparent"
+            android:hint="请输入交易价格"
+            android:inputType="number"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textColorHint="@color/color_FF7F8592"
+            android:textSize="14sp" />
+
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_line" />
+
+    <TextView
+        android:id="@+id/tv_handicap_ap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="6dp"
+        android:text="当前盘口价格"
+        android:textColor="@color/color_FF7F8592"
+        android:layout_marginRight="15dp"
+        android:textSize="12sp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        android:padding="15dp">
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <TextView
-            android:id="@+id/tv_price_ab"
+            android:id="@+id/tv_num_ap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="单价:"
+            android:text="交易数量"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tv_price_value_ab"
+            android:id="@+id/tv_num_unit_ap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="UCC"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/et_num_value_ap"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/tv_num_unit_ap"
+            android:layout_toRightOf="@+id/tv_num_ap"
+            android:background="@android:color/transparent"
+            android:hint="请输入购买数量"
+            android:inputType="number"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textColorHint="@color/color_FF7F8592"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_money_ap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="9dp"
-            android:layout_toRightOf="@+id/tv_price_ab"
-            android:text="1.992"
+            android:text="交易数量"
             android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tv_price_unit_ab"
+            android:id="@+id/tv_money_unit_ap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="CNY"
             android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@color/color_line" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
-
-
-        <TextView
-            android:id="@+id/tv_num_ab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="数量:"
-            android:textColor="@color/color_FFA3AAB9"
             android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/tv_num_unit_ab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="UCC"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
-
         <EditText
-            android:id="@+id/et_num_value_ab"
+            android:id="@+id/et_money_value_ap"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="9dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/tv_num_unit_ab"
-            android:layout_toRightOf="@+id/tv_num_ab"
+            android:layout_toLeftOf="@+id/tv_money_unit_ap"
+            android:layout_toRightOf="@+id/tv_money_ap"
             android:background="@android:color/transparent"
-            android:hint="请输入交易数量"
+            android:hint="最小交易额2000，需小于100k"
             android:inputType="number"
             android:textColor="@color/color_FFA3AAB9"
             android:textColorHint="@color/color_FF7F8592"
             android:textSize="14sp" />
-
-
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@color/color_line" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
-
-
-        <TextView
-            android:id="@+id/tv_money_ab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="金额:"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_money_unit_ab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="UCC"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
-
-        <EditText
-            android:id="@+id/et_money_value_ab"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/tv_money_unit_ab"
-            android:layout_toRightOf="@+id/tv_money_ab"
-            android:background="@android:color/transparent"
-            android:hint="请输入交易数量"
-            android:inputType="number"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textColorHint="@color/color_FF7F8592"
-            android:textSize="14sp" />
-
 
     </RelativeLayout>
 
@@ -207,31 +173,55 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:paddingLeft="15dp"
-        android:paddingTop="10dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="10dp"
-        android:text="全部买入"
-        android:textColor="@color/color_FF6D87A8"
-        android:textSize="12sp" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="27dp"
+        android:text="交易数量"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="15sp" />
 
-    <com.nze.nzexchange.widget.CommonButton
-        android:id="@+id/btn_confirm_ab"
+    <EditText
+        android:id="@+id/et_message_ap"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="确定" />
-
-    <TextView
-        android:id="@+id/btn_cancle_ab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:padding="15dp"
-        android:text="取消交易"
-        android:textColor="@color/color_FF6D87A8"
+        android:background="@drawable/shape_radius_line2532_bg"
+        android:hint="下单后极速付款，到账后请及时放币"
+        android:gravity="top|left"
+        android:minLines="4"
+        android:padding="8dp"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textColorHint="@color/color_FF676C7A"
         android:textSize="14sp" />
 
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_ap"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:text="发布" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp">
+
+        <TextView
+            android:id="@+id/tv_bond_ap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="买单保证金:100USDT"
+            android:textColor="@color/color_FF676C7A"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_service_charge_ap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="平台服务费:0%"
+            android:textColor="@color/color_FF676C7A"
+            android:textSize="12sp" />
+    </RelativeLayout>
 </LinearLayout>

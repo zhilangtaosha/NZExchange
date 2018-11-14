@@ -1,7 +1,6 @@
-package com.nze.nzexchange.controller.otc.buy
+package com.nze.nzexchange.controller.otc
 
 import android.view.View
-import android.widget.Toast
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.utils.EventCenter
 import com.nze.nzexchange.R
@@ -10,7 +9,7 @@ import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_buy_confirm.*
 
 class BuyConfirmActivity : NBaseActivity() {
-    override fun getRootView(): Int = R.layout.activity_buy_confirm
+    override fun getRootView(): Int = R.layout.activity_sale_confirm
 
     override fun initView() {
         (topbar_abc as CommonTopBar).setRightClick {

@@ -75,6 +75,10 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
         mTitleTv.text = title
     }
 
+    fun setRightText(str:String){
+        mRightTv.text = str
+    }
+
     fun setRightClick(click: () -> Unit) {
         mRightTv.setOnClickListener {
             click()

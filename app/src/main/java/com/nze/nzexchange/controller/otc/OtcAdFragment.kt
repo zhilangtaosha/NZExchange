@@ -1,7 +1,8 @@
- package com.nze.nzexchange.controller.otc
+package com.nze.nzexchange.controller.otc
+
 
 import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.utils.EventCenter
@@ -10,51 +11,34 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.tools.getNColor
-import kotlinx.android.synthetic.main.fragment_otc_content.view.*
+import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
 
 
-
-
-class OtcContentFragment : NBaseFragment() {
+/**
+ * A simple [Fragment] subclass.
+ *
+ */
+class OtcAdFragment : NBaseFragment() {
+    val adAdapter: OtcAdAdapter by lazy {
+        OtcAdAdapter(activity!!)
+    }
     lateinit var ptrLv: PullToRefreshListView
-    private var type: Int = 0
-    private var buyData = OtcBean.getList()
-    private val buyAdapter: OtcBuyAdapter by lazy {
-        OtcBuyAdapter(activity!!,type)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            type = it.getInt(PARAM_TYPE)
-        }
-    }
 
     companion object {
-        const val PARAM_TYPE = "type"
-        const val TYPE_BUY = 0
-        const val TYPE_SALE = 1
         @JvmStatic
-        fun newInstance(type: Int) =
-                OtcContentFragment().apply {
-                    arguments = Bundle().apply {
-                        putInt(PARAM_TYPE, type)
-                    }
-                }
+        fun newInstance() = OtcAdFragment()
     }
 
-    override fun getRootView(): Int = R.layout.fragment_otc_content
+    override fun getRootView(): Int = R.layout.fragment_otc_ad
 
     override fun initView(rootView: View) {
-        ptrLv = rootView.plv_foc
-        ptrLv.setPullLoadEnabled(true)
+        ptrLv = rootView.ptrlv_ad
         val listView = ptrLv.refreshableView
+        listView.adapter = adAdapter
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
 
-
-        listView.adapter = buyAdapter
-        buyAdapter.group=buyData
+        adAdapter.group = OtcBean.getList()
 
     }
 
@@ -75,4 +59,6 @@ class OtcContentFragment : NBaseFragment() {
     }
 
     override fun getContainerTargetView(): View? = null
+
+
 }

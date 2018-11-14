@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="22dp"
+    android:paddingBottom="22dp">
+
+    <TextView
+        android:id="@+id/tv_name_lao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="USDT"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_time_lao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_name_lao"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tv_name_lao"
+        android:text="10/23 16:12"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/btn_cancel_lao"
+        android:layout_width="40dp"
+        android:layout_height="19dp"
+        android:layout_alignBottom="@+id/tv_name_lao"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/shape_radius_2536_bg2"
+        android:gravity="center"
+        android:text="撤销"
+        android:textColor="@color/color_FF6D87A8"
+        android:textSize="11sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name_lao"
+        android:layout_marginTop="14dp"
+        android:gravity="left"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="委托价格"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_price_lao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.013456"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name_lao"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="委托数量"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_total_num_lao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.013456"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name_lao"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="14dp"
+        android:gravity="right"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已成交数量"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_transaction_num_lao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.013456"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="16sp" />
+    </LinearLayout>
+</RelativeLayout>

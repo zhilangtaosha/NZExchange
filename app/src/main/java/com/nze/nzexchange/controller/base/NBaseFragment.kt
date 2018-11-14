@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.base
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import com.nze.nzeframework.ui.BaseFragment
 
@@ -29,4 +30,9 @@ abstract class NBaseFragment : BaseFragment() {
     interface OnFragmentInteractionListener {
         fun onFragmentInteraction(uri: Uri)
     }
+
+    fun skipActivity(cls: Class<*>) {
+        startActivity(Intent(activity, cls))
+    }
+
 }
