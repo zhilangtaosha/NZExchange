@@ -20,11 +20,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.main.DemoActivity" />
         <activity android:name=".controller.otc.BuyActivity" />
         <activity android:name=".controller.otc.BuyConfirmActivity" />
         <activity android:name=".controller.otc.PublishActivity" />
-        <activity android:name=".controller.otc.tradelist.TradeListActivity"></activity>
+        <activity android:name=".controller.otc.tradelist.TradeListActivity" />
+        <activity android:name=".controller.otc.tradelist.TradeCommonDetailActivity" />
+        <activity android:name=".controller.otc.SaleConfirmActivity" />
+        <activity android:name=".controller.my.paymethod.SetPayMethodActivity" />
+        <activity android:name=".controller.my.paymethod.AddCardActivity"></activity>
     </application>
 
 </manifest>

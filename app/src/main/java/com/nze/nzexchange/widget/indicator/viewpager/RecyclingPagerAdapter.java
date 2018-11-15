@@ -61,15 +61,15 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
 	 * <p>
 	 * Returns the number of types of Views that will be created by
 	 * {@link #getView}. Each type represents a set of views that can be
-	 * converted in {@link #getView}. If the adapter always returns the same
+	 * converted in {@link #getView}. If the commonAdapter always returns the same
 	 * type of View for all items, this method should return 1.
 	 * </p>
 	 * <p>
-	 * This method will only be called when when the adapter is set on the the
+	 * This method will only be called when when the commonAdapter is set on the the
 	 * {@link AdapterView}.
 	 * </p>
 	 * 
-	 * @return The number of types of Views that will be created by this adapter
+	 * @return The number of types of Views that will be created by this commonAdapter
 	 */
 	public int getViewTypeCount() {
 		return 1;
@@ -80,7 +80,7 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
 	 * specified item.
 	 * 
 	 * @param position
-	 *            The position of the item within the adapter's data set whose
+	 *            The position of the item within the commonAdapter's data set whose
 	 *            view type we want.
 	 * @return An integer representing the type of View. Two views should share
 	 *         the same type if one can be converted to the other in
@@ -103,7 +103,7 @@ public abstract class RecyclingPagerAdapter extends PagerAdapter {
 	 * to specify a root view and to prevent attachment to the root.
 	 * 
 	 * @param position
-	 *            The position of the item within the adapter's data set of the
+	 *            The position of the item within the commonAdapter's data set of the
 	 *            item whose view we want.
 	 * @param convertView
 	 *            The old view to reuse, if possible. Note: You should check

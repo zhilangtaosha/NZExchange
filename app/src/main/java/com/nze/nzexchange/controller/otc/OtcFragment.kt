@@ -1,8 +1,10 @@
 package com.nze.nzexchange.controller.otc
 
 
+import android.graphics.drawable.ColorDrawable
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
+import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -41,6 +43,8 @@ class OtcFragment : NBaseFragment(), View.OnClickListener {
 
     var currentItem: Int = 0
 
+    val sideData = mutableListOf<String>("BTC", "USDT", "EOS", "ETH", "LTC", "BCH", "DASH")
+
     companion object {
         @JvmStatic
         fun newInstance() = OtcFragment()
@@ -56,8 +60,11 @@ class OtcFragment : NBaseFragment(), View.OnClickListener {
         //侧边栏
         drawerLayout = rootView.layout_drawer_market
         leftLayout = rootView.layout_left_market
-        rootView.layout_drawer_market.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+//        drawerLayout.setDrawerShadow(ColorDrawable(getNColor(R.color.black)), Gravity.RIGHT)
+        val sideAdapter:OtcSideAdapter=OtcSideAdapter(activity!!)
+        rootView.lv_side_otc.adapter = sideAdapter
+        sideAdapter.group = sideData
         //主页
         // rootView.available_home.text = Html.fromHtml("可用<font color=\"#E05760\">0.1983</font>UCC")
         availableLayout = rootView.layout_available_otc

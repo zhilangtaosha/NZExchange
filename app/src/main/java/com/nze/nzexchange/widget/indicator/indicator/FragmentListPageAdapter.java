@@ -38,7 +38,7 @@ import android.view.ViewGroup;
  * cost of potentially more overhead when switching between pages.
  * When using FragmentPagerAdapter the host ViewPager must have a valid ID set.
  * Subclasses only need to implement {@link #getItem(int)} and
- * {@link android.support.v4.view.PagerAdapter#getCount()} to have a working adapter.
+ * {@link android.support.v4.view.PagerAdapter#getCount()} to have a working commonAdapter.
  * Here is an example implementation of a pager containing fragments of lists:
  * {
  * development/samples/Support13Demos/src/com/example/android/supportv13/app/

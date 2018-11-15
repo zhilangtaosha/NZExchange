@@ -25,9 +25,9 @@ class TradeListActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLi
     lateinit var viewPager: ViewPager
     lateinit var scrollIndicatorView: ScrollIndicatorView
     val tabs = listOf<String>("未完成", "已完成", "已取消")
-    val pages = listOf<NBaseFragment>(TradeNoCompleteFragment.newInstance(),
-            TradeCommonFragment.newInstance(),
-            TradeCommonFragment.newInstance())
+    val pages = listOf<NBaseFragment>(TradeCommonFragment.newInstance(TradeCommonFragment.TYPE_NO_COMPLETE),
+            TradeCommonFragment.newInstance(TradeCommonFragment.TYPE_COMPLETED),
+            TradeCommonFragment.newInstance(TradeCommonFragment.TYPE_CANCEL))
 
     override fun getRootView(): Int = R.layout.activity_trade_list
 
