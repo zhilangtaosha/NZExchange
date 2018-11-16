@@ -27,7 +27,11 @@
         <activity android:name=".controller.otc.tradelist.TradeCommonDetailActivity" />
         <activity android:name=".controller.otc.SaleConfirmActivity" />
         <activity android:name=".controller.my.paymethod.SetPayMethodActivity" />
-        <activity android:name=".controller.my.paymethod.AddCardActivity"></activity>
+        <activity android:name=".controller.my.paymethod.AddBankActivity" />
+        <activity android:name=".controller.my.paymethod.AddZhifubaoActivity" />
+        <activity android:name=".controller.transfer.OtcTransferActivity" />
+        <activity android:name=".controller.transfer.CapitalTransferActivity" />
+        <activity android:name=".controller.transfer.SelectAccountActivity"></activity>
     </application>
 
 </manifest>

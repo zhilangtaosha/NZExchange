@@ -16,6 +16,7 @@ import com.nze.nzexchange.Extend.setTextFromHtml
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.otc.tradelist.TradeListActivity
+import com.nze.nzexchange.controller.transfer.CapitalTransferActivity
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
@@ -120,7 +121,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener {
             R.id.layout_available_otc -> {
                 when (currentItem) {
                     0, 1 -> {
-
+                        skipActivity(CapitalTransferActivity::class.java)
                     }
                     2 -> {
                         skipActivity(PublishActivity::class.java)
