@@ -1,0 +1,11 @@
+package com.nze.nzexchange.http
+
+data class Result<T>(
+        var code: Int = 0,
+        var success: Boolean = false,
+        var message: String = "",
+        var totalSize: Int = 0,
+        var page: Int = 0,
+        var pageSize: Int = 0,
+        var data: T? = null
+)

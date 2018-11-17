@@ -9,8 +9,8 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.controller.base.BaseAda
-import com.nze.nzexchange.Extend.setBg
-import com.nze.nzexchange.Extend.setTxtColor
+import com.nze.nzexchange.extend.setBg
+import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import kotlinx.android.synthetic.main.lv_buy_otc.view.*
 

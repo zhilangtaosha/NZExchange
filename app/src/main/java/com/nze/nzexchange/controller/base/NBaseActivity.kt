@@ -12,4 +12,5 @@ abstract class NBaseActivity : BaseActivity() {
         startActivity(Intent(this, cls))
     }
 
+    
 }

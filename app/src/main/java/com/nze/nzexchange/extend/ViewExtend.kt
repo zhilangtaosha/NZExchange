@@ -1,9 +1,8 @@
-package com.nze.nzexchange.Extend
+package com.nze.nzexchange.extend
 
 import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.text.Html
-import android.text.Spanned
 import android.view.View
 import android.widget.TextView
 

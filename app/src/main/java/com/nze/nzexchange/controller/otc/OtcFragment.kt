@@ -1,17 +1,15 @@
 package com.nze.nzexchange.controller.otc
 
 
-import android.graphics.drawable.ColorDrawable
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
-import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.utils.EventCenter
-import com.nze.nzexchange.Extend.setTextFromHtml
+import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseFragment
