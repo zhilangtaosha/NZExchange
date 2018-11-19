@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
+import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R

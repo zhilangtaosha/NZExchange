@@ -1,9 +1,7 @@
-package com.nze.nzeframework.utils
+package com.nze.nzeframework.tool
 
-import android.content.Context
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import java.lang.ref.SoftReference
 
 /**

@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager
 import android.view.View
 import android.widget.Toast
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
+import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment

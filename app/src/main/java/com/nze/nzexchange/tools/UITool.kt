@@ -9,7 +9,7 @@ import com.nze.nzexchange.R
 
 
 fun dp2px(value: Float,context:Context= NzeApp.instance): Int {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, context.getResources().getDisplayMetrics()).toInt()
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, context.resources.displayMetrics).toInt()
 }
 
 fun getNColor(colorId:Int):Int{

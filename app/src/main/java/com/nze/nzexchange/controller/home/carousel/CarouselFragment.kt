@@ -1,9 +1,8 @@
 package com.nze.nzexchange.controller.home.carousel
 
-import android.os.Build.VERSION_CODES.N
 import android.os.Bundle
 import android.view.View
-import com.nze.nzeframework.utils.NGlide
+import com.nze.nzeframework.tool.NGlide
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.SimpleFragment
 import kotlinx.android.synthetic.main.fragment_carousel.view.*

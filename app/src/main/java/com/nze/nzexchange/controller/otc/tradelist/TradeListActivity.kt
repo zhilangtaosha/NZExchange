@@ -4,12 +4,11 @@ import android.net.Uri
 import android.support.v4.view.ViewPager
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
+import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.CommonIndicatorAdapter
-import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager

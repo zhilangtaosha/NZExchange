@@ -5,13 +5,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.nze.nzeframework.netstatus.NetChangeObserver
-import com.nze.nzeframework.netstatus.NetStateReceiver
-import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.ui.BaseActivity
-import com.nze.nzeframework.ui.BaseFragment
-import com.nze.nzeframework.utils.EventCenter
-import org.greenrobot.eventbus.EventBus
 
 abstract class SimpleFragment : Fragment() {
 

@@ -2,11 +2,9 @@ package com.nze.nzexchange.controller.transfer
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
+import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.IntentConstant

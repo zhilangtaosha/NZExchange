@@ -9,7 +9,7 @@ import com.nze.nzeframework.loadcontrol.VaryViewHelperController
 import com.nze.nzeframework.netstatus.NetChangeObserver
 import com.nze.nzeframework.netstatus.NetStateReceiver
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
+import com.nze.nzeframework.tool.EventCenter
 import com.trello.rxlifecycle2.components.support.RxFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

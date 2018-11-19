@@ -1,13 +1,9 @@
 package com.nze.nzexchange.controller.main
 
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
+import com.nze.nzeframework.tool.EventCenter
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseFragment

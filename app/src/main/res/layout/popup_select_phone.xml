@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8f000000"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llyt_anima"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_radius_line2532_bg"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_take_picture_popup"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="拍照"
+                android:textColor="@color/selector_common_btn_text"
+                android:textSize="13sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_line" />
+
+            <Button
+                android:id="@+id/btn_album_popup"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="手机相册"
+                android:textColor="@color/selector_common_btn_text"
+                android:textSize="13sp" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_cancel_popup"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/selector_common_btn_bg"
+            android:gravity="center"
+            android:text="取消" />
+    </LinearLayout>
+</RelativeLayout>

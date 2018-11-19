@@ -5,7 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.support.v4.app.Fragment
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
+import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OtcBean

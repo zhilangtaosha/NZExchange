@@ -1,12 +1,10 @@
 package com.nze.nzexchange.controller.home
 
-import android.graphics.drawable.ColorDrawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
+import com.nze.nzeframework.tool.EventCenter
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairBean

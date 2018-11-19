@@ -2,26 +2,20 @@ package com.nze.nzexchange.controller.otc
 
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
-import com.nze.nzeframework.utils.EventCenter
-import com.nze.nzeframework.utils.NLog
+import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.validation.EditTextValidator
-import com.nze.nzeframework.validation.ValidationModel
-import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.http.Result
 import com.nze.nzexchange.tools.TextTool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonTopBar
 import com.trello.rxlifecycle2.android.ActivityEvent
-import io.reactivex.Observer
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_publish.*
-import kotlinx.android.synthetic.main.activity_publish.view.*
 
 class PublishActivity : NBaseActivity(), View.OnClickListener {
 

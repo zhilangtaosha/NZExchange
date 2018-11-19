@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nze.nzeframework.utils;
+package com.nze.nzeframework.tool;
 
 /**
  * Author:  Tau.Chen
