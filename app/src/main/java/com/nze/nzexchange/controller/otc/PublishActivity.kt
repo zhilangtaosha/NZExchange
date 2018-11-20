@@ -16,6 +16,7 @@ import com.trello.rxlifecycle2.android.ActivityEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_publish.*
+import java.util.logging.Handler
 
 class PublishActivity : NBaseActivity(), View.OnClickListener {
 
@@ -48,11 +49,13 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 .executeValidator()
 
         btn_ap.setOnClickListener {
+            mProgressDialog.show()
             NRetrofit.instance.createService()
                     .pendingOrder("123")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(this.bindUntilEvent(ActivityEvent.DESTROY))
+                    .compose(netTfWithDialog())
                     .subscribe({ rs ->
                         NLog.i(rs.toString())
                     }, { it: Throwable ->

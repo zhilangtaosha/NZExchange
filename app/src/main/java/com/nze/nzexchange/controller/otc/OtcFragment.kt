@@ -4,6 +4,7 @@ package com.nze.nzexchange.controller.otc
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.view.View
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -12,19 +13,24 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.AssetBean
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.otc.tradelist.TradeListActivity
 import com.nze.nzexchange.controller.transfer.CapitalTransferActivity
+import com.nze.nzexchange.http.Result
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
 import com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
 import com.nze.nzexchange.widget.indicator.indicator.slidebar.ColorBar
 import com.nze.nzexchange.widget.indicator.indicator.transition.OnTransitionTextListener
+import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc.view.*
 
 
-class OtcFragment : NBaseFragment(), View.OnClickListener {
+class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemClickListener {
+
+
     lateinit var drawerLayout: DrawerLayout
     lateinit var moreTv: TextView
     lateinit var leftLayout: LinearLayout
@@ -35,14 +41,14 @@ class OtcFragment : NBaseFragment(), View.OnClickListener {
     lateinit var indicatorViewPager: IndicatorViewPager
     lateinit var viewPager: ViewPager
     lateinit var scrollIndicatorView: ScrollIndicatorView
-    val tabs = listOf<String>("购买", "出售", "广告")
-    val pages = listOf<NBaseFragment>(OtcContentFragment.newInstance(OtcContentFragment.TYPE_BUY),
+    private val tabs = listOf<String>("购买", "出售", "广告")
+    private val pages = listOf<NBaseFragment>(OtcContentFragment.newInstance(OtcContentFragment.TYPE_BUY),
             OtcContentFragment.newInstance(OtcContentFragment.TYPE_SALE),
             OtcAdFragment.newInstance())
 
     var currentItem: Int = 0
 
-    val sideData = mutableListOf<String>("BTC", "USDT", "EOS", "ETH", "LTC", "BCH", "DASH")
+    private val sideData = mutableListOf<AssetBean>()
 
     companion object {
         @JvmStatic
@@ -60,8 +66,8 @@ class OtcFragment : NBaseFragment(), View.OnClickListener {
         drawerLayout = rootView.layout_drawer_market
         leftLayout = rootView.layout_left_market
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-//        drawerLayout.setDrawerShadow(ColorDrawable(getNColor(R.color.black)), Gravity.RIGHT)
-        val sideAdapter:OtcSideAdapter=OtcSideAdapter(activity!!)
+        rootView.lv_side_otc.setOnItemClickListener(this)
+        val sideAdapter: OtcSideAdapter = OtcSideAdapter(activity!!)
         rootView.lv_side_otc.adapter = sideAdapter
         sideAdapter.group = sideData
         //主页
@@ -88,6 +94,15 @@ class OtcFragment : NBaseFragment(), View.OnClickListener {
             this.currentItem = currentItem
             changeAva(currentItem)
         }
+
+
+        AssetBean.getAssetsNet("007")
+                .compose(netTf())
+                .subscribe({
+                    sideAdapter.group = it.data!!
+                }, onError)
+
+
 
     }
 
@@ -150,5 +165,11 @@ class OtcFragment : NBaseFragment(), View.OnClickListener {
 
             }
         }
+    }
+
+
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        drawerLayout.closeDrawer(leftLayout)
+        moreTv.setText(sideData.get(position).currency)
     }
 }

@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.otc
 
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzeframework.ui.BaseActivityPresenter
+import com.nze.nzexchange.controller.base.NBaseActivity
 
 /**
  * @author: zwy
@@ -9,7 +10,15 @@ import com.nze.nzeframework.ui.BaseActivityPresenter
  * @类 说 明:
  * @创建时间：2018/11/17
  */
-class PublicP(activity: BaseActivity, mIView: IPublicView) : BaseActivityPresenter<PublicP.IPublicView>(activity, mIView) {
+class PublicP(activity: NBaseActivity, mIView: IPublicView) : BaseActivityPresenter<PublicP.IPublicView>(activity, mIView) {
 
-    interface IPublicView {}
+    fun publishNet() {
+
+    }
+
+
+    interface IPublicView {
+        fun onPublishSuccess()
+        fun onPublishFail()
+    }
 }

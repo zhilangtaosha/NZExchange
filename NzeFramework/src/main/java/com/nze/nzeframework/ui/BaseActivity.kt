@@ -29,7 +29,8 @@ abstract class BaseActivity : RxAppCompatActivity() {
             BaseActivity.TransitionMode.BOTTOM -> overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out)
             BaseActivity.TransitionMode.SCALE -> overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
             BaseActivity.TransitionMode.FADE -> overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-            else->{}
+            else -> {
+            }
         }
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -57,6 +58,7 @@ abstract class BaseActivity : RxAppCompatActivity() {
         setContentView(getRootView())
         initView()
     }
+
     abstract fun getRootView(): Int
 
     abstract fun initView()
@@ -81,7 +83,7 @@ abstract class BaseActivity : RxAppCompatActivity() {
     protected abstract fun onNetworkDisConnected()
 
     enum class TransitionMode {
-        DEFAULT,LEFT, RIGHT, TOP, BOTTOM, SCALE, FADE
+        DEFAULT, LEFT, RIGHT, TOP, BOTTOM, SCALE, FADE
     }
 
     override fun onDestroy() {
@@ -102,30 +104,31 @@ abstract class BaseActivity : RxAppCompatActivity() {
             BaseActivity.TransitionMode.BOTTOM -> overridePendingTransition(R.anim.top_in, R.anim.top_out)
             BaseActivity.TransitionMode.SCALE -> overridePendingTransition(R.anim.scale_in_disappear, R.anim.scale_out_disappear)
             BaseActivity.TransitionMode.FADE -> overridePendingTransition(R.anim.fade_in_disappear, R.anim.fade_out_disappear)
-            else->{}
+            else -> {
+            }
         }
     }
 
     abstract fun getContainerTargetView(): View?
 
 
-    protected fun showLoadingView() {
+    fun showLoadingView() {
         toggleShowLoading(true, null)
     }
 
-    protected fun showErrorView() {
+    fun showErrorView() {
         toggleShowError(true, "系统出错，请检查网络设置后重新进入该页面", null)
     }
 
-    protected fun showNONetView(onClickListener: View.OnClickListener) {
+    fun showNONetView(onClickListener: View.OnClickListener) {
         toggleNetworkError(true, onClickListener)
     }
 
-    protected fun showNODataView(str: String) {
+    fun showNODataView(str: String) {
         toggleShowEmpty(true, str, R.mipmap.ic_no_data)
     }
 
-    protected fun stopAllView() {
+    fun stopAllView() {
         toggleShowLoading(false, null)
     }
 

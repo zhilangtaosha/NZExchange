@@ -27,6 +27,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -47,7 +48,7 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.8.0'
     //rxbingding
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    api 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
     //eventbus
     api 'org.greenrobot:eventbus:3.1.1'
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
