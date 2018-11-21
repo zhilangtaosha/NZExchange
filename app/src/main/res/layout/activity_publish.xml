@@ -41,7 +41,7 @@
             android:layout_toRightOf="@+id/tv_price_ap"
             android:background="@android:color/transparent"
             android:hint="请输入交易价格"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textColor="@color/color_FFA3AAB9"
             android:textColorHint="@color/color_FF7F8592"
             android:textSize="14sp" />
@@ -61,9 +61,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginTop="6dp"
+        android:layout_marginRight="15dp"
         android:text="当前盘口价格"
         android:textColor="@color/color_FF7F8592"
-        android:layout_marginRight="15dp"
         android:textSize="12sp" />
 
     <RelativeLayout
@@ -104,7 +104,7 @@
             android:layout_toRightOf="@+id/tv_num_ap"
             android:background="@android:color/transparent"
             android:hint="请输入购买数量"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textColor="@color/color_FFA3AAB9"
             android:textColorHint="@color/color_FF7F8592"
             android:textSize="14sp" />
@@ -131,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="交易数量"
+            android:text="交易金额"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="15sp" />
 
@@ -156,7 +156,7 @@
             android:layout_toRightOf="@+id/tv_money_ap"
             android:background="@android:color/transparent"
             android:hint="最小交易额2000，需小于100k"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textColor="@color/color_FFA3AAB9"
             android:textColorHint="@color/color_FF7F8592"
             android:textSize="14sp" />
@@ -175,7 +175,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="27dp"
-        android:text="交易数量"
+        android:text="交易说明"
         android:textColor="@color/color_FFA3AAB9"
         android:textSize="15sp" />
 
@@ -185,8 +185,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:background="@drawable/shape_radius_line2532_bg"
-        android:hint="下单后极速付款，到账后请及时放币"
         android:gravity="top|left"
+        android:hint="下单后极速付款，到账后请及时放币"
         android:minLines="4"
         android:padding="8dp"
         android:textColor="@color/color_FFA3AAB9"

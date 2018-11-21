@@ -61,12 +61,6 @@ abstract class NBaseFragment : BaseFragment() {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindUntilEvent(FragmentEvent.DESTROY))
-                .doOnSubscribe {
-                    mProgressDialog.show()
-                }
-                .doFinally {
-                    mProgressDialog.dismiss()
-                }
     }
 
 

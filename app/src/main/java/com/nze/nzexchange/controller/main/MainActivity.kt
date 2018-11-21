@@ -14,7 +14,7 @@ import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.home.HomeFragment
 import com.nze.nzexchange.controller.market.MarketFragment
 import com.nze.nzexchange.controller.my.MyFragment
-import com.nze.nzexchange.controller.otc.OtcFragment
+import com.nze.nzexchange.controller.otc.main.OtcFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : NBaseActivity(), View.OnClickListener,NBaseFragment.OnFragmentInteractionListener {

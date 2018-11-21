@@ -7,5 +7,5 @@ data class Result<T>(
         var totalSize: Int = 0,
         var page: Int = 0,
         var pageSize: Int = 0,
-        var data: T? = null
+        var result: T
 )

@@ -1,12 +1,15 @@
-package com.nze.nzexchange.controller.otc
+package com.nze.nzexchange.controller.otc.main
 
 
 import android.graphics.drawable.ColorDrawable
 import android.support.v4.app.Fragment
 import android.view.View
+import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
+import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -18,7 +21,9 @@ import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
  * A simple [Fragment] subclass.
  *
  */
-class OtcAdFragment : NBaseFragment() {
+class OtcAdFragment : NBaseFragment(),IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
+
+
     val adAdapter: OtcAdAdapter by lazy {
         OtcAdAdapter(activity!!)
     }
@@ -33,6 +38,10 @@ class OtcAdFragment : NBaseFragment() {
 
     override fun initView(rootView: View) {
         ptrLv = rootView.ptrlv_ad
+        ptrLv.isPullLoadEnabled=true
+        ptrLv.isScrollLoadEnabled=false
+        ptrLv.setOnRefreshListener(this)
+
         val listView = ptrLv.refreshableView
         listView.adapter = adAdapter
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
@@ -46,7 +55,7 @@ class OtcAdFragment : NBaseFragment() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -60,5 +69,13 @@ class OtcAdFragment : NBaseFragment() {
 
     override fun getContainerTargetView(): View? = null
 
+    override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+    }
 
+    override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+    }
+
+    override fun refresh(tokenId: String) {
+        NLog.i("tokenid:$tokenId")
+    }
 }

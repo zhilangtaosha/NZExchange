@@ -21,7 +21,6 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.tools.FileTool
 import com.nze.nzexchange.tools.TakePhotoTool
 import kotlinx.android.synthetic.main.activity_add_zhifubao.*
-import kotlinx.android.synthetic.main.bulletin_simple_item.*
 import java.io.File
 
 class AddZhifubaoActivity : NBaseActivity(), SelectPhotoPopup.OnSelectPhotoListener, TakePhoto.TakeResultListener, InvokeListener, View.OnClickListener {
@@ -46,7 +45,7 @@ class AddZhifubaoActivity : NBaseActivity(), SelectPhotoPopup.OnSelectPhotoListe
 
     override fun initView() {
         intent?.let {
-            type = it.getIntExtra(IntentConstant.PARAM_TYPE, IntentConstant.TYPE_ZHIFUBAO)
+            type = it.getIntExtra(IntentConstant.PARAM_PAY, IntentConstant.TYPE_ZHIFUBAO)
         }
 
         if (type == IntentConstant.TYPE_ZHIFUBAO) {

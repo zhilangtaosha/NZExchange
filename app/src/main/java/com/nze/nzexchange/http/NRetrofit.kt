@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class NRetrofit private constructor() {
-    val LIU_URL = "http://192.168.0.113:8080/zyy-otc/"
+    val LIU_URL = "http://192.168.0.108:18080/zyy-otc/"
 
     var url: String = LIU_URL
     var retrofit: Retrofit

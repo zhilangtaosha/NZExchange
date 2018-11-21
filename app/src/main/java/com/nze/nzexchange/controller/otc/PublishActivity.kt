@@ -1,22 +1,26 @@
 package com.nze.nzexchange.controller.otc
 
 import android.view.View
+import android.widget.Toast
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
-import com.nze.nzeframework.validation.EditTextValidator
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.http.NRetrofit
+import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.TextTool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonTopBar
-import com.trello.rxlifecycle2.android.ActivityEvent
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_publish.*
-import java.util.logging.Handler
+import java.util.concurrent.TimeUnit
 
 class PublishActivity : NBaseActivity(), View.OnClickListener {
 
@@ -25,11 +29,17 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     val TYPE_SALE: Int = 1
     var currentType: Int = TYPE_BUY
     lateinit var topBar: CommonTopBar
-    lateinit var validator: EditTextValidator
+    lateinit var tokenId: String
+    lateinit var currency: String
+    var flag: Boolean = true
 
     override fun getRootView(): Int = R.layout.activity_publish
 
     override fun initView() {
+        intent?.let {
+            tokenId = it.getStringExtra(IntentConstant.PARAM_TOKENID)
+            currency = it.getStringExtra(IntentConstant.PARAM_CURRENCY)
+        }
         topBar = ctb_ap
         topBar.setRightClick {
             if (currentType == TYPE_BUY) {
@@ -39,30 +49,73 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
             }
             changLayout()
         }
-
+        tv_num_unit_ap.text = currency
 
         btn_ap.initValidator()
                 .add(et_price_value_ap, EmptyValidation())
                 .add(et_num_value_ap, EmptyValidation())
                 .add(et_money_value_ap, EmptyValidation())
-                .add(et_message_ap, EmptyValidation())
                 .executeValidator()
 
-        btn_ap.setOnClickListener {
-            mProgressDialog.show()
-            NRetrofit.instance.createService()
-                    .pendingOrder("123")
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .compose(this.bindUntilEvent(ActivityEvent.DESTROY))
-                    .compose(netTfWithDialog())
-                    .subscribe({ rs ->
-                        NLog.i(rs.toString())
-                    }, { it: Throwable ->
-                    })
+        RxTextView.textChanges(et_price_value_ap)
+                .subscribe {
+                    if (flag) {
+                        flag = false
+                        var value = ""
+                        var num = et_num_value_ap.text
+                        if (it.isNotEmpty() && num.isNotEmpty())
+                            value = DoubleMath.mul(it.toString().toDouble(), num.toString().toDouble()).toString()
+                        et_money_value_ap.setText(value)
+                    } else {
+                        flag = true
+                    }
+                }
 
+        RxTextView.textChanges(et_num_value_ap)
+                .subscribe {
+                    if (flag) {
+                        flag = false
+                        var value = ""
+                        val price = et_price_value_ap.text.toString()
+                        if (it.isNotEmpty() && price.isNotEmpty()) {
+                            value = DoubleMath.mul(it.toString().toDouble(), price.toString().toDouble()).toString()
+                        }
+                        et_money_value_ap.setText(value)
 
-        }
+                    } else {
+                        flag = true
+                    }
+                }
+
+        RxTextView.textChanges(et_money_value_ap)
+                .subscribe {
+                    if (flag) {
+                        flag = false
+                        var value = ""
+                        val price = et_price_value_ap.text.toString()
+                        if (it.isNotEmpty() && price.isNotEmpty()) {
+                            value = DoubleMath.div(it.toString().toDouble(), price.toDouble()).toString()
+                        }
+                        et_num_value_ap.setText(value)
+                    } else {
+                        flag = true
+                    }
+                }
+
+        RxView.clicks(btn_ap)
+                .throttleFirst(3, TimeUnit.SECONDS)
+                .subscribe {
+                    if (btn_ap.validate()) {
+                        submitNet(tokenId, NzeApp.instance.userId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+                                .compose(netTfWithDialog())
+                                .subscribe({
+                                    Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
+                                    if (it.success) {
+                                        this@PublishActivity.finish()
+                                    }
+                                }, onError)
+                    }
+                }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -108,6 +161,14 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
             et_num_value_ap.hint = "请输入购买数量"
             et_message_ap.hint = TextTool.fromHtml("1.订单有效期为15分钟，请及时付款并点击「我已支付」按钮<br/>" +
                     "2.币由系统锁定托管，请安心下单")
+        }
+    }
+
+    fun submitNet(tokenId: String, userId: String, poolAllCount: String, poolPrice: String, remark: String): Flowable<Result<Boolean>> {
+        return Flowable.defer {
+            NRetrofit.instance
+                    .createService()
+                    .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark)
         }
     }
 }

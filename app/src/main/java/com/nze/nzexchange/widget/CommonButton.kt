@@ -41,8 +41,9 @@ class CommonButton(context: Context, attrs: AttributeSet?) : Button(context, att
         return this
     }
 
-    fun executeValidator() {
+    fun executeValidator(): CommonButton {
         validator.execute()
+        return this
     }
 
     fun validate(): Boolean = validator.validate()

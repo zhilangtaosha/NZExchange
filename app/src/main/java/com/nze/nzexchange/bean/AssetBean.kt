@@ -10,7 +10,8 @@ import io.reactivex.Flowable
  * @类 说 明:
  * @创建时间：2018/11/20
  */
-data class AssetBean(var currency: String = "", var amount: Double, var tokenId: String = "") {
+data class AssetBean(var currency: String = "", var amount: Double, var tokenId: String = "", var freeze: Double) {
+    var available:Double=amount-freeze
 
     companion object {
         fun getAssetsNet(userId: String): Flowable<Result<MutableList<AssetBean>>> {

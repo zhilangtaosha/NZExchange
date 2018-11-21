@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.nze.nzexchange.R
-import com.nze.nzexchange.controller.otc.OtcBuyAdapter
 
 abstract class NBaseAda<T, V>(var mContext: Context) : BaseAdapter() {
     var group: MutableList<T> = mutableListOf<T>()

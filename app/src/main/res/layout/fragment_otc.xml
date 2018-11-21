@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     android:orientation="vertical"
-    tools:context=".controller.otc.OtcFragment">
+    tools:context=".controller.otc.main.OtcFragment">
 
     <LinearLayout
         android:id="@+id/layout_main_market"

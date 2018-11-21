@@ -52,10 +52,10 @@ class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
                 skipActivity(AddBankActivity::class.java)
             }
             1 -> {
-                startActivity(Intent(this, AddZhifubaoActivity::class.java).putExtra(IntentConstant.PARAM_TYPE, IntentConstant.TYPE_ZHIFUBAO))
+                startActivity(Intent(this, AddZhifubaoActivity::class.java).putExtra(IntentConstant.PARAM_PAY, IntentConstant.TYPE_ZHIFUBAO))
             }
             2 -> {
-                startActivity(Intent(this, AddZhifubaoActivity::class.java).putExtra(IntentConstant.PARAM_TYPE, IntentConstant.TYPE_WECHAT))
+                startActivity(Intent(this, AddZhifubaoActivity::class.java).putExtra(IntentConstant.PARAM_PAY, IntentConstant.TYPE_WECHAT))
             }
         }
     }

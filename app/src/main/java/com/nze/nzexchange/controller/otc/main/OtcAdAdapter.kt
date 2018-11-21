@@ -1,13 +1,11 @@
-package com.nze.nzexchange.controller.otc
+package com.nze.nzexchange.controller.otc.main
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OtcBean
-import com.nze.nzexchange.controller.base.BaseAda
 import com.nze.nzexchange.controller.base.NBaseAda
 import kotlinx.android.synthetic.main.lv_ad_otc.view.*
 

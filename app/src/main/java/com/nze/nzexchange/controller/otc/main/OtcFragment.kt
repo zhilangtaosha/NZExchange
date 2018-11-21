@@ -1,6 +1,7 @@
-package com.nze.nzexchange.controller.otc
+package com.nze.nzexchange.controller.otc.main
 
 
+import android.content.Intent
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.view.View
@@ -14,17 +15,18 @@ import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.AssetBean
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
+import com.nze.nzexchange.controller.otc.PublishActivity
 import com.nze.nzexchange.controller.otc.tradelist.TradeListActivity
 import com.nze.nzexchange.controller.transfer.CapitalTransferActivity
-import com.nze.nzexchange.http.Result
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
 import com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
 import com.nze.nzexchange.widget.indicator.indicator.slidebar.ColorBar
 import com.nze.nzexchange.widget.indicator.indicator.transition.OnTransitionTextListener
-import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc.view.*
 
 
@@ -47,6 +49,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
             OtcAdFragment.newInstance())
 
     var currentItem: Int = 0
+    var mCurrentAsset: AssetBean? = null
 
     private val sideData = mutableListOf<AssetBean>()
 
@@ -99,9 +102,12 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         AssetBean.getAssetsNet("007")
                 .compose(netTf())
                 .subscribe({
-                    sideAdapter.group = it.data!!
+                    val list = it.result
+                    sideData.addAll(list)
+                    sideAdapter.group = list
+                    mCurrentAsset = list.get(0)
+                    changeAva(currentItem)
                 }, onError)
-
 
 
     }
@@ -110,7 +116,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     }
 
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -137,7 +143,9 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
                         skipActivity(CapitalTransferActivity::class.java)
                     }
                     2 -> {
-                        skipActivity(PublishActivity::class.java)
+                        startActivity(Intent(activity, PublishActivity::class.java)
+                                .putExtra(IntentConstant.PARAM_TOKENID, mCurrentAsset?.tokenId)
+                                .putExtra(IntentConstant.PARAM_CURRENCY, mCurrentAsset?.currency))
                     }
                     else -> {
                     }
@@ -154,8 +162,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     fun changeAva(current: Int) {
         when (current) {
             0, 1 -> {
-                availableTv.setTextFromHtml("可用<font color=\"#E05760\">0.1983</font>UCC")
-                frozenTv.text = "冻结0.000UCC"
+                refreshLayout()
             }
             2 -> {
                 availableTv.text = "发布广告"
@@ -165,11 +172,29 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 
             }
         }
+        val fragment = pages.get(current)
+        if (fragment is IOtcView)
+            fragment.refresh(mCurrentAsset?.tokenId!!)
     }
 
+    fun refreshLayout() {
+        moreTv.text = mCurrentAsset?.currency
+        availableTv.setTextFromHtml("可用<font color=\"#E05760\">${mCurrentAsset?.available}</font>${mCurrentAsset?.currency}")
+        frozenTv.setTextFromHtml("<font color=\"#6D87A8\">冻结${mCurrentAsset?.freeze}${mCurrentAsset?.currency}</font>")
+    }
+
+    fun refreshPages() {
+        pages.forEach {
+            if (it is IOtcView)
+                it.refresh(mCurrentAsset?.tokenId ?: "")
+        }
+    }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         drawerLayout.closeDrawer(leftLayout)
-        moreTv.setText(sideData.get(position).currency)
+        mCurrentAsset = sideData.get(position)
+        moreTv.setText(mCurrentAsset!!.currency)
+        changeAva(currentItem)
     }
 }
+

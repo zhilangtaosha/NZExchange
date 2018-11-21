@@ -1,27 +1,36 @@
- package com.nze.nzexchange.controller.otc
+package com.nze.nzexchange.controller.otc.main
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
+import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.OtcBean
+import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.tools.getNColor
 import kotlinx.android.synthetic.main.fragment_otc_content.view.*
 
 
+class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
 
-
-class OtcContentFragment : NBaseFragment() {
     lateinit var ptrLv: PullToRefreshListView
     private var type: Int = 0
-    private var buyData = OtcBean.getList()
-    private val buyAdapter: OtcBuyAdapter by lazy {
-        OtcBuyAdapter(activity!!,type)
+    private lateinit var tokenId: String
+    private val orderPoolList: MutableList<OrderPoolBean> by lazy {
+        mutableListOf<OrderPoolBean>()
     }
+    private val buyAdapter: OtcBuyAdapter by lazy {
+        OtcBuyAdapter(activity!!, type)
+    }
+    private var refreshType: RrefreshType = RrefreshType.INIT
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,13 +57,13 @@ class OtcContentFragment : NBaseFragment() {
     override fun initView(rootView: View) {
         ptrLv = rootView.plv_foc
         ptrLv.setPullLoadEnabled(true)
+        ptrLv.setOnRefreshListener(this)
         val listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
 
 
         listView.adapter = buyAdapter
-        buyAdapter.group=buyData
 
     }
 
@@ -75,4 +84,42 @@ class OtcContentFragment : NBaseFragment() {
     }
 
     override fun getContainerTargetView(): View? = null
+
+    override fun refresh(tokenId: String) {
+        this.tokenId = tokenId
+        ptrLv.doPullRefreshing(true, 200)
+    }
+
+    override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_DOWN
+        getDataFromNet()
+    }
+
+    override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_UP
+    }
+
+    fun getDataFromNet() {
+        OrderPoolBean.getFromNet(tokenId)
+                .compose(netTf())
+                .subscribe({
+                    when (refreshType) {
+                        RrefreshType.INIT -> {
+                            orderPoolList.addAll(it.result)
+                        }
+                        RrefreshType.PULL_DOWN -> {
+                            orderPoolList.clear()
+                            orderPoolList.addAll(it.result)
+                            buyAdapter.group = orderPoolList
+                            ptrLv.onPullDownRefreshComplete()
+                        }
+                        RrefreshType.PULL_UP -> {
+                            orderPoolList.addAll(it.result)
+                            ptrLv.onPullUpRefreshComplete()
+                        }
+                        else -> {
+                        }
+                    }
+                }, onError)
+    }
 }

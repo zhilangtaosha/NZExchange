@@ -3,8 +3,12 @@ package com.nze.nzexchange.config
 class IntentConstant {
 
     companion object {
-        const val PARAM_TYPE: String = "type"
+        const val PARAM_PAY: String = "pay"
         const val PARAM_ACCOUNT: String = "account"
+        const val PARAM_TOKENID = "tokenId"
+        const val PARAM_CURRENCY = "currency"
+        const val PARAM_ORDER_POOL = "orderPool"
+        const val PARAM_ACCMONEY = "accmoney"
 
         //设置支付方式
         const val TYPE_ZHIFUBAO = 0x001//支付宝

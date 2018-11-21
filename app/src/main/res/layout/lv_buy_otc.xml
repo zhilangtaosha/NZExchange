@@ -33,11 +33,12 @@
         android:textColor="@color/color_FF7F8592"
         android:textSize="14sp" />
 
-    <com.nze.nzexchange.widget.LinearLayoutAsListView
-        android:id="@+id/lav_pay_lbo"
+    <LinearLayout
+        android:id="@+id/layout_pay_lbo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_total_num_lbo"
         android:orientation="horizontal" />
 
     <TextView

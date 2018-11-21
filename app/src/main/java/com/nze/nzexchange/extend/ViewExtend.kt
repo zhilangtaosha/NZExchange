@@ -4,6 +4,7 @@ import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.text.Html
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 
 fun View.setBg(drawableId: Int) {
@@ -25,4 +26,7 @@ fun TextView.setTextFromHtml(source: String) {
         text = Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY)
     }
 }
+
+
+fun EditText.getContent(): String = text.toString()
 
