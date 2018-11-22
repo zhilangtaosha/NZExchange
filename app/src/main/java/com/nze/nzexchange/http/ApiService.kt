@@ -1,8 +1,6 @@
 package com.nze.nzexchange.http
 
-import com.nze.nzexchange.bean.Accmoney
-import com.nze.nzexchange.bean.AssetBean
-import com.nze.nzexchange.bean.OrderPoolBean
+import com.nze.nzexchange.bean.*
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -34,13 +32,24 @@ interface ApiService {
     fun findOrderPool(@Field("tokenId") tokenId: String): Flowable<Result<MutableList<OrderPoolBean>>>
 
     //OTC买入
-    //poolId=Order1542784401045&userIdSell=007&userIdBu=008&suborderAmount=1&suborderPrice=2.6
     @FormUrlEncoded
     @POST("otc/buy/placeAnOrder")
     fun placeAnOrder(@Field("poolId") poolId: String,
                      @Field("userIdSell") userIdSell: String,
                      @Field("userIdBu") userIdBu: String,
-                     @Field("suborderAmount") suborderAmount: String,
-                     @Field("suborderPrice") suborderPrice: String
-    ): Flowable<Result<Accmoney>>
+                     @Field("suborderNum") suborderNum: String,
+                     @Field("tokenId") tokenId: String
+    ): Flowable<Result<PlaceAnOrderBean>>
+
+    //获取商家广告列表
+    @FormUrlEncoded
+    @POST("otc/buy/findSellList")
+    fun findSellList(@Field("userId") userId: String): Flowable<Result<MutableList<FindSellBean>>>
+
+    //.商家取消订单
+    @FormUrlEncoded
+    @POST("otc/buy/cancelOrder")
+    fun cancelOrder(@Field("poolId") poolId: String,
+                    @Field("userId") userId: String
+    ): Flowable<Result<Boolean>>
 }

@@ -8,6 +8,8 @@ import com.nze.nzeframework.tool.EventCenter
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.tools.dp2px
+import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
 import com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
 import com.nze.nzexchange.widget.indicator.indicator.slidebar.ColorBar
@@ -39,7 +41,9 @@ class MarketFragment : NBaseFragment() {
 
         scrollIndicatorView.onTransitionListener = OnTransitionTextListener().setColor(-0x927858, -0x5c5547)
 
-        scrollIndicatorView.setScrollBar(ColorBar(activity, -0x927858, 4))
+        val colorBar = ColorBar(activity!!, getNColor(R.color.color_FF6D87A8), 3)
+        colorBar.setWidth(dp2px(60F))
+        scrollIndicatorView.setScrollBar(colorBar)
 
         viewPager.offscreenPageLimit = 2
         indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)

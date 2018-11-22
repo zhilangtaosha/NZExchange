@@ -10,10 +10,19 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.FindSellBean
+import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.OtcBean
+import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.http.NRetrofit
+import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
+import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
 
 
@@ -21,8 +30,12 @@ import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
  * A simple [Fragment] subclass.
  *
  */
-class OtcAdFragment : NBaseFragment(),IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
+class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
 
+    private var refreshType: RrefreshType = RrefreshType.INIT
+    private val findSellList: MutableList<FindSellBean> by lazy {
+        mutableListOf<FindSellBean>()
+    }
 
     val adAdapter: OtcAdAdapter by lazy {
         OtcAdAdapter(activity!!)
@@ -38,8 +51,8 @@ class OtcAdFragment : NBaseFragment(),IOtcView, PullToRefreshBase.OnRefreshListe
 
     override fun initView(rootView: View) {
         ptrLv = rootView.ptrlv_ad
-        ptrLv.isPullLoadEnabled=true
-        ptrLv.isScrollLoadEnabled=false
+        ptrLv.isPullLoadEnabled = true
+        ptrLv.isScrollLoadEnabled = false
         ptrLv.setOnRefreshListener(this)
 
         val listView = ptrLv.refreshableView
@@ -47,12 +60,20 @@ class OtcAdFragment : NBaseFragment(),IOtcView, PullToRefreshBase.OnRefreshListe
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
 
-        adAdapter.group = OtcBean.getList()
-
+        adAdapter.onClick = { poolId, userId ->
+            cancelNet(poolId, userId)
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        showToast(it.message)
+                        if (it.success)
+                            ptrLv.doPullRefreshing(true, 200)
+                    }, onError)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (eventCenter.eventCode == EventCode.CODE_PULISH)
+            ptrLv.doPullRefreshing(true, 200)
     }
 
     override fun isBindEventBusHere(): Boolean = true
@@ -68,14 +89,54 @@ class OtcAdFragment : NBaseFragment(),IOtcView, PullToRefreshBase.OnRefreshListe
     }
 
     override fun getContainerTargetView(): View? = null
+    override fun refresh(tokenId: String) {
+        ptrLv.doPullRefreshing(true, 200)
+    }
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_DOWN
+        getDataFromNet()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_UP
     }
 
-    override fun refresh(tokenId: String) {
-        NLog.i("tokenid:$tokenId")
+
+    fun getDataFromNet() {
+        FindSellBean.getFromNet(NzeApp.instance.userId)
+                .compose(netTf())
+                .subscribe({
+                    when (refreshType) {
+                        RrefreshType.INIT -> {
+                            findSellList.addAll(it.result)
+                        }
+                        RrefreshType.PULL_DOWN -> {
+                            findSellList.clear()
+                            findSellList.addAll(it.result)
+                            adAdapter.group = findSellList
+                            ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
+                            ptrLv.onPullDownRefreshComplete()
+                        }
+                        RrefreshType.PULL_UP -> {
+                            findSellList.addAll(it.result)
+                            ptrLv.onPullUpRefreshComplete()
+                        }
+                        else -> {
+                        }
+                    }
+                }, {
+                    ptrLv.onPullDownRefreshComplete()
+                    ptrLv.onPullUpRefreshComplete()
+                })
+    }
+
+
+    fun cancelNet(poolId: String, userId: String): Flowable<Result<Boolean>> {
+        return Flowable.defer {
+            NRetrofit.instance
+                    .createService()
+                    .cancelOrder(poolId, userId)
+        }
     }
 }

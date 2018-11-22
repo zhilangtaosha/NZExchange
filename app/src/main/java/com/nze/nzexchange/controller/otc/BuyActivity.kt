@@ -10,6 +10,8 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.Accmoney
 import com.nze.nzexchange.bean.OrderPoolBean
+import com.nze.nzexchange.bean.PlaceAnOrderBean
+import com.nze.nzexchange.bean.PlaceAnOrderBean.Companion.submitNet
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.otc.main.OtcContentFragment
@@ -121,11 +123,15 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                 if (type == OtcContentFragment.TYPE_BUY) {
 //                    skipActivity(BuyConfirmActivity::class.java)
                     with(orderPoolBean) {
-                        submitNet(poolId, userId, NzeApp.instance.userId, et_num_value_ab.getContent(), poolPrice.toString())
+                        submitNet(poolId, userId, NzeApp.instance.userId, et_num_value_ab.getContent(), tokenId)
                                 .compose(netTfWithDialog())
                                 .subscribe({
                                     showToast(it.message)
-
+                                    if (it.success) {
+                                        startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
+                                                .putExtra(IntentConstant.PARAM_PLACE_AN_ORDER, it.result))
+                                        this@BuyActivity.finish()
+                                    }
                                 }, onError)
                     }
                 } else {
@@ -134,7 +140,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                 }
             }
             R.id.tv_all_ab -> {
-                et_num_value_ab.setText(orderPoolBean.poolAllCount.toString())
+                et_num_value_ab.setText(orderPoolBean.poolLeftamount.toString())
             }
             R.id.btn_cancle_ab -> this@BuyActivity.finish()
             else -> {
@@ -142,11 +148,5 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         }
     }
 
-    fun submitNet(poolId: String, userIdSell: String, userIdBu: String, suborderAmount: String, suborderPrice: String): Flowable<Result<Accmoney>> {
-        return Flowable.defer {
-            NRetrofit.instance
-                    .createService()
-                    .placeAnOrder(poolId, userIdSell, userIdBu, suborderAmount, suborderPrice)
-        }
-    }
+
 }

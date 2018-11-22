@@ -14,6 +14,7 @@ import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import kotlinx.android.synthetic.main.fragment_otc_content.view.*
 
@@ -111,6 +112,7 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
                             orderPoolList.clear()
                             orderPoolList.addAll(it.result)
                             buyAdapter.group = orderPoolList
+                            ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
                             ptrLv.onPullDownRefreshComplete()
                         }
                         RrefreshType.PULL_UP -> {
@@ -120,6 +122,9 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
                         else -> {
                         }
                     }
-                }, onError)
+                }, {
+                    ptrLv.onPullDownRefreshComplete()
+                    ptrLv.onPullUpRefreshComplete()
+                })
     }
 }

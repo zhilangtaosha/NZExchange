@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.base
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.nze.nzeframework.ui.BaseFragment
 import com.trello.rxlifecycle2.android.FragmentEvent
@@ -66,5 +67,9 @@ abstract class NBaseFragment : BaseFragment() {
 
     val onError: (e: Throwable) -> Unit = { e: Throwable ->
 
+    }
+
+    fun showToast(content: String) {
+        Toast.makeText(activity, content, Toast.LENGTH_SHORT).show()
     }
 }

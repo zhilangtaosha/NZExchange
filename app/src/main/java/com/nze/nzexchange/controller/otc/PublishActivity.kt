@@ -9,6 +9,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.setTextFromHtml
@@ -20,6 +21,7 @@ import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_publish.*
+import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
 
 class PublishActivity : NBaseActivity(), View.OnClickListener {
@@ -112,6 +114,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                                     Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
                                     if (it.success) {
                                         this@PublishActivity.finish()
+                                        EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
                                     }
                                 }, onError)
                     }

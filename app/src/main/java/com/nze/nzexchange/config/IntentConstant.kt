@@ -8,7 +8,7 @@ class IntentConstant {
         const val PARAM_TOKENID = "tokenId"
         const val PARAM_CURRENCY = "currency"
         const val PARAM_ORDER_POOL = "orderPool"
-        const val PARAM_ACCMONEY = "accmoney"
+        const val PARAM_PLACE_AN_ORDER = "placeAnOrder"
 
         //设置支付方式
         const val TYPE_ZHIFUBAO = 0x001//支付宝

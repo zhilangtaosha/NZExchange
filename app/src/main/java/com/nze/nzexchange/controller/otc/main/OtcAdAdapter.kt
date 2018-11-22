@@ -5,18 +5,29 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.FindSellBean
 import com.nze.nzexchange.bean.OtcBean
+import com.nze.nzexchange.config.CurrencyTool
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_ad_otc.view.*
 
-class OtcAdAdapter(mContext: Context) : NBaseAda<OtcBean, OtcAdAdapter.ViewHolder>(mContext) {
-    override fun initView(vh: ViewHolder, item: OtcBean) {
-        vh.nameTv.text = item.currency
-        vh.timeTv.text = item.time
-        vh.priceTv.text = item.price.toString()
-        vh.totalNumTv.text = item.totalNum.toString()
-        vh.transactionNumTv.text = item.transactionNum.toString()
+class OtcAdAdapter(mContext: Context) : NBaseAda<FindSellBean, OtcAdAdapter.ViewHolder>(mContext) {
+    var onClick: ((String, String) -> Unit)? = null
+    override fun initView(vh: ViewHolder, item: FindSellBean) {
+        item.run {
+            val tip = if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) "买入" else "卖出"
+            vh.nameTv.text = "${tip}${CurrencyTool.getCurrency(tokenId)}"
+            vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, poolCreateTime)
+            vh.priceTv.text = poolPrice.toString()
+            vh.totalNumTv.text = poolAllCount.toString()
+            vh.transactionNumTv.text = poolSuccessamount.toString()
 
+        }
+
+        vh.cancelBtn.setOnClickListener {
+            onClick?.invoke(item.poolId, item.userId)
+        }
     }
 
     override fun setLayout(): Int = R.layout.lv_ad_otc

@@ -24,8 +24,9 @@ public class MarketIndicatorAdapter(fragmentManager: FragmentManager, val contex
         }
         val tv:TextView = cView as TextView
         tv.text = tabs[position%tabs.size]
-        val padding = dp2px(15.toFloat(), context)
-        tv.setPadding(padding,0,padding,0)
+//        tv.width= dp2px(80.toFloat())
+//        val padding = dp2px(15.toFloat(), context)
+//        tv.setPadding(padding,0,padding,0)
         return cView
     }
 

@@ -45,7 +45,7 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
             vh.orderNumTv.text = "${it.totalOrder}单"
             vh.limitTv.text = "限额：${it.poolMinamount}-${it.poolMaxamount}CNY"
             vh.priceTv.text = "¥${it.poolPrice}"
-            vh.totalNumTv.text = "数量：${it.poolAllCount}"
+            vh.totalNumTv.text = "数量：${it.poolLeftamount}"
 
             it.accmoney
         }?.run {

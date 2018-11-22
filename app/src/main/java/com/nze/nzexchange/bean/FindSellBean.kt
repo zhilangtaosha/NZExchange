@@ -1,42 +1,41 @@
 package com.nze.nzexchange.bean
 
-import android.annotation.SuppressLint
-import android.os.Parcelable
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.http.Result
 import io.reactivex.Flowable
-import kotlinx.android.parcel.Parcelize
 
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
- * @类 说 明:OTC 购买 出售列表实体
- * @创建时间：2018/11/21
+ * @类 说 明:OTC 广告列表实体
+ * @创建时间：2018/11/22
  */
-@SuppressLint("ParcelCreator")
-@Parcelize
-data class OrderPoolBean(
-        val accmoney: Accmoney,
-        val nick: String,
+data class FindSellBean(
         val poolAllCount: Double,
+        val poolCreateTime: Long,
         val poolId: String,
+        val poolLeftamount: Double,
+        val poolLockamount: Double,
         val poolMaxamount: Double,
         val poolMinamount: Double,
         val poolNo: String,
         val poolPrice: Double,
+        val poolStatus: Int,
+        val poolSuborderamount: Double,
         val remark: String,
         val tokenId: String,
-        val totalOrder: Int,
-        val transactionType: String,
+        val transactionType: Int,
         val userId: String,
-        val poolLeftamount:Double
-): Parcelable {
+        val poolSuccessamount: Double
+) {
     companion object {
-        fun getFromNet(tokenId: String): Flowable<Result<MutableList<OrderPoolBean>>> {
+        const val TRANSACTIONTYPE_BUY = 0
+        const val TRANSACTIONTYPE_SALE = 1
+        fun getFromNet(userId: String): Flowable<Result<MutableList<FindSellBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .createService()
-                        .findOrderPool(tokenId)
+                        .findSellList(userId)
             }
         }
     }

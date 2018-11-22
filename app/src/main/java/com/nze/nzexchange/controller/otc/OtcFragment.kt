@@ -1,4 +1,4 @@
-package com.nze.nzexchange.controller.otc.main
+package com.nze.nzexchange.controller.otc
 
 
 import android.content.Intent
@@ -17,8 +17,10 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.AssetBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
-import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
-import com.nze.nzexchange.controller.otc.PublishActivity
+import com.nze.nzexchange.controller.otc.main.IOtcView
+import com.nze.nzexchange.controller.otc.main.OtcAdFragment
+import com.nze.nzexchange.controller.otc.main.OtcContentFragment
+import com.nze.nzexchange.controller.otc.main.OtcSideAdapter
 import com.nze.nzexchange.controller.otc.tradelist.TradeListActivity
 import com.nze.nzexchange.controller.transfer.CapitalTransferActivity
 import com.nze.nzexchange.tools.dp2px
