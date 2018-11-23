@@ -4,6 +4,7 @@ import android.content.Intent
 import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.nze.nzeframework.ui.BaseActivity
+import com.nze.nzexchange.NzeApp
 import com.trello.rxlifecycle2.android.ActivityEvent
 import io.reactivex.FlowableTransformer
 import io.reactivex.ObservableTransformer
@@ -30,10 +31,11 @@ abstract class NBaseActivity : BaseActivity() {
                 .doOnSubscribe {
                     mProgressDialog.show()
                 }
-                .doFinally {
+                .doOnComplete {
                     mProgressDialog.dismiss()
                 }
     }
+
 
     fun <T> netTf(): FlowableTransformer<T, T> = FlowableTransformer { observable ->
         observable.subscribeOn(Schedulers.io())

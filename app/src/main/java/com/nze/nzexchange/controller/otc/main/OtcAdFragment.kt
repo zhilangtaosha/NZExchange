@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
  */
 class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
 
-    private var refreshType: RrefreshType = RrefreshType.INIT
+
     private val findSellList: MutableList<FindSellBean> by lazy {
         mutableListOf<FindSellBean>()
     }

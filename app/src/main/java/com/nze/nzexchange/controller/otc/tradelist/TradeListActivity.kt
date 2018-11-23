@@ -6,6 +6,7 @@ import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.SubOrderInfoBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.CommonIndicatorAdapter
@@ -24,9 +25,12 @@ class TradeListActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLi
     lateinit var viewPager: ViewPager
     lateinit var scrollIndicatorView: ScrollIndicatorView
     val tabs = listOf<String>("未完成", "已完成", "已取消")
-    val pages = listOf<NBaseFragment>(TradeCommonFragment.newInstance(TradeCommonFragment.TYPE_NO_COMPLETE),
+    val pages = listOf<TradeCommonFragment>(TradeCommonFragment.newInstance(TradeCommonFragment.TYPE_NO_COMPLETE),
             TradeCommonFragment.newInstance(TradeCommonFragment.TYPE_COMPLETED),
             TradeCommonFragment.newInstance(TradeCommonFragment.TYPE_CANCEL))
+    val status = listOf<Int>(SubOrderInfoBean.REQUEST_NO_COMPLETE,
+            SubOrderInfoBean.REQUEST_COMPLETED,
+            SubOrderInfoBean.REQUEST_CANCEL)
 
     override fun getRootView(): Int = R.layout.activity_trade_list
 
@@ -41,6 +45,9 @@ class TradeListActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLi
         indicatorViewPager = IndicatorViewPager(siv_atl, vp_atl)
         val indicatorAdapter = CommonIndicatorAdapter(supportFragmentManager!!, this, tabs, pages)
         indicatorViewPager.adapter = indicatorAdapter
+        indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
+            pages[currentItem].refresh(status[currentItem])
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

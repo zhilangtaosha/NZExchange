@@ -177,6 +177,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         val fragment = pages.get(current)
         if (fragment is IOtcView)
             fragment.refresh(mCurrentAsset?.tokenId!!)
+
     }
 
     fun refreshLayout() {
@@ -185,12 +186,6 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         frozenTv.setTextFromHtml("<font color=\"#6D87A8\">冻结${mCurrentAsset?.freeze}${mCurrentAsset?.currency}</font>")
     }
 
-    fun refreshPages() {
-        pages.forEach {
-            if (it is IOtcView)
-                it.refresh(mCurrentAsset?.tokenId ?: "")
-        }
-    }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         drawerLayout.closeDrawer(leftLayout)

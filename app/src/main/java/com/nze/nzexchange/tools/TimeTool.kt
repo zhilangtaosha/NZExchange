@@ -28,5 +28,9 @@ class TimeTool {
 
         fun getLastUpdateTime(): CharSequence = format(PATTERN2, date())
 
+        //倒计时使用
+        fun formatTime(t: Long): String = with(t) {
+            "${this / 60}分${this % 60}秒"
+        }
     }
 }

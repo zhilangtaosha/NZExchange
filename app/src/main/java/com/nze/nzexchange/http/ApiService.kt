@@ -2,9 +2,6 @@ package com.nze.nzexchange.http
 
 import com.nze.nzexchange.bean.*
 import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Observer
-import org.intellij.lang.annotations.Flow
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -39,7 +36,7 @@ interface ApiService {
                      @Field("userIdBu") userIdBu: String,
                      @Field("suborderNum") suborderNum: String,
                      @Field("tokenId") tokenId: String
-    ): Flowable<Result<PlaceAnOrderBean>>
+    ): Flowable<Result<SubOrderInfoBean>>
 
     //获取商家广告列表
     @FormUrlEncoded
@@ -52,4 +49,14 @@ interface ApiService {
     fun cancelOrder(@Field("poolId") poolId: String,
                     @Field("userId") userId: String
     ): Flowable<Result<Boolean>>
+
+    //获取用户子订单列表
+    @FormUrlEncoded
+    @POST("otc/buy/findSubOrderPool")
+    fun findSubOrderPool(
+            @Field("userId") userId: String,
+            @Field("pageNumber") pageNumber: Int,
+            @Field("pageSize") pageSize: Int,
+            @Field("suborderStatus") suborderStatus: Int
+    ): Flowable<Result<MutableList<SubOrderInfoBean>>>
 }

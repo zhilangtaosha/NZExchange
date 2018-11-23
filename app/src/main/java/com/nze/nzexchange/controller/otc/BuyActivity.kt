@@ -8,20 +8,15 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.Accmoney
 import com.nze.nzexchange.bean.OrderPoolBean
-import com.nze.nzexchange.bean.PlaceAnOrderBean
-import com.nze.nzexchange.bean.PlaceAnOrderBean.Companion.submitNet
+import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.submitNet
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.otc.main.OtcContentFragment
 import com.nze.nzexchange.extend.getContent
-import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.http.Result
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.ViewFactory
 import com.nze.nzexchange.validation.EmptyValidation
-import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_buy.*
 
 class BuyActivity : NBaseActivity(), View.OnClickListener {
@@ -122,7 +117,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
             R.id.btn_confirm_ab -> {
                 if (type == OtcContentFragment.TYPE_BUY) {
 //                    skipActivity(BuyConfirmActivity::class.java)
-                    with(orderPoolBean) {
+                    orderPoolBean.run {
                         submitNet(poolId, userId, NzeApp.instance.userId, et_num_value_ab.getContent(), tokenId)
                                 .compose(netTfWithDialog())
                                 .subscribe({
@@ -130,9 +125,10 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                     if (it.success) {
                                         startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
                                                 .putExtra(IntentConstant.PARAM_PLACE_AN_ORDER, it.result))
-                                        this@BuyActivity.finish()
                                     }
-                                }, onError)
+                                }, onError,{
+                                    this@BuyActivity.finish()
+                                })
                     }
                 } else {
                     skipActivity(SaleConfirmActivity::class.java)

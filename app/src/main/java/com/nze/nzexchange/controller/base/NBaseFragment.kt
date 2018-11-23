@@ -6,6 +6,7 @@ import android.net.Uri
 import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.nze.nzeframework.ui.BaseFragment
+import com.nze.nzexchange.config.RrefreshType
 import com.trello.rxlifecycle2.android.FragmentEvent
 import io.reactivex.Flowable
 import io.reactivex.FlowableTransformer
@@ -19,7 +20,9 @@ abstract class NBaseFragment : BaseFragment() {
         KProgressHUD.create(activity)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
     }
-
+    val PAGE_SIZE = 10
+    var page = 1
+    var refreshType: RrefreshType = RrefreshType.INIT
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -71,5 +74,9 @@ abstract class NBaseFragment : BaseFragment() {
 
     fun showToast(content: String) {
         Toast.makeText(activity, content, Toast.LENGTH_SHORT).show()
+    }
+
+    open fun getDataFromNet() {
+
     }
 }

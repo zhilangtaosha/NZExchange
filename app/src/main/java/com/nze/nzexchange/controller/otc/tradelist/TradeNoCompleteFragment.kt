@@ -4,6 +4,7 @@ package com.nze.nzexchange.controller.otc.tradelist
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseFragment
 
@@ -13,7 +14,7 @@ import com.nze.nzexchange.controller.base.NBaseFragment
  *
  */
 class TradeNoCompleteFragment : NBaseFragment() {
-
+    lateinit var ptrLv: PullToRefreshListView
     companion object {
         @JvmStatic
         fun newInstance() = TradeNoCompleteFragment()
@@ -22,6 +23,7 @@ class TradeNoCompleteFragment : NBaseFragment() {
     override fun getRootView(): Int = R.layout.common_ptrlv
 
     override fun initView(rootView: View) {
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

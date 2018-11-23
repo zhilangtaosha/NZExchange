@@ -30,7 +30,6 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
     private val buyAdapter: OtcBuyAdapter by lazy {
         OtcBuyAdapter(activity!!, type)
     }
-    private var refreshType: RrefreshType = RrefreshType.INIT
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
