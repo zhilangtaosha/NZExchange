@@ -20,6 +20,7 @@ data class Accmoney(
         val accmoneyId: String,
         val accmoneyStatus: String,
         val accmoneyUpdateTime: String,
+        val accmoneyUpdateUser: String?,
         val accmoneyWeixinacc: String,
         val accmoneyWeixinurl: String,
         val accmoneyZfbacc: String,

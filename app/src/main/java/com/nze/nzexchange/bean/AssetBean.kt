@@ -17,7 +17,7 @@ data class AssetBean(var currency: String = "", var amount: Double, var tokenId:
         fun getAssetsNet(userId: String): Flowable<Result<MutableList<AssetBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
-                        .createService()
+                        .buyService()
                         .getAssets(userId)
             }
         }

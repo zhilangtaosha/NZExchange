@@ -14,8 +14,10 @@ import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.http.Result
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
+import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc_content.view.*
 
 
@@ -23,7 +25,7 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
 
     lateinit var ptrLv: PullToRefreshListView
     private var type: Int = 0
-    private lateinit var tokenId: String
+    var tokenId: String = "token02"
     private val orderPoolList: MutableList<OrderPoolBean> by lazy {
         mutableListOf<OrderPoolBean>()
     }
@@ -91,31 +93,32 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
     }
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        page = 1
         refreshType = RrefreshType.PULL_DOWN
         getDataFromNet()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        page++
         refreshType = RrefreshType.PULL_UP
+        getDataFromNet()
     }
 
-    fun getDataFromNet() {
-        OrderPoolBean.getFromNet(tokenId)
-                .compose(netTf())
+    override fun getDataFromNet() {
+        getFlowable().compose(netTf())
                 .subscribe({
+                    val rList = it.result
                     when (refreshType) {
                         RrefreshType.INIT -> {
-                            orderPoolList.addAll(it.result)
+                            buyAdapter.group = rList
                         }
                         RrefreshType.PULL_DOWN -> {
-                            orderPoolList.clear()
-                            orderPoolList.addAll(it.result)
-                            buyAdapter.group = orderPoolList
+                            buyAdapter.group = rList
                             ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
                             ptrLv.onPullDownRefreshComplete()
                         }
                         RrefreshType.PULL_UP -> {
-                            orderPoolList.addAll(it.result)
+                            orderPoolList.addAll(rList)
                             ptrLv.onPullUpRefreshComplete()
                         }
                         else -> {
@@ -125,5 +128,15 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
                     ptrLv.onPullDownRefreshComplete()
                     ptrLv.onPullUpRefreshComplete()
                 })
+
+    }
+
+
+    fun getFlowable(): Flowable<Result<MutableList<OrderPoolBean>>> {
+        return if (type == TYPE_BUY) {
+            OrderPoolBean.getFromNet(tokenId, page, PAGE_SIZE)
+        } else {
+            OrderPoolBean.getSellNet(tokenId, page, PAGE_SIZE)
+        }
     }
 }

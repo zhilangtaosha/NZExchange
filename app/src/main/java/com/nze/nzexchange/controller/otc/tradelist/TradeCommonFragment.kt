@@ -13,11 +13,22 @@ import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.Accmoney
 import com.nze.nzexchange.bean.OtcOrder
 import com.nze.nzexchange.bean.SubOrderInfoBean
+import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.RrefreshType
+import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.otc.SaleConfirmActivity
+import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
+import com.trello.rxlifecycle2.android.FragmentEvent
+import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.common_ptrlv.view.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -31,10 +42,13 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
     var requestStatus = SubOrderInfoBean.REQUEST_NO_COMPLETE
 
     val commonAdapter: TradeCommonAdapter by lazy {
-        TradeCommonAdapter(activity!!, type)
+        TradeCommonAdapter(activity!!, type, this)
     }
     val noCompleteAdapter: TradeNoCompleteAdapter by lazy {
-        TradeNoCompleteAdapter(activity!!)
+        TradeNoCompleteAdapter(activity!!, this)
+    }
+    val list: MutableList<SubOrderInfoBean> by lazy {
+        mutableListOf<SubOrderInfoBean>()
     }
 
     companion object {
@@ -107,7 +121,9 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (type) {
             TYPE_NO_COMPLETE -> {
-
+                val item = noCompleteAdapter.getItem(position)
+                startActivity(Intent(activity, SaleConfirmActivity::class.java)
+                        .putExtra(IntentConstant.PARAM_SUBORDERID, item?.suborderId))
             }
             TYPE_COMPLETED, TYPE_CANCEL -> {
                 startActivity(Intent(activity, TradeCommonDetailActivity::class.java).putExtra(PARAM_TYPE, type))
@@ -117,21 +133,85 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
     }
 
     fun refresh(requstStatus: Int) {
-        this.requestStatus = requestStatus
+        this.requestStatus = requstStatus
+        ptrLv.doPullRefreshing(true, 200)
     }
 
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_DOWN
+        page = 1
+        getDataFromNet()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_UP
+        page++
+        getDataFromNet()
     }
 
     override fun getDataFromNet() {
         SubOrderInfoBean.findSubOrderPoolNet(NzeApp.instance.userId, page, PAGE_SIZE, requestStatus)
                 .compose(netTf())
                 .subscribe({
+                    var rList = it.result.map {
+                        it.phoneTime = System.currentTimeMillis()
+//                        it.suborderOverTime = 60 * 60
+                        it
+                    }.toMutableList()
+                    when (refreshType) {
+                        RrefreshType.INIT -> {
+                            when (type) {
+                                TYPE_NO_COMPLETE -> {
+                                    noCompleteAdapter.group = rList
+                                }
+                                TYPE_COMPLETED, TYPE_CANCEL -> {
+                                    commonAdapter.group = rList
+                                }
+                            }
+                        }
+                        RrefreshType.PULL_DOWN -> {
+                            ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
+                            ptrLv.onPullDownRefreshComplete()
+                            when (type) {
+                                TYPE_NO_COMPLETE -> {
+                                    noCompleteAdapter.group = rList
+                                    countdown()
+                                }
+                                TYPE_COMPLETED, TYPE_CANCEL -> {
+                                    commonAdapter.group = rList
+                                }
+                            }
+                        }
+                        RrefreshType.PULL_UP -> {
+                            ptrLv.onPullUpRefreshComplete()
+                            when (type) {
+                                TYPE_NO_COMPLETE -> {
+                                    noCompleteAdapter.addItems(rList)
+                                }
+                                TYPE_COMPLETED, TYPE_CANCEL -> {
+                                    commonAdapter.addItems(rList)
+                                }
+                            }
+                        }
+                        else -> {
+                        }
+                    }
 
-                }, onError)
+                }, {
+                    ptrLv.onPullDownRefreshComplete()
+                    ptrLv.onPullUpRefreshComplete()
+                })
+    }
+
+
+    fun countdown() {
+        Flowable.interval(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe {
+                    noCompleteAdapter.notifyDataSetChanged()
+                }
     }
 }

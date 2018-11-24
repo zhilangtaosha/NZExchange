@@ -30,8 +30,12 @@ abstract class NBaseActivity : BaseActivity() {
                 .compose(this.bindUntilEvent(ActivityEvent.DESTROY))
                 .doOnSubscribe {
                     mProgressDialog.show()
+                }.doOnNext {
+                    mProgressDialog.dismiss()
                 }
                 .doOnComplete {
+                    mProgressDialog.dismiss()
+                }.doFinally {
                     mProgressDialog.dismiss()
                 }
     }

@@ -34,7 +34,7 @@ data class FindSellBean(
         fun getFromNet(userId: String): Flowable<Result<MutableList<FindSellBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
-                        .createService()
+                        .buyService()
                         .findSellList(userId)
             }
         }

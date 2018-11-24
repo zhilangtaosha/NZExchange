@@ -1,6 +1,5 @@
 package com.nze.nzexchange.http
 
-import android.os.Build
 import com.nze.nzexchange.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -36,7 +35,9 @@ class NRetrofit private constructor() {
 
     fun <T> create(service: Class<T>): T = retrofit.create(service)
 
-    fun createService(): ApiService = create(ApiService::class.java)
+    fun buyService(): BuyService = create(BuyService::class.java)
+
+    fun sellService(): SellService = create(SellService::class.java)
 
     companion object {
         val instance: NRetrofit = NRetrofit()

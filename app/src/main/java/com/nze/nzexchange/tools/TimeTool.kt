@@ -28,9 +28,13 @@ class TimeTool {
 
         fun getLastUpdateTime(): CharSequence = format(PATTERN2, date())
 
-        //倒计时使用
+        //倒计时使用，单位秒
         fun formatTime(t: Long): String = with(t) {
-            "${this / 60}分${this % 60}秒"
+            if (t > 0) {
+                "${this / 60}分${this % 60}秒"
+            } else {
+                "0分0秒"
+            }
         }
     }
 }

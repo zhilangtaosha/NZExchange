@@ -6,9 +6,9 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
-import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.submitNet
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
@@ -108,15 +108,27 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe {
                     if (btn_ap.validate()) {
-                        submitNet(tokenId, NzeApp.instance.userId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
-                                .compose(netTfWithDialog())
-                                .subscribe({
-                                    Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
-                                    if (it.success) {
-                                        this@PublishActivity.finish()
-                                        EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
-                                    }
-                                }, onError)
+                        if (currentType == TYPE_BUY) {
+                            submitNet(tokenId, NzeApp.instance.userId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+                                    .compose(netTfWithDialog())
+                                    .subscribe({
+                                        Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
+                                        if (it.success) {
+                                            this@PublishActivity.finish()
+                                            EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
+                                        }
+                                    }, onError)
+                        } else {
+                            sellNet(tokenId, NzeApp.instance.userId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+                                    .compose(netTfWithDialog())
+                                    .subscribe({
+                                        Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
+                                        if (it.success) {
+                                            this@PublishActivity.finish()
+                                            EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
+                                        }
+                                    },onError)
+                        }
                     }
                 }
     }
@@ -170,7 +182,15 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     fun submitNet(tokenId: String, userId: String, poolAllCount: String, poolPrice: String, remark: String): Flowable<Result<Boolean>> {
         return Flowable.defer {
             NRetrofit.instance
-                    .createService()
+                    .buyService()
+                    .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark)
+        }
+    }
+
+    fun sellNet(tokenId: String, userId: String, poolAllCount: String, poolPrice: String, remark: String): Flowable<Result<Boolean>> {
+        return Flowable.defer {
+            NRetrofit.instance
+                    .sellService()
                     .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark)
         }
     }

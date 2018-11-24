@@ -7,14 +7,11 @@ import android.view.View
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
-import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.FindSellBean
-import com.nze.nzexchange.bean.OrderPoolBean
-import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -103,7 +100,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     }
 
 
-    fun getDataFromNet() {
+   override fun getDataFromNet() {
         FindSellBean.getFromNet(NzeApp.instance.userId)
                 .compose(netTf())
                 .subscribe({
@@ -135,7 +132,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     fun cancelNet(poolId: String, userId: String): Flowable<Result<Boolean>> {
         return Flowable.defer {
             NRetrofit.instance
-                    .createService()
+                    .buyService()
                     .cancelOrder(poolId, userId)
         }
     }

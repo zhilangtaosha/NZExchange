@@ -34,9 +34,11 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
 
         if (type == OtcContentFragment.TYPE_BUY) {
             vh.btn.setBg(R.drawable.selector_green_btn_bg)
+            vh.btn.text = "买入"
             vh.priceTv.setTxtColor(R.color.color_FF069F83)
         } else {
             vh.btn.setBg(R.drawable.selector_red_btn_bg)
+            vh.btn.text = "卖出"
             vh.priceTv.setTxtColor(R.color.color_FFE05760)
         }
         val item = getItem(position)

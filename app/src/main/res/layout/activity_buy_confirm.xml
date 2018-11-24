@@ -56,29 +56,32 @@
             android:textColor="@color/color_FF6D87A8"
             android:textSize="12sp" />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
+        android:orientation="horizontal"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
+        android:paddingBottom="8dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="真实姓名"
             android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp"
-            android:text="真实姓名"/>
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/tv_name_abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:text="黄娟娟"
             android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp"
-            android:text="黄娟娟"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -86,23 +89,25 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:orientation="horizontal"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
+        android:paddingBottom="8dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="联系方式"
             android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp"
-            android:text="联系方式"/>
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/tv_phone_abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:text="13602341256"
             android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp"
-            android:text="13602341256"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -110,23 +115,25 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:orientation="horizontal"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
+        android:paddingBottom="8dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="交易单价"
             android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp"
-            android:text="交易单价"/>
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/tv_price_abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:text="1.0321CNY"
             android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp"
-            android:text="1.0321CNY"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -134,23 +141,25 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:orientation="horizontal"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
+        android:paddingBottom="8dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="交易数量"
             android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp"
-            android:text="交易数量"/>
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/tv_num_abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:text="4215.32USDT"
             android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp"
-            android:text="4215.32USDT"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -158,23 +167,25 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:orientation="horizontal"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
+        android:paddingBottom="8dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="交易金额"
             android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp"
-            android:text="交易金额"/>
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/tv_money_abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:text="2435.42CNY"
             android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp"
-            android:text="2435.42CNY"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -205,8 +216,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
         android:background="@drawable/shape_radius_line2536_bg"
         android:orientation="horizontal"
         android:padding="10dp">
@@ -235,7 +246,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="17dp"
         android:layout_marginRight="15dp"
-        android:text="请在19分59秒内完成付款，并点击确认付款，超时将自动取消订单"
+        android:text="请在0分0秒内完成付款，并点击确认付款，超时将自动取消订单"
         android:textColor="@color/color_FF7F8592"
         android:textSize="12sp" />
 
@@ -252,10 +263,10 @@
         android:id="@+id/btn_cancle_abc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:padding="15dp"
         android:text="取消交易"
         android:textColor="@color/color_FF6D87A8"
-        android:textSize="14sp"
-        android:layout_gravity="center_horizontal"/>
+        android:textSize="14sp" />
 </LinearLayout>

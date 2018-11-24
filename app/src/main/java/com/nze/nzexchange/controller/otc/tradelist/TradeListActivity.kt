@@ -1,10 +1,12 @@
 package com.nze.nzexchange.controller.otc.tradelist
 
 import android.net.Uri
+import android.os.Handler
 import android.support.v4.view.ViewPager
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.SubOrderInfoBean
 import com.nze.nzexchange.controller.base.NBaseActivity
@@ -48,6 +50,10 @@ class TradeListActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLi
         indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
             pages[currentItem].refresh(status[currentItem])
         }
+
+        Handler().postDelayed({
+            pages[0].refresh(status[0])
+        }, 500)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

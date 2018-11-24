@@ -6,14 +6,14 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
-interface ApiService {
+interface BuyService {
 
 
     @FormUrlEncoded
     @POST("otc/buy/getAssets")
     fun getAssets(@Field("userId") userId: String): Flowable<Result<MutableList<AssetBean>>>
 
-    //商家出售，用户购买
+    //挂单，商家出售，用户购买
     @FormUrlEncoded
     @POST("otc/buy/pendingOrder")
     fun pendingOrder(@Field("userId") userId: String,
@@ -26,9 +26,12 @@ interface ApiService {
     //OTC购买列表
     @FormUrlEncoded
     @POST("otc/buy/findOrderPool")
-    fun findOrderPool(@Field("tokenId") tokenId: String): Flowable<Result<MutableList<OrderPoolBean>>>
+    fun findOrderPool(@Field("tokenId") tokenId: String,
+                      @Field("pageNumber") pageNumber: Int,
+                      @Field("pageSize") pageSize: Int
+    ): Flowable<Result<MutableList<OrderPoolBean>>>
 
-    //OTC买入
+    //吃单
     @FormUrlEncoded
     @POST("otc/buy/placeAnOrder")
     fun placeAnOrder(@Field("poolId") poolId: String,
@@ -59,4 +62,26 @@ interface ApiService {
             @Field("pageSize") pageSize: Int,
             @Field("suborderStatus") suborderStatus: Int
     ): Flowable<Result<MutableList<SubOrderInfoBean>>>
+
+    //获取子订单详情
+    @FormUrlEncoded
+    @POST("otc/buy/findSubOrderInfo")
+    fun findSubOrderInfo(@Field("userId") userId: String,
+                         @Field("subOrderId") subOrderId: String
+    ): Flowable<Result<SubOrderInfoBean>>
+
+
+    //用户确认付款
+    @FormUrlEncoded
+    @POST("otc/buy/confirmReceipt")
+    fun confirmReceipt(@Field("userIdBu") userIdBu: String,
+                       @Field("suborderId") suborderId: String
+    ): Flowable<Result<Boolean>>
+
+    //用户取消订单
+    @FormUrlEncoded
+    @POST("otc/buy/userCancelOrder")
+    fun userCancelOrder(@Field("userId") userId: String,
+                        @Field("subOrderId") subOrderId: String
+    ): Flowable<Result<Boolean>>
 }

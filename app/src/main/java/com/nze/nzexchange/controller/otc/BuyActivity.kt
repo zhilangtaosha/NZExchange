@@ -37,7 +37,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         if (type == OtcContentFragment.TYPE_BUY) {
             ctb_ab.setTitle("买入UCC")
         } else {
-            ctb_ab.setTitle("买出UCC")
+            ctb_ab.setTitle("卖出UCC")
         }
 
         orderPoolBean.run {
@@ -124,9 +124,10 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                     showToast(it.message)
                                     if (it.success) {
                                         startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
+                                                .putExtra(OtcContentFragment.PARAM_TYPE, type)
                                                 .putExtra(IntentConstant.PARAM_PLACE_AN_ORDER, it.result))
                                     }
-                                }, onError,{
+                                }, onError, {
                                     this@BuyActivity.finish()
                                 })
                     }

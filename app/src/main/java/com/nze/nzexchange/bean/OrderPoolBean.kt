@@ -6,6 +6,7 @@ import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.http.Result
 import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
+import retrofit2.http.Field
 
 /**
  * @author: zwy
@@ -29,14 +30,28 @@ data class OrderPoolBean(
         val totalOrder: Int,
         val transactionType: String,
         val userId: String,
-        val poolLeftamount:Double
-): Parcelable {
+        val poolLeftamount: Double
+) : Parcelable {
     companion object {
-        fun getFromNet(tokenId: String): Flowable<Result<MutableList<OrderPoolBean>>> {
+        //购买列表
+        fun getFromNet(tokenId: String,
+                       pageNumber: Int,
+                       pageSize: Int): Flowable<Result<MutableList<OrderPoolBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
-                        .createService()
-                        .findOrderPool(tokenId)
+                        .buyService()
+                        .findOrderPool(tokenId, pageNumber, pageSize)
+            }
+        }
+
+        //出售列列表
+        fun getSellNet(tokenId: String,
+                       pageNumber: Int,
+                       pageSize: Int): Flowable<Result<MutableList<OrderPoolBean>>> {
+            return Flowable.defer {
+                NRetrofit.instance
+                        .sellService()
+                        .findOrderPool(tokenId, pageNumber, pageSize)
             }
         }
     }
