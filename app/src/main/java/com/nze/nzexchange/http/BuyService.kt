@@ -44,7 +44,10 @@ interface BuyService {
     //获取商家广告列表
     @FormUrlEncoded
     @POST("otc/buy/findSellList")
-    fun findSellList(@Field("userId") userId: String): Flowable<Result<MutableList<FindSellBean>>>
+    fun findSellList(@Field("userId") userId: String,
+                     @Field("pageNumber") pageNumber: Int,
+                     @Field("pageSize") pageSize: Int
+    ): Flowable<Result<MutableList<FindSellBean>>>
 
     //.商家取消订单
     @FormUrlEncoded
@@ -75,6 +78,13 @@ interface BuyService {
     @FormUrlEncoded
     @POST("otc/buy/confirmReceipt")
     fun confirmReceipt(@Field("userIdBu") userIdBu: String,
+                       @Field("suborderId") suborderId: String
+    ): Flowable<Result<Boolean>>
+
+    //商家确认收款
+    @FormUrlEncoded
+    @POST("otc/buy/confirmPayment")
+    fun confirmPayment(@Field("userIdSell") userIdSell: String,
                        @Field("suborderId") suborderId: String
     ): Flowable<Result<Boolean>>
 

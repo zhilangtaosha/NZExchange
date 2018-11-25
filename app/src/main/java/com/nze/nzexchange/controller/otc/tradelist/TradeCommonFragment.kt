@@ -16,6 +16,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.Accmoney
 import com.nze.nzexchange.bean.OtcOrder
 import com.nze.nzexchange.bean.SubOrderInfoBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseAda
@@ -101,10 +102,11 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (type == TYPE_NO_COMPLETE && eventCenter.eventCode == EventCode.CODE_CONFIRM_PAY)
+            ptrLv.doPullRefreshing(true, 200)
     }
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -126,7 +128,11 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
                         .putExtra(IntentConstant.PARAM_SUBORDERID, item?.suborderId))
             }
             TYPE_COMPLETED, TYPE_CANCEL -> {
-                startActivity(Intent(activity, TradeCommonDetailActivity::class.java).putExtra(PARAM_TYPE, type))
+                val item = commonAdapter.getItem(position)
+                startActivity(Intent(activity, TradeCommonDetailActivity::class.java)
+                        .putExtra(PARAM_TYPE, type)
+                        .putExtra(IntentConstant.PARAM_SUBORDERID, item?.suborderId))
+
             }
 
         }

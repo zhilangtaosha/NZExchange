@@ -99,7 +99,20 @@ data class SubOrderInfoBean(
             }
         }
 
+        //出售出单
+        fun sellNet(poolId: String, userIdSell: String,
+                      userIdBu: String,
+                      suborderAmount: String,
+                      tokenId: String): Flowable<Result<SubOrderInfoBean>> {
+            return Flowable.defer {
+                NRetrofit.instance
+                        .sellService()
+                        .placeAnOrder(poolId, userIdSell, userIdBu, suborderAmount, tokenId)
+            }
+        }
+
     }
+
 
 
 

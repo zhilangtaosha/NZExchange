@@ -11,6 +11,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
@@ -101,7 +102,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         }
 
 
-        AssetBean.getAssetsNet("007")
+        AssetBean.getAssetsNet(NzeApp.instance.userId)
                 .compose(netTf())
                 .subscribe({
                     val list = it.result

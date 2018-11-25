@@ -9,5 +9,6 @@ package com.nze.nzexchange.config
 class EventCode {
     companion object {
         const val CODE_PULISH = 0x001
+        const val CODE_CONFIRM_PAY = 0x002
     }
 }

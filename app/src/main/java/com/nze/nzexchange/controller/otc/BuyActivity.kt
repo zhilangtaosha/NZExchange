@@ -9,6 +9,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OrderPoolBean
+import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.sellNet
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.submitNet
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
@@ -47,11 +48,11 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
             price = poolPrice
             accmoney
         }.run {
-            if (accmoneyWeixinurl.isNotEmpty())
+            if (accmoneyWeixinurl?.isNotEmpty()!!)
                 layout_pay_ab.addView(ViewFactory.createRightPayMethod(R.mipmap.wechat_icon))
-            if (accmoneyZfburl.isNotEmpty())
+            if (accmoneyZfburl?.isNotEmpty()!!)
                 layout_pay_ab.addView(ViewFactory.createRightPayMethod(R.mipmap.zhifubao_icon))
-            if (accmoneyBankcard.isNotEmpty())
+            if (accmoneyBankcard?.isNotEmpty()!!)
                 layout_pay_ab.addView(ViewFactory.createRightPayMethod(R.mipmap.card_icon))
         }
 
@@ -132,8 +133,20 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                 })
                     }
                 } else {
-                    skipActivity(SaleConfirmActivity::class.java)
-                    Toast.makeText(this, "sale...", Toast.LENGTH_SHORT).show()
+                    orderPoolBean.run {
+                        sellNet(poolId, userId, NzeApp.instance.userId, et_num_value_ab.getContent(), tokenId)
+                                .compose(netTfWithDialog())
+                                .subscribe({
+                                    showToast(it.message)
+                                    if (it.success) {
+                                        startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
+                                                .putExtra(OtcContentFragment.PARAM_TYPE, type)
+                                                .putExtra(IntentConstant.PARAM_PLACE_AN_ORDER, it.result))
+                                    }
+                                }, onError, {
+                                    this@BuyActivity.finish()
+                                })
+                    }
                 }
             }
             R.id.tv_all_ab -> {

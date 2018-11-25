@@ -108,7 +108,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe {
                     if (btn_ap.validate()) {
-                        if (currentType == TYPE_BUY) {
+                        if (currentType == TYPE_SALE) {
                             submitNet(tokenId, NzeApp.instance.userId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
                                     .compose(netTfWithDialog())
                                     .subscribe({
@@ -127,7 +127,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                                             this@PublishActivity.finish()
                                             EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
                                         }
-                                    },onError)
+                                    }, onError)
                         }
                     }
                 }

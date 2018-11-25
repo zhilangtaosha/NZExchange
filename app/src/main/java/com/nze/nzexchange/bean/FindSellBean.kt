@@ -31,11 +31,11 @@ data class FindSellBean(
     companion object {
         const val TRANSACTIONTYPE_BUY = 0
         const val TRANSACTIONTYPE_SALE = 1
-        fun getFromNet(userId: String): Flowable<Result<MutableList<FindSellBean>>> {
+        fun getFromNet(userId: String, page: Int, pageSize: Int): Flowable<Result<MutableList<FindSellBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .buyService()
-                        .findSellList(userId)
+                        .findSellList(userId,page,pageSize)
             }
         }
     }

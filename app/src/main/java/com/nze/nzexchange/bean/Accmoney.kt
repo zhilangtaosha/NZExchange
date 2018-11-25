@@ -13,20 +13,20 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class Accmoney(
-        val accmoneyBank: String,
-        val accmoneyBankcard: String,
-        val accmoneyBanktype: String,
-        val accmoneyCreateTime: String,
-        val accmoneyId: String,
-        val accmoneyStatus: String,
-        val accmoneyUpdateTime: String,
+        val accmoneyBank: String?,
+        val accmoneyBankcard: String?,
+        val accmoneyBanktype: String?,
+        val accmoneyCreateTime: String?,
+        val accmoneyId: String?,
+        val accmoneyStatus: String?,
+        val accmoneyUpdateTime: String?,
         val accmoneyUpdateUser: String?,
-        val accmoneyWeixinacc: String,
-        val accmoneyWeixinurl: String,
-        val accmoneyZfbacc: String,
-        val accmoneyZfburl: String,
-        val membId: String,
-        val userId: String,
+        val accmoneyWeixinacc: String?,
+        val accmoneyWeixinurl: String?,
+        val accmoneyZfbacc: String?,
+        val accmoneyZfburl: String?,
+        val membId: String?,
+        val userId: String?,
         val phone: String?,
         val trueName: String?
 ) : Parcelable

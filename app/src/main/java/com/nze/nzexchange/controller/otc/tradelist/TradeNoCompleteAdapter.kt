@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.nze.nzeframework.tool.NLog
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.SubOrderInfoBean
 import com.nze.nzexchange.config.CurrencyTool
@@ -29,7 +30,13 @@ class TradeNoCompleteAdapter(mContext: Context, var fragment: NBaseFragment) : N
 
     override fun initView(vh: ViewHolder, item: SubOrderInfoBean) {
         item.run {
-            val type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) "买入" else "卖出"
+            var type = ""
+            if (NzeApp.instance.userId == item.userIdSell) {
+                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) "卖出" else "买入"
+            } else {
+                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) "买入" else "卖出"
+            }
+
             vh.typeTv.text = "${type}${CurrencyTool.getCurrency(tokenId)}"
             vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, suborderCreateTime)
             vh.statusTv.text = SubOrderInfoBean.getStatus(suborderStatus)

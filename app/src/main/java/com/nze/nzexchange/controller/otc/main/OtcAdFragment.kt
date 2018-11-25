@@ -91,32 +91,35 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     }
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        page = 1
         refreshType = RrefreshType.PULL_DOWN
         getDataFromNet()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        page++
         refreshType = RrefreshType.PULL_UP
+        getDataFromNet()
     }
 
 
-   override fun getDataFromNet() {
-        FindSellBean.getFromNet(NzeApp.instance.userId)
+    override fun getDataFromNet() {
+        FindSellBean.getFromNet(NzeApp.instance.userId, page, PAGE_SIZE)
                 .compose(netTf())
                 .subscribe({
+                    val rList = it.result
                     when (refreshType) {
                         RrefreshType.INIT -> {
-                            findSellList.addAll(it.result)
+                            adAdapter.group = rList
                         }
                         RrefreshType.PULL_DOWN -> {
-                            findSellList.clear()
-                            findSellList.addAll(it.result)
-                            adAdapter.group = findSellList
+
+                            adAdapter.group = rList
                             ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
                             ptrLv.onPullDownRefreshComplete()
                         }
                         RrefreshType.PULL_UP -> {
-                            findSellList.addAll(it.result)
+                            adAdapter.addItems(rList)
                             ptrLv.onPullUpRefreshComplete()
                         }
                         else -> {

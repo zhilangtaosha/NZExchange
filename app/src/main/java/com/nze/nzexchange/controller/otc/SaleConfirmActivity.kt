@@ -10,6 +10,7 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.SubOrderInfoBean
 import com.nze.nzexchange.config.CurrencyTool
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.NRetrofit
@@ -18,6 +19,7 @@ import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_buy_confirm.*
+import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
 
 class SaleConfirmActivity : NBaseActivity() {
@@ -51,24 +53,14 @@ class SaleConfirmActivity : NBaseActivity() {
                 .compose(this.bindToLifecycle())
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe {
-                    confirmReceiptNet(subOrderInfoBean?.userIdBu!!, subOrderInfoBean?.suborderId!!)
-                            .compose(netTfWithDialog())
-                            .subscribe({
-                                if (it.success)
-                                    this@SaleConfirmActivity.finish()
-                            }, onError)
+                    confirmPay(subOrderInfoBean!!)
                 }
 
         RxView.clicks(btn_cancle_abc)
                 .compose(this.bindToLifecycle())
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe {
-                    cancelOrderNet(NzeApp.instance.userId, subOrderInfoBean?.suborderId!!)
-                            .compose(netTf())
-                            .subscribe({
-                                if (it.success)
-                                    this@SaleConfirmActivity.finish()
-                            }, onError)
+
                 }
     }
 
@@ -76,20 +68,39 @@ class SaleConfirmActivity : NBaseActivity() {
         subOrderInfoBean?.run {
             tv_order_no_abc.text = "订单编号:$suborderId"
             tv_status_abc.text = if (suborderStatus == SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY) {
-                btn_confirm_abc.text = "确认付款"
-                tv_message_abc.text = "请及时付款"
+//                btn_confirm_abc.text = "确认付款"
+//                tv_message_abc.text = "请及时付款"
                 "待付款"
             } else {
-                btn_confirm_abc.visibility = View.INVISIBLE
-                btn_cancle_abc.visibility = View.INVISIBLE
+
+                tv_tip_abc.visibility = View.INVISIBLE
                 tv_message_abc.text = "请及时放币"
                 "待放币"
             }
+            var type = ""
+            if (NzeApp.instance.userId == userIdSell) {
+                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {
+                    btn_cancle_abc.visibility = View.INVISIBLE
+                    "确认收款"
+                } else {
+                    "确认付款"
+                }
+            } else {
+                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {
+                    "确认付款"
+                } else {
+                    btn_cancle_abc.visibility = View.INVISIBLE
+                    "确认收款"
+                }
+            }
+            btn_confirm_abc.text = type
+
+
             tv_price_abc.text = "${suborderPrice}CNY"
             tv_num_abc.text = "${suborderNum}${CurrencyTool.getCurrency(tokenId)}"
             tv_money_abc.text = "${suborderAmount}CNY"
-
-            time = (suborderOverTime - suborderCreateTime) / 1000
+            tv_message_abc.text = remark
+            time = suborderOverTime
 
             accmoney
         }?.run {
@@ -127,20 +138,53 @@ class SaleConfirmActivity : NBaseActivity() {
     override fun getContainerTargetView(): View? = null
 
 
-    fun confirmReceiptNet(userIdBu: String, suborderId: String): Flowable<Result<Boolean>> {
-        return Flowable.defer {
-            NRetrofit.instance
-                    .buyService()
-                    .confirmReceipt(userIdBu, suborderId)
+    //确认付款
+    fun confirmPay(subOrderInfoBean: SubOrderInfoBean) {
+        if (NzeApp.instance.userId == subOrderInfoBean.userIdSell) {//本人是商家
+            if (subOrderInfoBean.transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
+                //商家确认收款
+                NRetrofit.instance
+                        .buyService()
+                        .confirmPayment(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId)
+                        .compose(netTf())
+                        .subscribe({
+                            confirm(it)
+                        }, onError)
+            } else {//卖币
+                //商家确认付款
+                NRetrofit.instance
+                        .sellService()
+                        .confirmReceipt(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId)
+                        .compose(netTf())
+                        .subscribe({
+                            confirm(it)
+                        }, onError)
+            }
+        } else {//本人是用户
+            if (subOrderInfoBean.transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
+                NRetrofit.instance
+                        .buyService()
+                        .confirmReceipt(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId)
+                        .compose(netTf())
+                        .subscribe({
+                            confirm(it)
+                        }, onError)
+            } else {//卖币
+                NRetrofit.instance
+                        .sellService()
+                        .confirmPayment(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId)
+                        .compose(netTf())
+                        .subscribe({
+                            confirm(it)
+                        }, onError)
+            }
         }
     }
 
-    fun cancelOrderNet(userId: String, orderId: String): Flowable<Result<Boolean>> {
-        return Flowable.defer {
-            NRetrofit.instance
-                    .buyService()
-                    .userCancelOrder(userId, orderId)
+    fun confirm(rs: Result<Boolean>) {
+        if (rs.success) {
+            this@SaleConfirmActivity.finish()
+            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_CONFIRM_PAY))
         }
     }
-
 }

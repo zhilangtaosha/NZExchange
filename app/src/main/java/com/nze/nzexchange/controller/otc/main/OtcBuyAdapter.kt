@@ -52,11 +52,11 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
             it.accmoney
         }?.run {
             vh.payLayout.removeAllViews()
-            if (accmoneyWeixinurl.isNotEmpty())
+            if (accmoneyWeixinurl?.isNotEmpty()!!)
                 vh.payLayout.addView(ViewFactory.createLeftPayMethod(R.mipmap.wechat_icon))
-            if (accmoneyZfburl.isNotEmpty())
+            if (accmoneyZfburl?.isNotEmpty()!!)
                 vh.payLayout.addView(ViewFactory.createLeftPayMethod(R.mipmap.zhifubao_icon))
-            if (accmoneyBankcard.isNotEmpty())
+            if (accmoneyBankcard?.isNotEmpty()!!)
                 vh.payLayout.addView(ViewFactory.createLeftPayMethod(R.mipmap.card_icon))
         }
 

@@ -45,4 +45,18 @@ interface SellService {
     ): Flowable<Result<MutableList<OrderPoolBean>>>
 
 
+    //商家确认付款
+    @FormUrlEncoded
+    @POST("otc/sell/confirmReceipt")
+    fun confirmReceipt(@Field("userIdSell") userIdSell: String,
+                       @Field("suborderId") suborderId: String
+    ): Flowable<Result<Boolean>>
+
+
+    //用户确认收款
+    @FormUrlEncoded
+    @POST("otc/sell/confirmPayment")
+    fun confirmPayment(@Field("userIdBu") userIdSell: String,
+                       @Field("suborderId") suborderId: String
+    ): Flowable<Result<Boolean>>
 }
