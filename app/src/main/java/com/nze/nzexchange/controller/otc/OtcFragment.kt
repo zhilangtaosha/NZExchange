@@ -16,6 +16,7 @@ import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.AssetBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.otc.main.IOtcView
@@ -53,6 +54,10 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 
     var currentItem: Int = 0
     var mCurrentAsset: AssetBean? = null
+    val sideAdapter: OtcSideAdapter by lazy {
+        OtcSideAdapter(activity!!)
+    }
+
 
     private val sideData = mutableListOf<AssetBean>()
 
@@ -73,7 +78,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         leftLayout = rootView.layout_left_market
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         rootView.lv_side_otc.setOnItemClickListener(this)
-        val sideAdapter: OtcSideAdapter = OtcSideAdapter(activity!!)
+
         rootView.lv_side_otc.adapter = sideAdapter
         sideAdapter.group = sideData
         //主页
@@ -102,6 +107,13 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         }
 
 
+        getAssetFromNet()
+
+
+    }
+
+
+    fun getAssetFromNet() {
         AssetBean.getAssetsNet(NzeApp.instance.userId)
                 .compose(netTf())
                 .subscribe({
@@ -111,11 +123,11 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
                     mCurrentAsset = list.get(0)
                     changeAva(currentItem)
                 }, onError)
-
-
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
+        if (eventCenter.eventCode == EventCode.CODE_REFRESH_ASSET)
+            getAssetFromNet()
     }
 
 

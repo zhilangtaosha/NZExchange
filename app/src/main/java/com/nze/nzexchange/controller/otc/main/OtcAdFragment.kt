@@ -48,7 +48,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
 
     override fun initView(rootView: View) {
         ptrLv = rootView.ptrlv_ad
-        ptrLv.isPullLoadEnabled = true
+        ptrLv.isPullLoadEnabled = false
         ptrLv.isScrollLoadEnabled = false
         ptrLv.setOnRefreshListener(this)
 
@@ -113,14 +113,23 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
                             adAdapter.group = rList
                         }
                         RrefreshType.PULL_DOWN -> {
-
                             adAdapter.group = rList
                             ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
                             ptrLv.onPullDownRefreshComplete()
+                            if (adAdapter.count >= it.pageSize) {
+                                ptrLv.setHasMoreData(false)
+                            } else {
+                                ptrLv.setHasMoreData(true)
+                            }
                         }
                         RrefreshType.PULL_UP -> {
                             adAdapter.addItems(rList)
                             ptrLv.onPullUpRefreshComplete()
+                            if (adAdapter.count >= it.pageSize) {
+                                ptrLv.setHasMoreData(false)
+                            } else {
+                                ptrLv.setHasMoreData(true)
+                            }
                         }
                         else -> {
                         }

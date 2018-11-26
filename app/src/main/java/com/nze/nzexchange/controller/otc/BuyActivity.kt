@@ -1,16 +1,21 @@
 package com.nze.nzexchange.controller.otc
 
 import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.view.View
 import android.widget.Toast
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.R.id.et_num_value_ab
 import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.sellNet
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.submitNet
+import com.nze.nzexchange.config.CurrencyTool
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.otc.main.OtcContentFragment
@@ -19,6 +24,7 @@ import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.ViewFactory
 import com.nze.nzexchange.validation.EmptyValidation
 import kotlinx.android.synthetic.main.activity_buy.*
+import org.greenrobot.eventbus.EventBus
 
 class BuyActivity : NBaseActivity(), View.OnClickListener {
 
@@ -36,15 +42,18 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
             orderPoolBean = it.getParcelableExtra(IntentConstant.PARAM_ORDER_POOL)
         }
         if (type == OtcContentFragment.TYPE_BUY) {
-            ctb_ab.setTitle("买入UCC")
+            ctb_ab.setTitle("买入${CurrencyTool.getCurrency(orderPoolBean.tokenId)}")
         } else {
-            ctb_ab.setTitle("卖出UCC")
+            ctb_ab.setTitle("卖出${CurrencyTool.getCurrency(orderPoolBean.tokenId)}")
         }
 
         orderPoolBean.run {
             tv_seller_ab.text = nick
             tv_order_num_abc.text = "${totalOrder}单"
             tv_price_value_ab.text = poolPrice.toString()
+            tv_num_unit_ab.text = CurrencyTool.getCurrency(tokenId)
+            tv_money_unit_ab.text = CurrencyTool.getCurrency(tokenId)
+
             price = poolPrice
             accmoney
         }.run {
@@ -97,7 +106,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT
+    override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = BaseActivity.TransitionMode.DEFAULT
 
     override fun isBindEventBusHere(): Boolean = false
 
@@ -139,6 +148,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                 .subscribe({
                                     showToast(it.message)
                                     if (it.success) {
+                                        EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
                                         startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
                                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
                                                 .putExtra(IntentConstant.PARAM_PLACE_AN_ORDER, it.result))

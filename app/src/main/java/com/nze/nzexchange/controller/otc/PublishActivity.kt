@@ -116,6 +116,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                                         if (it.success) {
                                             this@PublishActivity.finish()
                                             EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
+                                            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
                                         }
                                     }, onError)
                         } else {
@@ -126,6 +127,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                                         if (it.success) {
                                             this@PublishActivity.finish()
                                             EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
+                                            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
                                         }
                                     }, onError)
                         }

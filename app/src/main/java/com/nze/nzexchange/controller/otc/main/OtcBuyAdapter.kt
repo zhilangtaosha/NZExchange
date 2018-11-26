@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.BaseAda
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.otc.BuyActivity
 import com.nze.nzexchange.extend.setBg
 import com.nze.nzexchange.extend.setTxtColor
@@ -61,9 +63,13 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
         }
 
         vh.btn.setOnClickListener {
-            mContext.startActivity(Intent(mContext, BuyActivity::class.java)
-                    .putExtra(OtcContentFragment.PARAM_TYPE, type)
-                    .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
+            if (NzeApp.instance.userId != item?.userId) {
+                mContext.startActivity(Intent(mContext, BuyActivity::class.java)
+                        .putExtra(OtcContentFragment.PARAM_TYPE, type)
+                        .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
+            } else {
+                (mContext as NBaseActivity).showToast("不能与自己交易哦~")
+            }
         }
         return cView!!
     }

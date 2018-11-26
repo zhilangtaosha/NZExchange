@@ -88,7 +88,7 @@ interface BuyService {
                        @Field("suborderId") suborderId: String
     ): Flowable<Result<Boolean>>
 
-    //用户取消订单
+    //用户取消子订单
     @FormUrlEncoded
     @POST("otc/buy/userCancelOrder")
     fun userCancelOrder(@Field("userId") userId: String,

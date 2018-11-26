@@ -116,10 +116,20 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
                             buyAdapter.group = rList
                             ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
                             ptrLv.onPullDownRefreshComplete()
+                            if (buyAdapter.count >= it.pageSize) {
+                                ptrLv.setHasMoreData(false)
+                            } else {
+                                ptrLv.setHasMoreData(true)
+                            }
                         }
                         RrefreshType.PULL_UP -> {
                             buyAdapter.addItems(rList)
                             ptrLv.onPullUpRefreshComplete()
+                            if (buyAdapter.count >= it.pageSize) {
+                                ptrLv.setHasMoreData(false)
+                            } else {
+                                ptrLv.setHasMoreData(true)
+                            }
                         }
                         else -> {
                         }

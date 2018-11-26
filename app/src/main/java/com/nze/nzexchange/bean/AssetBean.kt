@@ -2,6 +2,7 @@ package com.nze.nzexchange.bean
 
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.tools.DoubleMath
 import io.reactivex.Flowable
 
 /**
@@ -16,7 +17,7 @@ data class AssetBean(var currency: String = "",
                      var freeze: Double) {
     var available: Double = 0.0
         get() {
-            return amount - freeze
+            return DoubleMath.sub(amount, freeze)
         }
 
     companion object {

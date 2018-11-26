@@ -10,5 +10,6 @@ class EventCode {
     companion object {
         const val CODE_PULISH = 0x001
         const val CODE_CONFIRM_PAY = 0x002
+        const val CODE_REFRESH_ASSET = 0x003
     }
 }

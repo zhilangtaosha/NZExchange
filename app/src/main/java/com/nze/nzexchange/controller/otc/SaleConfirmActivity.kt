@@ -60,7 +60,7 @@ class SaleConfirmActivity : NBaseActivity() {
                 .compose(this.bindToLifecycle())
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe {
-
+                    cancelNet(subOrderInfoBean!!)
                 }
     }
 
@@ -78,22 +78,37 @@ class SaleConfirmActivity : NBaseActivity() {
                 "待放币"
             }
             var type = ""
-            if (NzeApp.instance.userId == userIdSell) {
-                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {
+            var titleContent = ""
+            if (NzeApp.instance.userId == userIdSell) {//商家
+                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//卖币
                     btn_cancle_abc.visibility = View.INVISIBLE
+                    titleContent = "卖出${CurrencyTool.getCurrency(tokenId)}"
                     "确认收款"
-                } else {
+                } else {//买币
+                    if (suborderStatus == SubOrderInfoBean.SUBORDERSTATUS_WAIT_RELEASE) {
+                        btn_confirm_abc.visibility = View.INVISIBLE
+                        btn_cancle_abc.visibility = View.INVISIBLE
+                    }
+                    titleContent = "买入 ${CurrencyTool.getCurrency(tokenId)}"
                     "确认付款"
                 }
-            } else {
-                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {
+            } else {//用户
+                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
+                    if (suborderStatus == SubOrderInfoBean.SUBORDERSTATUS_WAIT_RELEASE) {
+                        btn_confirm_abc.visibility = View.INVISIBLE
+                        btn_cancle_abc.visibility = View.INVISIBLE
+                    }
+                    titleContent = "买入 ${CurrencyTool.getCurrency(tokenId)}"
                     "确认付款"
-                } else {
+                } else {//卖币
                     btn_cancle_abc.visibility = View.INVISIBLE
+                    titleContent = "卖出${CurrencyTool.getCurrency(tokenId)}"
                     "确认收款"
                 }
             }
+
             btn_confirm_abc.text = type
+            topbar_abc.setTitle(titleContent)
 
 
             tv_price_abc.text = "${suborderPrice}CNY"
@@ -162,6 +177,7 @@ class SaleConfirmActivity : NBaseActivity() {
             }
         } else {//本人是用户
             if (subOrderInfoBean.transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
+                //确认付款
                 NRetrofit.instance
                         .buyService()
                         .confirmReceipt(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId)
@@ -170,6 +186,7 @@ class SaleConfirmActivity : NBaseActivity() {
                             confirm(it)
                         }, onError)
             } else {//卖币
+                //确认收款
                 NRetrofit.instance
                         .sellService()
                         .confirmPayment(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId)
@@ -182,9 +199,38 @@ class SaleConfirmActivity : NBaseActivity() {
     }
 
     fun confirm(rs: Result<Boolean>) {
+        showToast(rs.message)
         if (rs.success) {
             this@SaleConfirmActivity.finish()
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_CONFIRM_PAY))
+            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
         }
+    }
+
+
+    fun cancelNet(subOrderInfoBean: SubOrderInfoBean) {
+//        if (NzeApp.instance.userId == subOrderInfoBean.userIdSell) {//本人是商家
+//            NRetrofit.instance
+//                    .sellService()
+//                    .userCancelOrder(NzeApp.instance.userId, subOrderInfoBean.suborderId)
+//                    .compose(netTf())
+//                    .subscribe({
+//                        cancel(it)
+//                    }, onError)
+//        } else {//本人是用户
+            NRetrofit.instance
+                    .buyService()
+                    .userCancelOrder(NzeApp.instance.userId, subOrderInfoBean.suborderId)
+                    .compose(netTf())
+                    .subscribe({
+                        cancel(it)
+                    }, onError)
+//        }
+    }
+
+    fun cancel(rs: Result<Boolean>) {
+        showToast(rs.message)
+        if (rs.success)
+            this@SaleConfirmActivity.finish()
     }
 }

@@ -59,4 +59,12 @@ interface SellService {
     fun confirmPayment(@Field("userIdBu") userIdSell: String,
                        @Field("suborderId") suborderId: String
     ): Flowable<Result<Boolean>>
+
+
+    //商家取消子订单
+    @FormUrlEncoded
+    @POST("otc/sell/cancelOrder")
+    fun userCancelOrder(@Field("userId") userId: String,
+                        @Field("subOrderId") subOrderId: String
+    ): Flowable<Result<Boolean>>
 }
