@@ -2,6 +2,8 @@ package com.nze.nzexchange.widget
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.util.AttributeSet
@@ -10,16 +12,21 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzexchange.R
+import com.nze.nzexchange.R.id.layout_root_ctb
+import com.nze.nzexchange.tools.getNColor
+import kotlinx.android.synthetic.main.common_top_bar.view.*
 
 class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(context, attrs) {
     private lateinit var mLeftTv: TextView
     private lateinit var mTitleTv: TextView
     private lateinit var mRightTv: TextView
+    private lateinit var mRootLayout: RelativeLayout
     private var mTitleText: String? = null
     private var mShowLeftIcon: Boolean = false
     private var mLeftText: String? = null
     private var mRightText: String? = null
     private var mLeftIconId: Int = 0
+    private var mBackgroudColor: Int = -1
 
     init {
         initAttrs(context, attrs)
@@ -34,16 +41,19 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
             mLeftText = ta.getString(R.styleable.CommonTopBar_tb_left_text)
             mLeftIconId = ta.getResourceId(R.styleable.CommonTopBar_tb_left_icon, R.mipmap.left_arrow)
             mRightText = ta.getString(R.styleable.CommonTopBar_tb_right_text)
-            ta.recycle()
+            mBackgroudColor = ta.getColor(R.styleable.CommonTopBar_tb_backgroud, ContextCompat.getColor(context,R.color.color_title_bg))
         }
-
+        ta.recycle()
     }
 
     fun init(context: Context) {
         LayoutInflater.from(context).inflate(R.layout.common_top_bar, this, true)
-        mLeftTv = findViewById(R.id.tv_left_tb) as TextView
-        mRightTv = findViewById(R.id.tv_right_tb) as TextView
-        mTitleTv = findViewById(R.id.tv_title_tb) as TextView
+        mLeftTv = findViewById<TextView>(R.id.tv_left_tb)
+        mRightTv = findViewById<TextView>(R.id.tv_right_tb)
+        mTitleTv = findViewById<TextView>(R.id.tv_title_tb)
+        mRootLayout = findViewById<RelativeLayout>(R.id.layout_root_ctb)
+
+        mRootLayout.setBackgroundColor(mBackgroudColor)
 
         mTitleTv.setText(mTitleText)
         val leftIcon = ContextCompat.getDrawable(context, mLeftIconId)
@@ -67,22 +77,36 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
 
     }
 
-    fun setTitle(resid: Int) {
+    fun setTitle(resid: Int): CommonTopBar {
         mTitleTv.setText(resid)
+        return this
     }
 
-    fun setTitle(title: String) {
+    fun setTitle(title: String): CommonTopBar {
         mTitleTv.text = title
+        return this
     }
 
-    fun setRightText(str:String){
+    fun setRightText(str: String): CommonTopBar {
         mRightTv.text = str
+        return this
     }
 
-    fun setRightClick(click: () -> Unit) {
+    fun setRightClick(click: () -> Unit): CommonTopBar {
         mRightTv.setOnClickListener {
             click()
         }
+        return this
+    }
+
+    fun setBackGroud(color: Int): CommonTopBar {
+        layout_root_ctb.setBackgroundColor(color)
+        return this
+    }
+
+    fun hideLeft(): CommonTopBar {
+        mLeftTv.visibility = View.INVISIBLE
+        return this
     }
 
 }

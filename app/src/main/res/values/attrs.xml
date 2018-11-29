@@ -12,5 +12,6 @@
         <attr name="tb_left_text" format="string" />
         <attr name="tb_right_text" format="string" />
         <attr name="tb_left_icon" format="reference" />
+        <attr name="tb_backgroud" format="reference|color" />
     </declare-styleable>
 </resources>

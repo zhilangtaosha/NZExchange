@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    tools:context=".controller.login.LoginActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_al"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_backgroud="@color/color_bg"
+        app:tb_right_text="取消"
+        app:tb_title_text="登录" />
+
+
+    <com.nze.nzexchange.widget.clearedit.ClearableEditText
+        android:id="@+id/et_account_al"
+        style="@style/et14"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@+id/ctb_al"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="30dp"
+        android:hint="手机号或邮箱号码" />
+
+    <View
+        android:id="@+id/line1_al"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/et_account_al"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@color/color_line" />
+
+
+    <com.nze.nzexchange.widget.clearedit.ClearableEditText
+        android:id="@+id/et_password_al"
+        style="@style/et14"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@+id/line1_al"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:hint="密码(8~16位数字和字母组合)"
+        android:inputType="textPassword" />
+
+    <View
+        android:id="@+id/line2_al"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/et_password_al"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@color/color_line" />
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_login_al"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@+id/line2_al"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="30dp"
+        android:text="登录" />
+
+    <TextView
+        android:id="@+id/tv_forget_al"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_login_al"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="10dp"
+        android:text="忘记密码"
+        android:textColor="@color/color_FF6D87A8"
+        android:textSize="15sp" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="还没有账号？"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_register_al"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="注册"
+            android:textColor="@color/color_FF6D87A8"
+            android:textSize="16sp" />
+    </LinearLayout>
+</RelativeLayout>
