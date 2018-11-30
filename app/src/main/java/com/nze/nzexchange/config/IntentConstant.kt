@@ -10,6 +10,8 @@ class IntentConstant {
         const val PARAM_ORDER_POOL = "orderPool"
         const val PARAM_PLACE_AN_ORDER = "placeAnOrder"
         const val PARAM_SUBORDERID = "suborderId"
+        const val PARAM_COUNTRY_NAME = "countryName"
+        const val PARAM_COUNTRY_NUMBER = "countryNumber"
 
         //设置支付方式
         const val TYPE_ZHIFUBAO = 0x001//支付宝

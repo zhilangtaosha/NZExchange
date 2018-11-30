@@ -90,9 +90,12 @@
         </provider>
 
         <activity android:name=".controller.login.LoginActivity" />
-        <activity android:name=".controller.login.RegisterActivity" />
         <activity android:name=".controller.login.PhoneRegisterActivity" />
-        <activity android:name=".controller.login.EmailRegisterActivity"></activity>
+        <activity android:name=".controller.login.EmailRegisterActivity" />
+        <activity
+            android:name=".controller.login.SelectCountryActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity android:name=".controller.login.FindPwdActivity"></activity>
     </application>
 
 </manifest>
