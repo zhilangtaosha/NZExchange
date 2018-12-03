@@ -89,6 +89,7 @@ class SelectCountryActivity : NBaseActivity() {
             intent.putExtra(IntentConstant.PARAM_COUNTRY_NAME, countryName)
             intent.putExtra(IntentConstant.PARAM_COUNTRY_NUMBER, countryNumber)
             setResult(Activity.RESULT_OK, intent)
+            this@SelectCountryActivity.finish()
         }
 
         getCountryList()

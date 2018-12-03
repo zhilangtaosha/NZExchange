@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#fff"
+    android:background="@color/color_bg"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
@@ -10,12 +10,12 @@
         android:id="@+id/country_catalog"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#f0f0f0"
+        android:background="@color/color_title_bg"
         android:gravity="center_vertical"
-        android:paddingBottom="2dip"
-        android:paddingLeft="8dip"
-        android:paddingTop="2dip"
-        android:textColor="#000" />
+        android:paddingBottom="2dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="2dp"
+        android:textColor="@color/color_FFA3AAB9" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -29,7 +29,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="20dip"
             android:singleLine="true"
-            android:textColor="#000"
+            android:textColor="@color/color_FFA3AAB9"
             android:textSize="15sp" />
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dip"
             android:singleLine="true"
-            android:textColor="#333"
+            android:textColor="@color/color_FFA3AAB9"
             android:textSize="12sp" />
     </RelativeLayout>
 

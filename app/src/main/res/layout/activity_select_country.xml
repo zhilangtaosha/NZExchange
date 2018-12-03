@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg"
     android:orientation="vertical"
     tools:context=".controller.login.SelectCountryActivity">
 
@@ -46,7 +47,10 @@
         <ListView
             android:id="@+id/lv_asc"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@color/color_bg"
+            android:divider="@color/color_line"
+            android:dividerHeight="1px" />
 
         <TextView
             android:id="@+id/tv_dialog_asc"

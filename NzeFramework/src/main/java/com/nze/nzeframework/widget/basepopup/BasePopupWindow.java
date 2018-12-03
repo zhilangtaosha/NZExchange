@@ -138,7 +138,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         initView(context, w, h);
     }
 
-    private void initView(Activity context, int w, int h) {
+    protected void initView(Activity context, int w, int h) {
         mContext = context;
 
         mPopupView = onCreatePopupView();

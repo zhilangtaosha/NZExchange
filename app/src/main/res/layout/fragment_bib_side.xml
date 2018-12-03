@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    tools:context=".controller.bibi.BibSideContentFragment">
+
+    <com.nze.nzexchange.widget.clearedit.ClearableEditText
+        android:id="@+id/cet_search_pbs"
+        style="@style/et14"
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/shape_radius_2536_bg2"
+        android:drawableLeft="@mipmap/search_icon"
+        android:drawablePadding="10dp"
+        android:hint="搜索交易对"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
+
+    <Button
+        android:id="@+id/btn_fbs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="button" />
+
+    <com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
+        android:id="@+id/siv_fbs"
+        android:layout_width="180dp"
+        android:layout_height="47dp"
+        android:fillViewport="false" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/color_FF1F2532" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_fbs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

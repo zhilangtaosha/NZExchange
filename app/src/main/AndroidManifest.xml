@@ -95,7 +95,8 @@
         <activity
             android:name=".controller.login.SelectCountryActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity android:name=".controller.login.FindPwdActivity"></activity>
+        <activity android:name=".controller.login.FindPwdActivity" />
+        <activity android:name=".controller.bibi.BibiSideActivity"></activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.setTextFromHtml
 import kotlinx.android.synthetic.main.activity_email_register.*
@@ -13,6 +14,10 @@ import kotlinx.android.synthetic.main.activity_phone_register.*
 
 class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     val REQUEST_CODE = 0x112
+    var countryName = "中国"
+    var countryNumber = "+86"
+
+
     override fun getRootView(): Int = R.layout.activity_phone_register
 
     override fun initView() {
@@ -54,14 +59,19 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.tv_country_apr -> {
-                startActivityForResult(Intent(this@PhoneRegisterActivity,SelectCountryActivity::class.java),REQUEST_CODE)
+                startActivityForResult(Intent(this@PhoneRegisterActivity, SelectCountryActivity::class.java), REQUEST_CODE)
             }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode== Activity.RESULT_OK){
-
+        if (resultCode == Activity.RESULT_OK) {
+            data?.run {
+                countryName = getStringExtra(IntentConstant.PARAM_COUNTRY_NAME)
+                countryNumber = getStringExtra(IntentConstant.PARAM_COUNTRY_NUMBER)
+            }
+            tv_country_apr.text = countryName
+            tv_country_code_apr.text = countryNumber
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
