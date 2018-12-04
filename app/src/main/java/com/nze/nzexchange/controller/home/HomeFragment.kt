@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.home
 
+import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -63,8 +64,12 @@ class HomeFragment : NBaseFragment() {
         mHotRView.adapter = mHotAdapter
 
         val mRandAdapter = RankListAdapter(activity!!)
-        mRandAdapter.group = hotDatas
-        rootView.lav_rank_home.adapter = mRandAdapter
+
+
+        Handler().postDelayed({
+            mRandAdapter.group = hotDatas
+            rootView.lav_rank_home.adapter = mRandAdapter
+        },3000)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

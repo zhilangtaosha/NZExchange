@@ -32,48 +32,6 @@ import kotlinx.android.synthetic.main.notification_template_lines_media.view.*
  * @创建时间：2018/12/3
  */
 class BibiSidePopup(var contxt: BaseActivity, var fragmentManager: FragmentManager) : BasePopupWindow(contxt) {
-    private val mainLayout = findViewById(R.id.layout_main)
-    val button:Button = findViewById(R.id.btn_fbs) as Button
-
-    private lateinit var viewPager: ViewPager
-    private lateinit var scrollIndicatorView: ScrollIndicatorView
-    private lateinit var indicatorViewPager: IndicatorViewPager
-    private val tabs by lazy {
-        mutableListOf<String>().apply {
-            add("BCH")
-            add("BTC")
-            add("ETH")
-//            add("USDT")
-//            add("EOS")
-//            add("HT")
-        }
-    }
-
-    private val pages by lazy {
-        mutableListOf<NBaseFragment>().apply {
-            add(BibSideContentFragment.newInstance("BCH"))
-            add(BibSideContentFragment.newInstance("BTC"))
-            add(BibSideContentFragment.newInstance("ETH"))
-
-        }
-    }
-
-    init {
-        button.setOnClickListener {
-            NLog.i("click....")
-        }
-        scrollIndicatorView.onTransitionListener = OnTransitionTextListener().setColor(getNColor(R.color.color_FF6D87A8), getNColor(R.color.color_FFA3AAB9))
-
-        val colorBar = ColorBar(contxt!!, getNColor(R.color.color_FF6D87A8), 3)
-        colorBar.setWidth(dp2px(41F))
-        scrollIndicatorView.setScrollBar(colorBar)
-
-        viewPager.offscreenPageLimit = 2
-        indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
-        val indicatorAdapter = OtcIndicatorAdapter(fragmentManager, contxt!!, tabs, pages)
-        indicatorViewPager.adapter = indicatorAdapter
-    }
-
 
     override fun initShowAnimation(): Animation {
         return AnimationUtils.loadAnimation(context, R.anim.in_lefttoright)

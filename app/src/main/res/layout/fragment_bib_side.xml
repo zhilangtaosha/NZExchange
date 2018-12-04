@@ -24,11 +24,6 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
 
-    <Button
-        android:id="@+id/btn_fbs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="button" />
 
     <com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
         android:id="@+id/siv_fbs"
@@ -40,6 +35,42 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/color_FF1F2532" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_transaction_fbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="币对"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_cost_fbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:text="价格"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_change_fbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:text="涨跌"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="12sp" />
+    </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_fbs"

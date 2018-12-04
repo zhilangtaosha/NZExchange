@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.View
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
@@ -23,6 +24,7 @@ import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
 import com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
 import com.nze.nzexchange.widget.indicator.indicator.slidebar.ColorBar
 import com.nze.nzexchange.widget.indicator.indicator.transition.OnTransitionTextListener
+import kotlinx.android.synthetic.main.fragment_bib_side.*
 import kotlinx.android.synthetic.main.fragment_bib_side.view.*
 import kotlinx.android.synthetic.main.fragment_otc_content.view.*
 
@@ -33,16 +35,10 @@ import kotlinx.android.synthetic.main.fragment_otc_content.view.*
  */
 class BibiSideFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<ListView> {
 
-
     private lateinit var viewPager: ViewPager
     private lateinit var scrollIndicatorView: ScrollIndicatorView
     private lateinit var indicatorViewPager: IndicatorViewPager
-    //    private val btn = findViewById(R.id.btn_pbs).apply {
-//        setOnClickListener {
-//            NLog.i("click.....")
-//        }
-//    }
-//    private val tv = findViewById(R.id.tv_pbs) as TextView
+
     private val tabs by lazy {
         mutableListOf<String>().apply {
             add("BCH")
@@ -84,6 +80,7 @@ class BibiSideFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
         indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
         val indicatorAdapter = OtcIndicatorAdapter(childFragmentManager, activity!!, tabs, pages)
         indicatorViewPager.adapter = indicatorAdapter
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -108,4 +105,6 @@ class BibiSideFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
     }
+
+    fun ttt() {}
 }

@@ -1,14 +1,339 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_bg"
     tools:context=".controller.bibi.BibiFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <Button
-        android:id="@+id/btn_bibi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="more" />
-</FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/color_title_bg">
+
+        <TextView
+            android:id="@+id/more_bibi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@mipmap/more_icon"
+            android:drawablePadding="7dp"
+            android:paddingLeft="15dp"
+            android:text="UCC"
+            android:textColor="@color/color_FF6D87A8"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/iv_kline_bibi"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/kline_icon" />
+    </RelativeLayout>
+
+    <com.nze.nzexchange.widget.ReboundScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="top"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="15dp">
+
+                    <TextView
+                        android:id="@+id/tv_buy_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selector_bibi_buy"
+                        android:gravity="center"
+                        android:text="买入"
+                        android:textColor="@color/selector_bibi_buy" />
+
+                    <TextView
+                        android:id="@+id/tv_sale_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/tv_buy_bibi"
+                        android:background="@drawable/selector_bibi_sale"
+                        android:gravity="center"
+                        android:text="卖出"
+                        android:textColor="@color/selector_bibi_sale" />
+
+                    <TextView
+                        android:id="@+id/tv_limit_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_buy_bibi"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:drawableRight="@mipmap/open_icon"
+                        android:drawablePadding="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="限价"
+                        android:textColor="@color/color_FF6D87A8"
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_give_bibi"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_below="@+id/tv_limit_bibi"
+                        android:background="@drawable/shape_radius_2532_bg2"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <EditText
+                            android:id="@+id/et_give_bibi"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="价格"
+                            android:maxLines="1"
+                            android:padding="10dp"
+                            android:textColor="@color/color_FF6D87A8"
+                            android:textColorHint="@color/color_FF8C90A1"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tv_give_unit_bibi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:text="USDT"
+                            android:textColor="@color/color_FF6D87A8"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_price_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/layout_give_bibi"
+                        android:layout_marginTop="5dp"
+                        android:text="≈0.425568CNY"
+                        android:textColor="@color/color_FF8C90A1"
+                        android:textSize="11sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_get_bibi"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_below="@+id/tv_price_bibi"
+                        android:layout_marginTop="18dp"
+                        android:background="@drawable/shape_radius_2532_bg2"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <EditText
+                            android:id="@+id/et_get_bibi"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="数量"
+                            android:maxLines="1"
+                            android:padding="10dp"
+                            android:textColor="@color/color_FF6D87A8"
+                            android:textColorHint="@color/color_FF8C90A1"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tv_get_unit_bibi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:text="USDT"
+                            android:textColor="@color/color_FF6D87A8"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_available_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/layout_get_bibi"
+                        android:layout_marginTop="5dp"
+                        android:text="可用0.5664654USDT"
+                        android:textColor="@color/color_FF8C90A1"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tv_total_transaction_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_available_bibi"
+                        android:layout_marginTop="10dp"
+                        android:text="交易额 --"
+                        android:textColor="@color/color_FF7F8592"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/btn_transaction_bibi"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_below="@+id/tv_total_transaction_bibi"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_btn_9d81_bg"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_handicap_head_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:text="盘口"
+                        android:textColor="@color/color_FF7F8592"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_cost_head_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="价格"
+                        android:textColor="@color/color_FF7F8592"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_amount_head_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:text="数量"
+                        android:textColor="@color/color_FF7F8592"
+                        android:textSize="12sp" />
+
+                    <com.nze.nzexchange.widget.LinearLayoutAsListView
+                        android:id="@+id/lv_handicap_sale_bibi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_handicap_head_bibi"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/tv_last_cost_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lv_handicap_sale_bibi"
+                        android:layout_marginTop="10dp"
+                        android:text="2315.36"
+                        android:textColor="@color/color_FF069F83"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_last_price_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_last_cost_bibi"
+                        android:layout_marginTop="5dp"
+                        android:text="≈0.425568CNY"
+                        android:textColor="@color/color_FF8C90A1"
+                        android:textSize="11sp" />
+
+                    <com.nze.nzexchange.widget.LinearLayoutAsListView
+                        android:id="@+id/lv_handicap_buy_bibi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_last_price_bibi"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lv_handicap_buy_bibi"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="10dp"
+                        android:drawableRight="@mipmap/open_icon"
+                        android:drawablePadding="5dp"
+                        android:text="深度2"
+                        android:paddingBottom="10dp"
+                        android:textColor="@color/color_FF6D87A8"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/color_FF1F2532" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_order_bibi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="当前委托"
+                    android:textColor="@color/color_FF6D87A8"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_order_history_bibi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@mipmap/order_manage2"
+                    android:paddingTop="15dp"
+                    android:paddingRight="15dp"
+                    android:text="历史委托"
+                    android:textColor="@color/color_FF6D87A8"
+                    android:textSize="13sp" />
+
+                <com.nze.nzexchange.widget.LinearLayoutAsListView
+                    android:id="@+id/lv_current_order_bibi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_order_bibi"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </com.nze.nzexchange.widget.ReboundScrollView>
+</LinearLayout>

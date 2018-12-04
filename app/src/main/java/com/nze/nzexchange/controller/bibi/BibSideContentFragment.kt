@@ -14,6 +14,7 @@ import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.tools.getNColor
@@ -32,6 +33,7 @@ class BibSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
 
     lateinit var ptrLv: PullToRefreshListView
     var tokenId: String? = null
+    val adapter: BibiSideContentAdapter by lazy { BibiSideContentAdapter(activity!!) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,12 +56,13 @@ class BibSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
 
     override fun initView(rootView: View) {
         ptrLv = rootView.plv_foc
-        ptrLv.setPullLoadEnabled(true)
+        ptrLv.setPullLoadEnabled(false)
         ptrLv.setOnRefreshListener(this)
         val listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
-
+        listView.adapter = adapter
+        adapter.group = TransactionPairBean.getList()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
