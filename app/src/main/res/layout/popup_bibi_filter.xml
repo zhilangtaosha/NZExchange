@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_black_tran"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_anim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_FF1F2532"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="16dp"
+            android:text="交易对"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_buy_currency_pbf"
+                android:layout_width="133dp"
+                android:layout_height="33dp"
+                android:background="@drawable/shape_radius_line678c_bg"
+                android:hint="币种"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/color_FF4D678C"
+                android:textColorHint="@color/color_FF7F8592"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="/"
+                android:textColor="@color/color_FF4D678C"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_unit_currency_pbf"
+                android:layout_width="133dp"
+                android:layout_height="33dp"
+                android:background="@drawable/shape_radius_line678c_bg"
+                android:drawableRight="@mipmap/open_icon2"
+                android:editable="false"
+                android:hint="选择计价单位"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/color_FF4D678C"
+                android:textColorHint="@color/color_FF7F8592"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/gv_pbf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:horizontalSpacing="5dp"
+            android:numColumns="4"
+            android:verticalSpacing="5dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="订单状态"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cb_buy_pbf"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_checkbox_bibi_filter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="买入"
+                android:textColor="@color/selector_bibi_filter"
+                android:textSize="12sp" />
+
+            <CheckBox
+                android:id="@+id/cb_sale_pbf"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_checkbox_bibi_filter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="卖出"
+                android:textColor="@color/selector_bibi_filter"
+                android:textSize="12sp" />
+
+            <CheckBox
+                android:id="@+id/cb_complete_pbf"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_checkbox_bibi_filter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="已成交"
+                android:textColor="@color/selector_bibi_filter"
+                android:textSize="12sp" />
+
+            <CheckBox
+                android:id="@+id/cb_cancel_pbf"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_checkbox_bibi_filter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="已撤销"
+                android:textColor="@color/selector_bibi_filter"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_reset_pbf"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_radius_line678c_bg2"
+                android:text="重置"
+                android:textColor="@color/color_FF4D678C"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btn_confirm_pbf"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/color_FF3F5F8C"
+                android:text="确定"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

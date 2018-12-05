@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/color_bg"
+    android:orientation="vertical"
     tools:context=".controller.bibi.BibiFragment">
 
 
@@ -184,10 +185,59 @@
                         android:textSize="11sp" />
 
                     <TextView
-                        android:id="@+id/tv_total_transaction_bibi"
+                        android:id="@+id/tv_seekbar_value_bibi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_available_bibi"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="15dp"
+                        android:text="0%"
+                        android:textColor="@color/color_FF6D87A8"
+                        android:textSize="11sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_seekbar_bibi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_seekbar_value_bibi"
+                        android:layout_marginLeft="-13dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="-13dp"
+                        android:orientation="vertical">
+
+                        <com.warkiz.widget.IndicatorSeekBar
+                            android:id="@+id/isb_buy_bibi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:isb_seek_smoothly="true"
+                            app:isb_show_indicator="none"
+                            app:isb_thumb_adjust_auto="true"
+                            app:isb_thumb_drawable="@mipmap/seekbar_thumb_green"
+                            app:isb_tick_marks_drawable="@drawable/selector_tick_marks_green"
+                            app:isb_ticks_count="5"
+                            app:isb_track_background_color="#FF1F2532"
+                            app:isb_track_progress_color="#FF0DA187" />
+
+                        <com.warkiz.widget.IndicatorSeekBar
+                            android:id="@+id/isb_sale_bibi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            app:isb_seek_smoothly="true"
+                            app:isb_show_indicator="none"
+                            app:isb_thumb_adjust_auto="true"
+                            app:isb_thumb_drawable="@mipmap/seekbar_thumb_red"
+                            app:isb_tick_marks_drawable="@drawable/selector_tick_marks_red"
+                            app:isb_ticks_count="5"
+                            app:isb_track_background_color="#FF1F2532"
+                            app:isb_track_progress_color="#FFFF4A5F" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_total_transaction_bibi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/layout_seekbar_bibi"
                         android:layout_marginTop="10dp"
                         android:text="交易额 --"
                         android:textColor="@color/color_FF7F8592"
@@ -278,6 +328,7 @@
                         android:orientation="vertical" />
 
                     <TextView
+                        android:id="@+id/tv_depth_bibi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/lv_handicap_buy_bibi"
@@ -285,8 +336,8 @@
                         android:layout_marginTop="10dp"
                         android:drawableRight="@mipmap/open_icon"
                         android:drawablePadding="5dp"
-                        android:text="深度2"
                         android:paddingBottom="10dp"
+                        android:text="深度2"
                         android:textColor="@color/color_FF6D87A8"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -312,14 +363,14 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/tv_order_history_bibi"
+                    android:id="@+id/tv_all_order_bibi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@mipmap/order_manage2"
                     android:paddingTop="15dp"
                     android:paddingRight="15dp"
-                    android:text="历史委托"
+                    android:text="全部委托"
                     android:textColor="@color/color_FF6D87A8"
                     android:textSize="13sp" />
 

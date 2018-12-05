@@ -25,7 +25,8 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
     private var mShowLeftIcon: Boolean = false
     private var mLeftText: String? = null
     private var mRightText: String? = null
-    private var mLeftIconId: Int = 0
+    private var mLeftIconId: Int = -1
+    private var mRightIconId: Int = -1
     private var mBackgroudColor: Int = -1
 
     init {
@@ -40,8 +41,9 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
             mShowLeftIcon = ta.getBoolean(R.styleable.CommonTopBar_tb_show_left_icon, true)
             mLeftText = ta.getString(R.styleable.CommonTopBar_tb_left_text)
             mLeftIconId = ta.getResourceId(R.styleable.CommonTopBar_tb_left_icon, R.mipmap.left_arrow)
+            mRightIconId = ta.getResourceId(R.styleable.CommonTopBar_tb_right_icon, -1)
             mRightText = ta.getString(R.styleable.CommonTopBar_tb_right_text)
-            mBackgroudColor = ta.getColor(R.styleable.CommonTopBar_tb_backgroud, ContextCompat.getColor(context,R.color.color_title_bg))
+            mBackgroudColor = ta.getColor(R.styleable.CommonTopBar_tb_backgroud, ContextCompat.getColor(context, R.color.color_title_bg))
         }
         ta.recycle()
     }
@@ -62,6 +64,11 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
             mLeftTv.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
         } else {
             mLeftTv.setCompoundDrawablesWithIntrinsicBounds(leftIcon, null, null, null)
+        }
+
+        if (mRightIconId>0){
+            val rightIcon = ContextCompat.getDrawable(context, mRightIconId)
+            mRightTv.setCompoundDrawablesWithIntrinsicBounds(null, null, rightIcon, null)
         }
 
         if (!TextUtils.isEmpty(mLeftText))

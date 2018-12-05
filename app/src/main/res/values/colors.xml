@@ -8,6 +8,8 @@
     <color name="color_bg">#FF151927</color>
     <color name="color_title_bg">#FF1F2532</color>
     <color name="color_line">#FF1F2532</color>
+    <color name="color_black_tran">#55000000</color>
+
 
 
     <color name="color_FFFF3746">#FFFF3746</color>
@@ -35,6 +37,7 @@
     <color name="color_FF8C90A1">#FF8C90A1</color>
     <color name="color_FF09937a">#FF09937a</color>
     <color name="color_FFf5384e">#FFf5384e</color>
+    <color name="color_FF151E2F">#FF151E2F</color>
 
 
 </resources>

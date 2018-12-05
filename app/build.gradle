@@ -37,8 +37,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':NzeFramework')
+    //轮播图
     implementation 'com.zhuang.zbanner:zbanner:1.2.1'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
-
+    //加载进度条
     implementation 'com.kaopiz:kprogresshud:1.2.0'
+    //seekbar用于币币交易
+    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.0'
 }

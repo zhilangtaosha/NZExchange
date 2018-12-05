@@ -1,9 +1,11 @@
 package com.nze.nzexchange.extend
 
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.text.Html
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 
@@ -29,4 +31,13 @@ fun TextView.setTextFromHtml(source: String) {
 
 
 fun EditText.getContent(): String = text.toString()
+
+fun Button.setBgByDrawable(drawable: Drawable) {
+    if (Build.VERSION.SDK_INT > 16) {
+        background = drawable
+    } else {
+        setBackgroundDrawable(drawable)
+    }
+}
+
 
