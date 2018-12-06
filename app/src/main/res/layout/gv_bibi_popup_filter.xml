@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="28dp"
-    android:background="@drawable/selector_checkbox_bibi_filter"
-    android:button="@null"
-    android:gravity="center"
-    android:textSize="12sp"
-    android:textColor="@color/selector_bibi_filter" />
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_gbpf"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_checkbox_bibi_filter"
+        android:button="@null"
+        android:gravity="center"
+        android:textColor="@color/selector_bibi_filter"
+        android:textSize="12sp" />
+</LinearLayout>

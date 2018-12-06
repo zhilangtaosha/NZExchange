@@ -9,19 +9,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.HandicapBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.extend.setBgByDrawable
 import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.warkiz.widget.IndicatorSeekBar
+import com.warkiz.widget.OnSeekChangeListener
+import com.warkiz.widget.SeekParams
 import kotlinx.android.synthetic.main.fragment_bibi.*
 import kotlinx.android.synthetic.main.fragment_bibi.view.*
 
-class BibiFragment : NBaseFragment(), View.OnClickListener {
+class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnListPopupItemClick, OnSeekChangeListener {
 
 
     lateinit var rootView: View
@@ -37,8 +41,16 @@ class BibiFragment : NBaseFragment(), View.OnClickListener {
     val getUnitTv: TextView by lazy { rootView.tv_get_unit_bibi }
     val availableTv: TextView by lazy { rootView.tv_available_bibi }
     val seekbarValueTv: TextView by lazy { rootView.tv_seekbar_value_bibi }
-    val buyIsb: IndicatorSeekBar by lazy { rootView.isb_buy_bibi }
-    val saleIsb: IndicatorSeekBar by lazy { rootView.isb_sale_bibi }
+    val buyIsb: IndicatorSeekBar by lazy {
+        rootView.isb_buy_bibi.apply {
+            onSeekChangeListener = this@BibiFragment
+        }
+    }
+    val saleIsb: IndicatorSeekBar by lazy {
+        rootView.isb_sale_bibi.apply {
+            onSeekChangeListener = this@BibiFragment
+        }
+    }
     val totalTransactionTv: TextView by lazy { rootView.tv_total_transaction_bibi }
     val transactionBtn: Button by lazy { rootView.btn_transaction_bibi }
     val handicapSaleLv: LinearLayoutAsListView by lazy { rootView.lv_handicap_sale_bibi }
@@ -48,8 +60,20 @@ class BibiFragment : NBaseFragment(), View.OnClickListener {
     val depthTv: TextView by lazy { rootView.tv_depth_bibi }
     val allOrderTv: TextView by lazy { rootView.tv_all_order_bibi }
     val currentOrderLv: LinearLayoutAsListView by lazy { rootView.lv_current_order_bibi }
-    val handicapSaleAdapter by lazy { HandicapAdapter(activity!!, HandicapAdapter.SALE) }
-    val handicapBuyAdapter by lazy { HandicapAdapter(activity!!, HandicapAdapter.BUY) }
+    val handicapSaleAdapter by lazy {
+        HandicapAdapter(activity!!, HandicapAdapter.SALE).apply {
+            onHandicapItemClick = {
+                giveEt.setText(it.cost.toString())
+            }
+        }
+    }
+    val handicapBuyAdapter by lazy {
+        HandicapAdapter(activity!!, HandicapAdapter.BUY).apply {
+            onHandicapItemClick = {
+                giveEt.setText(it.cost.toString())
+            }
+        }
+    }
     val currentOrderAdapter by lazy { BibiCurentOrderAdapter(activity!!) }
 
     val TYPE_BUY = 0
@@ -58,6 +82,47 @@ class BibiFragment : NBaseFragment(), View.OnClickListener {
 
     private val sidePopup: BibiSidePopup by lazy { BibiSidePopup(mBaseActivity, fragmentManager!!) }
 
+    val POPUP_LIMIT = 0
+    val POPUP_DEPTH = 1
+    var currentPopupType = POPUP_LIMIT
+    private val itemLimit: MutableList<String> by lazy {
+        mutableListOf<String>().apply {
+            add("限价")
+            add("市价")
+        }
+    }
+    private val limitPopup: CommonListPopup by lazy {
+        CommonListPopup(activity, POPUP_LIMIT).apply {
+            onItemClick = this@BibiFragment
+            setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
+                limitTv.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(context!!, R.mipmap.close_icon2), null)
+                true
+            }
+            onDismissListener = object : BasePopupWindow.OnDismissListener() {
+                override fun onDismiss() {
+                    limitTv.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(context!!, R.mipmap.open_icon2), null)
+                }
+            }
+            addAllItem(itemLimit)
+        }
+    }
+
+    private val itemDepth: MutableList<String> = mutableListOf<String>("1", "2", "3", "4", "5", "6")
+    private val depthPopup: CommonListPopup by lazy {
+        CommonListPopup(activity, POPUP_DEPTH).apply {
+            onItemClick = this@BibiFragment
+            setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
+                depthTv.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(context!!, R.mipmap.close_icon2), null)
+                true
+            }
+            onDismissListener = object : BasePopupWindow.OnDismissListener() {
+                override fun onDismiss() {
+                    depthTv.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(context!!, R.mipmap.open_icon2), null)
+                }
+            }
+            addAllItem(itemDepth)
+        }
+    }
 
     companion object {
         @JvmStatic
@@ -72,6 +137,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener {
         buyTv.setOnClickListener(this)
         saleTv.setOnClickListener(this)
         allOrderTv.setOnClickListener(this)
+        limitTv.setOnClickListener(this)
+        depthTv.setOnClickListener(this)
+
+
 
         handicapSaleAdapter.group = HandicapBean.getList()
         handicapBuyAdapter.group = HandicapBean.getList()
@@ -94,6 +163,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener {
             saleIsb.visibility = View.GONE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_9d81_bg)!!)
             transactionBtn.text = "买入BTC"
+            seekbarValueTv.text = "${buyIsb.progress}%"
         } else {
             buyTv.isSelected = false
             saleTv.isSelected = true
@@ -102,6 +172,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener {
             saleIsb.visibility = View.VISIBLE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_4a5f_bg)!!)
             transactionBtn.text = "买出BTC"
+            seekbarValueTv.text = "${saleIsb.progress}%"
         }
     }
 
@@ -137,6 +208,33 @@ class BibiFragment : NBaseFragment(), View.OnClickListener {
             R.id.tv_all_order_bibi -> {
                 skipActivity(BibiAllOrderActivity::class.java)
             }
+            R.id.tv_limit_bibi -> {
+                currentPopupType = POPUP_LIMIT
+                limitPopup.showPopupWindow()
+            }
+            R.id.tv_depth_bibi -> {
+                currentPopupType = POPUP_DEPTH
+                depthPopup.showPopupWindow()
+            }
         }
+    }
+
+    override fun clickItem(position: Int, item: String) {
+        if (currentPopupType == POPUP_LIMIT) {
+            limitTv.text = item
+        } else {
+            depthTv.text = "深度$item"
+        }
+    }
+
+    //----------------------seekbar监听-------------------------
+    override fun onSeeking(seekParams: SeekParams?) {
+        seekbarValueTv.text = "${seekParams?.progress}%"
+    }
+
+    override fun onStartTrackingTouch(seekBar: IndicatorSeekBar?) {
+    }
+
+    override fun onStopTrackingTouch(seekBar: IndicatorSeekBar?) {
     }
 }

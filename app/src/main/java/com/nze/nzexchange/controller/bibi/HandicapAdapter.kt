@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.lv_bibi_handicap.view.*
  * @创建时间：2018/12/4
  */
 class HandicapAdapter(mContext: Context, var type: Int) : NBaseAda<HandicapBean, HandicapAdapter.ViewHolder>(mContext) {
+    var onHandicapItemClick: ((handicapBean: HandicapBean) -> Unit)? = null
+
     override fun setLayout(): Int = R.layout.lv_bibi_handicap
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
@@ -27,9 +29,13 @@ class HandicapAdapter(mContext: Context, var type: Int) : NBaseAda<HandicapBean,
         } else {
             vh.costTv.setTxtColor(R.color.color_FF019D81)
         }
+
+        vh.view.setOnClickListener {
+            onHandicapItemClick?.invoke(item)
+        }
     }
 
-    class ViewHolder(val view: View) {
+    class ViewHolder(var view: View) {
         val handicapTv: TextView = view.tv_handicap_lbh
         val costTv: TextView = view.tv_cost_lbh
         val amountTv: TextView = view.tv_amount_lbh

@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.bibi
 
 import android.app.Activity
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -12,6 +13,8 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.BibiFilterBean
 import com.nze.nzexchange.controller.base.BaseAda
 import com.nze.nzexchange.tools.dp2px
+import kotlinx.android.synthetic.main.gv_bibi_popup_filter.view.*
+import kotlinx.android.synthetic.main.notification_template_lines_media.view.*
 
 /**
  * @author: zwy
@@ -21,12 +24,13 @@ import com.nze.nzexchange.tools.dp2px
  */
 class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
     val buyCurrencyEt: EditText = findViewById(R.id.et_buy_currency_pbf) as EditText
-    val unitCurrencyEt: EditText = findViewById(R.id.et_unit_currency_pbf) as EditText
+    val unitCurrencyTv: TextView = findViewById(R.id.tv_unit_currency_pbf) as TextView
     val unitGv: GridView = findViewById(R.id.gv_pbf) as GridView
     val buyCb: CheckBox = findViewById(R.id.cb_buy_pbf) as CheckBox
     val saleCb: CheckBox = findViewById(R.id.cb_sale_pbf) as CheckBox
     val completeCb: CheckBox = findViewById(R.id.cb_complete_pbf) as CheckBox
     val cancelCb: CheckBox = findViewById(R.id.cb_cancel_pbf) as CheckBox
+    val cbs = listOf<CheckBox>(buyCb, saleCb, completeCb, cancelCb)
     val resetBtn: Button = findViewById(R.id.btn_reset_pbf) as Button
     val confirmBtn: Button = findViewById(R.id.btn_confirm_pbf) as Button
 
@@ -34,23 +38,44 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
 
 
     init {
-        unitCurrencyEt.setOnClickListener {
+        unitCurrencyTv.setOnClickListener {
             if (unitGv.visibility == View.GONE) {
                 unitGv.visibility = View.VISIBLE
+                unitCurrencyTv.setCompoundDrawablesWithIntrinsicBounds(null,null,ContextCompat.getDrawable(context!!,R.mipmap.close_icon2),null)
             } else {
                 unitGv.visibility = View.GONE
+                unitCurrencyTv.setCompoundDrawablesWithIntrinsicBounds(null,null,ContextCompat.getDrawable(context!!,R.mipmap.open_icon2),null)
             }
+            buyCurrencyEt.clearFocus()
         }
 
         unitGv.adapter = unitAdapter
         unitAdapter.group = BibiFilterBean.getList()
         unitGv.setOnItemClickListener { parent, view, position, id ->
-            val list = unitAdapter.group.mapIndexed { index, bibiFilterBean ->
+            unitAdapter.group = unitAdapter.group.mapIndexed { index, bibiFilterBean ->
                 bibiFilterBean.isChoice = index == position
                 bibiFilterBean
-            }
-            unitAdapter.group = list.toMutableList()
+            }.toMutableList()
+            unitCurrencyTv.text = unitAdapter.getItem(position)?.currency
+            unitGv.visibility = View.GONE
         }
+
+        resetBtn.setOnClickListener { reset() }
+        confirmBtn.setOnClickListener { }
+    }
+
+    fun reset() {
+        buyCurrencyEt.text.clear()
+        unitCurrencyTv.text = ""
+        unitAdapter.group = unitAdapter.group.map {
+            it.isChoice = false
+            it
+        }.toMutableList()
+        cbs.forEach { it.isChecked = false }
+
+    }
+
+    fun confirm() {
 
     }
 
@@ -79,11 +104,13 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val cView = mInflater.inflate(R.layout.gv_bibi_popup_filter, parent, false)
             val filterBean = getItem(position)
-            cView as TextView
+            val tv = cView.tv_gbpf
             filterBean?.run {
-                cView.text = currency
-                cView.isSelected = isChoice
+                tv.text = currency
+                tv.isSelected = isChoice
             }
+
+
             return cView
         }
 

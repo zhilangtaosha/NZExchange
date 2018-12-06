@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_black_tran">
+
+
+    <LinearLayout
+        android:id="@+id/layout_anim_popup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/lv_popup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/color_line"
+            android:dividerHeight="1px" />
+
+        <Button
+            android:id="@+id/btn_cancel_popup"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/selector_common_lv"
+            android:text="取消"
+            android:textColor="@color/color_selector__8592_678c"
+            android:textSize="15sp" />
+    </LinearLayout>
+</RelativeLayout>
