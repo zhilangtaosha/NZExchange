@@ -3,6 +3,11 @@ package com.nze.nzexchange.controller.base
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
+import android.os.Handler
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.nze.nzeframework.ui.BaseFragment
@@ -15,6 +20,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 abstract class NBaseFragment : BaseFragment() {
+    protected var isViewCreated: Boolean = false
+    protected var isFirstVisible: Boolean = true
+    protected var isFragmentVisible: Boolean = false
+
     private var listener: OnFragmentInteractionListener? = null
     val mProgressDialog: KProgressHUD by lazy {
         KProgressHUD.create(activity)
@@ -79,4 +88,43 @@ abstract class NBaseFragment : BaseFragment() {
     open fun getDataFromNet() {
 
     }
+
+    //--------------懒加载---------------------
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        isFragmentVisible = isVisibleToUser
+
+        //当 View 创建完成切 用户可见的时候请求 且仅当是第一次对用户可见的时候请求自动数据
+        if (isVisibleToUser && isViewCreated && isFirstVisible) {
+            onFirstRequest()
+            isFirstVisible = false
+        }
+        // 由于每次可见都需要刷新所以我们只需要判断  Fragment 展示在用户面面前了，view 初始化完成了 然后即可以请求数据了
+        if (isVisibleToUser && isViewCreated) {
+            onVisibleRequest()
+        }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        isViewCreated = true
+
+        if (isFragmentVisible && isFirstVisible) {
+            //Adapter 默认展示的那个 Fragment ，或者隔 tab 选中的时候  requestData 推迟到 onCreateView 后
+            onFirstRequest()
+            isFirstVisible = false
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    // 只有在 Fragment 第一次对用户可见的时候才去请求
+    open fun onFirstRequest() {
+
+    }
+
+    //每次 Fragment 对用户可见都会去请求
+    open fun onVisibleRequest() {
+
+    }
+
+
 }

@@ -15,6 +15,8 @@ import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.TransactionPairsBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
@@ -27,6 +29,7 @@ import com.nze.nzexchange.widget.indicator.indicator.transition.OnTransitionText
 import kotlinx.android.synthetic.main.fragment_bib_side.*
 import kotlinx.android.synthetic.main.fragment_bib_side.view.*
 import kotlinx.android.synthetic.main.fragment_otc_content.view.*
+import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -38,6 +41,7 @@ class BibiSideFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
     private lateinit var viewPager: ViewPager
     private lateinit var scrollIndicatorView: ScrollIndicatorView
     private lateinit var indicatorViewPager: IndicatorViewPager
+    private val mainCurrencyList: MutableList<TransactionPairsBean> = mutableListOf()
 
     private val tabs by lazy {
         mutableListOf<String>().apply {
@@ -80,13 +84,21 @@ class BibiSideFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
         indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
         val indicatorAdapter = OtcIndicatorAdapter(childFragmentManager, activity!!, tabs, pages)
         indicatorViewPager.adapter = indicatorAdapter
-
+        indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
+            //            pages[currentItem].getDataFromNet()
+        }
+        NLog.i("BibiSideFragment>>>>>")
+        onFirstRequest()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
+        if (eventCenter.eventCode == EventCode.CODE_GET_MAIN_CURRENCY) {
+            val list = eventCenter.data as MutableList<TransactionPairsBean>
+            onFirstRequest()
+        }
     }
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -106,5 +118,14 @@ class BibiSideFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
     }
 
-    fun ttt() {}
+    override fun onFirstRequest() {
+        TransactionPairsBean.getTransactionPairs("")
+                .compose(netTf())
+                .subscribe({
+                    if (it.success) {
+                        mainCurrencyList.addAll(it.result)
+                    }
+                }, onError)
+
+    }
 }

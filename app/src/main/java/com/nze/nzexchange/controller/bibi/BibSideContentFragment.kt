@@ -10,11 +10,13 @@ import android.view.ViewGroup
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairBean
+import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.tools.getNColor
@@ -28,14 +30,15 @@ import kotlinx.android.synthetic.main.fragment_otc_content.view.*
 class BibSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<ListView> {
 
     lateinit var ptrLv: PullToRefreshListView
-    var tokenId: String? = null
+    var mainCurrency: String? = null
     val adapter: BibiSideContentAdapter by lazy { BibiSideContentAdapter(activity!!) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            tokenId = it.getString(IntentConstant.PARAM_TOKENID)
+            mainCurrency = it.getString(IntentConstant.PARAM_CURRENCY)
         }
+
     }
 
     companion object {
@@ -43,7 +46,7 @@ class BibSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
         fun newInstance(tokenId: String) =
                 BibSideContentFragment().apply {
                     arguments = Bundle().apply {
-                        putString(IntentConstant.PARAM_TOKENID, tokenId)
+                        putString(IntentConstant.PARAM_CURRENCY, tokenId)
                     }
                 }
     }
@@ -58,7 +61,6 @@ class BibSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
         listView.adapter = adapter
-        adapter.group = TransactionPairBean.getList()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -78,11 +80,31 @@ class BibSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
 
     override fun getContainerTargetView(): View? = null
 
+
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        getDataFromNet()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
     }
 
+    override fun onFirstRequest() {
+        getDataFromNet()
+    }
 
+    override fun getDataFromNet() {
+        NLog.i("mainCurrency>>>$mainCurrency")
+        if (mainCurrency != null) {
+            TransactionPairsBean.getTransactionPairs(mainCurrency!!)
+                    .compose(netTf())
+                    .subscribe({
+                        if (it.success) {
+                            adapter.group = it.result
+                            ptrLv.onPullDownRefreshComplete()
+                        }
+                    }, {
+                        NLog.i("")
+                    })
+        }
+    }
 }

@@ -13,7 +13,7 @@ import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
 
-public class OtcIndicatorAdapter(fragmentManager: FragmentManager, val context: Context, var tabs: List<String>, var pages: List<NBaseFragment>) : IndicatorViewPager.IndicatorFragmentPagerAdapter(fragmentManager) {
+open public class OtcIndicatorAdapter(fragmentManager: FragmentManager, val context: Context, var tabs: List<String>, var pages: List<NBaseFragment>) : IndicatorViewPager.IndicatorFragmentPagerAdapter(fragmentManager) {
     val inflate: LayoutInflater = LayoutInflater.from(context)
     override fun getCount(): Int = tabs.size
 

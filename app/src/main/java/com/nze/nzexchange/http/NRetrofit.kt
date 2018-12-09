@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class NRetrofit private constructor() {
     //http://zhongyingying.qicp.io:18080
-    val LIU_URL = "http://192.168.0.108:18080/zyy-otc/"
+    val LIU_URL = "http://192.168.1.100:18080/zyy-otc/"
     val SERVER_URL = "http://zhongyingying.qicp.io:18080/zyy-otc/"
 
     var url: String = LIU_URL
@@ -40,6 +40,8 @@ class NRetrofit private constructor() {
     fun buyService(): BuyService = create(BuyService::class.java)
 
     fun sellService(): SellService = create(SellService::class.java)
+
+    fun bibiService(): BibiService = create(BibiService::class.java)
 
     companion object {
         val instance: NRetrofit = NRetrofit()

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairBean
+import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.controller.base.NBaseAda
 import kotlinx.android.synthetic.main.lv_bibi_side_content.view.*
 
@@ -13,12 +14,12 @@ import kotlinx.android.synthetic.main.lv_bibi_side_content.view.*
  * @类 说 明:
  * @创建时间：2018/12/4
  */
-class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairBean, BibiSideContentAdapter.ViewHolder>(mContext) {
+class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, BibiSideContentAdapter.ViewHolder>(mContext) {
     override fun setLayout(): Int = R.layout.lv_bibi_side_content
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: TransactionPairBean) {
+    override fun initView(vh: ViewHolder, item: TransactionPairsBean) {
 
     }
 

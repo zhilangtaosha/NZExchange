@@ -9,10 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.HandicapBean
+import com.nze.nzexchange.bean.TransactionPairsBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.CommonListPopup
@@ -24,6 +27,7 @@ import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
 import kotlinx.android.synthetic.main.fragment_bibi.*
 import kotlinx.android.synthetic.main.fragment_bibi.view.*
+import org.greenrobot.eventbus.EventBus
 
 class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnListPopupItemClick, OnSeekChangeListener {
 
@@ -80,7 +84,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val TYPE_SALE = 1
     var currentType = TYPE_BUY
 
-    private val sidePopup: BibiSidePopup by lazy { BibiSidePopup(mBaseActivity, fragmentManager!!) }
+    private val sidePopup: BibiSidePopup by lazy { BibiSidePopup(mBaseActivity, childFragmentManager!!) }
+
 
     val POPUP_LIMIT = 0
     val POPUP_DEPTH = 1
@@ -126,7 +131,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     companion object {
         @JvmStatic
-        fun newInstance() = BibiFragment()
+        fun newInstance() = BibiFragment().apply {
+            onFirstRequest()
+        }
     }
 
     override fun getRootView(): Int = R.layout.fragment_bibi
@@ -195,6 +202,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.more_bibi -> {
+//                if (mainCurrencyList.size > 0)
                 sidePopup.showPopupWindow()
             }
             R.id.tv_buy_bibi -> {
@@ -236,5 +244,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     override fun onStopTrackingTouch(seekBar: IndicatorSeekBar?) {
+    }
+
+    override fun onFirstRequest() {
+
+
     }
 }

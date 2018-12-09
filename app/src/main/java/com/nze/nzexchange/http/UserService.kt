@@ -20,4 +20,8 @@ interface UserService {
                  @Field("userPassworUcode") userPassworUcode: String,
                  @Field("checkCode") checkCode: String
     )
+
+
+
+
 }
