@@ -14,7 +14,7 @@ class SetPayMethodAdapter(mContext: Context) : NBaseAda<PayMethodBean, SetPayMet
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: PayMethodBean) {
+    override fun initView(vh: ViewHolder, item: PayMethodBean,position: Int) {
         vh.iconIv.setImageResource(item.iconId)
         vh.nameTv.text = item.method
         vh.statusTv.text = item.status

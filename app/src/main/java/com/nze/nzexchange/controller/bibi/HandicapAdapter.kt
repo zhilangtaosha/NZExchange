@@ -22,7 +22,7 @@ class HandicapAdapter(mContext: Context, var type: Int) : NBaseAda<HandicapBean,
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: HandicapBean) {
+    override fun initView(vh: ViewHolder, item: HandicapBean,position: Int) {
 
         if (type == SALE) {
             vh.costTv.setTxtColor(R.color.color_FFFF4A5F)

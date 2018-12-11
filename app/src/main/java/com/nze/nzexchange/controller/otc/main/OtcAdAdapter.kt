@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.lv_ad_otc.view.*
 
 class OtcAdAdapter(mContext: Context) : NBaseAda<FindSellBean, OtcAdAdapter.ViewHolder>(mContext) {
     var onClick: ((String, String) -> Unit)? = null
-    override fun initView(vh: ViewHolder, item: FindSellBean) {
+    override fun initView(vh: ViewHolder, item: FindSellBean,position: Int) {
         item.run {
             val tip = if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) "买入" else "卖出"
             vh.nameTv.text = "${tip}${CurrencyTool.getCurrency(tokenId)}"

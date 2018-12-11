@@ -19,7 +19,7 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<HandicapBean, BibiCur
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: HandicapBean) {
+    override fun initView(vh: ViewHolder, item: HandicapBean,position: Int) {
 
 
     }

@@ -85,7 +85,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     var currentType = TYPE_BUY
 
     private val sidePopup: BibiSidePopup by lazy { BibiSidePopup(mBaseActivity, childFragmentManager!!) }
-
+    private var currentTransactionPair: TransactionPairsBean? = null
 
     val POPUP_LIMIT = 0
     val POPUP_DEPTH = 1
@@ -184,10 +184,15 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
+        if (eventCenter.eventCode == EventCode.CODE_SELECT_TRANSACTIONPAIR) {
+            sidePopup.dismiss()
+            currentTransactionPair = eventCenter.data as TransactionPairsBean
+            refreshLayout()
+        }
     }
 
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -248,6 +253,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun onFirstRequest() {
 
+
+    }
+
+    private fun refreshLayout(){
+        moreTv.text = currentTransactionPair?.transactionPair
 
     }
 }

@@ -3,12 +3,22 @@ package com.nze.nzexchange.controller.login
 import android.app.Activity
 import android.content.Intent
 import android.view.View
+import android.widget.CheckBox
+import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.RegisterBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.setTextFromHtml
+import com.nze.nzexchange.tools.MD5Tool
+import com.nze.nzexchange.validation.EmptyValidation
+import com.nze.nzexchange.widget.CommonButton
+import com.nze.nzexchange.widget.VerifyButton
+import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import kotlinx.android.synthetic.main.activity_email_register.*
 import kotlinx.android.synthetic.main.activity_phone_register.*
 
@@ -16,16 +26,35 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     val REQUEST_CODE = 0x112
     var countryName = "中国"
     var countryNumber = "+86"
-
+    val countryTv: TextView by lazy { tv_country_apr }
+    val countryCodeTv: TextView by lazy { tv_country_code_apr }
+    val phoneEt: ClearableEditText by lazy { et_phone_apr }
+    val verifyEt: ClearableEditText by lazy { et_verify_apr }
+    val verifyButton: VerifyButton by lazy { tv_verify_apr }
+    val pwdEt: ClearableEditText by lazy { et_pwd_apr }
+    val pwdCb: CheckBox by lazy { cb_pwd_apr }
+    val agreeCb: CheckBox by lazy { cb_agree_apr }
+    val registerBtn: CommonButton by lazy { btn_register_apr }
 
     override fun getRootView(): Int = R.layout.activity_phone_register
 
     override fun initView() {
-
+        ctb_apr.setRightClick {
+            this@PhoneRegisterActivity.finish()
+        }
         tv_to_login_apr.setTextFromHtml("已有账号？<font color=\"#6D87A8\">登录</font>")
         tv_go_email_apr.setOnClickListener(this)
         tv_to_login_apr.setOnClickListener(this)
-        tv_country_apr.setOnClickListener(this)
+        countryTv.setOnClickListener(this)
+
+        registerBtn.initValidator()
+                .add(phoneEt, EmptyValidation())
+                .add(verifyEt, EmptyValidation())
+                .add(pwdEt, EmptyValidation())
+                .executeValidator()
+
+        verifyButton.setVerifyClick(this)
+        registerBtn.setOnCommonClick(this)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -61,6 +90,24 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
             R.id.tv_country_apr -> {
                 startActivityForResult(Intent(this@PhoneRegisterActivity, SelectCountryActivity::class.java), REQUEST_CODE)
             }
+            R.id.tv_verify_apr -> {
+
+            }
+            R.id.btn_register_apr->{
+                if (registerBtn.validate()){
+                    val pwdStr = MD5Tool.getMd5_32(pwdEt.getContent())
+                    RegisterBean.registerNet(phoneEt.getContent(), null, null, pwdStr, verifyEt.getContent(), null)
+                            .compose(netTfWithDialog())
+                            .subscribe({
+                                NLog.i(it.message)
+                                if (it.success)
+                                    showToast("注册成功")
+                            }, {
+                                showToast("注册失败")
+                                NLog.i(it.localizedMessage)
+                            })
+                }
+            }
         }
     }
 
@@ -70,8 +117,8 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                 countryName = getStringExtra(IntentConstant.PARAM_COUNTRY_NAME)
                 countryNumber = getStringExtra(IntentConstant.PARAM_COUNTRY_NUMBER)
             }
-            tv_country_apr.text = countryName
-            tv_country_code_apr.text = countryNumber
+            countryTv.text = countryName
+            countryCodeTv.text = countryNumber
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

@@ -37,7 +37,7 @@ class CRetrofit private constructor() {
 
     fun <T> create(service: Class<T>): T = retrofit.create(service)
 
-    fun buyService(): BuyService = create(BuyService::class.java)
+    fun userService(): UserService = create(UserService::class.java)
 
 
     companion object {

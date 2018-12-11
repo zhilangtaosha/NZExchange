@@ -12,5 +12,7 @@ class EventCode {
         const val CODE_CONFIRM_PAY = 0x002
         const val CODE_REFRESH_ASSET = 0x003
         const val CODE_GET_MAIN_CURRENCY = 0x004
+        const val CODE_SELECT_TRANSACTIONPAIR = 0x005
+        const val CODE_SELF_SELECT = 0x006//添加删除自选
     }
 }

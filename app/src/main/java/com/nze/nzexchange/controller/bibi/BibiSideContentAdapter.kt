@@ -2,10 +2,18 @@ package com.nze.nzexchange.controller.bibi
 
 import android.content.Context
 import android.view.View
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxCompoundButton
+import com.nze.nzeframework.tool.NLog
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.getCheckListener
+import com.nze.nzexchange.extend.setTextFromHtml
+import com.nze.nzexchange.extend.setTxtColor
 import kotlinx.android.synthetic.main.lv_bibi_side_content.view.*
 
 /**
@@ -19,10 +27,40 @@ class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean,
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: TransactionPairsBean) {
+    override fun initView(vh: ViewHolder, item: TransactionPairsBean, position: Int) {
+        vh.transactionTv.text = item.transactionPair
+        vh.costTv.text = item.exchangeRate.formatForCurrency()
+
+        vh.choiceCb.isSelected = item.optional == 1
+        var gainStr = "0%"
+        if (item.gain >= 0) {
+            vh.changeTv.setTxtColor(R.color.color_FF019D81)
+            gainStr = "+${item.gain}<font color=\"#C1C0C7\" size=8>%</font>"
+        } else {
+            vh.changeTv.setTxtColor(R.color.color_FFFF4A5F)
+            gainStr = "${item.gain}<font color=\"#C1C0C7\" size=8>%</font>"
+        }
+        vh.changeTv.setTextFromHtml(gainStr)
+
+        vh.view.setOnClickListener {
+            onItemClick?.itemClick(item)
+        }
+        vh.choiceCb.tag = position
+        vh.choiceCb.setOnClickListener {
+            val p: Int = it.tag as Int
+            onItemClick?.selftSelect(item , position)
+
+        }
+
 
     }
 
+    var onItemClick: OnItemClickListener? = null
+
+    interface OnItemClickListener {
+        fun itemClick(item: TransactionPairsBean)
+        fun selftSelect(item: TransactionPairsBean,  position: Int)
+    }
 
     class ViewHolder(var view: View) {
         val choiceCb = view.cb_choice_lbsc

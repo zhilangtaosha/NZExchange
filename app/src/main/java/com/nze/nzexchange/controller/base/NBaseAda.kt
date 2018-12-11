@@ -93,7 +93,7 @@ abstract class NBaseAda<T, V>(var mContext: Context) : BaseAdapter() {
             vh = cView.tag as V
         }
         val item:T = group[position]
-        initView(vh,item)
+        initView(vh,item,position)
         return cView!!
     }
 
@@ -101,5 +101,5 @@ abstract class NBaseAda<T, V>(var mContext: Context) : BaseAdapter() {
 
     abstract fun createViewHold(convertView: View): V
 
-    abstract fun initView(vh: V,item:T)
+    abstract fun initView(vh: V,item:T,position: Int)
 }

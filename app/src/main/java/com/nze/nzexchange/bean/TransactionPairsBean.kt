@@ -23,14 +23,33 @@ data class TransactionPairsBean(
         val mainCurrency: String,
         val remark: String,
         val status: Int,
-        val transactionPair: String
+        val transactionPair: String,
+        val gain: Int,
+        var optional: Int = 0
 ) : Parcelable {
     companion object {
-        fun getTransactionPairs(mainCurrency: String): Flowable<Result<MutableList<TransactionPairsBean>>> {
+        fun getAllTransactionPairs(): Flowable<Result<MutableList<TransactionPairsBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .getTransactionPairs(mainCurrency)
+                        .getAllTransactionPairs()
+            }
+        }
+
+        fun getTransactionPairs(mainCurrency: String, userId: String): Flowable<Result<MutableList<TransactionPairsBean>>> {
+            return Flowable.defer {
+                NRetrofit.instance
+                        .bibiService()
+                        .getTransactionPairs(mainCurrency, userId)
+            }
+        }
+
+
+        fun getOptionalTransactionPair(userId: String): Flowable<Result<MutableList<TransactionPairsBean>>> {
+            return Flowable.defer {
+                NRetrofit.instance
+                        .bibiService()
+                        .getOptionalTransactionPair(userId)
             }
         }
 

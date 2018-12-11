@@ -22,7 +22,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="60dp"
         android:layout_marginRight="30dp"
-        android:hint="手机号或邮箱号码" />
+        android:hint="邮箱号码" />
 
     <View
         android:id="@+id/line1_aer"
@@ -48,9 +48,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:hint="手机号或邮箱号码" />
+            android:hint="请输入邮箱验证码" />
 
-        <TextView
+        <com.nze.nzexchange.widget.VerifyButton
             android:id="@+id/tv_verify_aer"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -119,8 +119,10 @@
             android:id="@+id/cb_agree_aer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:button="@drawable/selector_checkbox_agreement"
+            android:drawableLeft="@drawable/selector_checkbox_agreement"
+            android:button="@null"
             android:text="请阅读并同意"
+            android:drawablePadding="5dp"
             android:textColor="@color/color_FF7F8592"
             android:textSize="13sp" />
 

@@ -30,8 +30,6 @@ fun TextView.setTextFromHtml(source: String) {
 }
 
 
-fun EditText.getContent(): String = text.toString()
-
 fun Button.setBgByDrawable(drawable: Drawable) {
     if (Build.VERSION.SDK_INT > 16) {
         background = drawable
@@ -39,5 +37,7 @@ fun Button.setBgByDrawable(drawable: Drawable) {
         setBackgroundDrawable(drawable)
     }
 }
+
+
 
 

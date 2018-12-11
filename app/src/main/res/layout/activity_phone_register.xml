@@ -9,6 +9,7 @@
     tools:context=".controller.login.EmailRegisterActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_apr"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         app:tb_backgroud="@color/color_bg"
@@ -47,13 +48,13 @@
             android:textSize="15sp" />
 
         <com.nze.nzexchange.widget.clearedit.ClearableEditText
-            android:id="@+id/et_email_apr"
+            android:id="@+id/et_phone_apr"
             style="@style/et14"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:hint="手机号或邮箱号码" />
+            android:hint="手机号码" />
     </LinearLayout>
 
 
@@ -81,9 +82,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:hint="手机号或邮箱号码" />
+            android:hint="请输入短信验证码" />
 
-        <TextView
+        <com.nze.nzexchange.widget.VerifyButton
             android:id="@+id/tv_verify_apr"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

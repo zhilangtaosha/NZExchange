@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     android:orientation="vertical"
-    android:paddingTop="10dp"
-    tools:context=".controller.bibi.BibSideContentFragment">
-
+    tools:context=".controller.bibi.BibiSideContentFragment">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp"/>
     <com.nze.nzexchange.widget.clearedit.ClearableEditText
         android:id="@+id/cet_search_pbs"
         style="@style/et14"
@@ -27,7 +28,7 @@
 
     <com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
         android:id="@+id/siv_fbs"
-        android:layout_width="180dp"
+        android:layout_width="match_parent"
         android:layout_height="47dp"
         android:fillViewport="false" />
 

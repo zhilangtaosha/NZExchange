@@ -40,12 +40,15 @@ abstract class NBaseActivity : BaseActivity() {
                 .doOnSubscribe {
                     mProgressDialog.show()
                 }.doOnNext {
-                    mProgressDialog.dismiss()
+                    if (mProgressDialog.isShowing)
+                        mProgressDialog.dismiss()
                 }
                 .doOnComplete {
-                    mProgressDialog.dismiss()
+                    if (mProgressDialog.isShowing)
+                        mProgressDialog.dismiss()
                 }.doFinally {
-                    mProgressDialog.dismiss()
+                    if (mProgressDialog.isShowing)
+                        mProgressDialog.dismiss()
                 }
     }
 

@@ -64,9 +64,16 @@ abstract class NBaseFragment : BaseFragment() {
                 .compose(this.bindUntilEvent(FragmentEvent.DESTROY))
                 .doOnSubscribe {
                     mProgressDialog.show()
+                }.doOnNext {
+                    if (mProgressDialog.isShowing)
+                        mProgressDialog.dismiss()
                 }
-                .doFinally {
-                    mProgressDialog.dismiss()
+                .doOnComplete {
+                    if (mProgressDialog.isShowing)
+                        mProgressDialog.dismiss()
+                }.doFinally {
+                    if (mProgressDialog.isShowing)
+                        mProgressDialog.dismiss()
                 }
     }
 

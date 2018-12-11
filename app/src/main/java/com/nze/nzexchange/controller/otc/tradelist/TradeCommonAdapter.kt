@@ -18,7 +18,7 @@ class TradeCommonAdapter(mContext: Context, var type: Int, var fragment: NBaseFr
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: SubOrderInfoBean) {
+    override fun initView(vh: ViewHolder, item: SubOrderInfoBean,position: Int) {
         item.run {
             var type = ""
             if (NzeApp.instance.userId == item.userIdSell) {

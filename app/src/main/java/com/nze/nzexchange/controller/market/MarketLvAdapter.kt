@@ -20,7 +20,7 @@ class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairBean, MarketL
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: TransactionPairBean) {
+    override fun initView(vh: ViewHolder, item: TransactionPairBean,position: Int) {
         vh.transactionTv.text = item.name
         vh.exchangeTv.text = item.exchange.toString()
         vh.changeTv.text = item.change.toString()

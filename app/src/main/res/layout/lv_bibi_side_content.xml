@@ -8,7 +8,7 @@
     android:paddingRight="15dp"
     android:gravity="center_vertical">
 
-    <CheckBox
+    <TextView
         android:id="@+id/cb_choice_lbsc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
