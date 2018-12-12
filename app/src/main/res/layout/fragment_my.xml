@@ -12,13 +12,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_account_my"
+            android:id="@+id/tv_user_name_my"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:background="@color/color_FF1F2532"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
-            android:text="2326122979@qq.com"
+            android:text="登录"
             android:textColor="@color/color_FFA3AAB9" />
 
         <LinearLayout
@@ -44,7 +44,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/money_my"
+                        android:id="@+id/tv_money_my"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="531.12"
@@ -52,7 +52,7 @@
                         android:textSize="12sp" />
 
                     <TextView
-                        android:id="@+id/unit_my"
+                        android:id="@+id/tv_unit_my"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -64,7 +64,7 @@
 
 
                 <TextView
-                    android:id="@+id/account_my"
+                    android:id="@+id/tv_account_my"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/layout_money_my"
@@ -82,6 +82,7 @@
                 android:background="@color/color_FF2F3545" />
 
             <TextView
+                android:id="@+id/tv_recharge_my"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -100,6 +101,7 @@
                 android:background="@color/color_FF2F3545" />
 
             <TextView
+                android:id="@+id/tv_withdraw_my"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -124,6 +126,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_asset_my"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:drawableLeft="@mipmap/my_assets"
@@ -142,6 +145,7 @@
                 android:background="@color/color_FF2C3443" />
 
             <TextView
+                android:id="@+id/tv_order_manage_my"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:drawableLeft="@mipmap/order_manage"
@@ -181,6 +185,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_safe_center_my"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:drawableLeft="@mipmap/security_center"
@@ -199,6 +204,7 @@
                 android:background="@color/color_FF2C3443" />
 
             <TextView
+                android:id="@+id/tv_authentication_my"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:drawableLeft="@mipmap/real_name_authentication"
@@ -217,6 +223,7 @@
                 android:background="@color/color_FF2C3443" />
 
             <TextView
+                android:id="@+id/tv_setting_my"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:drawableLeft="@mipmap/setting_icon"

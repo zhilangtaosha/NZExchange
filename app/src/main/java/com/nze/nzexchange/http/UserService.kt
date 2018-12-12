@@ -1,7 +1,7 @@
 package com.nze.nzexchange.http
 
+import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.bean.RegisterBean
-import com.nze.nzexchange.bean.UserBean
 import io.reactivex.Flowable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -33,6 +33,6 @@ interface UserService {
               @Field("userPassworUcode") userPassworUcode: String,
               @Field("checkCodeId") checkCodeId: String?,
               @Field("checkCodeVal") checkCodeVal: String?
-    ): Flowable<Result<UserBean>>
+    ): Flowable<Result<LoginBean>>
 
 }

@@ -60,7 +60,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controller.main.MainActivity"
+        <activity
+            android:name=".controller.main.MainActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -98,7 +99,9 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity android:name=".controller.login.FindPwdActivity" />
         <activity android:name=".controller.bibi.BibiSideActivity" />
-        <activity android:name=".controller.bibi.BibiAllOrderActivity"></activity>
+        <activity android:name=".controller.bibi.BibiAllOrderActivity" />
+        <activity android:name=".controller.my.setting.SettingActivity" />
+        <activity android:name=".controller.my.setting.MoneyTypeSetActivity"></activity>
     </application>
 
 </manifest>

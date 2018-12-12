@@ -1,21 +1,16 @@
 package com.nze.nzexchange.controller.login
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.CheckBox
-import android.widget.TextView
-import com.jakewharton.rxbinding2.widget.RxCompoundButton
-import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
-import com.nze.nzeframework.tool.NLog
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.bean.RegisterBean
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.Result
@@ -28,7 +23,7 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_email_register.*
-import org.jetbrains.annotations.Nls
+import org.greenrobot.eventbus.EventBus
 
 class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
     private val emailEt: ClearableEditText by lazy { et_email_aer }
@@ -42,7 +37,9 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
     override fun getRootView(): Int = R.layout.activity_email_register
 
     override fun initView() {
-
+        ctb_aer.setRightClick {
+            this@EmailRegisterActivity.finish()
+        }
         tv_to_login_aer.setTextFromHtml("已有账号？<font color=\"#6D87A8\">登录</font>")
         tv_go_phone_aer.setOnClickListener(this)
         tv_to_login_aer.setOnClickListener(this)
@@ -63,7 +60,7 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
                 .add(pwdEt, EmptyValidation())
                 .executeValidator()
 
-        
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -110,17 +107,21 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
                             .flatMap {
                                 if (it.success) {
                                     showToast("注册成功，正在自动登录..")
-                                    UserBean.login(emailEt.getContent(), pwdStr)
+                                    LoginBean.login(emailEt.getContent(), pwdStr)
                                             .subscribeOn(Schedulers.io())
                                 } else {
-                                    Flowable.error<String>(Throwable("注册失败"))
+                                    Flowable.error<String>(Throwable(it.message))
                                 }
                             }
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
-                                val rs = it as Result<UserBean>
-                                if (rs.success)
+                                val rs = it as Result<LoginBean>
+                                if (rs.success) {
                                     showToast("登录成功")
+                                    NzeApp.instance.userBean = rs.result.cloneToUserBean()
+                                    EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
+                                    this@EmailRegisterActivity
+                                }
                             }, {
                                 it.message?.let { showToast(it) }
                             })

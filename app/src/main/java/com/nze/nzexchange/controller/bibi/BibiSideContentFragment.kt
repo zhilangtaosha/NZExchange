@@ -71,17 +71,30 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_SELF_SELECT && mainCurrency == "自选") {
+        if (eventCenter.eventCode == EventCode.CODE_SELF_SELECT) {
             val pairsBean = eventCenter.data as TransactionPairsBean
-            if (pairsBean.optional == 1) {
-                adapter.addItem(pairsBean)
+            if (mainCurrency == "自选") {
+                if (pairsBean.optional == 1) {
+                    adapter.addItem(pairsBean)
+                } else {
+                    val list = adapter.group
+                    adapter.group = list.filter {
+                        it.id != pairsBean.id
+                    }.toMutableList()
+                }
             } else {
                 val list = adapter.group
-                adapter.group = list.filter {
-                    it.id != pairsBean.id
-                }.toMutableList()
+                val index = list.indexOfFirst {
+                    it.id == pairsBean.id
+                }
+                if (index >= 0) {
+                    list.get(index).optional = pairsBean.optional
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
+
+
     }
 
     override fun isBindEventBusHere(): Boolean = true
@@ -147,12 +160,13 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
     }
 
     override fun selftSelect(item: TransactionPairsBean, position: Int) {
-        if (item.optional == 0) {
+        if (item.optional != 1) {
             addOptional(item.id, NzeApp.instance.userId)
                     .compose(netTfWithDialog())
                     .subscribe({
                         item.optional = 1
                         EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELF_SELECT, item))
+                        adapter.notifyDataSetChanged()
                         showToast(it.message)
                     }, {
                         item.optional = 0
@@ -165,6 +179,7 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
                         showToast(it.message)
                         item.optional = 0
                         EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELF_SELECT, item))
+                        adapter.notifyDataSetChanged()
                     }, {
                         item.optional = 1
                         adapter.notifyDataSetChanged()

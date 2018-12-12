@@ -9,6 +9,7 @@
     tools:context=".controller.login.EmailRegisterActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_aer"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         app:tb_backgroud="@color/color_bg"

@@ -8,19 +8,27 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.bean.RegisterBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.setTextFromHtml
+import com.nze.nzexchange.http.Result
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.VerifyButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
+import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_email_register.*
 import kotlinx.android.synthetic.main.activity_phone_register.*
+import org.greenrobot.eventbus.EventBus
 
 class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     val REQUEST_CODE = 0x112
@@ -93,19 +101,34 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
             R.id.tv_verify_apr -> {
 
             }
-            R.id.btn_register_apr->{
-                if (registerBtn.validate()){
+            R.id.btn_register_apr -> {
+                if (registerBtn.validate()) {
                     val pwdStr = MD5Tool.getMd5_32(pwdEt.getContent())
                     RegisterBean.registerNet(phoneEt.getContent(), null, null, pwdStr, verifyEt.getContent(), null)
-                            .compose(netTfWithDialog())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .flatMap {
+                                if (it.success) {
+                                    showToast("注册成功，正在自动登录..")
+                                    LoginBean.login(phoneEt.getContent(), pwdStr)
+                                            .subscribeOn(Schedulers.io())
+                                } else {
+                                    Flowable.error<String>(Throwable("注册失败"))
+                                }
+                            }
+                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
-                                NLog.i(it.message)
-                                if (it.success)
-                                    showToast("注册成功")
+                                val rs = it as Result<LoginBean>
+                                if (rs.success) {
+                                    showToast("登录成功")
+                                    NzeApp.instance.userBean = rs.result.cloneToUserBean()
+                                    EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
+                                    this@PhoneRegisterActivity.finish()
+                                }
                             }, {
-                                showToast("注册失败")
-                                NLog.i(it.localizedMessage)
+                                it.message?.let { showToast(it) }
                             })
+
                 }
             }
         }

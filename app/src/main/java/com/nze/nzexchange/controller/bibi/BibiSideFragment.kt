@@ -64,7 +64,7 @@ class BibiSideFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
         colorBar.setWidth(dp2px(41F))
         scrollIndicatorView.setScrollBar(colorBar)
 
-        viewPager.offscreenPageLimit = 2
+
         indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
         onFirstRequest()
     }
@@ -107,6 +107,7 @@ class BibiSideFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
                             tabs.add(it.mainCurrency)
                             pages.add(BibiSideContentFragment.newInstance(it.mainCurrency))
                         }
+                        viewPager.offscreenPageLimit = tabs.size
                         val indicatorAdapter = OtcIndicatorAdapter(childFragmentManager, activity!!, tabs, pages)
                         indicatorViewPager.adapter = indicatorAdapter
                         indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->

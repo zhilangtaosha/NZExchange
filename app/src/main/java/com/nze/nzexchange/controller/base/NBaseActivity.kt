@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.NzeApp
 import com.trello.rxlifecycle2.android.ActivityEvent
@@ -60,7 +61,8 @@ abstract class NBaseActivity : BaseActivity() {
     }
 
     val onError: (e: Throwable) -> Unit = { e: Throwable ->
-
+        NLog.i("error.....${e.localizedMessage}")
+        showToast(e.localizedMessage)
     }
 
     fun showToast(content: String) {

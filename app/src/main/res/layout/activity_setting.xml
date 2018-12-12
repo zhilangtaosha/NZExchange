@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.setting.SettingActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_set"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:tb_title_text="设置" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <RelativeLayout
+                android:id="@+id/layout_money_type_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="计价方式"
+                    android:textColor="@color/color_FFA3AAB9"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_money_type_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableRight="@mipmap/right_arrow"
+                    android:drawablePadding="10dp"
+                    android:text="人民币"
+                    android:textColor="@color/color_FF6D87A8"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <include layout="@layout/common_line" />
+
+            <TextView
+                android:id="@+id/tv_exchange_rate_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:drawableRight="@mipmap/right_arrow"
+                android:gravity="center_vertical"
+                android:text="汇率概览"
+                android:textColor="@color/color_FFA3AAB9"
+                android:textSize="15sp" />
+
+            <include layout="@layout/common_line" />
+
+            <TextView
+                android:id="@+id/tv_service_charge_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:drawableRight="@mipmap/right_arrow"
+                android:gravity="center_vertical"
+                android:text="费率详情"
+                android:textColor="@color/color_FFA3AAB9"
+                android:textSize="15sp" />
+
+            <include layout="@layout/common_line" />
+
+            <TextView
+                android:id="@+id/tv_about_us_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:drawableRight="@mipmap/right_arrow"
+                android:gravity="center_vertical"
+                android:text="关于我们"
+                android:textColor="@color/color_FFA3AAB9"
+                android:textSize="15sp" />
+
+            <include layout="@layout/common_line" />
+
+            <TextView
+                android:id="@+id/tv_night_mode_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:drawableRight="@mipmap/right_arrow"
+                android:gravity="center_vertical"
+                android:text="夜间模式"
+                android:textColor="@color/color_FFA3AAB9"
+                android:textSize="15sp" />
+
+            <include layout="@layout/common_line" />
+
+            <RelativeLayout
+                android:id="@+id/layout_color_mode_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="颜色配置"
+                    android:textColor="@color/color_FFA3AAB9"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_color_mode_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableRight="@mipmap/right_arrow" />
+
+                <ImageView
+                    android:id="@+id/iv_color_mode_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/tv_color_mode_set"
+                    android:src="@mipmap/color_mode_set" />
+            </RelativeLayout>
+
+            <include layout="@layout/common_line" />
+
+            <RelativeLayout
+                android:id="@+id/layout_style_mode_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="颜色配置"
+                    android:textColor="@color/color_FFA3AAB9"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_style_mode_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableRight="@mipmap/right_arrow" />
+
+                <ImageView
+                    android:id="@+id/iv_style_mode_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/tv_style_mode_set"
+                    android:src="@mipmap/style_mode_set" />
+            </RelativeLayout>
+
+            <include layout="@layout/common_line" />
+
+            <RelativeLayout
+                android:id="@+id/layout_edition_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="计价方式"
+                    android:textColor="@color/color_FFA3AAB9"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_edition_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableRight="@mipmap/right_arrow"
+                    android:drawablePadding="10dp"
+                    android:text="v1.35"
+                    android:textColor="@color/color_FF676C7A"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <com.nze.nzexchange.widget.CommonButton
+                android:id="@+id/btn_logout_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:text="退出登录" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
