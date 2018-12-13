@@ -101,7 +101,14 @@
         <activity android:name=".controller.bibi.BibiSideActivity" />
         <activity android:name=".controller.bibi.BibiAllOrderActivity" />
         <activity android:name=".controller.my.setting.SettingActivity" />
-        <activity android:name=".controller.my.setting.MoneyTypeSetActivity"></activity>
+        <activity android:name=".controller.my.setting.MoneyTypeSetActivity" />
+        <activity android:name=".controller.my.setting.ColorModeSetActivity" />
+        <activity android:name=".controller.my.setting.StyleModeSetActivity" />
+        <activity android:name=".controller.my.setting.SafeCenterSetActivity" />
+        <activity android:name=".controller.my.setting.NightModeSetActivity" />
+        <activity android:name=".controller.my.setting.ExchangeRateSetActivity" />
+        <activity android:name=".controller.my.setting.ServiceChargeSetActivity" />
+        <activity android:name=".controller.my.asset.MyAssetActivity"></activity>
     </application>
 
 </manifest>

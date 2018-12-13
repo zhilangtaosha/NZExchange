@@ -19,11 +19,7 @@ import java.util.concurrent.TimeUnit
 
 class CommonButton(context: Context, attrs: AttributeSet?) : Button(context, attrs) {
     var validator: EditTextValidator? = null
-//    var onCommonClick: OnCommonButtonClick? = null
-//
-//    interface OnCommonButtonClick {
-//        fun onClick(view: View);
-//    }
+
 
     init {
         initView(context, attrs)
@@ -38,15 +34,6 @@ class CommonButton(context: Context, attrs: AttributeSet?) : Button(context, att
 
         setTextColor(ContextCompat.getColor(context, R.color.selector_common_btn_text))
 
-//        setOnClickListener {
-//            RxView.clicks(this)
-//                    .throttleFirst(2, TimeUnit.SECONDS)
-//                    .subscribe {
-//                        onCommonClick?.onClick(this)
-//                    }
-//        }
-
-
     }
 
     fun setOnCommonClick(click: View.OnClickListener) {
@@ -54,6 +41,14 @@ class CommonButton(context: Context, attrs: AttributeSet?) : Button(context, att
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe {
                     click.onClick(this)
+                }
+    }
+
+    fun setOnCommonClick(click: (view: View) -> Unit) {
+        RxView.clicks(this)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe {
+                    click.invoke(this)
                 }
     }
 

@@ -58,10 +58,11 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS || eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
             userBean = NzeApp.instance.userBean
             changeForLogin()
         }
+
     }
 
 

@@ -15,5 +15,6 @@ class EventCode {
         const val CODE_SELECT_TRANSACTIONPAIR = 0x005
         const val CODE_SELF_SELECT = 0x006//添加删除自选
         const val CODE_LOGIN_SUCCUSS = 0x007// 登录成功
+        const val CODE_LOGOUT_SUCCESS = 0x008//退出登录
     }
 }

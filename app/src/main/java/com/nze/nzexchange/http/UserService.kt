@@ -35,4 +35,11 @@ interface UserService {
               @Field("checkCodeVal") checkCodeVal: String?
     ): Flowable<Result<LoginBean>>
 
+    @FormUrlEncoded
+    @POST("/manaTokenAllBus/zyy/manaTokenDel.json")
+    fun logout(@Field("tokenUserId") tokenUserId: String,
+               @Field("tokenUserKey") tokenUserKey: String,
+               @Field("tokenSystreeId") tokenSystreeId: String
+    ): Flowable<Result<String>>
+
 }

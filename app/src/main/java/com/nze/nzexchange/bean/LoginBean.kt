@@ -20,7 +20,7 @@ data class LoginBean(
 
     fun cloneToUserBean(): UserBean {
         return token.run {
-            UserBean(userEmail, userId, userName, userNick, userNo, userPhone, userShow, userTag)
+            UserBean(userEmail, userId, userName, userNick, userNo, userPhone, userShow, userTag, TokenReqVo(tokenReqVo.tokenSystreeId, tokenReqVo.tokenUserId, tokenReqVo.tokenUserKey))
         }
     }
 
@@ -61,9 +61,9 @@ data class Token(
 ) : Serializable
 
 data class TokenReqVo(
-        val tokenSystreeId: String?,
-        val tokenUserId: String?,
-        val tokenUserKey: String?
+        val tokenSystreeId: String,
+        val tokenUserId: String,
+        val tokenUserKey: String
 ) : Serializable
 
 data class TokenMenuVo(

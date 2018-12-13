@@ -88,7 +88,9 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
                                     this@LoginActivity.finish()
                                 }
-                            }, onError)
+                            }, {
+                                showToast("登录失败")
+                            })
                 }
             }
         }
