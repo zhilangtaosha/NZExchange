@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.authentication.PrimaryAuthenticationCompleteActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="初级认证" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:src="@mipmap/hook_icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:text="初级认证已完成！"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="15dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_horizontal"
+        android:text="您已可以进行币币交易以及小额法币交易(单笔交易小于￥800)，24小时提币额度为2BTC，如需使用法币购买大额数字资产或提升24小时提币额度至100BTC，请您完成下一步操作"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="13sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+
+        <com.nze.nzexchange.widget.CommonButton
+            android:id="@+id/btn_goon_apac"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:text="继续身份验证" />
+
+        <Button
+            android:id="@+id/btn_bibi_apac"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_radius_line678c_bg"
+            android:text="开始币币交易"
+            android:textColor="@color/color_FF6D87A8"
+            android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>

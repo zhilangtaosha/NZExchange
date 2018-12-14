@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.authentication.PrimaryAuthenticationActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="初级认证" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择国家"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_country_apa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@mipmap/right_arrow"
+            android:drawablePadding="10dp"
+            android:text="中国大陆"
+            android:textColor="@color/color_FF6D87A8"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/common_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="真实姓名"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="15sp" />
+
+        <com.nze.nzexchange.widget.clearedit.ClearableEditText
+            android:id="@+id/et_name_apa"
+            style="@style/et14"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:hint="请输入真实姓名" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="真实姓名"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="15sp" />
+
+        <com.nze.nzexchange.widget.clearedit.ClearableEditText
+            android:id="@+id/et_credentials_apa"
+            style="@style/et14"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:hint="请输入身份证号码" />
+    </LinearLayout>
+
+    <include layout="@layout/common_line" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:text="注意：请填写本人真实身份信息，认证成功后不可更改"
+        android:textColor="@color/color_FF454D5B"
+        android:textSize="12sp" />
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_next_ap"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="15dp"
+        android:text="下一步" />
+</LinearLayout>

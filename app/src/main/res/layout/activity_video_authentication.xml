@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".controller.my.authentication.VideoAuthenticationActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="视频认证" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:text="请使用前置摄像头用普通话录制视频"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_record_video_ava"
+        android:layout_width="300dp"
+        android:layout_height="185dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:background="@mipmap/record_video_bg"
+        android:gravity="bottom|center_horizontal"
+        android:paddingBottom="45dp"
+        android:text="点击录制"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="13sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="40dp"
+        android:text="视频录制要求"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:text="·请使用普通话完整朗读数字1，3，5"
+        android:textColor="@color/color_FF676C7A"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_corrent_ava"
+                android:layout_width="77dp"
+                android:layout_height="78dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/record_video_corrent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_corrent_ava"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@mipmap/corrent_icon"
+                android:drawablePadding="3dp"
+                android:text="正确示例"
+                android:textColor="@color/color_FF676C7A"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_error1_ava"
+                android:layout_width="77dp"
+                android:layout_height="78dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/record_video_error1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_error1_ava"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@mipmap/error_icon"
+                android:drawablePadding="3dp"
+                android:text="光线不足"
+                android:textColor="@color/color_FF676C7A"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_error2_ava"
+                android:layout_width="77dp"
+                android:layout_height="78dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/record_video_error2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_error2_ava"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@mipmap/error_icon"
+                android:drawablePadding="3dp"
+                android:text="没有入镜"
+                android:textColor="@color/color_FF676C7A"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/iv_error3_ava"
+                android:layout_width="77dp"
+                android:layout_height="78dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/record_video_error2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_error3_ava"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@mipmap/error_icon"
+                android:drawablePadding="3dp"
+                android:text="没有入镜"
+                android:textColor="@color/color_FF676C7A"
+                android:textSize="13sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

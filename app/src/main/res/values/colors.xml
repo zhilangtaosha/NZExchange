@@ -11,7 +11,6 @@
     <color name="color_black_tran">#99000000</color>
 
 
-
     <color name="color_FFFF3746">#FFFF3746</color>
     <color name="color_FFA3AAB9">#FFA3AAB9</color>
     <color name="color_FF1F2532">#FF1F2532</color>
@@ -38,6 +37,7 @@
     <color name="color_FF09937a">#FF09937a</color>
     <color name="color_FFf5384e">#FFf5384e</color>
     <color name="color_FF151E2F">#FF151E2F</color>
+    <color name="color_FF454D5B">#FF454D5B</color>
 
 
 </resources>

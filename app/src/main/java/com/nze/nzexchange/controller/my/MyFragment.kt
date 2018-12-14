@@ -12,6 +12,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.login.LoginActivity
+import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity
 import com.nze.nzexchange.controller.my.paymethod.SetPayMethodActivity
 import com.nze.nzexchange.controller.my.setting.SettingActivity
 import kotlinx.android.synthetic.main.fragment_my.view.*
@@ -99,6 +100,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
             R.id.tv_safe_center_my -> {
             }
             R.id.tv_authentication_my -> {
+                skipActivity(PrimaryAuthenticationActivity::class.java)
             }
             R.id.tv_setting_my -> {
                 skipActivity(SettingActivity::class.java)

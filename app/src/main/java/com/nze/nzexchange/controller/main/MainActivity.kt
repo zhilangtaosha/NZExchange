@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.bibi.BibiFragment
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -17,12 +18,12 @@ import com.nze.nzexchange.controller.my.MyFragment
 import com.nze.nzexchange.controller.otc.OtcFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : NBaseActivity(), View.OnClickListener,NBaseFragment.OnFragmentInteractionListener {
+class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFragmentInteractionListener {
 
     val mFragmentManager: FragmentManager by lazy { supportFragmentManager }
     var mCurrentTab = 0
     var mLastTab = -1
-     var mLastFragment: NBaseFragment?=null
+    var mLastFragment: NBaseFragment? = null
 
 
     override fun isBindNetworkListener(): Boolean = false
@@ -38,8 +39,10 @@ class MainActivity : NBaseActivity(), View.OnClickListener,NBaseFragment.OnFragm
     override fun isBindEventBusHere(): Boolean = true
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.data is String)
-            Toast.makeText(this, eventCenter.data as String, Toast.LENGTH_SHORT).show()
+        if (eventCenter.eventCode == EventCode.CODE_REFRESH_MAIN_ACT) {
+            val i = eventCenter.data as Int
+            selectTab(i)
+        }
     }
 
     override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.RIGHT
@@ -94,7 +97,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener,NBaseFragment.OnFragm
 
         var transaction = mFragmentManager.beginTransaction()
         mLastFragment?.let { transaction.hide(mLastFragment!!) }
-        var fragment: NBaseFragment?  = mFragmentManager.findFragmentByTag(tag) as NBaseFragment?
+        var fragment: NBaseFragment? = mFragmentManager.findFragmentByTag(tag) as NBaseFragment?
         if (fragment == null) {
             when (id) {
                 0 -> fragment = HomeFragment.newInstance()
@@ -106,7 +109,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener,NBaseFragment.OnFragm
                     fragment = HomeFragment.newInstance()
                 }
             }
-             transaction.add(R.id.content_main, fragment, tag)
+            transaction.add(R.id.content_main, fragment, tag)
         } else {
             transaction.show(fragment)
         }

@@ -62,6 +62,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".controller.main.MainActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -108,7 +109,11 @@
         <activity android:name=".controller.my.setting.NightModeSetActivity" />
         <activity android:name=".controller.my.setting.ExchangeRateSetActivity" />
         <activity android:name=".controller.my.setting.ServiceChargeSetActivity" />
-        <activity android:name=".controller.my.asset.MyAssetActivity"></activity>
+        <activity android:name=".controller.my.asset.MyAssetActivity" />
+        <activity android:name=".controller.my.authentication.PrimaryAuthenticationActivity" />
+        <activity android:name=".controller.my.authentication.PrimaryAuthenticationCompleteActivity" />
+        <activity android:name=".controller.my.authentication.RealNameAuthenticationActivity" />
+        <activity android:name=".controller.my.authentication.VideoAuthenticationActivity"></activity>
     </application>
 
 </manifest>
