@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -18,19 +19,38 @@ import com.nze.nzeframework.widget.takephoto.permission.TakePhotoInvocationHandl
 import com.nze.nzexchange.R
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.tools.FileTool
 import com.nze.nzexchange.tools.TakePhotoTool
 import kotlinx.android.synthetic.main.activity_add_zhifubao.*
 import java.io.File
 
-class AddZhifubaoActivity : NBaseActivity(), SelectPhotoPopup.OnSelectPhotoListener, TakePhoto.TakeResultListener, InvokeListener, View.OnClickListener {
+class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, InvokeListener, View.OnClickListener {
+
 
     var type: Int = IntentConstant.TYPE_ZHIFUBAO
-    val popup: SelectPhotoPopup by lazy {
-        SelectPhotoPopup(this).apply {
-            onListener = this@AddZhifubaoActivity
+    val cardNoValueEt:EditText by lazy { et_cardno_value_aaz }
+    private val itemLimit: MutableList<String> by lazy {
+        mutableListOf<String>().apply {
+            add("拍照")
+            add("从相册选择")
         }
     }
+    val selectPhonePopup: CommonListPopup by lazy {
+        CommonListPopup(this).apply {
+            addAllItem(itemLimit)
+            setOnItemClick { position, item ->
+                val file: File = File(FileTool.getImageCachePath(), FileTool.getTempImageName())
+                val imageUri: Uri = Uri.fromFile(file)
+                if (position == 0) {
+                    takePhoto.onPickFromCaptureWithCrop(imageUri, TakePhotoTool.getCropOptions())
+                } else {
+                    takePhoto.onPickFromGalleryWithCrop(imageUri, TakePhotoTool.getCropOptions())
+                }
+            }
+        }
+    }
+
     val takePhoto: TakePhoto by lazy {
         (TakePhotoInvocationHandler.of(this).bind(TakePhotoImpl(this, this)) as TakePhoto).apply {
             TakePhotoTool.configCompress(this)
@@ -62,7 +82,7 @@ class AddZhifubaoActivity : NBaseActivity(), SelectPhotoPopup.OnSelectPhotoListe
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.layout_add_aaz -> popup.showPopupWindow()
+            R.id.layout_add_aaz -> selectPhonePopup.showPopupWindow()
             R.id.iv_close_aaz -> {
                 iv_add_aaz.setImageResource(R.mipmap.add_image)
                 iv_close_aaz.visibility = View.GONE
@@ -92,20 +112,6 @@ class AddZhifubaoActivity : NBaseActivity(), SelectPhotoPopup.OnSelectPhotoListe
 
     override fun getContainerTargetView(): View? = null
 
-    override fun onSelect(select: SelectPhotoPopup.SelectType) {
-        val file: File = File(FileTool.getImageCachePath(), FileTool.getTempImageName())
-        val imageUri: Uri = Uri.fromFile(file)
-        when (select) {
-            SelectPhotoPopup.SelectType.TAKE_PICTURE -> {
-                takePhoto.onPickFromCaptureWithCrop(imageUri, TakePhotoTool.getCropOptions())
-            }
-            SelectPhotoPopup.SelectType.ALBUM -> {
-                takePhoto.onPickFromGalleryWithCrop(imageUri, TakePhotoTool.getCropOptions())
-            }
-            else -> {
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         takePhoto.onCreate(savedInstanceState)

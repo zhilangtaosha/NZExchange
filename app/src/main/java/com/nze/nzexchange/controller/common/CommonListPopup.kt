@@ -37,6 +37,14 @@ class CommonListPopup(context: Activity?, var type: Int = 0) : BasePopupWindow(c
         }
     }
     var onItemClick: OnListPopupItemClick? = null
+
+    fun setOnItemClick(onItemClick: (position: Int, item: String) -> Unit) {
+        listView.setOnItemClickListener { parent, view, position, id ->
+            onItemClick.invoke(position, comAdapter.getItem(position)!!)
+            this@CommonListPopup.dismiss()
+        }
+    }
+
     private val itemList: MutableList<String> by lazy {
         mutableListOf<String>()
     }

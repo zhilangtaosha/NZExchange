@@ -15,7 +15,8 @@ data class UserBean(
         val userPhone: String?,
         val userShow: String?,
         val userTag: String?,
-        val tokenReqVo: TokenReqVo?
+        val tokenReqVo: TokenReqVo,
+        var payMethod: SetPayMethodBean?
 ) {
 
 

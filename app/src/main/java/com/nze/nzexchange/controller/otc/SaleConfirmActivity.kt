@@ -14,7 +14,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable

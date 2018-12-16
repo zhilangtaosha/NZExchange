@@ -1,4 +1,4 @@
-package com.nze.nzexchange.http
+package com.nze.nzexchange.bean
 
 data class Result<T>(
         var code: Int = 0,

@@ -1,7 +1,6 @@
 package com.nze.nzexchange.bean
 
 import com.nze.nzexchange.http.CRetrofit
-import com.nze.nzexchange.http.Result
 import io.reactivex.Flowable
 import java.io.Serializable
 

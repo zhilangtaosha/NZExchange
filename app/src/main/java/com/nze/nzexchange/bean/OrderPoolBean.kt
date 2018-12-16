@@ -3,10 +3,8 @@ package com.nze.nzexchange.bean
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.http.Result
 import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
-import retrofit2.http.Field
 
 /**
  * @author: zwy

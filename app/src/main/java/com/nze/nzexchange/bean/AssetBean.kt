@@ -1,7 +1,6 @@
 package com.nze.nzexchange.bean
 
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.http.Result
 import com.nze.nzexchange.tools.DoubleMath
 import io.reactivex.Flowable
 

@@ -8,13 +8,12 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.submitNet
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.TextTool
 import com.nze.nzexchange.validation.EmptyValidation

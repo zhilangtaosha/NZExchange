@@ -2,6 +2,8 @@ package com.nze.nzexchange.http
 
 import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.bean.RegisterBean
+import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.SetPayMethodBean
 import io.reactivex.Flowable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -35,6 +37,7 @@ interface UserService {
               @Field("checkCodeVal") checkCodeVal: String?
     ): Flowable<Result<LoginBean>>
 
+    //退出登录
     @FormUrlEncoded
     @POST("/manaTokenAllBus/zyy/manaTokenDel.json")
     fun logout(@Field("tokenUserId") tokenUserId: String,
@@ -42,4 +45,28 @@ interface UserService {
                @Field("tokenSystreeId") tokenSystreeId: String
     ): Flowable<Result<String>>
 
+
+    //修改当前登录人的收款方式
+    @FormUrlEncoded
+    @POST("/meRunBus/meAccmoney/zyy/saveOneEntity_meAccmoney_curToken_t.json")
+    fun setPayMethod(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("accmoneyBank") accmoneyBank: String?,
+            @Field("accmoneyBankcard") accmoneyBankcard: String?,
+            @Field("accmoneyBanktype") accmoneyBanktype: String?,
+            @Field("accmoneyWeixinurl") accmoneyWeixinurl: String?,
+            @Field("accmoneyWeixinacc") accmoneyWeixinacc: String?,
+            @Field("accmoneyZfburl") accmoneyZfburl: String?,
+            @Field("accmoneyZfbacc") accmoneyZfbacc: String?
+    ): Flowable<Result<SetPayMethodBean>>
+
+    //获取当前用户的收款方式
+    @FormUrlEncoded
+    @POST("/meRunBus/meAccmoney/zyy/findDataVoByBusKey_meAccmoney_curToken.json")
+    fun getPayMethod(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("tokenSystreeId") tokenSystreeId: String
+    ): Flowable<Result<SetPayMethodBean>>
 }

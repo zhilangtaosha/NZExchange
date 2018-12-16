@@ -12,3 +12,8 @@ fun Double.formatForCurrency(): String? {
     val df = DecimalFormat("0.########")
     return df.format(this)
 }
+
+
+fun String.getValue(): String {
+    return this
+}

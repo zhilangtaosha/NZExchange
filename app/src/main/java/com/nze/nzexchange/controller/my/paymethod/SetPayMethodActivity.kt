@@ -5,14 +5,18 @@ import android.view.View
 import android.widget.AdapterView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.PayMethodBean
+import com.nze.nzexchange.bean.SetPayMethodBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import kotlinx.android.synthetic.main.activity_set_pay_method.*
 
 class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
 
+    var userBean: UserBean? = NzeApp.instance.userBean
 
     val adapter: SetPayMethodAdapter by lazy {
         SetPayMethodAdapter(this)
@@ -24,6 +28,17 @@ class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
         lv_aspm.onItemClickListener = this
         lv_aspm.adapter = adapter
         adapter.group = PayMethodBean.getPayList()
+
+        userBean = userBean?.apply {
+            SetPayMethodBean.getPayMethodNet(tokenReqVo.tokenUserId, tokenReqVo.tokenUserKey, tokenReqVo.tokenSystreeId)
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        if (it.success) {
+                            this.payMethod = it.result
+                            NzeApp.instance.userBean = this
+                        }
+                    }, onError)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

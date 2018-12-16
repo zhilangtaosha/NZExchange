@@ -6,15 +6,13 @@ import android.view.View
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
-import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OrderPoolBean
-import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
-import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable

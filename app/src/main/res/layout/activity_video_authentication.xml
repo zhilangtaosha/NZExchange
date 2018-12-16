@@ -146,6 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_weight="1">
+
             <ImageView
                 android:id="@+id/iv_error3_ava"
                 android:layout_width="77dp"
@@ -165,6 +166,7 @@
                 android:textColor="@color/color_FF676C7A"
                 android:textSize="13sp" />
         </RelativeLayout>
+
     </LinearLayout>
 
 </LinearLayout>

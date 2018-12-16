@@ -7,7 +7,6 @@ import android.widget.CheckBox
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
-import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LoginBean
@@ -17,7 +16,7 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.setTextFromHtml
-import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
@@ -26,7 +25,6 @@ import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_email_register.*
 import kotlinx.android.synthetic.main.activity_phone_register.*
 import org.greenrobot.eventbus.EventBus
 

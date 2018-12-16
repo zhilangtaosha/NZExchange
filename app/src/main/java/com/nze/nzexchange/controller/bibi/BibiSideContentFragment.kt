@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -20,7 +19,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc_content.view.*

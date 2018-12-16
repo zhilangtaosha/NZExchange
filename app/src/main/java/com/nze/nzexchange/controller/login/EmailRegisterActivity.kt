@@ -9,11 +9,10 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.bean.RegisterBean
-import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.*
-import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton

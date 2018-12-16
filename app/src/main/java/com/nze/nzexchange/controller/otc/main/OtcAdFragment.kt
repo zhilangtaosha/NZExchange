@@ -16,7 +16,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.http.Result
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable

@@ -2,6 +2,7 @@ package com.nze.nzexchange.http
 
 import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.SubOrderInfoBean
+import com.nze.nzexchange.bean.Result
 import io.reactivex.Flowable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
