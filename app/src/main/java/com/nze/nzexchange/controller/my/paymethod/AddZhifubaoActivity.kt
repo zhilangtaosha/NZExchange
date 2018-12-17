@@ -29,7 +29,7 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
 
 
     var type: Int = IntentConstant.TYPE_ZHIFUBAO
-    val cardNoValueEt:EditText by lazy { et_cardno_value_aaz }
+    val cardNoValueEt: EditText by lazy { et_cardno_value_aaz }
     private val itemLimit: MutableList<String> by lazy {
         mutableListOf<String>().apply {
             add("拍照")
@@ -61,6 +61,7 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
 
     lateinit var invokeParam: InvokeParam
 
+
     override fun getRootView(): Int = R.layout.activity_add_zhifubao
 
     override fun initView() {
@@ -78,6 +79,7 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
         layout_add_aaz.setOnClickListener(this)
 
         iv_close_aaz.setOnClickListener(this)
+        btn_save_aaz.setOnCommonClick(this)
     }
 
     override fun onClick(v: View?) {
@@ -87,6 +89,9 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                 iv_add_aaz.setImageResource(R.mipmap.add_image)
                 iv_close_aaz.visibility = View.GONE
                 layout_add_aaz.isClickable = true
+            }
+            R.id.btn_save_aaz -> {
+
             }
         }
     }

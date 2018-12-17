@@ -43,7 +43,6 @@ class VerifyButton : AppCompatTextView {
     fun setVerifyClick(click: View.OnClickListener) {
         setOnClickListener {
             click.onClick(it)
-            startVerify()
         }
     }
 

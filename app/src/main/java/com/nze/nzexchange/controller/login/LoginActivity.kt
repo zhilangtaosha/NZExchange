@@ -33,6 +33,8 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
     override fun getRootView(): Int = R.layout.activity_login
 
     override fun initView() {
+        setWindowStatusBarColor(R.color.color_bg)
+
         topBar.setRightClick {
             this@LoginActivity.finish()
         }
@@ -72,6 +74,7 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_forget_al -> {
+                skipActivity(FindPwdActivity::class.java)
             }
             R.id.tv_register_al -> {
                 skipActivity(EmailRegisterActivity::class.java)
@@ -82,12 +85,13 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
                     LoginBean.login(accountEt.getContent(), pwdStr)
                             .compose(netTfWithDialog())
                             .subscribe({
-                                if (it.success) {
-                                    showToast("登录成功")
+                                showToast(it.message)
+                                if (it.result.token != null) {
                                     NzeApp.instance.userBean = it.result.cloneToUserBean()
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
                                     this@LoginActivity.finish()
                                 }
+
                             }, {
                                 showToast("登录失败")
                             })

@@ -11,6 +11,7 @@ import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.extend.getValue
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import kotlinx.android.synthetic.main.activity_add_card.*
@@ -24,17 +25,17 @@ class AddBankActivity : NBaseActivity() {
     val bankValueEt: EditText by lazy { et_bank_value_aac }
     val addressValueEt: EditText by lazy { et_address_value_aac }
     val saveBtn: CommonButton by lazy { btn_save_aac }
-    val userBean: UserBean? by lazy { NzeApp.instance.userBean.apply {
-        this?.payMethod?.run {
-//            cartNoValueEt.setText(this.accmoneyBankcard?.get)
-
-        }
-    } }
+    val userBean: UserBean? by lazy { NzeApp.instance.userBean }
 
 
     override fun getRootView(): Int = R.layout.activity_add_card
 
     override fun initView() {
+        userBean?.payMethod?.run {
+            cartNoValueEt.setText(this.accmoneyBankcard?.getValue() ?: "")
+            bankValueEt.setText(this.accmoneyBank?.getValue() ?: "")
+            addressValueEt.setText(this.accmoneyBanktype?.getValue() ?: "")
+        }
         saveBtn.initValidator()
                 .add(cartNoValueEt, EmptyValidation())
                 .add(bankValueEt, EmptyValidation())

@@ -13,6 +13,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
@@ -32,6 +33,8 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
     private val pwdCb: CheckBox by lazy { cb_pwd_aer }
     private val agreeCb: CheckBox by lazy { cb_agree_aer }
     private val registerBtn: CommonButton by lazy { btn_register_aer }
+
+    private var checkcodeId: String? = null
 
     override fun getRootView(): Int = R.layout.activity_email_register
 
@@ -82,6 +85,7 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
 
     override fun getContainerTargetView(): View? = null
 
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_go_phone_aer -> {
@@ -95,12 +99,24 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.tv_verify_aer -> {
-
+                VerifyBean.getVerifyCodeNet(emailEt.getContent(), VerifyBean.TYPE_REGISTER)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                verifyTv.startVerify()
+                                checkcodeId = it.result.checkcodeId
+                                showToast("验证码已经发送到${emailEt.getContent()}")
+                            }
+                        }, onError)
             }
             R.id.btn_register_aer -> {
+                if (checkcodeId.isNullOrEmpty()) {
+                    showToast("请先获取验证码")
+                    return
+                }
                 if (registerBtn.validate()) {
                     val pwdStr = MD5Tool.getMd5_32(pwdEt.getContent())
-                    RegisterBean.registerNet(null, emailEt.getContent(), null, pwdStr, verifyEt.getContent(), null)
+                    RegisterBean.registerNet(null, emailEt.getContent(), null, pwdStr, checkcodeId, verifyEt.getContent())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .flatMap {

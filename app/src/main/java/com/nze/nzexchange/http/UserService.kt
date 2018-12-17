@@ -1,13 +1,9 @@
 package com.nze.nzexchange.http
 
-import com.nze.nzexchange.bean.LoginBean
-import com.nze.nzexchange.bean.RegisterBean
-import com.nze.nzexchange.bean.Result
-import com.nze.nzexchange.bean.SetPayMethodBean
+import com.nze.nzexchange.bean.*
 import io.reactivex.Flowable
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import okhttp3.MultipartBody
+import retrofit2.http.*
 
 /**
  * @author: zwy
@@ -23,8 +19,8 @@ interface UserService {
                  @Field("userEmail") userEmail: String?,
                  @Field("userName") userName: String?,
                  @Field("userPassworUcode") userPassworUcode: String,
-                 @Field("checkcodeId ") checkcodeId: String?,
-                 @Field("checkcodeVal ") checkcodeVal: String?
+                 @Field("checkcodeId") checkcodeId: String?,
+                 @Field("checkcodeVal") checkcodeVal: String?
     ): Flowable<Result<RegisterBean>>
 
 
@@ -69,4 +65,49 @@ interface UserService {
             @Field("tokenUserKey") tokenUserKey: String,
             @Field("tokenSystreeId") tokenSystreeId: String
     ): Flowable<Result<SetPayMethodBean>>
+
+    //获取验证码
+    @FormUrlEncoded
+    @POST("/msgRunBus/msgMessagetreeSend/zyy/messagetree_sendMessage_checkCode.json")
+    fun getVerifyCode(
+            @Field("messageBustag") messageBustag: String,
+            @Field("messageTo") messageTo: String
+    ): Flowable<Result<VerifyBean>>
+
+
+    //重置密码
+    @FormUrlEncoded
+    @POST("/manaTokenAllBus/zyy/manaTokenUpdatePwByUserTag.json")
+    fun findPassword(
+            @Field("checkcodeId") checkcodeId: String,
+            @Field("checkcodeVal") checkcodeVal: String,
+            @Field("userPhone") userPhone: String,
+            @Field("userEmail") userEmail: String,
+            @Field("userPassworUcode") userPassworUcode: String
+    ): Flowable<Result<FindPasswordBean>>
+
+
+    //修改密码
+    @FormUrlEncoded
+    @POST("/manaTokenAllBus/zyy/manaTokenUpdatePw.json")
+    fun modifyPassword(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("tokenSystreeId") tokenSystreeId: String,
+            @Field("curUserpasswordUcode") curUserpasswordUcode: String,
+            @Field("newUserPassworUcode") newUserPassworUcode: String
+    ): Flowable<Result<HashMap<String, String>>>
+
+    //上传文件
+    @Multipart
+    @POST("/fileWebAllBus/zyy/uploadAttachement.json")
+    fun uploadFile(
+            @Part("tokenUserId") tokenUserId: String,
+            @Part("tokenUserKey") tokenUserKey: String,
+            @Part("tokenSystreeId") tokenSystreeId: String,
+            @Part("path") path: String,
+            @Part("busId") busId: String,
+            @Part("coverOldBusFile") coverOldBusFile: Boolean,
+            @Part file: MultipartBody.Part
+    ): Flowable<Result<HashMap<String, String>>>
 }

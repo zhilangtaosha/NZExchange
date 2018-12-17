@@ -18,6 +18,10 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.nze.nzexchange.controller.base.NBaseActivity.OnHideKeyboardListener
+import android.view.WindowManager
+import android.os.Build
+import android.app.Activity
+import android.support.v4.content.ContextCompat
 
 
 abstract class NBaseActivity : BaseActivity() {
@@ -108,5 +112,21 @@ abstract class NBaseActivity : BaseActivity() {
 
     interface OnHideKeyboardListener {
         fun hideKeyboard(): Boolean
+    }
+
+    fun setWindowStatusBarColor(colorResId: Int) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                val window = window
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                window.statusBarColor = ContextCompat.getColor(this, colorResId)
+
+                //底部导航栏
+                //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 }

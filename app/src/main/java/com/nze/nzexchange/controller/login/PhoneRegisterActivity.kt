@@ -17,6 +17,7 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
@@ -41,6 +42,8 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     val pwdCb: CheckBox by lazy { cb_pwd_apr }
     val agreeCb: CheckBox by lazy { cb_agree_apr }
     val registerBtn: CommonButton by lazy { btn_register_apr }
+
+    private var checkcodeId: String? = null
 
     override fun getRootView(): Int = R.layout.activity_phone_register
 
@@ -81,6 +84,8 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
 
     override fun getContainerTargetView(): View? = null
 
+
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_go_email_apr -> {
@@ -97,12 +102,25 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                 startActivityForResult(Intent(this@PhoneRegisterActivity, SelectCountryActivity::class.java), REQUEST_CODE)
             }
             R.id.tv_verify_apr -> {
-
+                VerifyBean.getVerifyCodeNet(phoneEt.getContent(), VerifyBean.TYPE_REGISTER)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                verifyButton.startVerify()
+                                checkcodeId = it.result.checkcodeId
+                                showToast("验证码已经发送到${phoneEt.getContent()}")
+                            }
+                        }, onError)
             }
             R.id.btn_register_apr -> {
+                if (checkcodeId.isNullOrEmpty()) {
+                    showToast("请先获取验证码")
+                    return
+                }
+
                 if (registerBtn.validate()) {
                     val pwdStr = MD5Tool.getMd5_32(pwdEt.getContent())
-                    RegisterBean.registerNet(phoneEt.getContent(), null, null, pwdStr, verifyEt.getContent(), null)
+                    RegisterBean.registerNet(phoneEt.getContent(), null, null, pwdStr, checkcodeId, verifyEt.getContent())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .flatMap {
