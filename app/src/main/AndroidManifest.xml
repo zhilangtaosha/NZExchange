@@ -113,7 +113,9 @@
         <activity android:name=".controller.my.authentication.PrimaryAuthenticationActivity" />
         <activity android:name=".controller.my.authentication.PrimaryAuthenticationCompleteActivity" />
         <activity android:name=".controller.my.authentication.RealNameAuthenticationActivity" />
-        <activity android:name=".controller.my.authentication.VideoAuthenticationActivity"></activity>
+        <activity android:name=".controller.my.authentication.VideoAuthenticationActivity" />
+        <activity android:name=".controller.login.QuickLoginActivity" />
+        <activity android:name=".controller.my.safecenter.SafeCenterActivity"></activity>
     </application>
 
 </manifest>

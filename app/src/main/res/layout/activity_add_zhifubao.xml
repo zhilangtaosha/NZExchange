@@ -79,7 +79,6 @@
             android:layout_toRightOf="@+id/tv_account_aaz"
             android:background="@android:color/transparent"
             android:hint="请输入支付宝账号"
-            android:inputType="number"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:textColor="@color/color_FFA3AAB9"

@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_set_pay_method.*
 
 class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
 
-    var userBean: UserBean? = NzeApp.instance.userBean
+    var userBean: UserBean? =  UserBean.loadFromApp()
 
     val adapter: SetPayMethodAdapter by lazy {
         SetPayMethodAdapter(this)
@@ -40,6 +40,7 @@ class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
                     }, onError)
         }
     }
+
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

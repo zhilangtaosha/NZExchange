@@ -3,6 +3,7 @@ package com.nze.nzexchange.http
 import com.nze.nzexchange.bean.*
 import io.reactivex.Flowable
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 /**
@@ -102,12 +103,12 @@ interface UserService {
     @Multipart
     @POST("/fileWebAllBus/zyy/uploadAttachement.json")
     fun uploadFile(
-            @Part("tokenUserId") tokenUserId: String,
-            @Part("tokenUserKey") tokenUserKey: String,
-            @Part("tokenSystreeId") tokenSystreeId: String,
-            @Part("path") path: String,
-            @Part("busId") busId: String,
-            @Part("coverOldBusFile") coverOldBusFile: Boolean,
+            @Query("tokenUserId") tokenUserId: String,
+            @Query("tokenUserKey") tokenUserKey: String,
+            @Query("tokenSystreeId") tokenSystreeId: String,
+            @Query("path") path: String,
+            @Query("busId") busId: String,
+            @Query("coverOldBusFile") coverOldBusFile: Boolean,
             @Part file: MultipartBody.Part
-    ): Flowable<Result<HashMap<String, String>>>
+    ): Flowable<Result<UploadBean>>
 }

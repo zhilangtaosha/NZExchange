@@ -1,5 +1,7 @@
 package com.nze.nzexchange.bean
 
+import com.nze.nzexchange.NzeApp
+
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
@@ -20,4 +22,9 @@ data class UserBean(
 ) {
 
 
+    companion object {
+
+        fun loadFromApp() = NzeApp.instance.userBean
+
+    }
 }

@@ -12,19 +12,34 @@ class CRetrofit private constructor() {
     //http://zhongyingying.qicp.io:18080
     val LIU_URL = "http://192.168.1.143:8082/"
     val SERVER_URL = "http://zhongyingying.qicp.io:18080/zyy-otc/"
+    //服务器地址
+    val SERVER_FILE = "http://zhongyingying.qicp.io:8083"
 
     var url: String = LIU_URL
     var retrofit: Retrofit
-
-    init {
-        val builder = OkHttpClient.Builder()
+    val builder by lazy {
+        OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(RetryIntercepter(3))
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
-        builder.addInterceptor(interceptor)
+                .apply {
+                    val interceptor = HttpLoggingInterceptor()
+                    interceptor.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+                    addInterceptor(interceptor)
+                }
+    }
+
+    init {
+//        builder = OkHttpClient.Builder()
+//                .connectTimeout(30, TimeUnit.SECONDS)
+//                .writeTimeout(30, TimeUnit.SECONDS)
+//                .readTimeout(30, TimeUnit.SECONDS)
+//                .addInterceptor(RetryIntercepter(3))
+//        val interceptor = HttpLoggingInterceptor()
+//        interceptor.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+//        builder.addInterceptor(interceptor)
+
         retrofit = Retrofit.Builder()
                 .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -39,6 +54,15 @@ class CRetrofit private constructor() {
 
     fun userService(): UserService = create(UserService::class.java)
 
+    fun uploadService(): UserService {
+        return Retrofit.Builder()
+                .client(builder.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl(SERVER_FILE)
+                .build()
+                .create(UserService::class.java)
+    }
 
     companion object {
         val instance: CRetrofit by lazy { CRetrofit() }

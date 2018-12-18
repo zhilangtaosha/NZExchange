@@ -12,9 +12,9 @@ import retrofit2.http.Field
  * @创建时间：2018/12/16
  */
 data class SetPayMethodBean(
-        val accmoneyBank: String?,
-        val accmoneyBankcard: String?,
-        val accmoneyBanktype: String?,
+        var accmoneyBank: String?,
+        var accmoneyBankcard: String?,
+        var accmoneyBanktype: String?,
         val accmoneyCreateTime: Long,
         val accmoneyCreateTimeStr: String?,
         val accmoneyCreateUser: String?,
@@ -24,10 +24,10 @@ data class SetPayMethodBean(
         val accmoneyUpdateTime: Long,
         val accmoneyUpdateTimeStr: String?,
         val accmoneyUpdateUser: String?,
-        val accmoneyWeixinacc: String?,
-        val accmoneyWeixinurl: String?,
-        val accmoneyZfbacc: String?,
-        val accmoneyZfburl: String?,
+        var accmoneyWeixinacc: String?,
+        var accmoneyWeixinurl: String?,
+        var accmoneyZfbacc: String?,
+        var accmoneyZfburl: String?,
         val membId: String?,
         val membIdentitycard: String?,
         val membName: String?,

@@ -17,5 +17,6 @@ class EventCode {
         const val CODE_LOGIN_SUCCUSS = 0x007// 登录成功
         const val CODE_LOGOUT_SUCCESS = 0x008//退出登录
         const val CODE_REFRESH_MAIN_ACT = 0x009//通知刷新主页面
+        const val CODE_REFRESH_USERBEAN = 0x010//通知刷新NzeApp的UserBean
     }
 }

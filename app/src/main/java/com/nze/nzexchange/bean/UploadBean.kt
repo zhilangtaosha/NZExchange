@@ -1,7 +1,9 @@
 package com.nze.nzexchange.bean
 
 import com.nze.nzexchange.http.CRetrofit
+import io.reactivex.Flowable
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Part
 
 /**
@@ -10,7 +12,12 @@ import retrofit2.http.Part
  * @类 说 明:
  * @创建时间：2018/12/17
  */
-class UploadBean {
+data class UploadBean(
+        val allFileHttpUrl: String,
+        val busId: String,
+        val fileds: List<Filed>,
+        val msg: String
+) {
 
     companion object {
 
@@ -22,10 +29,39 @@ class UploadBean {
                 busId: String,
                 coverOldBusFile: Boolean,
                 file: MultipartBody.Part
-        ) {
-            CRetrofit.instance
-                    .userService()
-                    .uploadFile(tokenUserId, tokenUserKey, tokenSystreeId, path, busId, coverOldBusFile, file)
+        ): Flowable<Result<UploadBean>> {
+
+            return Flowable.defer {
+                CRetrofit.instance
+                        .uploadService()
+                        .uploadFile(tokenUserId, tokenUserKey, tokenSystreeId, path, busId, coverOldBusFile, file)
+            }
         }
     }
 }
+
+
+data class Filed(
+        val busId: String,
+        val diskPath: String,
+        val downUrl: String,
+        val fileBusName: String,
+        val fileBusPath: String,
+        val fileContent: String,
+        val fileCreateTime: Long,
+        val fileCreateTimeStr: String,
+        val fileCreateUser: String,
+        val fileId: String,
+        val fileName: String,
+        val filePath: String,
+        val fileSize: Int,
+        val fileStatus: Int,
+        val fileStatusStr: String,
+        val fileUpdateTime: Long,
+        val fileUpdateUser: Any,
+        val httpUrl: String,
+        val systreeId: String,
+        val treeauthCode: String,
+        val treeauthId: String,
+        val treeauthName: String
+)

@@ -106,5 +106,12 @@
             android:text="注册"
             android:textColor="@color/color_FF6D87A8"
             android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_quick_my"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="快速" />
     </LinearLayout>
 </RelativeLayout>

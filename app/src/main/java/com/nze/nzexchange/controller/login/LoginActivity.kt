@@ -47,7 +47,9 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
                 .add(passwordEt, EmptyValidation())
                 .executeValidator()
 
-
+        btn_quick_my.setOnClickListener {
+            skipActivity(QuickLoginActivity::class.java)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

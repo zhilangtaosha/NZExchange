@@ -4,9 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
+import android.widget.*
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NGlide
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.takephoto.app.TakePhoto
 import com.nze.nzeframework.widget.takephoto.app.TakePhotoImpl
@@ -16,20 +17,44 @@ import com.nze.nzeframework.widget.takephoto.model.TResult
 import com.nze.nzeframework.widget.takephoto.permission.InvokeListener
 import com.nze.nzeframework.widget.takephoto.permission.PermissionManager
 import com.nze.nzeframework.widget.takephoto.permission.TakePhotoInvocationHandler
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.SetPayMethodBean
+import com.nze.nzexchange.bean.UploadBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.CommonListPopup
+import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.extend.getValue
 import com.nze.nzexchange.tools.FileTool
 import com.nze.nzexchange.tools.TakePhotoTool
+import com.nze.nzexchange.validation.EmptyValidation
+import com.nze.nzexchange.widget.CommonButton
 import kotlinx.android.synthetic.main.activity_add_zhifubao.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
+
 
 class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, InvokeListener, View.OnClickListener {
 
 
     var type: Int = IntentConstant.TYPE_ZHIFUBAO
     val cardNoValueEt: EditText by lazy { et_cardno_value_aaz }
+    val saveBtn: CommonButton by lazy {
+        btn_save_aaz.apply {
+            initValidator()
+                    .add(cardNoValueEt, EmptyValidation())
+                    .executeValidator()
+        }
+    }
+    val nameValueTv: TextView by lazy { tv_name_value_aaz }
+    val addLayout: RelativeLayout by lazy { layout_add_aaz }
+    val addIv: ImageView by lazy { iv_add_aaz }
+    val closeIv: ImageView by lazy { iv_close_aaz }
+
     private val itemLimit: MutableList<String> by lazy {
         mutableListOf<String>().apply {
             add("拍照")
@@ -60,7 +85,19 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
 
 
     lateinit var invokeParam: InvokeParam
+    val userBean: UserBean? by lazy { NzeApp.instance.userBean }
+    var path: String = "membAccmoney"
+    var busId = "83517FF817394A4B813E4777063536"
+    lateinit var body: MultipartBody.Part
+    lateinit var requestFile: RequestBody
 
+    var accmoneyWeixinurl: String? = null
+    var accmoneyWeixinacc: String? = null
+    var accmoneyZfburl: String? = null
+    var accmoneyZfbacc: String? = null
+
+    var imageUrl = ""
+    var account = ""
 
     override fun getRootView(): Int = R.layout.activity_add_zhifubao
 
@@ -72,14 +109,34 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
         if (type == IntentConstant.TYPE_ZHIFUBAO) {
             ctb_aaz.setTitle("添加支付宝")
             et_cardno_value_aaz.hint = "请输入支付宝账号"
+            imageUrl = userBean?.payMethod?.accmoneyZfburl?.getValue() ?: ""
+            account = userBean?.payMethod?.accmoneyZfbacc?.getValue() ?: ""
+            accmoneyZfbacc = account
+            accmoneyZfburl = imageUrl
         } else {
             ctb_aaz.setTitle("添加微信")
             et_cardno_value_aaz.hint = "请输入微信账号"
+            imageUrl = userBean?.payMethod?.accmoneyWeixinurl?.getValue() ?: ""
+            account = userBean?.payMethod?.accmoneyWeixinacc?.getValue() ?: ""
+            accmoneyWeixinacc = account
+            accmoneyWeixinurl = imageUrl
         }
-        layout_add_aaz.setOnClickListener(this)
 
-        iv_close_aaz.setOnClickListener(this)
-        btn_save_aaz.setOnCommonClick(this)
+        addLayout.setOnClickListener(this)
+
+        closeIv.setOnClickListener(this)
+        saveBtn.setOnCommonClick(this)
+
+        if (account.isNotEmpty()) {
+            cardNoValueEt.setText(account)
+            cardNoValueEt.setSelection(account.length)
+        }
+        if (imageUrl.isNotEmpty()) {
+            NGlide.load(addIv, imageUrl)
+            closeIv.visibility = View.VISIBLE
+            addLayout.isClickable = false
+        }
+
     }
 
     override fun onClick(v: View?) {
@@ -91,7 +148,36 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                 layout_add_aaz.isClickable = true
             }
             R.id.btn_save_aaz -> {
-
+                if (saveBtn.validate()) {
+                    if (type == IntentConstant.TYPE_ZHIFUBAO) {
+                        accmoneyZfbacc = cardNoValueEt.getContent()
+                    } else {
+                        accmoneyWeixinacc = cardNoValueEt.getContent()
+                    }
+                    userBean?.run {
+                        SetPayMethodBean.setPayMethodNet(tokenReqVo.tokenUserId,
+                                tokenReqVo.tokenUserKey,
+                                null,
+                                null,
+                                null,
+                                accmoneyWeixinurl, accmoneyWeixinacc, accmoneyZfburl, accmoneyZfbacc)
+                                .compose(netTfWithDialog())
+                                .subscribe({
+                                    if (it.success) {
+                                        val payMethodBean = it.result
+                                        if (type == IntentConstant.TYPE_ZHIFUBAO) {
+                                            userBean?.payMethod?.accmoneyZfbacc = payMethodBean.accmoneyZfbacc
+                                            userBean?.payMethod?.accmoneyZfburl = payMethodBean.accmoneyZfburl
+                                        } else {
+                                            userBean?.payMethod?.accmoneyWeixinacc = payMethodBean.accmoneyWeixinacc
+                                            userBean?.payMethod?.accmoneyWeixinurl = payMethodBean.accmoneyWeixinurl
+                                        }
+                                        NzeApp.instance.userBean = userBean
+                                        this@AddZhifubaoActivity.finish()
+                                    }
+                                }, onError)
+                    }
+                }
             }
         }
     }
@@ -141,9 +227,28 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
 
     override fun takeSuccess(result: TResult?) {
         NLog.i("takeSuccess:" + result?.image?.compressPath)
-        iv_add_aaz.setImageURI(Uri.fromFile(File(if (result?.image?.compressPath != null) result.image?.compressPath else result?.image?.originalPath)))
+        val imageFile = File(if (result?.image?.compressPath != null) result.image?.compressPath else result?.image?.originalPath)
+        iv_add_aaz.setImageURI(Uri.fromFile(imageFile))
         iv_close_aaz.visibility = View.VISIBLE
         layout_add_aaz.isClickable = false
+//        path = if (result?.image?.compressPath != null) result.image?.compressPath!! else result?.image?.originalPath!!
+        requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile)
+        var fileName = "${System.currentTimeMillis()}.jpg"
+        body = MultipartBody.Part.createFormData("file", fileName, requestFile)
+        userBean?.run {
+            UploadBean.uploadFileNet(tokenReqVo.tokenUserId, tokenReqVo.tokenUserKey, tokenReqVo.tokenSystreeId, path, busId, true, body)
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        if (it.success) {
+                            val httpUrl = it.result.fileds[0].httpUrl
+                            if (type == IntentConstant.TYPE_ZHIFUBAO) {
+                                accmoneyZfburl = httpUrl
+                            } else {
+                                accmoneyWeixinurl = httpUrl
+                            }
+                        }
+                    }, onError)
+        }
     }
 
     override fun takeFail(result: TResult?, msg: String?) {
