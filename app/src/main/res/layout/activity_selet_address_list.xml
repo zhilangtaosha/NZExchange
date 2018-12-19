@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.withdraw.SelectCurrencyAddressListActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="选择地址" />
+
+    <ListView
+        android:id="@+id/lv_select_asal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="44dp"
+        android:listSelector="@drawable/selector_common_lv" />
+
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_add_asal"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="30dp" />
+</RelativeLayout>

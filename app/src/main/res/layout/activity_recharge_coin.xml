@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.RechargeCoinActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_arc"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_right_text="充值记录"
+        app:tb_title_text="USDT充值" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/shape_recharge_coin_bg1"
+                android:gravity="center"
+                android:text="USDT快速充值"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/shape_recharge_coin_bg2"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_coin_address_arc"
+                    android:layout_width="265dp"
+                    android:layout_height="265dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="35dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/default_icon" />
+
+                <TextView
+                    android:id="@+id/tv_coin_address_arc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="8646466846sdfsdf"
+                    android:textColor="@color/color_FFA3AAB9"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/shape_dash_line_87a8"
+                    android:layerType="software" />
+
+                <TextView
+                    android:id="@+id/tv_copy_address_arc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="15dp"
+                    android:text="复制地址"
+                    android:textColor="@color/color_FF6D87A8"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_tip_arc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="50dp"
+                android:text="最小充值金额：100.0USDT，小于最小金额的充值将不会入账，请勿向上述地址充值任何非USDT资产，否则资产将不可找回。"
+                android:textColor="@color/color_FF6D87A8"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

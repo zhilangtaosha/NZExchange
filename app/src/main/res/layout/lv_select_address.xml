@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingTop="20dp"
+    android:paddingRight="15dp">
+
+    <TextView
+        android:id="@+id/tv_desc_lsa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="两只小妹妹"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_currency_type_lsa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_toRightOf="@+id/tv_desc_lsa"
+        android:background="@color/color_FF3F5F8C"
+        android:text="ETH"
+        android:textColor="@color/color_FFD3DDF0"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/tv_address_lsa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_desc_lsa"
+        android:layout_marginTop="10dp"
+        android:text="sdfsdfsdf15131351sdf"
+        android:textColor="@color/color_FF676C7A"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_below="@+id/tv_address_lsa"
+        android:layout_marginTop="13dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/color_line" />
+</RelativeLayout>

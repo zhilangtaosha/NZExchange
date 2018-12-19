@@ -66,7 +66,7 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
             mLeftTv.setCompoundDrawablesWithIntrinsicBounds(leftIcon, null, null, null)
         }
 
-        if (mRightIconId>0){
+        if (mRightIconId > 0) {
             val rightIcon = ContextCompat.getDrawable(context, mRightIconId)
             mRightTv.setCompoundDrawablesWithIntrinsicBounds(null, null, rightIcon, null)
         }
@@ -89,6 +89,16 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
         return this
     }
 
+    fun setTitleRightIcon(iconId: Int) {
+        mTitleTv.setCompoundDrawables(null, null, ContextCompat.getDrawable(context, iconId), null)
+    }
+
+    fun setTitleClick(click: () -> Unit) {
+        mTitleTv.setOnClickListener {
+            click.invoke()
+        }
+    }
+
     fun setTitle(title: String): CommonTopBar {
         mTitleTv.text = title
         return this
@@ -106,6 +116,7 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
         return this
     }
 
+
     fun setBackGroud(color: Int): CommonTopBar {
         layout_root_ctb.setBackgroundColor(color)
         return this
@@ -115,5 +126,6 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
         mLeftTv.visibility = View.INVISIBLE
         return this
     }
+
 
 }

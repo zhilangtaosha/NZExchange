@@ -12,6 +12,8 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.login.LoginActivity
+import com.nze.nzexchange.controller.my.asset.RechargeCoinActivity
+import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
 import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity
 import com.nze.nzexchange.controller.my.paymethod.SetPayMethodActivity
 import com.nze.nzexchange.controller.my.setting.SettingActivity
@@ -89,8 +91,10 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
             R.id.tv_recharge_my -> {
             }
             R.id.tv_withdraw_my -> {
+                skipActivity(CurrencyAddressSetListActivity::class.java)
             }
             R.id.tv_asset_my -> {
+                skipActivity(RechargeCoinActivity::class.java)
             }
             R.id.tv_order_manage_my -> {
             }

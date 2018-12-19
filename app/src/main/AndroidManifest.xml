@@ -115,7 +115,13 @@
         <activity android:name=".controller.my.authentication.RealNameAuthenticationActivity" />
         <activity android:name=".controller.my.authentication.VideoAuthenticationActivity" />
         <activity android:name=".controller.login.QuickLoginActivity" />
-        <activity android:name=".controller.my.safecenter.SafeCenterActivity"></activity>
+        <activity android:name=".controller.my.safecenter.SafeCenterActivity" />
+        <activity android:name=".controller.my.asset.RechargeCoinActivity" />
+        <activity android:name=".controller.my.asset.SelectCurrencyActivity" />
+        <activity android:name=".controller.my.asset.withdraw.CurrencyWithdrawActivity" />
+        <activity android:name=".controller.my.asset.withdraw.CurrencyAddressSetListActivity" />
+        <activity android:name=".controller.my.asset.withdraw.SelectCurrencyAddressListActivity" />
+        <activity android:name=".controller.my.asset.withdraw.AddAddressActivity"></activity>
     </application>
 
 </manifest>

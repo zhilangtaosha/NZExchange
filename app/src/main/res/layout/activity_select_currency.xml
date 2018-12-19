@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.SelectCurrencyActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/color_title_bg"
+        android:orientation="horizontal">
+
+        <com.nze.nzexchange.widget.clearedit.ClearableEditText
+            android:id="@+id/cet_search_asc"
+            style="@style/et14"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_radius_1927_bg"
+            android:drawableLeft="@mipmap/search_icon"
+            android:drawablePadding="10dp"
+            android:hint="搜索币种" />
+
+        <TextView
+            android:id="@+id/tv_cancel_asc"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="取消"
+            android:textColor="@color/color_FF6D87A8"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_currency_asc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:listSelector="@drawable/selector_common_lv"
+        android:divider="@color/color_line"
+        android:dividerHeight="1px" />
+
+</LinearLayout>
