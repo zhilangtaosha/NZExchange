@@ -43,6 +43,8 @@ class NRetrofit private constructor() {
 
     fun bibiService(): BibiService = create(BibiService::class.java)
 
+    fun assetService(): AssetService = create(AssetService::class.java)
+
     companion object {
         val instance: NRetrofit = NRetrofit()
     }

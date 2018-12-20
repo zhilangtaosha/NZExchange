@@ -10,17 +10,17 @@ import io.reactivex.Flowable
  * @类 说 明:
  * @创建时间：2018/11/20
  */
-data class AssetBean(var currency: String = "",
-                     var amount: Double,
-                     var tokenId: String = "",
-                     var freeze: Double) {
+data class OtcAssetBean(var currency: String = "",
+                        var amount: Double,
+                        var tokenId: String = "",
+                        var freeze: Double) {
     var available: Double = 0.0
         get() {
             return DoubleMath.sub(amount, freeze)
         }
 
     companion object {
-        fun getAssetsNet(userId: String): Flowable<Result<MutableList<AssetBean>>> {
+        fun getAssetsNet(userId: String): Flowable<Result<MutableList<OtcAssetBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .buyService()

@@ -28,7 +28,7 @@ class SelectCurrencyAddressListActivity : NBaseActivity() {
         selectAdapter.group = CoinAddressBean.getList()[0].coinAddress
 
         addBtn.setOnClickListener {
-
+            skipActivity(AddAddressActivity::class.java)
         }
     }
 

@@ -1,22 +1,35 @@
 package com.nze.nzexchange.controller.my.asset
 
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.base.NBaseFragment
+import com.zhuang.zbannerlibrary.ZBanner
+import com.zhuang.zbannerlibrary.ZBannerAdapter
+import kotlinx.android.synthetic.main.activity_my_asset.*
 
 /**
  * 我的资产
  */
-class MyAssetActivity : NBaseActivity() {
+class MyAssetActivity : NBaseActivity(),NBaseFragment.OnFragmentInteractionListener {
 
+
+    val zbanner: ZBanner by lazy { carousel_ama }
+    val accoutTypeList: List<Int> = listOf<Int>(AssetBannerFragment.ACCOUT_TYPE_BIBI, AssetBannerFragment.ACCOUT_TYPE_LEGAL, AssetBannerFragment.ACCOUT_TYPE_OTC)
+    val bannerAdapter: AssetBannerAdapter by lazy { AssetBannerAdapter(supportFragmentManager, accoutTypeList) }
 
     override fun getRootView(): Int = R.layout.activity_my_asset
 
     override fun initView() {
+        zbanner.setAdapter(bannerAdapter)
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -38,6 +51,20 @@ class MyAssetActivity : NBaseActivity() {
 
     override fun getContainerTargetView(): View? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
+    override fun onFragmentInteraction(uri: Uri) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    class AssetBannerAdapter(fm: FragmentManager?, var typeList: List<Int>) : ZBannerAdapter(fm) {
+        override fun getItem(position: Int): Fragment {
+            return AssetBannerFragment.newInstance(typeList[position])
+        }
+
+        override fun getCount(): Int = typeList.size
+
     }
 
 }

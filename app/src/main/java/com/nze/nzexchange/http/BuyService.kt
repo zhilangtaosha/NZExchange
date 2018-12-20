@@ -12,7 +12,7 @@ interface BuyService {
 
     @FormUrlEncoded
     @POST("otc/buy/getAssets")
-    fun getAssets(@Field("userId") userId: String): Flowable<Result<MutableList<AssetBean>>>
+    fun getAssets(@Field("userId") userId: String): Flowable<Result<MutableList<OtcAssetBean>>>
 
     //挂单，商家出售，用户购买
     @FormUrlEncoded

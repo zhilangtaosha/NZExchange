@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.AssetBean
+import com.nze.nzexchange.bean.OtcAssetBean
 import com.nze.nzexchange.controller.base.BaseAda
 
-class OtcSideAdapter(mContext: Context) : BaseAda<AssetBean>(mContext) {
+class OtcSideAdapter(mContext: Context) : BaseAda<OtcAssetBean>(mContext) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 

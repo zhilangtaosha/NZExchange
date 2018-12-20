@@ -44,6 +44,8 @@ dependencies {
     implementation 'com.kaopiz:kprogresshud:1.2.0'
     //seekbar用于币币交易
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.0'
-
+    //二维码
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
+    //获取权限
+    implementation 'pub.devrel:easypermissions:2.0.0'
 }

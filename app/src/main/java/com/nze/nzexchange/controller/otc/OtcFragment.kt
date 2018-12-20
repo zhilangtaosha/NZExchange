@@ -15,7 +15,7 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.AssetBean
+import com.nze.nzexchange.bean.OtcAssetBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -53,13 +53,13 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
             OtcAdFragment.newInstance())
 
     var currentItem: Int = 0
-    var mCurrentAsset: AssetBean? = null
+    var mCurrentAsset: OtcAssetBean? = null
     val sideAdapter: OtcSideAdapter by lazy {
         OtcSideAdapter(activity!!)
     }
 
 
-    private val sideData = mutableListOf<AssetBean>()
+    private val sideData = mutableListOf<OtcAssetBean>()
 
     companion object {
         @JvmStatic
@@ -114,7 +114,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 
 
     fun getAssetFromNet() {
-        AssetBean.getAssetsNet(NzeApp.instance.userId)
+        OtcAssetBean.getAssetsNet(NzeApp.instance.userId)
                 .compose(netTf())
                 .subscribe({
                     val list = it.result

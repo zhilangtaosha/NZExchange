@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout_fab"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/asset_bibi_bg"
+    android:orientation="vertical"
+    android:paddingLeft="25dp"
+    android:paddingTop="22dp"
+    android:paddingBottom="18dp"
+    tools:context=".controller.my.asset.AssetBannerFragment">
+
+    <TextView
+        android:id="@+id/tv_accout_type_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="币币账户"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_asset_key_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="净资产折合(BTC)"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_asset_value_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="0.02165115"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_money_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="≈0.165165CNY"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+</LinearLayout>

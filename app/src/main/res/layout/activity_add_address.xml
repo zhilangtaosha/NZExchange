@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg"
     android:orientation="vertical"
     tools:context=".controller.my.asset.withdraw.AddAddressActivity">
 
@@ -32,10 +33,60 @@
             style="@style/et14"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@null" />
 
         <ImageView
-            android:layout_width="17dp"
-            android:layout_height="17dp" />
+            android:id="@+id/iv_scan_aaa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:src="@mipmap/scan_icon" />
     </LinearLayout>
+
+    <include layout="@layout/common_line" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:text="备注"
+        android:textColor="@color/color_FFA3AAB9"
+        android:textSize="15sp" />
+
+    <com.nze.nzexchange.widget.clearedit.ClearableEditText
+        android:id="@+id/et_remark_aaa"
+        style="@style/et14"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@null"
+        android:hint="USDT-Address 2" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="left"
+        android:text="注:设置提币地址需进行视频认证，点击下一步开始视频认证，认证视频和地址信息一起提交交易所审核，审核通过后则地址设置成功，否则需要新认证。审核时间未1个工作日。"
+        android:textColor="@color/color_FF151927"
+        android:textSize="12sp" />
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_confirm_aaa"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="15dp"
+        android:text="完成" />
 </LinearLayout>

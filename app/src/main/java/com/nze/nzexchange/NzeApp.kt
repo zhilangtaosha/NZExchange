@@ -2,6 +2,7 @@ package com.nze.nzexchange
 
 import com.nze.nzeframework.ui.BaseApplication
 import com.nze.nzexchange.bean.UserBean
+import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import kotlin.properties.Delegates
 
 class NzeApp : BaseApplication() {
@@ -16,6 +17,8 @@ class NzeApp : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        ZXingLibrary.initDisplayOpinion(this)
     }
 
 
