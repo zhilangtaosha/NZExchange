@@ -12,7 +12,8 @@ import io.reactivex.Flowable
 data class BibiAssetBean(
         val address: String,
         val available: Double,
-        val currency: String
+        val currency: String,
+        val freeze: Double
 ) {
 
     companion object {
@@ -22,6 +23,13 @@ data class BibiAssetBean(
                 NRetrofit.instance
                         .assetService()
                         .getUserAssets(userId)
+            }
+        }
+
+
+        fun getList() = mutableListOf<BibiAssetBean>().apply {
+            for (i in 1..10) {
+                add(BibiAssetBean("sdf65465651", 6.58, "CURRENCY$i", 1.20))
             }
         }
     }

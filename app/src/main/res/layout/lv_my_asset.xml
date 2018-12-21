@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/tv_currency_name_lma"
+        style="@style/tx15_aab9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="USDT" />
+
+    <TextView
+        android:id="@+id/tv_available_key_lma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_currency_name_lma"
+        android:layout_marginTop="12dp"
+        android:text="可用"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_available_value_lma"
+        style="@style/tx15_aab9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_available_key_lma"
+        android:layout_alignLeft="@+id/tv_available_key_lma"
+        android:layout_marginTop="10dp"
+        android:text="0.1515" />
+
+    <TextView
+        android:id="@+id/tv_freeze_key_lma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_currency_name_lma"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:text="冻结"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_freeze_value_lma"
+        style="@style/tx15_aab9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_freeze_key_lma"
+        android:layout_alignLeft="@+id/tv_freeze_key_lma"
+        android:layout_marginTop="10dp"
+        android:text="0.1515" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_currency_name_lma"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_money_key_lma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="折合(CNY)"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_money_value_lma"
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="2.5449865" />
+    </LinearLayout>
+
+</RelativeLayout>

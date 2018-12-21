@@ -121,7 +121,8 @@
         <activity android:name=".controller.my.asset.withdraw.CurrencyWithdrawActivity" />
         <activity android:name=".controller.my.asset.withdraw.CurrencyAddressSetListActivity" />
         <activity android:name=".controller.my.asset.withdraw.SelectCurrencyAddressListActivity" />
-        <activity android:name=".controller.my.asset.withdraw.AddAddressActivity"></activity>
+        <activity android:name=".controller.my.asset.withdraw.AddAddressActivity" />
+        <activity android:name=".controller.my.asset.ConcreteCurrencyAssetActivity"></activity>
     </application>
 
 </manifest>

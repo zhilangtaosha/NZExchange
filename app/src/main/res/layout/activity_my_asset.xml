@@ -16,9 +16,7 @@
     <com.zhuang.zbannerlibrary.ZBanner
         android:id="@+id/carousel_ama"
         android:layout_width="match_parent"
-        android:layout_height="187dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_height="160dp"
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
         app:offscreenPageLimit="2"
@@ -29,16 +27,41 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
         <com.nze.nzexchange.widget.clearedit.ClearableEditText
+            android:id="@+id/et_search_ama"
+            style="@style/et14"
             android:layout_width="200dp"
             android:layout_height="30dp"
-            android:layout_marginLeft="15dp"
+            android:background="@drawable/shape_radius_2532_bg"
+            android:drawableLeft="@mipmap/search_icon"
+            android:drawablePadding="10dp"
+            android:hint="搜索币种"
             android:paddingLeft="10dp"
-            android:drawableLeft="@mipmap/search_icon" />
+            android:textColor="@color/color_FFA3AAB9" />
+
+        <CheckBox
+            android:id="@+id/cb_show_small_ama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:button="@null"
+            android:drawableLeft="@drawable/selector_checkbox_asset_show_small"
+            android:drawablePadding="10dp"
+            android:text="隐藏小额币种"
+            android:textColor="@color/color_FFA3AAB9"
+            android:textSize="12sp" />
     </RelativeLayout>
 
+    <ListView
+        android:id="@+id/lv_ama"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -23,7 +23,7 @@
         android:id="@+id/tv_asset_key_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:text="净资产折合(BTC)"
         android:textColor="@color/white"
         android:textSize="14sp" />
@@ -32,7 +32,7 @@
         android:id="@+id/tv_asset_value_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:text="0.02165115"
         android:textColor="@color/white"
         android:textSize="20sp" />
@@ -41,7 +41,7 @@
         android:id="@+id/tv_money_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:text="≈0.165165CNY"
         android:textColor="@color/white"
         android:textSize="15sp" />
