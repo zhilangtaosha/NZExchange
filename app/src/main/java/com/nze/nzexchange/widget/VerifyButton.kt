@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
@@ -38,6 +39,8 @@ class VerifyButton : AppCompatTextView {
     private fun initView(context: Context) {
         setTextColor(ContextCompat.getColor(getContext(), R.color.color_FFE05760))
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+
+        gravity = Gravity.CENTER
     }
 
     fun setVerifyClick(click: View.OnClickListener) {

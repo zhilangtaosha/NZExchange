@@ -14,7 +14,7 @@ import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_recharge_coin.*
 import org.w3c.dom.Text
 
-class RechargeCoinActivity : NBaseActivity(), View.OnClickListener {
+class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
 
     val topBar: CommonTopBar by lazy {
         ctb_arc.apply {

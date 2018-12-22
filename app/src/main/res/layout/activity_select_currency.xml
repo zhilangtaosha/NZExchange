@@ -12,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="@color/color_title_bg"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="horizontal">
 
         <com.nze.nzexchange.widget.clearedit.ClearableEditText
@@ -44,10 +46,8 @@
         android:id="@+id/lv_currency_asc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:listSelector="@drawable/selector_common_lv"
         android:divider="@color/color_line"
-        android:dividerHeight="1px" />
+        android:dividerHeight="1px"
+        android:listSelector="@drawable/selector_common_lv" />
 
 </LinearLayout>

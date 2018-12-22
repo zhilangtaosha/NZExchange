@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     android:orientation="vertical"
-    tools:context=".controller.my.asset.RechargeCoinActivity">
+    tools:context=".controller.my.asset.RechargeCurrencyActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
         android:id="@+id/ctb_arc"

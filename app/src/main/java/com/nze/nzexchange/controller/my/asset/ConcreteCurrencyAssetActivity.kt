@@ -1,7 +1,5 @@
 package com.nze.nzexchange.controller.my.asset
 
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -9,8 +7,8 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawCurrencyActivity
 import kotlinx.android.synthetic.main.activity_concrete_currency_asset.*
-import kotlinx.android.synthetic.main.lv_my_asset.view.*
 
 /**
  * 具体某种币的资产页面
@@ -53,6 +51,14 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
     override fun getContainerTargetView(): View? = null
 
     override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.btn_recharge_acca -> {
+                skipActivity(RechargeCurrencyActivity::class.java)
+            }
+            R.id.btn_withdraw_acca -> {
+                skipActivity(WithdrawCurrencyActivity::class.java)
+            }
+        }
     }
 
 }

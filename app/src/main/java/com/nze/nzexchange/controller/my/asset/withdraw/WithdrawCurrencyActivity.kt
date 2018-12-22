@@ -6,42 +6,63 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.widget.CommonButton
+import com.nze.nzexchange.widget.CommonTopBar
+import com.nze.nzexchange.widget.VerifyButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import com.uuzuche.lib_zxing.activity.CaptureActivity
 import com.uuzuche.lib_zxing.activity.CodeUtils
-import kotlinx.android.synthetic.main.activity_add_address.*
+import kotlinx.android.synthetic.main.activity_coin_withdraw.*
 import pub.devrel.easypermissions.EasyPermissions
 
-
 /**
- * 添加新的提币地址
- * 添加完成后在列表展示
+ * 数字货币提现
  */
-class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermissions.PermissionCallbacks {
+class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPermissions.PermissionCallbacks {
 
 
-    val addressEt: ClearableEditText by lazy { et_address_aaa }
-    val scanIv: ImageView by lazy { iv_scan_aaa }
-    val remarkEt: ClearableEditText by lazy { et_remark_aaa }
-    val confirmBtn: CommonButton by lazy { btn_confirm_aaa }
+    val topBar: CommonTopBar by lazy { ctb_acw }
+    val currencyTv: TextView by lazy { tv_currency_acw }
+    val selectCurrencyIv: ImageView by lazy { iv_select_currency_acw }
+    val addressEt: ClearableEditText by lazy { et_address_acw }
+    val qcodeIv: ImageView by lazy { iv_qcode_acw }
+    val addressIv: ImageView by lazy { iv_address_acw }
+    val amountEt: ClearableEditText by lazy { et_amount_acw }
+    val availableTv: TextView by lazy { tv_available_acw }
+    val allTv: TextView by lazy { tv_all_acw }
+    val phoneEt: ClearableEditText by lazy { et_phone_acw }
+    val verifyBtn: VerifyButton by lazy { btn_verify_acw }
+    val serviceChargeTv: TextView by lazy { tv_service_charge_acw }
+    val actualAmountTv: TextView by lazy { tv_actual_amount_acw }
+    val withdrawBtn: CommonButton by lazy { btn_withdraw_acw }
+    val attentionTv: TextView by lazy { tv_attention_acw }
 
     val REQUEST_CODE = 0x001
+    /**
+     * 请求CAMERA权限码
+     */
+    private val REQUEST_CAMERA_PERM: Int = 101
 
-    override fun getRootView(): Int = R.layout.activity_add_address
+    override fun getRootView(): Int = R.layout.activity_coin_withdraw
 
     override fun initView() {
-
-        scanIv.setOnClickListener(this)
-        confirmBtn.setOnCommonClick(this)
-
-
+        topBar.setRightClick {
+            skipActivity(WithdrawHistoryActivity::class.java)
+        }
+        selectCurrencyIv.setOnClickListener(this)
+        qcodeIv.setOnClickListener(this)
+        addressIv.setOnClickListener(this)
+        allTv.setOnClickListener(this)
+        verifyBtn.setOnClickListener(this)
+        withdrawBtn.setOnClickListener(this)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -51,6 +72,7 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
     override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT
 
     override fun isBindEventBusHere(): Boolean = false
+
     override fun isBindNetworkListener(): Boolean = false
 
     override fun onNetworkConnected(type: NetUtils.NetType) {
@@ -65,10 +87,20 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.iv_scan_aaa -> {
-                cameraTask()
+            R.id.iv_select_currency_acw -> {
+                skipActivity(SelectCurrencyActivity::class.java)
             }
-            R.id.btn_confirm_aaa -> {
+            R.id.iv_qcode_acw -> {
+            }
+            R.id.iv_address_acw -> {
+                skipActivity(SelectCurrencyAddressListActivity::class.java)
+            }
+            R.id.tv_all_acw -> {
+            }
+            R.id.btn_verify_acw -> {
+                verifyBtn.startVerify()
+            }
+            R.id.btn_withdraw_acw -> {
             }
         }
     }
@@ -82,19 +114,15 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
                     var result = bundle.getString(CodeUtils.RESULT_STRING);
                     Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
                 } else if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(this@AddAddressActivity, "解析二维码失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this@WithdrawCurrencyActivity, "解析二维码失败", Toast.LENGTH_LONG).show();
                 }
             }
         }
     }
 
-    /**
-     * 请求CAMERA权限码
-     */
-    private val REQUEST_CAMERA_PERM = 101
 
     fun openScan() {
-        startActivityForResult(Intent(this@AddAddressActivity, CaptureActivity::class.java), REQUEST_CODE)
+        startActivityForResult(Intent(this@WithdrawCurrencyActivity, CaptureActivity::class.java), REQUEST_CODE)
     }
 
 
@@ -113,9 +141,9 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             showToast("拒绝权限，不再弹出询问框，请前往APP应用设置中打开此权限")
-        }else{
+        } else {
             showToast("拒绝权限，等待下次询问哦")
         }
     }
@@ -128,6 +156,4 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
-
-
 }

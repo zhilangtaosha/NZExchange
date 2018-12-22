@@ -116,13 +116,14 @@
         <activity android:name=".controller.my.authentication.VideoAuthenticationActivity" />
         <activity android:name=".controller.login.QuickLoginActivity" />
         <activity android:name=".controller.my.safecenter.SafeCenterActivity" />
-        <activity android:name=".controller.my.asset.RechargeCoinActivity" />
+        <activity android:name=".controller.my.asset.RechargeCurrencyActivity" />
         <activity android:name=".controller.my.asset.SelectCurrencyActivity" />
-        <activity android:name=".controller.my.asset.withdraw.CurrencyWithdrawActivity" />
+        <activity android:name=".controller.my.asset.withdraw.WithdrawCurrencyActivity" />
         <activity android:name=".controller.my.asset.withdraw.CurrencyAddressSetListActivity" />
         <activity android:name=".controller.my.asset.withdraw.SelectCurrencyAddressListActivity" />
         <activity android:name=".controller.my.asset.withdraw.AddAddressActivity" />
-        <activity android:name=".controller.my.asset.ConcreteCurrencyAssetActivity"></activity>
+        <activity android:name=".controller.my.asset.ConcreteCurrencyAssetActivity" />
+        <activity android:name=".controller.my.asset.withdraw.WithdrawHistoryActivity"></activity>
     </application>
 
 </manifest>

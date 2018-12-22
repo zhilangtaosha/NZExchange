@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.View
+import android.widget.AdapterView
 import android.widget.CheckBox
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
@@ -22,8 +23,7 @@ import kotlinx.android.synthetic.main.activity_my_asset.*
 /**
  * 我的资产
  */
-class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionListener {
-
+class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionListener, AdapterView.OnItemClickListener {
 
     val zbanner: ZBanner by lazy { carousel_ama }
     val accoutTypeList: List<Int> = listOf<Int>(AssetBannerFragment.ACCOUT_TYPE_BIBI, AssetBannerFragment.ACCOUT_TYPE_LEGAL, AssetBannerFragment.ACCOUT_TYPE_OTC)
@@ -39,6 +39,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     override fun initView() {
         zbanner.setAdapter(bannerAdapter)
         listView.adapter = assetAdapter
+        listView.setOnItemClickListener(this)
 
         assetAdapter.group = BibiAssetBean.getList()
     }
@@ -62,6 +63,10 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
 
     override fun getContainerTargetView(): View? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        skipActivity(ConcreteCurrencyAssetActivity::class.java)
     }
 
 

@@ -13,7 +13,6 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
-import com.nze.nzexchange.controller.my.asset.RechargeCoinActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
 import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity
 import com.nze.nzexchange.controller.my.paymethod.SetPayMethodActivity
