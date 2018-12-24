@@ -12,6 +12,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.widget.CommonButton
@@ -45,7 +46,9 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
     val withdrawBtn: CommonButton by lazy { btn_withdraw_acw }
     val attentionTv: TextView by lazy { tv_attention_acw }
 
-    val REQUEST_CODE = 0x001
+    val REQUEST_CODE_QCODE = 1
+    val REQUEST_CODE_CURRENCY = 2
+
     /**
      * 请求CAMERA权限码
      */
@@ -88,7 +91,10 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.iv_select_currency_acw -> {
-                skipActivity(SelectCurrencyActivity::class.java)
+                startActivityForResult(
+                        Intent(this, SelectCurrencyActivity::class.java),
+                        REQUEST_CODE_CURRENCY
+                )
             }
             R.id.iv_qcode_acw -> {
             }
@@ -107,22 +113,28 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE) {
-            if (null != data) {
-                var bundle: Bundle? = data.getExtras() ?: return;
-                if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    var result = bundle.getString(CodeUtils.RESULT_STRING);
-                    Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
-                } else if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(this@WithdrawCurrencyActivity, "解析二维码失败", Toast.LENGTH_LONG).show();
+        var bundle: Bundle? = data?.getExtras() ?: return;
+        when (requestCode) {
+            REQUEST_CODE_QCODE -> {
+                if (null != data) {
+                    if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                        var result = bundle.getString(CodeUtils.RESULT_STRING);
+                        Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                    } else if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                        Toast.makeText(this@WithdrawCurrencyActivity, "解析二维码失败", Toast.LENGTH_LONG).show();
+                    }
                 }
+            }
+            REQUEST_CODE_CURRENCY -> {
+                val currency = bundle?.getString(IntentConstant.PARAM_CURRENCY)
+                currencyTv.text = currency
             }
         }
     }
 
 
     fun openScan() {
-        startActivityForResult(Intent(this@WithdrawCurrencyActivity, CaptureActivity::class.java), REQUEST_CODE)
+        startActivityForResult(Intent(this@WithdrawCurrencyActivity, CaptureActivity::class.java), REQUEST_CODE_QCODE)
     }
 
 
@@ -156,4 +168,6 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
+
+
 }

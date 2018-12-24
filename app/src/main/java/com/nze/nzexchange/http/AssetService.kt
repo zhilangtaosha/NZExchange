@@ -4,6 +4,10 @@ import com.nze.nzexchange.bean.BibiAssetBean
 import com.nze.nzexchange.bean.Result
 import io.reactivex.Flowable
 import retrofit2.http.*
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.http.POST
+
 
 /**
  * @author: zwy
@@ -28,5 +32,7 @@ interface AssetService {
             @Field("remark") remark: String
     ): Flowable<Result<String>>
 
-    
+//    @Headers("Content-Type: application/json;Accept: application/json")
+    @POST("/")
+    fun zhangNet(@Body info: RequestBody):Flowable<Any>
 }

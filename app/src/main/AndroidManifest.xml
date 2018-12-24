@@ -123,7 +123,8 @@
         <activity android:name=".controller.my.asset.withdraw.SelectCurrencyAddressListActivity" />
         <activity android:name=".controller.my.asset.withdraw.AddAddressActivity" />
         <activity android:name=".controller.my.asset.ConcreteCurrencyAssetActivity" />
-        <activity android:name=".controller.my.asset.withdraw.WithdrawHistoryActivity"></activity>
+        <activity android:name=".controller.my.asset.withdraw.WithdrawHistoryActivity" />
+        <activity android:name=".controller.my.asset.recharge.RechargeHistoryActivity"></activity>
     </application>
 
 </manifest>

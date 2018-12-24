@@ -1,13 +1,17 @@
 package com.nze.nzexchange.controller.my.asset
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.View
+import android.view.View.Z
 import android.widget.ImageView
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.widget.CommonTopBar
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -18,8 +22,12 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
 
     val topBar: CommonTopBar by lazy {
         ctb_arc.apply {
+            setTitleRightIcon(R.mipmap.open_icon)
             setTitleClick {
-                skipActivity(SelectCurrencyActivity::class.java)
+                startActivityForResult(
+                        Intent(this@RechargeCurrencyActivity, SelectCurrencyActivity::class.java),
+                        1
+                )
             }
             setRightClick {
                 //充值历史列表
@@ -64,5 +72,12 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            var currency = data?.extras?.getString(IntentConstant.PARAM_CURRENCY)
+            topBar.setTitle("${currency}快速充值")
+        }
     }
 }

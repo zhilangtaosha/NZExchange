@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".controller.my.asset.withdraw.WithdrawHistoryActivity">
+    tools:context=".controller.my.asset.recharge.RechargeHistoryActivity">
 
-    <Button
-        android:id="@+id/btn1_awh"
+    <com.nze.nzexchange.widget.CommonTopBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="rpc" />
+        android:layout_height="44dp"
+        app:tb_title_text="充值记录" />
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
