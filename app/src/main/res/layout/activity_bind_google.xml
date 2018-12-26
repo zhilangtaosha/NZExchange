@@ -13,116 +13,160 @@
         android:layout_height="44dp"
         app:tb_title_text="谷歌绑定" />
 
-    <TextView
-        style="@style/tx14_aab9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
-        android:text="第一步: 在Google验证器中添加该密钥" />
+    <com.nze.nzexchange.widget.ReboundScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_qcode_abg"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="18dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/ic_launcher" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_address_abg"
-        style="@style/tx15_87a8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:drawableRight="@mipmap/copy_icon"
-        android:drawablePadding="5dp"
-        android:padding="15dp"
-        android:text="3RRYSAY676egc234" />
 
-    <TextView
-        style="@style/tx14_aab9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:text="第二步: 输入谷歌验证器中的6位数字" />
+            <TextView
+                style="@style/tx14_aab9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:text="第一步: 在Google验证器中添加该密钥" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:text="请输入Google验证码"
-        android:textColor="@color/color_FF676C7A"
-        android:textSize="15sp" />
+            <ImageView
+                android:id="@+id/iv_qcode_abg"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="18dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_address_abg"
+                style="@style/tx15_87a8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableRight="@mipmap/copy_icon"
+                android:drawablePadding="5dp"
+                android:padding="15dp"
+                android:text="3RRYSAY676egc234" />
 
-        <EditText
-            android:id="@+id/et_verify1_abg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/selector_verify_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1" />
+            <TextView
+                style="@style/tx14_aab9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="第二步: 输入谷歌验证器中的6位数字" />
 
-        <EditText
-            android:id="@+id/et_verify2_abg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/selector_verify_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="请输入Google验证码"
+                android:textColor="@color/color_FF676C7A"
+                android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/et_verify3_abg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/selector_verify_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/et_verify4_abg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/selector_verify_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1" />
+                <EditText
+                    android:id="@+id/et_verify1_abg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/selector_verify_bg"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1" />
 
-        <EditText
-            android:id="@+id/et_verify5_abg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/selector_verify_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1" />
+                <EditText
+                    android:id="@+id/et_verify2_abg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selector_verify_bg"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1" />
 
-        <EditText
-            android:id="@+id/et_verify6_abg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/selector_verify_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1" />
-    </LinearLayout>
+                <EditText
+                    android:id="@+id/et_verify3_abg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selector_verify_bg"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1" />
 
+                <EditText
+                    android:id="@+id/et_verify4_abg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selector_verify_bg"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1" />
+
+                <EditText
+                    android:id="@+id/et_verify5_abg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selector_verify_bg"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1" />
+
+                <EditText
+                    android:id="@+id/et_verify6_abg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selector_verify_bg"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1" />
+            </LinearLayout>
+
+
+            <com.nze.nzexchange.widget.CommonButton
+                android:id="@+id/btn_confirm_abg"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="15dp"
+                android:text="完成" />
+
+            <TextView
+                android:id="@+id/tv_guide_abg"
+                style="@style/tx14_87a8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="5dp"
+                android:padding="15dp"
+                android:text="查看操作指南" />
+
+
+            <TextView
+                android:id="@+id/tv_download_abg"
+                style="@style/tx15_87a8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="20dp"
+                android:text="下载谷歌验证器" />
+        </LinearLayout>
+    </com.nze.nzexchange.widget.ReboundScrollView>
 </LinearLayout>
