@@ -4,13 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg"
     android:orientation="vertical"
     tools:context=".controller.my.asset.withdraw.WithdrawHistoryActivity">
 
-    <Button
-        android:id="@+id/btn1_awh"
+    <com.nze.nzexchange.widget.CommonTopBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="rpc" />
+        android:layout_height="44dp"
+        app:tb_title_text="提现记录" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="数量"
+            android:textColor="@color/color_FF676C7A"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="状态"
+            android:textColor="@color/color_FF676C7A"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="@color/color_FF676C7A"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView_awh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/color_line"
+        android:dividerHeight="1px"
+        android:listSelector="@drawable/selector_common_lv" />
 
 </LinearLayout>

@@ -16,6 +16,7 @@ import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
 import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity
 import com.nze.nzexchange.controller.my.paymethod.SetPayMethodActivity
+import com.nze.nzexchange.controller.my.safecenter.SafeCenterActivity
 import com.nze.nzexchange.controller.my.setting.SettingActivity
 import kotlinx.android.synthetic.main.fragment_my.view.*
 
@@ -102,6 +103,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
                 skipActivity(SetPayMethodActivity::class.java)
             }
             R.id.tv_safe_center_my -> {
+                skipActivity(SafeCenterActivity::class.java)
             }
             R.id.tv_authentication_my -> {
                 skipActivity(PrimaryAuthenticationActivity::class.java)

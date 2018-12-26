@@ -1,11 +1,10 @@
-package com.nze.nzexchange.controller.my.asset
+package com.nze.nzexchange.controller.my.asset.recharge
 
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.View
-import android.view.View.Z
 import android.widget.ImageView
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
@@ -13,10 +12,10 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.widget.CommonTopBar
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_recharge_coin.*
-import org.w3c.dom.Text
 
 class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
 
@@ -31,6 +30,7 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
             }
             setRightClick {
                 //充值历史列表
+                skipActivity(RechargeHistoryActivity::class.java)
             }
         }
     }

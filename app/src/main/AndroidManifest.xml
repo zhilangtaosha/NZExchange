@@ -116,7 +116,7 @@
         <activity android:name=".controller.my.authentication.VideoAuthenticationActivity" />
         <activity android:name=".controller.login.QuickLoginActivity" />
         <activity android:name=".controller.my.safecenter.SafeCenterActivity" />
-        <activity android:name=".controller.my.asset.RechargeCurrencyActivity" />
+        <activity android:name=".controller.my.asset.recharge.RechargeCurrencyActivity" />
         <activity android:name=".controller.my.asset.SelectCurrencyActivity" />
         <activity android:name=".controller.my.asset.withdraw.WithdrawCurrencyActivity" />
         <activity android:name=".controller.my.asset.withdraw.CurrencyAddressSetListActivity" />
@@ -124,7 +124,12 @@
         <activity android:name=".controller.my.asset.withdraw.AddAddressActivity" />
         <activity android:name=".controller.my.asset.ConcreteCurrencyAssetActivity" />
         <activity android:name=".controller.my.asset.withdraw.WithdrawHistoryActivity" />
-        <activity android:name=".controller.my.asset.recharge.RechargeHistoryActivity"></activity>
+        <activity android:name=".controller.my.asset.recharge.RechargeHistoryActivity" />
+        <activity android:name=".controller.my.asset.recharge.RechargeDetailActivity" />
+        <activity android:name=".controller.my.asset.withdraw.WithdrawDetailActivity" />
+        <activity android:name=".controller.my.safecenter.BindEmailActivity" />
+        <activity android:name=".controller.my.safecenter.BindEmailVerifyActivity" />
+        <activity android:name=".controller.my.safecenter.BindGoogleActivity"></activity>
     </application>
 
 </manifest>

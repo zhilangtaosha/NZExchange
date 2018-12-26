@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.safecenter.BindEmailActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="邮箱绑定" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="邮箱地址" />
+
+        <com.nze.nzexchange.widget.clearedit.ClearableEditText
+            android:id="@+id/et_email_abe"
+            style="@style/et14"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:hint="请输入邮箱账号" />
+    </LinearLayout>
+
+    <include layout="@layout/common_line_margin15" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="邮箱地址" />
+
+        <com.nze.nzexchange.widget.clearedit.ClearableEditText
+            android:id="@+id/et_verify_abe"
+            style="@style/et14"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:hint="请输入手机短信验证码" />
+
+        <com.nze.nzexchange.widget.VerifyButton
+            android:id="@+id/btn_verify_abe"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text="获取验证码"
+            android:textColor="@color/color_FFE05760" />
+    </LinearLayout>
+
+    <include layout="@layout/common_line_margin15" />
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_confirm_abe"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="15dp" />
+</LinearLayout>
