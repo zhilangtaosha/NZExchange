@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.recharge.RechargeDetailActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="充值明细" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="充值金额" />
+
+        <TextView
+            android:id="@+id/tv_currency_unit_ard"
+            style="@style/tx14_8592"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="USDT" />
+
+        <TextView
+            android:id="@+id/tv_currency_amount_ard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_currency_unit_ard"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/tv_currency_unit_ard"
+            android:text="+1335.56"
+            android:textColor="@color/color_FF7386A5"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/common_line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="汇入时间" />
+
+        <TextView
+            android:id="@+id/tv_date_ard"
+            style="@style/tx15_8592"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="2018-12-23 20:40" />
+    </RelativeLayout>
+
+    <include layout="@layout/common_line" />
+</LinearLayout>
