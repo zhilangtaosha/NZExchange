@@ -129,7 +129,9 @@
         <activity android:name=".controller.my.asset.withdraw.WithdrawDetailActivity" />
         <activity android:name=".controller.my.safecenter.BindEmailActivity" />
         <activity android:name=".controller.my.safecenter.BindEmailVerifyActivity" />
-        <activity android:name=".controller.my.safecenter.BindGoogleActivity"></activity>
+        <activity
+            android:name=".controller.my.safecenter.BindGoogleActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>
