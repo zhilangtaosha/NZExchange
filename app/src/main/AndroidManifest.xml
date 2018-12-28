@@ -131,7 +131,10 @@
         <activity android:name=".controller.my.safecenter.BindEmailVerifyActivity" />
         <activity
             android:name=".controller.my.safecenter.BindGoogleActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".controller.my.safecenter.SetFundPasswordActivity" />
+        <activity android:name=".controller.my.safecenter.ModifyPasswordActivity" />
+        <activity android:name=".controller.my.safecenter.BindPhoneActivity"></activity>
     </application>
 
 </manifest>

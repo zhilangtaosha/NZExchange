@@ -54,6 +54,7 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_bind_phone_asc -> {
+                skipActivity(BindPhoneActivity::class.java)
             }
             R.id.tv_bind_email_asc -> {
                 skipActivity(BindEmailActivity::class.java)
@@ -62,8 +63,10 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
                 skipActivity(BindGoogleActivity::class.java)
             }
             R.id.iv_fund_password_asc -> {
+                skipActivity(SetFundPasswordActivity::class.java)
             }
             R.id.iv_modify_password_asc -> {
+                skipActivity(ModifyPasswordActivity::class.java)
             }
         }
     }

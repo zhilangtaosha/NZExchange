@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     android:orientation="vertical"
-    tools:context=".controller.my.safecenter.BindEmailActivity">
+    tools:context=".controller.my.safecenter.BindPhoneActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        app:tb_title_text="邮箱绑定" />
+        app:tb_title_text="手机绑定" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,15 +26,16 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="邮箱地址" />
+            android:text="手机号码" />
 
         <com.nze.nzexchange.widget.clearedit.ClearableEditText
-            android:id="@+id/et_email_abe"
+            android:id="@+id/et_phone_aba"
             style="@style/et14"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:hint="请输入邮箱账号" />
+            android:hint="请输入手机号码" />
+
     </LinearLayout>
 
     <include layout="@layout/common_line_margin15" />
@@ -52,19 +53,19 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="邮箱地址" />
+            android:text="邮箱验证" />
 
         <com.nze.nzexchange.widget.clearedit.ClearableEditText
-            android:id="@+id/et_verify_abe"
+            android:id="@+id/et_verify_aba"
             style="@style/et14"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
             android:layout_weight="1"
-            android:hint="请输入手机短信验证码" />
+            android:hint="请输入邮箱验证码" />
 
         <com.nze.nzexchange.widget.VerifyButton
-            android:id="@+id/btn_verify_abe"
+            android:id="@+id/btn_verify_aba"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
@@ -75,7 +76,7 @@
     <include layout="@layout/common_line_margin15" />
 
     <com.nze.nzexchange.widget.CommonButton
-        android:id="@+id/btn_confirm_abe"
+        android:id="@+id/btn_confirm_aba"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginLeft="15dp"

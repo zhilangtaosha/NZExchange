@@ -5,10 +5,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.*
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -39,10 +36,12 @@ class BindGoogleActivity : NBaseActivity() {
     val confirmBtn: CommonButton by lazy { btn_confirm_abg }
     val guideTv: TextView by lazy { tv_guide_abg }
     val downloadTv: TextView by lazy { tv_download_abg }
+    val verifyLayout: LinearLayout by lazy { layout_verify_abg }
     val TYPE_INPUT = 0
     val TYPE_DEL = 1
     var type: Int = TYPE_INPUT
     var isBottom = false
+    var isFoucusAble = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -62,7 +61,11 @@ class BindGoogleActivity : NBaseActivity() {
             }
             false
         }
+        verifyLayout.setOnClickListener {
+            NLog.i("layout click....")
+        }
         etInputList.forEach {
+
             RxTextView.textChanges(it)
                     .subscribe {
                         if (it.isNotEmpty()) {
@@ -72,7 +75,8 @@ class BindGoogleActivity : NBaseActivity() {
 
                     }
             it.setOnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) {
+                if (isFoucusAble && hasFocus) {
+                    isFoucusAble = false
                     type = TYPE_INPUT
                     if (!isBottom) {
                         scrollView.post {
@@ -84,7 +88,9 @@ class BindGoogleActivity : NBaseActivity() {
                     }
                 }
             }
-
+            it.setOnClickListener {
+                NLog.i("click....")
+            }
             it.setOnKeyListener { v, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_DEL && event.action != KeyEvent.ACTION_UP) {
                     NLog.i("删除。。。")
@@ -104,11 +110,13 @@ class BindGoogleActivity : NBaseActivity() {
                 if (editText.getContent().isNullOrEmpty()) {
                     editText.isCursorVisible = true
                     editText.requestFocus()
+                    isFoucusAble = true
                     return
                 } else {
                     if (index == etDelList.size - 1) {
                         editText.isCursorVisible = true
                         editText.requestFocus()
+                        isFoucusAble = true
                     } else {
                         editText.isCursorVisible = false
                     }
@@ -123,11 +131,13 @@ class BindGoogleActivity : NBaseActivity() {
                     editText.setText("")
                     editText.isCursorVisible = true
                     editText.requestFocus()
+                    isFoucusAble = true
                     return
                 } else {
                     if (index === 0) {
                         editText.isCursorVisible = true
                         editText.requestFocus()
+                        isFoucusAble = true
                     } else {
                         editText.isCursorVisible = false
                     }

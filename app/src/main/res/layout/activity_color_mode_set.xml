@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".controller.my.setting.ColorModeSetActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="颜色配置" />
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="44dp"
+       android:paddingTop="10dp"
+       android:paddingLeft="15dp"
+       android:paddingRight="15dp">
+
+       <TextView
+           android:id="@+id/tv_color_mode_lcm"
+           style="@style/tx15_aab9"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerVertical="true"
+           android:text="绿涨红跌" />
+   </RelativeLayout>
+
+</LinearLayout>

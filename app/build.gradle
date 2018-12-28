@@ -48,4 +48,6 @@ dependencies {
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
     //获取权限
     implementation 'pub.devrel:easypermissions:2.0.0'
+    //SharedPreferences
+    implementation "net.grandcentrix.tray:tray:0.12.0"
 }

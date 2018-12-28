@@ -1,20 +1,19 @@
-package com.nze.nzexchange.controller.my.setting
+package com.nze.nzexchange.controller.my.safecenter
 
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
 import android.view.View
-import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
-import kotlinx.android.synthetic.main.activity_color_mode_set.*
 
-class ColorModeSetActivity : NBaseActivity() {
+class SetFundPasswordActivity : NBaseActivity() {
 
-
-
-    override fun getRootView(): Int = R.layout.activity_color_mode_set
+    override fun getRootView(): Int = R.layout.activity_set_fund_password
 
     override fun initView() {
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

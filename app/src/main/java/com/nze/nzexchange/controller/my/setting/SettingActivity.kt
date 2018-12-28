@@ -87,6 +87,7 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.layout_money_type_set -> {
+                skipActivity(MoneyTypeSetActivity::class.java)
             }
             R.id.tv_exchange_rate_set -> {
             }
