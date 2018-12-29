@@ -26,5 +26,8 @@ data class UserBean(
 
         fun loadFromApp() = NzeApp.instance.userBean
 
+        fun isLogin(): Boolean = loadFromApp() != null
+
+
     }
 }

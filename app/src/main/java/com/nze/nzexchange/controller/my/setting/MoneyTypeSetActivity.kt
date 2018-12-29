@@ -40,9 +40,8 @@ class MoneyTypeSetActivity : NBaseActivity() {
     override fun initView() {
         listView.adapter = moneyAdapter
         moneyAdapter.group = moneyTypeList
-        val string = sp.getString(SettingSp.KEY_MONEY_TYPE)
+//        val string = sp.getString(SettingSp.KEY_MONEY_TYPE,"CNY")
 
-        sp.put(SettingSp.KEY_MONEY_TYPE,"CNY")
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

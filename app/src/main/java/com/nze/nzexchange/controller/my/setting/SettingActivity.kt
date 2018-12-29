@@ -14,6 +14,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.login.LoginActivity
+import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
@@ -68,7 +69,7 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
 
     override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = BaseActivity.TransitionMode.DEFAULT
 
-    override fun isBindEventBusHere(): Boolean = true
+    override fun isBindEventBusHere(): Boolean = false
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -90,6 +91,7 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
                 skipActivity(MoneyTypeSetActivity::class.java)
             }
             R.id.tv_exchange_rate_set -> {
+                skipActivity(ExchangeRateSetActivity::class.java)
             }
             R.id.tv_service_charge_set -> {
             }
@@ -98,6 +100,7 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
             R.id.tv_night_mode_set -> {
             }
             R.id.layout_color_mode_set -> {
+                skipActivity(ColorModeSetActivity::class.java)
             }
             R.id.layout_style_mode_set -> {
             }
@@ -115,8 +118,10 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
                                     if (it.success) {
                                         NzeApp.instance.userBean = null
                                         userBean = null
-                                        logoutBtn.text = "登录"
-                                        EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGOUT_SUCCESS, true))
+//                                        logoutBtn.text = "登录"
+//                                        EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGOUT_SUCCESS, true))
+                                        EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 0))
+                                        skipActivity(MainActivity::class.java)
                                     }
                                 }, onError)
                     }

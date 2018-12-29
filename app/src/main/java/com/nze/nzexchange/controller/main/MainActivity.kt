@@ -8,11 +8,13 @@ import android.widget.Toast
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.bibi.BibiFragment
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.home.HomeFragment
+import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.MarketFragment
 import com.nze.nzexchange.controller.my.MyFragment
 import com.nze.nzexchange.controller.otc.OtcFragment
@@ -43,6 +45,9 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
             val i = eventCenter.data as Int
             selectTab(i)
         }
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
+            selectTab(mCurrentTab)
+        }
     }
 
     override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.RIGHT
@@ -69,7 +74,13 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
             R.id.tab_market_main -> mCurrentTab = 1
             R.id.tab_bibi_main -> mCurrentTab = 2
             R.id.tab_otc_main -> mCurrentTab = 3
-            R.id.tab_my_main -> mCurrentTab = 4
+            R.id.tab_my_main -> {
+                mCurrentTab = 4
+                if (!UserBean.isLogin()) {
+                    skipActivity(LoginActivity::class.java)
+                    return
+                }
+            }
             else -> {
             }
         }

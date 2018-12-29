@@ -1,6 +1,7 @@
 package com.nze.nzexchange.repository.sp
 
 import android.content.Context
+import com.nze.nzeframework.tool.NLog
 import net.grandcentrix.tray.TrayPreferences
 
 /**
@@ -13,9 +14,12 @@ class SettingSp(context: Context, module: String = "setting", version: Int = 1) 
 
     companion object {
         const val KEY_MONEY_TYPE = "moneyTypeKey"
+        const val KEY_COLOR_MODE = "colorModeKey"
 
         fun getInstance(context: Context): SettingSp {
             return SettingSp(context)
         }
     }
+
+
 }

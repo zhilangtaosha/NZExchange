@@ -23,7 +23,11 @@ import org.greenrobot.eventbus.EventBus
 import kotlin.math.log
 
 class LoginActivity : NBaseActivity(), View.OnClickListener {
-    val topBar: CommonTopBar by lazy { ctb_al }
+    val topBar: CommonTopBar by lazy {
+        ctb_al.apply {
+            hideLeft()
+        }
+    }
     val accountEt: ClearableEditText by lazy { et_account_al }
     val passwordEt: ClearableEditText by lazy { et_password_al }
     val loginBtn: CommonButton by lazy { btn_login_al }

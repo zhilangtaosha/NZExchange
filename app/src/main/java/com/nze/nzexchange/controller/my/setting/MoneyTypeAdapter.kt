@@ -25,7 +25,7 @@ class MoneyTypeAdapter(mContext: Context) : NBaseAda<MoneyTypeBean, MoneyTypeAda
 
     override fun initView(vh: ViewHolder, item: MoneyTypeBean, position: Int) {
         vh.moneyTv.text = "${item.moneyName}(${item.moneySign})"
-        if (sp.getString(SettingSp.KEY_MONEY_TYPE) == item.moneySign) {
+        if (sp.getString(SettingSp.KEY_MONEY_TYPE, "CNY") == item.moneySign) {
             vh.moneyIv.visibility = View.VISIBLE
         } else {
             vh.moneyIv.visibility = View.GONE
