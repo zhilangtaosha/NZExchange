@@ -10,7 +10,7 @@ import com.nze.nzexchange.NzeApp
  */
 data class UserBean(
         val userEmail: String?,
-        val userId: String?,
+        val userId: String,
         val userName: String?,
         val userNick: String?,
         val userNo: String?,

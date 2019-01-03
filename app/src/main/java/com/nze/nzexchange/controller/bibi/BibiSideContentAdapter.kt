@@ -42,13 +42,13 @@ class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean,
         }
         vh.changeTv.setTextFromHtml(gainStr)
 
-        vh.view.setOnClickListener {
-            onItemClick?.itemClick(item)
-        }
+//        vh.rootLayout.setOnClickListener {
+//            onItemClick?.itemClick(item)
+//        }
         vh.choiceCb.tag = position
         vh.choiceCb.setOnClickListener {
             val p: Int = it.tag as Int
-            onItemClick?.selftSelect(item , position)
+            onItemClick?.selftSelect(item, position)
 
         }
 
@@ -58,11 +58,12 @@ class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean,
     var onItemClick: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun itemClick(item: TransactionPairsBean)
-        fun selftSelect(item: TransactionPairsBean,  position: Int)
+//        fun itemClick(item: TransactionPairsBean)
+        fun selftSelect(item: TransactionPairsBean, position: Int)
     }
 
     class ViewHolder(var view: View) {
+        val rootLayout = view.layout_root_lbsc
         val choiceCb = view.cb_choice_lbsc
         val transactionTv = view.tv_transaction_lbsc
         val costTv = view.tv_cost_lbsc

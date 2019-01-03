@@ -9,7 +9,7 @@ import java.text.DecimalFormat
  * @创建时间：2018/12/10
  */
 fun Double.formatForCurrency(): String? {
-    val df = DecimalFormat("0.########")
+    val df = DecimalFormat("0.###########")
     return df.format(this)
 }
 

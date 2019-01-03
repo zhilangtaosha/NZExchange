@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseFragment
 import com.nze.nzexchange.config.RrefreshType
 import com.trello.rxlifecycle2.android.FragmentEvent
@@ -85,7 +86,7 @@ abstract class NBaseFragment : BaseFragment() {
 
 
     val onError: (e: Throwable) -> Unit = { e: Throwable ->
-
+        NLog.i(e.localizedMessage)
     }
 
     fun showToast(content: String) {

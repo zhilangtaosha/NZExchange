@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.jakewharton.rxbinding2.view.RxView
+import java.util.concurrent.TimeUnit
 
 fun View.setBg(drawableId: Int) {
     if (Build.VERSION.SDK_INT > 15) {
@@ -36,6 +38,15 @@ fun Button.setBgByDrawable(drawable: Drawable) {
     } else {
         setBackgroundDrawable(drawable)
     }
+}
+
+
+fun Button.setShakeClickListener(click: View.OnClickListener) {
+    RxView.clicks(this)
+            .throttleFirst(2, TimeUnit.SECONDS)
+            .subscribe {
+                click.onClick(this)
+            }
 }
 
 

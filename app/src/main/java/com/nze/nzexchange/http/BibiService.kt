@@ -1,5 +1,7 @@
 package com.nze.nzexchange.http
 
+import com.nze.nzexchange.bean.LimitTransactionBean
+import com.nze.nzexchange.bean.RestOrderBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.Result
 import io.reactivex.Flowable
@@ -42,4 +44,33 @@ interface BibiService {
     fun deleteOptional(@Field("currencyId") currencyId: Int,
                        @Field("userId") userId: String
     ): Flowable<Result<String>>
+
+    //获取挂单信息
+    @GET("cc/getPendingOrderInfo")
+    fun getPendingOrderInfo(
+            @Query("currencyId") currencyId: Int,
+            @Query("userId") userId: String?
+    ): Flowable<Result<RestOrderBean>>
+
+    //提交限价交易
+    @FormUrlEncoded
+    @POST("cc/limitTransaction")
+    fun limitTransaction(
+            @Field("transactionType") transactionType: Int,
+            @Field("userId") userId: String,
+            @Field("currencyId") currencyId: Int,
+            @Field("number") number: Double,
+            @Field("price") price: Double
+    ): Flowable<Result<LimitTransactionBean>>
+
+
+    //提交市价交易
+    @FormUrlEncoded
+    @POST("cc/marketTransaction")
+    fun marketTransaction(
+            @Field("transactionType") transactionType: Int,
+            @Field("userId") userId: String,
+            @Field("currencyId") currencyId: Int,
+            @Field("number") number: Double
+    ): Flowable<Result<HashMap<String, Any>>>
 }

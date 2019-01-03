@@ -63,9 +63,13 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
         val listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
+        listView.setSelector(R.drawable.selector_common_lv)
         listView.adapter = adapter
-        adapter.onItemClick = this
 
+        adapter.onItemClick = this
+        listView.setOnItemClickListener { parent, view, position, id ->
+            EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, adapter.getItem(position)))
+        }
 
     }
 
@@ -154,9 +158,9 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
     }
 
 
-    override fun itemClick(item: TransactionPairsBean) {
-        EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, item))
-    }
+//    override fun itemClick(item: TransactionPairsBean) {
+//        //EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, item))
+//    }
 
     override fun selftSelect(item: TransactionPairsBean, position: Int) {
         if (item.optional != 1) {

@@ -23,7 +23,7 @@ data class TransactionPairsBean(
         val remark: String,
         val status: Int,
         val transactionPair: String,
-        val gain: Int,
+        val gain: Double,
         var optional: Int = 0
 ) : Parcelable {
     companion object {

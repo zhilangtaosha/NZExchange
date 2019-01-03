@@ -50,7 +50,7 @@ data class Token(
         val treeauthId: String?,
         val treeauthName: String?,
         val userEmail: String?,
-        val userId: String?,
+        val userId: String,
         val userName: String?,
         val userNick: String?,
         val userNo: String?,
