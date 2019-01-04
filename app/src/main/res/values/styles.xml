@@ -89,18 +89,22 @@
     </style>
 
 
-    <style name="DialogTheme" parent="@android:style/Theme.Dialog">
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- 边框 -->
+        <!--<item name="android:windowAnimationStyle">@style/AnimBottom</item>-->
         <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <!--<item name="android:windowIsFloating">true</item>-->
         <!-- 是否浮现在activity之上 -->
-        <item name="android:windowIsFloating">true</item>
-        <!-- 不透明 -->
+        <!-- 半透明 -->
         <item name="android:windowIsTranslucent">true</item>
         <!-- 无标题 -->
         <item name="android:windowNoTitle">true</item>
-        <!-- 背景 -->
+
+        <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
-        <!-- 模糊 -->
+        <!-- 是否允许对话框的背景变暗 -->
         <item name="android:backgroundDimEnabled">true</item>
+        <!--<item name="android:windowContentOverlay">@null</item>-->
     </style>
 </resources>

@@ -68,6 +68,7 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
 
         adapter.onItemClick = this
         listView.setOnItemClickListener { parent, view, position, id ->
+            NLog.i("listView item click...")
             EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, adapter.getItem(position)))
         }
 

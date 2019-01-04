@@ -10,9 +10,10 @@ import io.reactivex.Flowable
  * @创建时间：2019/1/2
  */
 data class RestOrderBean(
-        val mainCurrency: MainCurrency?,
+        var mainCurrency: MainCurrency?,
         val rate: Double
 ) {
+
     companion object {
         fun getPendingOrderInfo(currencyId: Int, userId: String?): Flowable<Result<RestOrderBean>> {
             return Flowable.defer {
@@ -25,8 +26,8 @@ data class RestOrderBean(
 }
 
 data class MainCurrency(
-        val available: Double,
+        var available: Double=0.0,
         val currency: String,
-        val freeze: Double,
+        var freeze: Double=0.0,
         val remark: String
 )

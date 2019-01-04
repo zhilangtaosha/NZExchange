@@ -3,19 +3,94 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_black_tran"
     android:orientation="horizontal"
     tools:context=".controller.bibi.BibiSideActivity">
 
     <LinearLayout
         android:id="@+id/layout_side_abs"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/color_bg"
         android:orientation="vertical">
-        <Button
+
+
+
+        <com.nze.nzexchange.widget.clearedit.ClearableEditText
+            android:id="@+id/cet_search_abs"
+            style="@style/et14"
             android:layout_width="match_parent"
-            android:layout_height="44dp" />
+            android:layout_height="33dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_radius_2536_bg2"
+            android:drawableLeft="@mipmap/search_icon"
+            android:drawablePadding="10dp"
+            android:hint="搜索交易对"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+
+        <com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
+            android:id="@+id/siv_abs"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:fillViewport="false" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_FF1F2532" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_transaction_abs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="币对"
+                android:textColor="@color/color_FFA3AAB9"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_cost_abs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:text="价格"
+                android:textColor="@color/color_FFA3AAB9"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_change_abs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="涨跌"
+                android:textColor="@color/color_FFA3AAB9"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_abs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/layout_other_abs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+    </LinearLayout>
 </LinearLayout>

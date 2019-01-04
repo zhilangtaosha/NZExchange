@@ -20,10 +20,7 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.login.LoginActivity
-import com.nze.nzexchange.extend.formatForCurrency
-import com.nze.nzexchange.extend.setBgByDrawable
-import com.nze.nzexchange.extend.setShakeClickListener
-import com.nze.nzexchange.extend.setTextFromHtml
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
@@ -83,8 +80,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
     val currentOrderAdapter by lazy { BibiCurentOrderAdapter(activity!!) }
 
-    val TYPE_BUY = 0
-    val TYPE_SALE = 1
+    val TYPE_BUY = 1
+    val TYPE_SALE = 0
     var currentType = TYPE_BUY
 
     private val sidePopup: BibiSidePopup by lazy { BibiSidePopup(mBaseActivity, childFragmentManager!!) }
@@ -200,7 +197,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         if (eventCenter.eventCode == EventCode.CODE_SELECT_TRANSACTIONPAIR) {
-            sidePopup.dismiss()
+//            sidePopup.dismiss()
+            NLog.i("bibifragment get select event....")
             currentTransactionPair = eventCenter.data as TransactionPairsBean
             refreshLayout()
         }
@@ -254,37 +252,71 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     skipActivity(LoginActivity::class.java)
                     return
                 }
-                if (currentType == TYPE_BUY) {
-
-                } else {
-
+                var price= 0.0
+                if (transactionType == TRANSACTIONTYPE_LIMIT){
+                    if (!checkPrice()) return
+                    price = giveEt.getContent().toDouble()
                 }
+                if (!checkNum()) return
+//                if (currentType == TYPE_BUY) {
+                    btnHandler(userBean!!, getEt.getContent().toDouble(),price)
+//                } else {
+//
+//                }
             }
         }
     }
 
-    fun buyHandler(user: UserBean, number: Double, price: Double) {
+    fun btnHandler(user: UserBean, number: Double,price:Double) {
         if (transactionType == TRANSACTIONTYPE_LIMIT) {
-            LimitTransactionBean.limitTransaction(1, user.userId, currentTransactionPair?.id!!, number, price)
+            if (!checkPrice()) return
+            LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble())
                     .compose(netTfWithDialog())
                     .subscribe({
-
+                        if (it.success) {
+                            showToast("下单成功")
+                        } else {
+                            showToast(it.message)
+                        }
                     }, onError)
         } else {
 
         }
     }
 
-    fun saleHandler(user: UserBean, number: Double, price: Double) {
+    fun saleHandler(user: UserBean, number: Double) {
         if (transactionType == TRANSACTIONTYPE_LIMIT) {
-            LimitTransactionBean.limitTransaction(0, user.userId, currentTransactionPair?.id!!, number, price)
+            LimitTransactionBean.limitTransaction(0, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble())
                     .compose(netTfWithDialog())
                     .subscribe({
-
+                        if (it.success) {
+                            showToast("下单成功")
+                        } else {
+                            showToast(it.message)
+                        }
                     }, onError)
         } else {
 
         }
+    }
+
+    fun checkNum(): Boolean {
+        val s = getEt.getContent()
+        if (s.isNullOrEmpty()) {
+            getEt.requestFocus()
+            return false
+        }
+        return true
+    }
+
+    fun checkPrice(): Boolean {
+        var s = giveEt.getContent()
+        if (s.isNullOrEmpty()) {
+            giveEt.requestFocus()
+            return false
+        }
+
+        return true
     }
 
     override fun clickItem(position: Int, item: String) {
@@ -298,6 +330,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 TRANSACTIONTYPE_LIMIT
             } else {
                 giveEt.isFocusable = false
+                giveEt.setText("")
                 giveEt.hint = "以当前最优价格交易"
                 giveUnitTv.visibility = View.GONE
                 TRANSACTIONTYPE_MARKET
@@ -325,7 +358,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     private fun refreshLayout() {
         currentTransactionPair?.let {
-            switchType(currentType)
+            //            switchType(currentType)
             moreTv.text = it.transactionPair
             giveEt.setText(it.exchangeRate.formatForCurrency())
             giveUnitTv.text = it.mainCurrency
