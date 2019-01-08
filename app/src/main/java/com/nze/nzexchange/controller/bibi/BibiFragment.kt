@@ -3,10 +3,7 @@ package com.nze.nzexchange.controller.bibi
 
 import android.support.v4.content.ContextCompat
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -20,11 +17,15 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.login.LoginActivity
+import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
+import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_bibi.*
 import kotlinx.android.synthetic.main.fragment_bibi.view.*
 import org.greenrobot.eventbus.EventBus
@@ -33,6 +34,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
 
     lateinit var rootView: View
+    val svRoot: LinearLayout by lazy { rootView.root_sv_fb }
     val moreTv: TextView by lazy { rootView.more_bibi }
     val klineIv: ImageView by lazy { rootView.iv_kline_bibi }
     val buyTv: TextView by lazy { rootView.tv_buy_bibi }
@@ -78,7 +80,19 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             }
         }
     }
-    val currentOrderAdapter by lazy { BibiCurentOrderAdapter(activity!!) }
+    val currentOrderAdapter by lazy {
+        BibiCurentOrderAdapter(activity!!).apply {
+            cancelClick = { position, item ->
+                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+                            }
+                        }, onError)
+            }
+        }
+    }
 
     val TYPE_BUY = 1
     val TYPE_SALE = 0
@@ -162,10 +176,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         handicapSaleLv.adapter = handicapSaleAdapter
         handicapBuyLv.adapter = handicapBuyAdapter
 
-        currentOrderAdapter.group = HandicapBean.getList()
         currentOrderLv.adapter = currentOrderAdapter
 
         switchType(currentType)
+        getTransactionPair()
     }
 
 
@@ -201,10 +215,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             NLog.i("bibifragment get select event....")
             currentTransactionPair = eventCenter.data as TransactionPairsBean
             refreshLayout()
+            getPendingOrderInfo(currentTransactionPair?.id!!)
+            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
         }
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
-            userBean = NzeApp.instance.userBean
-            refreshLayout()
+            userBean = UserBean.loadFromApp()
+            getPendingOrderInfo(currentTransactionPair?.id!!)
+            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
         }
     }
 
@@ -247,58 +264,48 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 currentPopupType = POPUP_DEPTH
                 depthPopup.showPopupWindow()
             }
-            R.id.btn_transaction_bibi -> {
+            R.id.btn_transaction_bibi -> {//买入卖出
                 if (userBean == null) {
                     skipActivity(LoginActivity::class.java)
                     return
                 }
-                var price= 0.0
-                if (transactionType == TRANSACTIONTYPE_LIMIT){
+                var price = 0.0
+                if (transactionType == TRANSACTIONTYPE_LIMIT) {
                     if (!checkPrice()) return
                     price = giveEt.getContent().toDouble()
                 }
                 if (!checkNum()) return
-//                if (currentType == TYPE_BUY) {
-                    btnHandler(userBean!!, getEt.getContent().toDouble(),price)
-//                } else {
-//
-//                }
+                btnHandler(userBean!!, getEt.getContent().toDouble(), price)
             }
         }
     }
 
-    fun btnHandler(user: UserBean, number: Double,price:Double) {
-        if (transactionType == TRANSACTIONTYPE_LIMIT) {
-            if (!checkPrice()) return
+    fun btnHandler(user: UserBean, number: Double, price: Double) {
+        if (transactionType == TRANSACTIONTYPE_LIMIT) {//限价交易
             LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble())
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
                             showToast("下单成功")
+                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
                             showToast(it.message)
                         }
                     }, onError)
-        } else {
-
-        }
-    }
-
-    fun saleHandler(user: UserBean, number: Double) {
-        if (transactionType == TRANSACTIONTYPE_LIMIT) {
-            LimitTransactionBean.limitTransaction(0, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble())
+        } else {//市价交易
+            LimitTransactionBean.marketTransaction(currentType, user.userId, currentTransactionPair?.id!!, number)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
                             showToast("下单成功")
+                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
                             showToast(it.message)
                         }
                     }, onError)
-        } else {
-
         }
     }
+
 
     fun checkNum(): Boolean {
         val s = getEt.getContent()
@@ -363,13 +370,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             giveEt.setText(it.exchangeRate.formatForCurrency())
             giveUnitTv.text = it.mainCurrency
             getUnitTv.text = it.mainCurrency
-            getPendingOrderInfo(it.id)
+
         }
 
     }
 
     //获取挂单信息
-    private fun getPendingOrderInfo(currencyId: Int) {
+    private fun getPendingOrderInfo(currencyId: String) {
         RestOrderBean.getPendingOrderInfo(currencyId, userBean?.userId)
                 .compose(netTfWithDialog())
                 .subscribe({
@@ -379,4 +386,60 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     }
                 }, onError)
     }
+
+
+    private fun getTransactionPair() {
+        TransactionPairsBean.getAllTransactionPairs()
+                .compose(netTfWithDialog())
+                .flatMap {
+                    if (it.success) {
+                        val list = it.result
+                        if (list != null && list.size > 0) {
+                            TransactionPairsBean.getTransactionPairs(list[0].currency, userBean?.userId?.getValue())
+                                    .subscribeOn(Schedulers.io())
+                        } else {
+                            Flowable.error<String>(Throwable("没有交易对"))
+                        }
+                    } else {
+                        Flowable.error<String>(Throwable("请求失败"))
+                    }
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap {
+                    it as Result<MutableList<TransactionPairsBean>>
+                    if (it.success) {
+                        currentTransactionPair = it.result[0]
+                        refreshLayout()
+                        if (userBean != null) {
+                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+                        }
+                        RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
+                                .subscribeOn(Schedulers.io())
+                    } else {
+                        Flowable.error<String>(Throwable("请求失败"))
+                    }
+
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    it as Result<RestOrderBean>
+                    if (it.success) {
+                        restOrderBean = it.result
+                        switchType(currentType)
+                    }
+                }, onError)
+
+    }
+
+
+    private fun orderPending(currencyId: String, userId: String) {
+        OrderPendBean.orderPending(currencyId, userId)
+                .compose(netTf())
+                .subscribe({
+                    if (it.success) {
+                        currentOrderAdapter.group = it.result
+                        currentOrderLv.adapter = currentOrderAdapter
+                    }
+                }, onError)
+    }
+
 }

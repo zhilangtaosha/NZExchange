@@ -3,20 +3,21 @@ package com.nze.nzexchange.bean
 import com.nze.nzexchange.http.NRetrofit
 import io.reactivex.Flowable
 import retrofit2.http.Field
+import retrofit2.http.Query
 
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
  * @类 说 明:
- * @创建时间：2019/1/3
+ * @创建时间：2019/1/7
  */
-data class LimitTransactionBean(
+data class OrderPendBean(
         val amount: String,
         val ctime: Double,
         val deal_fee: String,
         val deal_money: String,
         val deal_stock: String,
-        val id: Int,
+        val id: String,
         val left: String,
         val maker_fee: String,
         val market: String,
@@ -26,35 +27,30 @@ data class LimitTransactionBean(
         val source: String,
         val taker_fee: String,
         val type: Int,
-        val user: Int
+        val userId: String
 ) {
     companion object {
-
-        fun limitTransaction(
-                transactionType: Int,
-                userId: String,
+        fun orderPending(
                 currencyId: String,
-                number: Double,
-                price: Double
-        ): Flowable<Result<LimitTransactionBean>> {
+                userId: String
+        ): Flowable<Result<MutableList<OrderPendBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .limitTransaction(transactionType, userId, currencyId, number, price)
+                        .orderPending(currencyId, userId)
             }
         }
 
 
-        fun marketTransaction(
-                transactionType: Int,
+        fun cancelOrder(
+                orderId: String,
                 userId: String,
-                currencyId: String,
-                number: Double
-        ): Flowable<Result<LimitTransactionBean>> {
+                currencyId: String
+        ): Flowable<Result<OrderPendBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .marketTransaction(transactionType, userId, currencyId, number)
+                        .cancelOrder(orderId, userId, currencyId)
             }
         }
     }

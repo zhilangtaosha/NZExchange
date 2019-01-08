@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.BibiAssetBean
+import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.controller.base.NBaseAda
 import kotlinx.android.synthetic.main.lv_my_asset.view.*
 
@@ -14,12 +15,12 @@ import kotlinx.android.synthetic.main.lv_my_asset.view.*
  * @类 说 明:
  * @创建时间：2018/12/21
  */
-class MyAssetLvAdapter(mContext: Context) : NBaseAda<BibiAssetBean, MyAssetLvAdapter.ViewHolder>(mContext) {
+class MyAssetLvAdapter(mContext: Context) : NBaseAda<UserAssetBean, MyAssetLvAdapter.ViewHolder>(mContext) {
     override fun setLayout(): Int = R.layout.lv_my_asset
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: BibiAssetBean, position: Int) {
+    override fun initView(vh: ViewHolder, item: UserAssetBean, position: Int) {
         vh.currencyNameTv.text = item.currency
         vh.availableValueTv.text = item.available.toString()
         vh.freezwValueTv.text = item.freeze.toString()

@@ -7,9 +7,11 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairsBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.tools.getNColor
@@ -110,8 +112,16 @@ class BibiSideActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLis
                         val indicatorAdapter = OtcIndicatorAdapter(supportFragmentManager, this, tabs, pages)
                         indicatorViewPager.adapter = indicatorAdapter
                         indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
-                            //            pages[currentItem].getDataFromNet()
+                            if (currentItem == 0 && !UserBean.isLogin()) {
+                                skipActivity(LoginActivity::class.java)
+                                indicatorViewPager.setCurrentItem(1, true)
+                            } else if (currentItem == 0 && UserBean.isLogin()) {
+                                (pages[currentItem] as BibiSideContentFragment).refreshData()
+                            } else {
+
+                            }
                         }
+                        indicatorViewPager.setCurrentItem(1, true)
                     }
                 }, onError)
     }

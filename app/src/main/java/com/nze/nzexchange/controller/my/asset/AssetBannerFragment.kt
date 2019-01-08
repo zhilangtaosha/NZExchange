@@ -30,9 +30,9 @@ class AssetBannerFragment : NBaseFragment() {
     val moneyTv: TextView by lazy { rootView.tv_money_fab }
 
     companion object {
-        const val ACCOUT_TYPE_BIBI = 1//币币
-        const val ACCOUT_TYPE_LEGAL = 2//法币
-        const val ACCOUT_TYPE_OTC = 3//otc
+        const val ACCOUT_TYPE_BIBI = 0//币币
+        const val ACCOUT_TYPE_LEGAL = 1//法币
+        const val ACCOUT_TYPE_OTC = 2//otc
 
         @JvmStatic
         fun newInstance(accoutType: Int) =

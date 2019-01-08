@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
@@ -17,6 +18,9 @@ import com.nze.nzexchange.widget.CommonTopBar
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_recharge_coin.*
 
+/**
+ * 充值页面
+ */
 class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
 
     val topBar: CommonTopBar by lazy {
@@ -39,13 +43,22 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
     val copyAddressTv: TextView by lazy { tv_copy_address_arc }
     val tipTv: TextView by lazy { tv_tip_arc }
     var codeBitmap: Bitmap? = null
+    var userAssetBean: UserAssetBean? = null
+    var currecy: String? = null
 
     override fun getRootView(): Int = R.layout.activity_recharge_coin
 
     override fun initView() {
-        topBar.setTitle("USDT快速充值")
-        codeBitmap = CodeUtils.createImage("4565s465df1s65df", 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-        coinAddressIv.setImageBitmap(codeBitmap)
+        intent?.let {
+            userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
+        }
+        userAssetBean?.let {
+            topBar.setTitle("${it.currency}快速充值")
+            codeBitmap = CodeUtils.createImage(it.address, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+            coinAddressIv.setImageBitmap(codeBitmap)
+        }
+
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -74,10 +87,12 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            var currency = data?.extras?.getString(IntentConstant.PARAM_CURRENCY)
-            topBar.setTitle("${currency}快速充值")
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (resultCode == Activity.RESULT_OK) {
+//            var currency = data?.extras?.getString(IntentConstant.PARAM_CURRENCY)
+//            topBar.setTitle("${currency}快速充值")
+//        }
+//    }
+
+
 }

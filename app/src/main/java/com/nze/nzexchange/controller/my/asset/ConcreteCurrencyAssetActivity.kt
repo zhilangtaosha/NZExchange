@@ -1,11 +1,14 @@
 package com.nze.nzexchange.controller.my.asset
 
+import android.content.Intent
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.UserAssetBean
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.recharge.RechargeCurrencyActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawCurrencyActivity
@@ -23,10 +26,21 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
     val moneyValueTv: TextView by lazy { tv_money_value_acca }
     val rechargeBtn: Button by lazy { btn_recharge_acca }
     val withdrawBtn: Button by lazy { btn_withdraw_acca }
+    var userAssetBean: UserAssetBean? = null
 
     override fun getRootView(): Int = R.layout.activity_concrete_currency_asset
 
     override fun initView() {
+        intent?.let {
+            userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
+        }
+        userAssetBean?.let {
+            currencyNameTv.text = it.currency
+            availableValueTv.text = it.available.toString()
+            freezValueTv.text = it.freeze.toString()
+
+        }
+
         rechargeBtn.setOnClickListener(this)
         withdrawBtn.setOnClickListener(this)
     }
@@ -54,10 +68,12 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_recharge_acca -> {
-                skipActivity(RechargeCurrencyActivity::class.java)
+                startActivity(Intent(this@ConcreteCurrencyAssetActivity, RechargeCurrencyActivity::class.java)
+                        .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
             }
             R.id.btn_withdraw_acca -> {
-                skipActivity(WithdrawCurrencyActivity::class.java)
+                startActivity(Intent(this@ConcreteCurrencyAssetActivity, WithdrawCurrencyActivity::class.java)
+                        .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
             }
         }
     }

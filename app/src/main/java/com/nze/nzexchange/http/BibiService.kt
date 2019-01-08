@@ -1,9 +1,6 @@
 package com.nze.nzexchange.http
 
-import com.nze.nzexchange.bean.LimitTransactionBean
-import com.nze.nzexchange.bean.RestOrderBean
-import com.nze.nzexchange.bean.TransactionPairsBean
-import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.*
 import io.reactivex.Flowable
 import retrofit2.http.*
 
@@ -21,7 +18,10 @@ interface BibiService {
 
     //通过计价货币获取交易对列表
     @GET("market/getTransactionPairs")
-    fun getTransactionPairs(@Query("mainCurrency") mainCurrency: String, @Query("userId") userId: String): Flowable<Result<MutableList<TransactionPairsBean>>>
+    fun getTransactionPairs(
+            @Query("mainCurrency") mainCurrency: String,
+            @Query("userId") userId: String?
+    ): Flowable<Result<MutableList<TransactionPairsBean>>>
 
 
     @GET("market/findTransactionPairs")
@@ -34,21 +34,21 @@ interface BibiService {
     //添加用户自选交易对
     @FormUrlEncoded
     @POST("market/addOptional")
-    fun addOptional(@Field("currencyId") currencyId: Int,
+    fun addOptional(@Field("currencyId") currencyId: String,
                     @Field("userId") userId: String
     ): Flowable<Result<String>>
 
     //删除用户自选交易对
     @FormUrlEncoded
     @POST("market/deleteOptional")
-    fun deleteOptional(@Field("currencyId") currencyId: Int,
+    fun deleteOptional(@Field("currencyId") currencyId: String,
                        @Field("userId") userId: String
     ): Flowable<Result<String>>
 
     //获取挂单信息
     @GET("cc/getPendingOrderInfo")
     fun getPendingOrderInfo(
-            @Query("currencyId") currencyId: Int,
+            @Query("currencyId") currencyId: String,
             @Query("userId") userId: String?
     ): Flowable<Result<RestOrderBean>>
 
@@ -58,7 +58,7 @@ interface BibiService {
     fun limitTransaction(
             @Field("transactionType") transactionType: Int,
             @Field("userId") userId: String,
-            @Field("currencyId") currencyId: Int,
+            @Field("currencyId") currencyId: String,
             @Field("number") number: Double,
             @Field("price") price: Double
     ): Flowable<Result<LimitTransactionBean>>
@@ -70,7 +70,28 @@ interface BibiService {
     fun marketTransaction(
             @Field("transactionType") transactionType: Int,
             @Field("userId") userId: String,
-            @Field("currencyId") currencyId: Int,
+            @Field("currencyId") currencyId: String,
             @Field("number") number: Double
-    ): Flowable<Result<HashMap<String, Any>>>
+    ): Flowable<Result<LimitTransactionBean>>
+
+    //查询未执行订单列表
+    @GET("cc/orderPending")
+    fun orderPending(
+            @Query("currencyId") currencyId: String,
+            @Query("userId") userId: String
+    ): Flowable<Result<MutableList<OrderPendBean>>>
+
+    //取消订单
+    @FormUrlEncoded
+    @POST("cc/cancelOrder")
+    fun cancelOrder(
+            @Field("orderId") orderId: String,
+            @Field("userId") userId: String,
+            @Field("currencyId") currencyId: String
+    ): Flowable<Result<OrderPendBean>>
+
+
+    //查询账户资产
+    @GET("assets/getUserAssets")
+    fun getUserAssets(@Query("userId") userId: String): Flowable<Result<MutableList<UserAssetBean>>>
 }

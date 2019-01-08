@@ -20,6 +20,8 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc_content.view.*
@@ -35,6 +37,8 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
     lateinit var ptrLv: PullToRefreshListView
     var mainCurrency: String? = null
     val adapter: BibiSideContentAdapter by lazy { BibiSideContentAdapter(activity!!) }
+
+    var userBean: UserBean? = NzeApp.instance.userBean
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +101,10 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
                 }
             }
         }
-
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
+            userBean = UserBean.loadFromApp()
+            refreshData()
+        }
 
     }
 
@@ -116,6 +123,10 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
     override fun getContainerTargetView(): View? = null
 
 
+    fun refreshData() {
+        ptrLv.doPullRefreshing(true, 200)
+    }
+
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         getDataFromNet()
     }
@@ -129,7 +140,7 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
 
     override fun getDataFromNet() {
         if (mainCurrency != null && mainCurrency != "自选") {
-            TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userId)
+            TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
                     .compose(netTf())
                     .subscribe({
                         if (it.success) {
@@ -140,21 +151,23 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
                         NLog.i("")
                     })
         } else if (mainCurrency != null) {
-            TransactionPairsBean.getOptionalTransactionPair(NzeApp.instance.userId)
-                    .map {
-                        it.apply {
-                            result.map {
-                                it.optional = 1
+            if (userBean != null) {
+                TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
+                        .map {
+                            it.apply {
+                                result.map {
+                                    it.optional = 1
+                                }
                             }
                         }
-                    }
-                    .compose(netTf())
-                    .subscribe({
-                        if (it.success) {
-                            adapter.group = it.result
-                            ptrLv.onPullDownRefreshComplete()
-                        }
-                    }, onError)
+                        .compose(netTf())
+                        .subscribe({
+                            if (it.success) {
+                                adapter.group = it.result
+                                ptrLv.onPullDownRefreshComplete()
+                            }
+                        }, onError)
+            }
         }
     }
 
@@ -192,7 +205,7 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
     }
 
     //添加自选
-    fun addOptional(currencyId: Int, userId: String): Flowable<Result<String>> {
+    fun addOptional(currencyId: String, userId: String): Flowable<Result<String>> {
         return Flowable.defer {
             NRetrofit.instance
                     .bibiService()
@@ -201,7 +214,7 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
     }
 
     //删除自选
-    fun deleteOptional(currencyId: Int, userId: String): Flowable<Result<String>> {
+    fun deleteOptional(currencyId: String, userId: String): Flowable<Result<String>> {
         return Flowable.defer {
             NRetrofit.instance
                     .bibiService()

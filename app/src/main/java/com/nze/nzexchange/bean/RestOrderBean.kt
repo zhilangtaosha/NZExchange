@@ -15,7 +15,7 @@ data class RestOrderBean(
 ) {
 
     companion object {
-        fun getPendingOrderInfo(currencyId: Int, userId: String?): Flowable<Result<RestOrderBean>> {
+        fun getPendingOrderInfo(currencyId: String, userId: String?): Flowable<Result<RestOrderBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()

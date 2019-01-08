@@ -18,7 +18,7 @@ data class TransactionPairsBean(
         val createTime: Long,
         val currency: String,
         val exchangeRate: Double,
-        val id: Int,
+        val id: String,
         val mainCurrency: String,
         val remark: String,
         val status: Int,
@@ -35,7 +35,7 @@ data class TransactionPairsBean(
             }
         }
 
-        fun getTransactionPairs(mainCurrency: String, userId: String): Flowable<Result<MutableList<TransactionPairsBean>>> {
+        fun getTransactionPairs(mainCurrency: String, userId: String?): Flowable<Result<MutableList<TransactionPairsBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()

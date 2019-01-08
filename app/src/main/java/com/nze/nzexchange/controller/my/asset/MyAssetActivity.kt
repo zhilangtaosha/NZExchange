@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.my.asset
 
+import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,8 +12,12 @@ import android.widget.CheckBox
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.BibiAssetBean
+import com.nze.nzexchange.bean.UserAssetBean
+import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
@@ -33,6 +38,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     val showCb: CheckBox by lazy { cb_show_small_ama }
     val listView: ListView by lazy { lv_ama }
     val assetAdapter: MyAssetLvAdapter by lazy { MyAssetLvAdapter(this) }
+    val userBean: UserBean? = UserBean.loadFromApp()
 
     override fun getRootView(): Int = R.layout.activity_my_asset
 
@@ -41,13 +47,15 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         listView.adapter = assetAdapter
         listView.setOnItemClickListener(this)
 
-        assetAdapter.group = BibiAssetBean.getList()
+        zbanner.setOnPageChangeLister {
+            getBibiAsset()
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
     }
 
-    override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT
+    override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = BaseActivity.TransitionMode.DEFAULT
 
     override fun isBindEventBusHere(): Boolean = false
 
@@ -66,7 +74,8 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        skipActivity(ConcreteCurrencyAssetActivity::class.java)
+        startActivity(Intent(this@MyAssetActivity, ConcreteCurrencyAssetActivity::class.java)
+                .putExtra(IntentConstant.PARAM_ASSET, assetAdapter.getItem(position)))
     }
 
 
@@ -83,4 +92,14 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
 
     }
 
+
+    fun getBibiAsset() {
+        UserAssetBean.getUserAssets(userBean?.userId!!)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        assetAdapter.group = it.result
+                    }
+                }, onError)
+    }
 }

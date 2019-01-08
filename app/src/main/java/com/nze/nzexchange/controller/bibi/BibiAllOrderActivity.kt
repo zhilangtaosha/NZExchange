@@ -47,7 +47,6 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         listView.dividerHeight = 1
 
         listView.adapter = orderAdapter
-        orderAdapter.group = HandicapBean.getList()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
