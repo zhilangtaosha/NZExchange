@@ -99,7 +99,18 @@
         android:layout_marginTop="15dp"
         android:background="@color/color_FF1F2532" />
 
+    <TextView
+        android:id="@+id/tv_record_title_acca"
+        style="@style/tx15_aab9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/line_acca"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="18dp"
+        android:text="财务记录" />
+
     <RelativeLayout
+        android:id="@+id/layout_btn_acca"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -134,4 +145,14 @@
             android:textColor="@color/color_FF6D87A8"
             android:textSize="16sp" />
     </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listView_acca"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_btn_acca"
+        android:layout_below="@+id/tv_record_title_acca"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
+
 </RelativeLayout>

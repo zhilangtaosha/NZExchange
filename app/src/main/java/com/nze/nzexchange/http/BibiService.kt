@@ -94,4 +94,16 @@ interface BibiService {
     //查询账户资产
     @GET("assets/getUserAssets")
     fun getUserAssets(@Query("userId") userId: String): Flowable<Result<MutableList<UserAssetBean>>>
+
+    //提币
+    @FormUrlEncoded
+    @POST("assets/sendTransaction")
+    fun sendTransaction(
+            @Field("userId") userId: String,
+            @Field("currency") currency: String,
+            @Field("to") to: String,
+            @Field("number") number: String,
+            @Field("password") password: String,
+            @Field("remark") remark: String?
+    ): Flowable<Result<String>>
 }

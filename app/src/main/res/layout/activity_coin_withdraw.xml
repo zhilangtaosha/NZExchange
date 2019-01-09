@@ -79,6 +79,10 @@
                     android:layout_width="0dp"
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:drawablePadding="5dp"
+                    android:singleLine="true"
                     android:hint="输入或长按粘贴地址" />
 
                 <ImageView

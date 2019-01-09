@@ -12,9 +12,13 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.UserAssetBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
+import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
 import com.nze.nzexchange.widget.VerifyButton
@@ -53,10 +57,15 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
      * 请求CAMERA权限码
      */
     private val REQUEST_CAMERA_PERM: Int = 101
+    var userAssetBean: UserAssetBean? = null
+    var userBean:UserBean?= UserBean.loadFromApp()
 
     override fun getRootView(): Int = R.layout.activity_coin_withdraw
 
     override fun initView() {
+        intent?.let {
+            userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
+        }
         topBar.setRightClick {
             skipActivity(WithdrawHistoryActivity::class.java)
         }
@@ -66,6 +75,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         allTv.setOnClickListener(this)
         verifyBtn.setOnClickListener(this)
         withdrawBtn.setOnClickListener(this)
+
+        refreshLayout()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -97,6 +108,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 )
             }
             R.id.iv_qcode_acw -> {
+                openScan()
             }
             R.id.iv_address_acw -> {
                 skipActivity(SelectCurrencyAddressListActivity::class.java)
@@ -107,6 +119,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 verifyBtn.startVerify()
             }
             R.id.btn_withdraw_acw -> {
+                sendTransaction()
             }
         }
     }
@@ -126,8 +139,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 }
             }
             REQUEST_CODE_CURRENCY -> {
-                val currency = bundle?.getString(IntentConstant.PARAM_CURRENCY)
-                currencyTv.text = currency
+                userAssetBean = bundle?.getParcelable(IntentConstant.PARAM_ASSET)
+                refreshLayout()
             }
         }
     }
@@ -169,5 +182,35 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+    fun refreshLayout() {
+        userAssetBean?.let {
+            topBar.setTitle("${it.currency}提现")
+            currencyTv.text = it.currency
+            availableTv.text = it.available.toString()
+        }
 
+    }
+
+
+    fun sendTransaction() {
+        val address = addressEt.getContent()
+        val amount = amountEt.getContent()
+        if (address.isNullOrEmpty()) {
+            showToast("请输入提现地址")
+            addressEt.requestFocus()
+            return
+        }
+        if (amount.isNullOrEmpty()) {
+            showToast("请输入提现数量")
+            amountEt.requestFocus()
+            return
+        }
+        NRetrofit.instance
+                .bibiService()
+                .sendTransaction(userBean?.userId!!,userAssetBean?.currency!!,address,amount,"123456","")
+                .compose(netTfWithDialog())
+                .subscribe({
+                    showToast(it.message)
+                },onError)
+    }
 }

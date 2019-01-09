@@ -90,7 +90,9 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
     }
 
     fun setTitleRightIcon(iconId: Int) {
-        mTitleTv.setCompoundDrawables(null, null, ContextCompat.getDrawable(context, iconId), null)
+        val drawable = ContextCompat.getDrawable(context, iconId)
+        drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+        mTitleTv.setCompoundDrawables(null, null,drawable, null)
     }
 
     fun setTitleClick(click: () -> Unit) {

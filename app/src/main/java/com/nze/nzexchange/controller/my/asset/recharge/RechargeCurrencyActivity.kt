@@ -25,7 +25,7 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
 
     val topBar: CommonTopBar by lazy {
         ctb_arc.apply {
-            setTitleRightIcon(R.mipmap.open_icon)
+
             setTitleClick {
                 startActivityForResult(
                         Intent(this@RechargeCurrencyActivity, SelectCurrencyActivity::class.java),
@@ -38,27 +38,23 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
             }
         }
     }
+    val coinTitleTv: TextView by lazy { tv_title_address_arc }
     val coinAddressIv: ImageView by lazy { iv_coin_address_arc }
     val coinAddressTv: TextView by lazy { tv_coin_address_arc }
     val copyAddressTv: TextView by lazy { tv_copy_address_arc }
     val tipTv: TextView by lazy { tv_tip_arc }
     var codeBitmap: Bitmap? = null
     var userAssetBean: UserAssetBean? = null
-    var currecy: String? = null
 
     override fun getRootView(): Int = R.layout.activity_recharge_coin
 
     override fun initView() {
+        topBar.setTitleRightIcon(R.mipmap.open_icon)
         intent?.let {
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
-        userAssetBean?.let {
-            topBar.setTitle("${it.currency}快速充值")
-            codeBitmap = CodeUtils.createImage(it.address, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-            coinAddressIv.setImageBitmap(codeBitmap)
-        }
 
-
+        refreshLayout()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -87,12 +83,21 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
 
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (resultCode == Activity.RESULT_OK) {
-//            var currency = data?.extras?.getString(IntentConstant.PARAM_CURRENCY)
-//            topBar.setTitle("${currency}快速充值")
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            userAssetBean = data?.extras?.getParcelable<UserAssetBean>(IntentConstant.PARAM_ASSET)
+            refreshLayout()
+        }
+    }
 
+    fun refreshLayout() {
+        userAssetBean?.let {
+            topBar.setTitle("${it.currency}充值")
+            coinTitleTv.text = "${it.currency}快速充值"
+            codeBitmap = CodeUtils.createImage(it.address, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+            coinAddressIv.setImageBitmap(codeBitmap)
+            coinAddressTv.text = it.address
+        }
+    }
 
 }

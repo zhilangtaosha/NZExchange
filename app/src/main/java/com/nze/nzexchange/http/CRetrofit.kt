@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 class CRetrofit private constructor() {
     //http://zhongyingying.qicp.io:18080
     val LIU_URL = "http://192.168.1.143:8082/"
-    val SERVER_URL = "http://zhongyingying.qicp.io:18080/zyy-otc/"
+    val SERVER_URL = "http://zhongyingying.qicp.io:8082"
     //服务器地址
     val SERVER_FILE = "http://zhongyingying.qicp.io:8083"
 
