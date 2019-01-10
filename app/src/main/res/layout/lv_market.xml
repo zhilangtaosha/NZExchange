@@ -22,8 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_transaction"
-        android:layout_marginLeft="55dp"
-        android:layout_toRightOf="@+id/tv_transaction"
+        android:layout_marginLeft="140dp"
         android:text="823.93186"
         android:textColor="@color/color_FFA3AAB9"
         android:textSize="14sp" />

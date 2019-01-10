@@ -11,4 +11,77 @@
         android:layout_height="wrap_content"
         android:text="转入" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_type_lcca"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="数量"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_amount_lcca"
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="1.00000" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_type_lcca"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="状态"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_status_lcca"
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="已完成" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_type_lcca"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间"
+            android:textColor="@color/color_FF7F8592"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_date_lcca"
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="10/21 12:21" />
+
+    </LinearLayout>
 </RelativeLayout>

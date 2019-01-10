@@ -6,7 +6,9 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.bean.TransactionPairBean
+import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.formatForCurrency
 import kotlinx.android.synthetic.main.lv_market.view.*
 
 /**
@@ -15,17 +17,23 @@ import kotlinx.android.synthetic.main.lv_market.view.*
  * @类 说 明:
  * @创建时间：2018/11/20
  */
-class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairBean, MarketLvAdapter.ViewHolder>(mContext) {
+class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, MarketLvAdapter.ViewHolder>(mContext) {
     override fun setLayout(): Int = R.layout.lv_market
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: TransactionPairBean,position: Int) {
-        vh.transactionTv.text = item.name
-        vh.exchangeTv.text = item.exchange.toString()
-        vh.changeTv.text = item.change.toString()
-        vh.total24Tv.text = item.total24.toString()
-        vh.costTv.text = item.cost.toString()
+    override fun initView(vh: ViewHolder, item: TransactionPairsBean, position: Int) {
+        vh.transactionTv.text = item.transactionPair
+        vh.exchangeTv.text = item.exchangeRate.formatForCurrency()
+        if (item.gain > 0) {
+            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_9d81_bg)
+            vh.changeTv.text = "+${item.gain}%"
+        } else {
+            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_4a5f_bg)
+            vh.changeTv.text = "${item.gain}%"
+        }
+//        vh.total24Tv.text = item.total24.toString()
+//        vh.costTv.text = item.cost.toString()
 
     }
 
