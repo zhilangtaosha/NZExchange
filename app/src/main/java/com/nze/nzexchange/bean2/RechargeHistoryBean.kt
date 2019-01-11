@@ -1,19 +1,24 @@
 package com.nze.nzexchange.bean2
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
  * @类 说 明:
  * @创建时间：2018/12/25
  */
+@Parcelize
 data class RechargeHistoryBean(
-        val title: String = "",
-        val month: String = "",
-        val type: String = "USDT充值",
-        val rechargeAmount: String = "+1334.21USDT",
-        val totalAmount: String = "余额 12345.23USDT",
-        val isTitle: Boolean = false
-) {
+        var title: String = "",
+        var month: String = "",
+        var time: String = "",
+        var type: String = "USDT充值",
+        var rechargeAmount: String = "+1334.21USDT",
+        var totalAmount: String = "余额 12345.23USDT",
+        var isTitle: Boolean = false
+) : Parcelable {
 
     companion object {
 

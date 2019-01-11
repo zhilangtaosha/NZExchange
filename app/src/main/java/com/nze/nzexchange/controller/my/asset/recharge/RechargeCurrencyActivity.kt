@@ -34,7 +34,8 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
             }
             setRightClick {
                 //充值历史列表
-                skipActivity(RechargeHistoryActivity::class.java)
+                startActivity(Intent(this@RechargeCurrencyActivity, RechargeHistoryActivity::class.java)
+                        .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
             }
         }
     }

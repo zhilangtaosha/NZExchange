@@ -9,7 +9,11 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.BuildConfig
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.TransactionListBean
+import com.nze.nzexchange.bean.UserAssetBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean2.WithdrawHistoryBean
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.AssetService
 import com.nze.nzexchange.http.RetryIntercepter
@@ -35,10 +39,15 @@ class WithdrawHistoryActivity : NBaseActivity() {
         }
     }
     val historyAdapter: WithdrawHistoryAdapter by lazy { WithdrawHistoryAdapter(this) }
+    var userBean: UserBean? = UserBean.loadFromApp()
+    var userAssetBean: UserAssetBean? = null
 
     override fun getRootView(): Int = R.layout.activity_withdraw_history
 
     override fun initView() {
+        intent?.let {
+            userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
+        }
         listView.adapter = historyAdapter
         historyAdapter.group = WithdrawHistoryBean.getList()
     }

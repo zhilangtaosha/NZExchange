@@ -58,7 +58,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
      */
     private val REQUEST_CAMERA_PERM: Int = 101
     var userAssetBean: UserAssetBean? = null
-    var userBean:UserBean?= UserBean.loadFromApp()
+    var userBean: UserBean? = UserBean.loadFromApp()
 
     override fun getRootView(): Int = R.layout.activity_coin_withdraw
 
@@ -67,7 +67,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
         topBar.setRightClick {
-            skipActivity(WithdrawHistoryActivity::class.java)
+            startActivity(Intent(this@WithdrawCurrencyActivity, WithdrawHistoryActivity::class.java)
+                    .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
         }
         selectCurrencyIv.setOnClickListener(this)
         qcodeIv.setOnClickListener(this)
@@ -108,7 +109,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 )
             }
             R.id.iv_qcode_acw -> {
-                openScan()
+                cameraTask()
             }
             R.id.iv_address_acw -> {
                 skipActivity(SelectCurrencyAddressListActivity::class.java)
@@ -132,7 +133,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 if (null != data) {
                     if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                         var result = bundle.getString(CodeUtils.RESULT_STRING);
-                        Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                        addressEt.setText(result)
+//                        Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
                     } else if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                         Toast.makeText(this@WithdrawCurrencyActivity, "解析二维码失败", Toast.LENGTH_LONG).show();
                     }
@@ -207,10 +209,13 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         }
         NRetrofit.instance
                 .bibiService()
-                .sendTransaction(userBean?.userId!!,userAssetBean?.currency!!,address,amount,"123456","")
+                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", "")
                 .compose(netTfWithDialog())
                 .subscribe({
                     showToast(it.message)
-                },onError)
+                    if (it.success) {
+                        finish()
+                    }
+                }, onError)
     }
 }

@@ -49,22 +49,21 @@
             android:layout_height="wrap_content"
             android:text="+1334.21USDT" />
 
-        <TextView
-            android:id="@+id/tv_total_amount_rrhc"
-            style="@style/tx12_8592"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="余额 12345.23USDT" />
+        <!--<TextView-->
+        <!--android:id="@+id/tv_total_amount_rrhc"-->
+        <!--style="@style/tx12_8592"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="2dp"-->
+        <!--android:text="余额 12345.23USDT" />-->
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_recharge_type_rrhc"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/layout_amount_rrhc"
-        android:layout_toRightOf="@+id/tv_month_rrhc"
+        android:layout_marginLeft="100dp"
         android:gravity="center_horizontal"
         android:text="USDT充值"
         android:textColor="@color/color_FFA3AAB9"

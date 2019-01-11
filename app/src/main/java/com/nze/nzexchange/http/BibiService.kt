@@ -106,4 +106,14 @@ interface BibiService {
             @Field("password") password: String,
             @Field("remark") remark: String?
     ): Flowable<Result<String>>
+
+
+    //充值记录
+    @GET("assets/getTransactionList")
+    fun getTransactionList(
+            @Query("userId") userId: String,
+            @Query("currency") currency: String,
+            @Query("pageNumber") pageNumber: Int,
+            @Query("pageSize") pageSize: Int
+    ): Flowable<Result<MutableList<TransactionListBean>>>
 }

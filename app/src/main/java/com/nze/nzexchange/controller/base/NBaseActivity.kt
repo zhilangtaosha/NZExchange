@@ -2,30 +2,29 @@ package com.nze.nzexchange.controller.base
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
+import android.support.v4.content.ContextCompat
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
-import com.nze.nzexchange.NzeApp
+import com.nze.nzexchange.config.RrefreshType
 import com.trello.rxlifecycle2.android.ActivityEvent
 import io.reactivex.FlowableTransformer
-import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import com.nze.nzexchange.controller.base.NBaseActivity.OnHideKeyboardListener
-import android.view.WindowManager
-import android.os.Build
-import android.app.Activity
-import android.support.v4.content.ContextCompat
 
 
 abstract class NBaseActivity : BaseActivity() {
-
+    val PAGE_SIZE = 20
+    var page = 1
+    var refreshType: RrefreshType = RrefreshType.INIT
     var onHideKeyboardListener: OnHideKeyboardListener? = null
 
     val mProgressDialog: KProgressHUD by lazy {
