@@ -116,4 +116,14 @@ interface BibiService {
             @Query("pageNumber") pageNumber: Int,
             @Query("pageSize") pageSize: Int
     ): Flowable<Result<MutableList<TransactionListBean>>>
+
+
+    @GET("assets/tickRecord")
+    fun tickRecord(
+            @Query("userId") userId: String,
+            @Query("currency") currency: String,
+            @Query("pageNumber") pageNumber: Int,
+            @Query("pageSize") pageSize: Int
+    ): Flowable<Result<MutableList<TickRecordBean>>>
+
 }

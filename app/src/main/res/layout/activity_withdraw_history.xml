@@ -47,8 +47,8 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listView_awh"
+    <com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
+        android:id="@+id/ptrlv_awh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/color_line"

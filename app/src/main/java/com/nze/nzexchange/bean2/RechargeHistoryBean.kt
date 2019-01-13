@@ -14,9 +14,11 @@ data class RechargeHistoryBean(
         var title: String = "",
         var month: String = "",
         var time: String = "",
-        var type: String = "USDT充值",
-        var rechargeAmount: String = "+1334.21USDT",
+        var currency: String = "USDT",
+        var rechargeAmount: String = "",
         var totalAmount: String = "余额 12345.23USDT",
+        var address: String = "",
+        var datetime: Long=0,
         var isTitle: Boolean = false
 ) : Parcelable {
 

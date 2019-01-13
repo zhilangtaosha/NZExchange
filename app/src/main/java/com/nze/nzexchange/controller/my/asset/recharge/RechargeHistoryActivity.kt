@@ -33,8 +33,8 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
     val rcvAdapter: RechargeHistoryAdapter by lazy {
         RechargeHistoryAdapter(this).apply {
             setDetailClick { position, item ->
-                startActivity(Intent(this@RechargeHistoryActivity,RechargeDetailActivity::class.java)
-                        .putExtra(IntentConstant.PARAM_DETAIL,item))
+                startActivity(Intent(this@RechargeHistoryActivity, RechargeDetailActivity::class.java)
+                        .putExtra(IntentConstant.PARAM_DETAIL, item))
             }
 //            setDetailClick {
 //                skipActivity(RechargeDetailActivity::class.java)
@@ -43,6 +43,7 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
     }
 
     val historyList: MutableList<TransactionListBean> by lazy { mutableListOf<TransactionListBean>() }
+
     var userBean: UserBean? = UserBean.loadFromApp()
     var userAssetBean: UserAssetBean? = null
 
@@ -119,8 +120,10 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
                                 tmpList.add(RechargeHistoryBean(
                                         month = TimeTool.format(TimeTool.PATTERN4, it.datetime),
                                         time = TimeTool.format(TimeTool.PATTERN5, it.datetime),
-                                        type = "${userAssetBean?.currency}充值",
-                                        rechargeAmount = "+${it.number}${userAssetBean?.currency}",
+                                        currency = userAssetBean?.currency!!,
+                                        rechargeAmount = it.number,
+                                        address = it.address,
+                                        datetime = it.datetime,
                                         isTitle = false
                                 ))
                             }

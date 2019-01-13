@@ -26,9 +26,9 @@ class RechargeHistoryAdapter(var context: Context) : Adapter<RecyclerView.ViewHo
     val TYPE_TITLE = 0
     val TYPE_CONTENT = 1
 
-    private var onDetailClick: ((position:Int,item:RechargeHistoryBean) -> Unit)? = null
+    private var onDetailClick: ((position: Int, item: RechargeHistoryBean) -> Unit)? = null
 
-    fun setDetailClick(click: (position:Int,item:RechargeHistoryBean) -> Unit) {
+    fun setDetailClick(click: (position: Int, item: RechargeHistoryBean) -> Unit) {
         onDetailClick = click
     }
 
@@ -39,7 +39,7 @@ class RechargeHistoryAdapter(var context: Context) : Adapter<RecyclerView.ViewHo
         notifyDataSetChanged()
     }
 
-    fun addAllItem(list: List<RechargeHistoryBean>){
+    fun addAllItem(list: List<RechargeHistoryBean>) {
         data.addAll(list)
         notifyDataSetChanged()
     }
@@ -73,10 +73,10 @@ class RechargeHistoryAdapter(var context: Context) : Adapter<RecyclerView.ViewHo
             is RechargeHistoryViewHolder.Content -> {
                 viewHolder.monthTv.text = item.month
                 viewHolder.timeTv.text = item.time
-                viewHolder.rechargeTypeTv.text = item.type
-                viewHolder.rechargeAmountTv.text = item.rechargeAmount
+                viewHolder.rechargeTypeTv.text = "${item.currency}充值"
+                viewHolder.rechargeAmountTv.text = "+${item.rechargeAmount} ${item.currency}"
                 viewHolder.itemView.setOnClickListener {
-                    onDetailClick?.invoke(position,item)
+                    onDetailClick?.invoke(position, item)
                 }
             }
         }
@@ -93,7 +93,7 @@ class RechargeHistoryAdapter(var context: Context) : Adapter<RecyclerView.ViewHo
             val timeTv: TextView = itemView.tv_time_rrhc
             val detailIv: ImageView = itemView.iv_detail_rrhc
             val rechargeAmountTv: TextView = itemView.tv_amount_recharge_rrhc
-//            val totalAmountTv: TextView = itemView.tv_total_amount_rrhc
+            //            val totalAmountTv: TextView = itemView.tv_total_amount_rrhc
             val rechargeTypeTv: TextView = itemView.tv_recharge_type_rrhc
         }
     }
