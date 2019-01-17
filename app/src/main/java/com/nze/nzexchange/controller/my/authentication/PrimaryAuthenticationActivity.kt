@@ -7,9 +7,12 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.login.SelectCountryActivity
+import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
@@ -22,7 +25,8 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
     val nextBtn: CommonButton by lazy {
         btn_next_ap.apply {
             setOnCommonClick {
-                skipActivity(PrimaryAuthenticationCompleteActivity::class.java)
+                //                skipActivity(PrimaryAuthenticationCompleteActivity::class.java)
+                primaryAuthentication()
             }
         }
     }
@@ -33,7 +37,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
             field = value
             countryTv.text = value
         }
-
+    var userBean: UserBean? = null
     override fun getRootView(): Int = R.layout.activity_primary_authentication
 
     override fun initView() {
@@ -78,5 +82,20 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun primaryAuthentication() {
+        userBean!!.tokenReqVo.let {
+            CRetrofit.instance
+                    .userService()
+                    .primaryAuthentication(it.tokenUserId, it.tokenUserKey, it.tokenSystreeId, nameEt.getContent(), credentialsEt.getContent(), countryTv.text.toString())
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        if (it.success) {
+
+                        }
+                    }, onError)
+        }
+
     }
 }

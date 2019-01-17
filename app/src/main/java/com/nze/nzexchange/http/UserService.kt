@@ -111,4 +111,15 @@ interface UserService {
             @Query("coverOldBusFile") coverOldBusFile: Boolean,
             @Part file: MultipartBody.Part
     ): Flowable<Result<UploadBean>>
+
+    //提交实名信息
+    @GET("/meRunBus/meMemb/zyy/saveOneEntity_meMemb_curToken_t.json")
+    fun primaryAuthentication(
+            @Query("tokenUserId") tokenUserId: String,
+            @Query("tokenUserKey") tokenUserKey: String,
+            @Query("tokenSystreeId") tokenSystreeId: String,
+            @Query("membName") membName: String,
+            @Query("membIdentitycard") membIdentitycard: String,
+            @Query("membCountry") membCountry: String
+    ): Flowable<Result<String>>
 }

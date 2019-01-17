@@ -1,7 +1,9 @@
 package com.nze.nzexchange.bean
 
+import android.os.Parcelable
 import com.nze.nzexchange.http.NRetrofit
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import retrofit2.http.Query
 
 /**
@@ -10,6 +12,7 @@ import retrofit2.http.Query
  * @类 说 明:
  * @创建时间：2019/1/13
  */
+@Parcelize
 data class TickRecordBean(
         val blockNo: String,
         val datetime: Long,
@@ -19,7 +22,7 @@ data class TickRecordBean(
         val state: String,
         val to: String,
         val txid: String
-) {
+):Parcelable {
     companion object {
         fun tickRecord(
                 userId: String,

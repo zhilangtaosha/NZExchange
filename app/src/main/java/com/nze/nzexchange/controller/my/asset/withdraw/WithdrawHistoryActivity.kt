@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.my.asset.withdraw
 
+import android.content.Intent
 import android.view.View
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
@@ -11,6 +12,7 @@ import com.nze.nzexchange.bean.TickRecordBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseActivity
 import kotlinx.android.synthetic.main.activity_withdraw_history.*
 
@@ -21,7 +23,10 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
     val listView: ListView by lazy {
         ptrLv.refreshableView.apply {
             setOnItemClickListener { parent, view, position, id ->
-                skipActivity(WithdrawDetailActivity::class.java)
+                //                skipActivity(WithdrawDetailActivity::class.java)
+                startActivity(Intent(this@WithdrawHistoryActivity, WithdrawDetailActivity::class.java)
+                        .putExtra(IntentConstant.PARAM_DETAIL, historyAdapter.getItem(position))
+                        .putExtra(IntentConstant.PARAM_CURRENCY, userAssetBean?.currency))
             }
         }
     }
@@ -35,6 +40,7 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         intent?.let {
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
+        ptrLv.isPullLoadEnabled = true
         ptrLv.setOnRefreshListener(this)
         listView.adapter = historyAdapter
 
@@ -62,11 +68,13 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
     override fun getContainerTargetView(): View? = null
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_DOWN
         page = 1
         tickRecord()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_UP
         page++
         tickRecord()
     }
@@ -76,7 +84,16 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
-                        historyAdapter.group = it.result
+                        when (refreshType) {
+                            RrefreshType.PULL_DOWN -> {
+                                historyAdapter.group = it.result
+                                ptrLv.onPullDownRefreshComplete()
+                            }
+                            RrefreshType.PULL_UP -> {
+                                historyAdapter.addItems(it.result)
+                                ptrLv.onPullUpRefreshComplete()
+                            }
+                        }
                     }
                 }, onError)
     }

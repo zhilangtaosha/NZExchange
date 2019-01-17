@@ -136,6 +136,7 @@
         android:layout_marginRight="15dp">
 
         <TextView
+            android:id="@+id/tv_trade_id_key_awd"
             style="@style/tx15_aab9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -144,9 +145,12 @@
 
         <TextView
             android:id="@+id/tv_trade_id_awd"
-            style="@style/tx14_8592"
+            style="@style/tx12_8592"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_toRightOf="@+id/tv_trade_id_key_awd"
+            android:layout_marginLeft="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="31421314562347586f" />

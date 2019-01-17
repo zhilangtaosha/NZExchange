@@ -16,6 +16,7 @@ class TimeTool {
         const val PATTERN3 = "yyyy-MM"
         const val PATTERN4 = "MM-dd"
         const val PATTERN5 = "HH:mm"
+        const val PATTERN6 = "yyyy/MM/dd HH:mm:ss"
 
         fun date(): Date = Date()
 
