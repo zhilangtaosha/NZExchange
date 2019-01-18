@@ -2,42 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="110dp"
     android:layout_height="111dp"
-    android:background="@drawable/shape_radius_2532_bg"
+    android:background="@drawable/shape_radius_common_bg"
     android:orientation="vertical"
     android:paddingLeft="15dp"
-    android:paddingTop="19dp">
+    android:paddingTop="12dp">
 
     <TextView
         android:id="@+id/tv_change_rhtp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="+0.16%"
-        android:textColor="@color/color_FF019D81"
+        android:textColor="@color/color_up"
         android:textSize="19sp" />
 
     <TextView
         android:id="@+id/tv_name_rhtp"
+        style="@style/tx13_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BTC/USDT"
-        android:textColor="@color/color_FFA3AAB9"
-        android:textSize="9sp" />
+        android:text="BTC/USDT" />
 
     <TextView
         android:id="@+id/tv_exchange_rhtp"
+        style="@style/tx15_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:text="6362.57"
-        android:textColor="@color/color_FFA3AAB9"
-        android:textSize="13sp" />
+        android:text="6362.57" />
 
     <TextView
         android:id="@+id/tv_cost_rhtp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:text="≈43733.86 CNY"
-        android:textColor="@color/color_FF7F8592"
-        android:textSize="9sp" />
+        style="@style/tx11_hint" />
 </LinearLayout>

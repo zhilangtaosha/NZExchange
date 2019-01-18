@@ -16,7 +16,7 @@
         android:id="@+id/layout_tab_main"
         android:layout_width="match_parent"
         android:layout_height="49dp"
-        android:background="@color/color_FF1F2532"
+        android:background="@color/color_title_bg"
         android:orientation="horizontal">
 
         <RelativeLayout

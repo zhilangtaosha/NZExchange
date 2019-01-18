@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.controller.base.BaseAda
+import com.nze.nzexchange.extend.setTxtColor
 import kotlinx.android.synthetic.main.lv_rank_home.view.*
 
 class RankListAdapter(mContext: Context) : BaseAda<TransactionPairBean>(mContext) {
@@ -21,6 +22,60 @@ class RankListAdapter(mContext: Context) : BaseAda<TransactionPairBean>(mContext
             cView = convertView
             vh = cView.tag as ViewHolder
         }
+        when (position) {
+            0 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_up)
+                vh.orderNumTv.background.mutate().alpha = 255
+                vh.orderNumTv.setTxtColor(R.color.white)
+            }
+            1 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_up)
+                vh.orderNumTv.background.mutate().alpha = (255 * 0.8).toInt()
+                vh.orderNumTv.setTxtColor(R.color.white)
+            }
+            2 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_up)
+                vh.orderNumTv.background.mutate().alpha = (255 * 0.6).toInt()
+                vh.orderNumTv.setTxtColor(R.color.white)
+            }
+            3 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_up)
+                vh.orderNumTv.background.mutate().alpha = (255 * 0.5).toInt()
+                vh.orderNumTv.setTxtColor(R.color.white)
+            }
+            4 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_up)
+                vh.orderNumTv.background.mutate().alpha = (255 * 0.3).toInt()
+                vh.orderNumTv.setTxtColor(R.color.white)
+            }
+            5 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
+                vh.orderNumTv.background.mutate().alpha = 255
+                vh.orderNumTv.setTxtColor(R.color.color_head)
+            }
+            6 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
+                vh.orderNumTv.background.mutate().alpha = (255 * 0.8).toInt()
+                vh.orderNumTv.setTxtColor(R.color.color_head)
+            }
+            7 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
+                vh.orderNumTv.background.mutate().alpha = (255 * 0.6).toInt()
+                vh.orderNumTv.setTxtColor(R.color.color_head)
+            }
+            8 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
+                vh.orderNumTv.background.mutate().alpha = (255 * 0.5).toInt()
+                vh.orderNumTv.setTxtColor(R.color.color_head)
+            }
+            9 -> {
+                vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
+                vh.orderNumTv.background.mutate().alpha = (255 * 0.3).toInt()
+                vh.orderNumTv.setTxtColor(R.color.color_head)
+            }
+        }
+        vh.orderNumTv.text = position.toString()
+
         return cView!!
     }
 

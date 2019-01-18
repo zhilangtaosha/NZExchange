@@ -99,7 +99,6 @@
             android:name=".controller.login.SelectCountryActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity android:name=".controller.login.FindPwdActivity" />
-
         <activity android:name=".controller.bibi.BibiAllOrderActivity" />
         <activity android:name=".controller.my.setting.SettingActivity" />
         <activity android:name=".controller.my.setting.MoneyTypeSetActivity" />
@@ -135,9 +134,10 @@
         <activity android:name=".controller.my.safecenter.SetFundPasswordActivity" />
         <activity android:name=".controller.my.safecenter.ModifyPasswordActivity" />
         <activity android:name=".controller.my.safecenter.BindPhoneActivity" />
-
-        <activity android:name=".controller.bibi.BibiSideActivity"
-            android:theme="@style/DialogTheme"/>
+        <activity
+            android:name=".controller.bibi.BibiSideActivity"
+            android:theme="@style/DialogTheme" />
+        <activity android:name=".controller.market.KLineActivity"></activity>
     </application>
 
 </manifest>

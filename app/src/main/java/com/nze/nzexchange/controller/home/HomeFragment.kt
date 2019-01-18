@@ -37,6 +37,8 @@ class HomeFragment : NBaseFragment() {
         hotDatas.add(TransactionPairBean("BTC/USDT", -0.16, 6362.57, 43733.86, 213321))
         hotDatas.add(TransactionPairBean("BTC/USDT", 0.16, 6362.57, 43733.86, 213321))
         hotDatas.add(TransactionPairBean("BTC/USDT", 0.16, 6362.57, 43733.86, 213321))
+        hotDatas.add(TransactionPairBean("BTC/USDT", 0.16, 6362.57, 43733.86, 213321))
+        hotDatas.add(TransactionPairBean("BTC/USDT", 0.16, 6362.57, 43733.86, 213321))
     }
 
     companion object {

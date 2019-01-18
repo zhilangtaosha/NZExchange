@@ -46,9 +46,9 @@ class MarketFragment : NBaseFragment() {
         scrollIndicatorView = rootView.siv_market
         viewPager = rootView.vp_market
 
-        scrollIndicatorView.onTransitionListener = OnTransitionTextListener().setColor(-0x927858, -0x5c5547)
+        scrollIndicatorView.onTransitionListener = OnTransitionTextListener().setColor(getNColor(R.color.color_main), getNColor(R.color.color_head))
 
-        val colorBar = ColorBar(activity!!, getNColor(R.color.color_FF6D87A8), 3)
+        val colorBar = ColorBar(activity!!, getNColor(R.color.color_main), 3)
         colorBar.setWidth(dp2px(60F))
         scrollIndicatorView.setScrollBar(colorBar)
 

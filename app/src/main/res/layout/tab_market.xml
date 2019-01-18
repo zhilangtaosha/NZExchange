@@ -4,6 +4,4 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:textColor="@color/color_FFA3AAB9"
-    android:textStyle="bold"
     android:textSize="15sp" />

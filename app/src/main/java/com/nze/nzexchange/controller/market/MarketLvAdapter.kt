@@ -23,13 +23,14 @@ class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, Market
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: TransactionPairsBean, position: Int) {
-        vh.transactionTv.text = item.transactionPair
+        vh.transactionTv.text = item.currency
+        vh.mainCurrencyTv.text = item.mainCurrency
         vh.exchangeTv.text = item.exchangeRate.formatForCurrency()
         if (item.gain > 0) {
-            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_9d81_bg)
+            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
             vh.changeTv.text = "+${item.gain}%"
         } else {
-            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_4a5f_bg)
+            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
             vh.changeTv.text = "${item.gain}%"
         }
 //        vh.total24Tv.text = item.total24.toString()
@@ -39,6 +40,7 @@ class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, Market
 
     class ViewHolder(view: View) {
         val transactionTv: TextView = view.tv_transaction
+        val mainCurrencyTv: TextView = view.tv_main_currecy
         val exchangeTv: TextView = view.tv_exchange
         val total24Tv: TextView = view.tv_total24
         val costTv: TextView = view.tv_cost

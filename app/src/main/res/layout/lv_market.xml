@@ -10,53 +10,57 @@
 
     <TextView
         android:id="@+id/tv_transaction"
+        style="@style/tx16_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:text="PHX/BTC"
-        android:textColor="@color/color_FFA3AAB9"
-        android:textSize="14sp" />
+        android:text="PHX" />
+
+    <TextView
+        android:id="@+id/tv_main_currecy"
+        style="@style/tx12_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_transaction"
+        android:layout_toRightOf="@+id/tv_transaction"
+        android:text="/BTC" />
 
     <TextView
         android:id="@+id/tv_exchange"
+        style="@style/tx16_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_transaction"
         android:layout_marginLeft="140dp"
-        android:text="823.93186"
-        android:textColor="@color/color_FFA3AAB9"
-        android:textSize="14sp" />
+        android:text="823.93186" />
 
     <TextView
         android:id="@+id/tv_total24"
+        style="@style/tx14_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_transaction"
         android:layout_alignLeft="@+id/tv_transaction"
         android:layout_marginTop="4dp"
-        android:text="24h量 21332"
-        android:textColor="@color/color_FF7F8592"
-        android:textSize="10sp" />
+        android:text="24h量 21332" />
 
     <TextView
         android:id="@+id/tv_cost"
+        style="@style/tx14_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tv_exchange"
         android:layout_alignBottom="@+id/tv_total24"
-        android:text="¥3813.31"
-        android:textColor="@color/color_FFA3AAB9"
-        android:textSize="10sp" />
+        android:text="¥3813.31" />
 
     <TextView
         android:id="@+id/tv_change"
-        android:layout_width="55dp"
-        android:layout_height="24dp"
+        style="@style/tx15_light"
+        android:layout_width="70dp"
+        android:layout_height="29dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/shape_radius_9d81_bg"
+        android:background="@drawable/shape_radius_up_bg"
         android:gravity="center"
-        android:text="+18.56%"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
+        android:text="+18.56%" />
 </RelativeLayout>

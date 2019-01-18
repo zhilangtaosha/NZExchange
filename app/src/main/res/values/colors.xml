@@ -5,9 +5,9 @@
     <color name="colorAccent">#D81B60</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
-    <color name="color_bg">#FF151927</color>
-    <color name="color_title_bg">#FF1F2532</color>
-    <color name="color_line">#FF1F2532</color>
+    <color name="color_bg">#FF12161C</color>
+    <color name="color_title_bg">#FF181F27</color>
+    <color name="color_line">#ff252d34</color>
     <color name="color_black_tran">#99000000</color>
 
 
@@ -40,6 +40,26 @@
     <color name="color_FF454D5B">#FF454D5B</color>
     <color name="color_FF7386A5">#FF7386A5</color>
     <color name="color_FF475970">#FF475970</color>
+
+
+    <color name="color_FF181F27">#FF181F27</color>
+    <color name="color_FF12161C">#ff12161C</color>
+
+    <color name="color_FF222A32">#ff222A32</color>
+    <color name="color_FFE7484A">#FFE7484A</color>
+    <color name="color_FF337AE5">#FF337AE5</color>
+    <color name="color_FFBD3EE9">#FFBD3EE9</color>
+    <color name="color_FFF0F0F4">#FFF0F0F4</color>
+    <color name="color_FF202833">#FF202833</color>
+
+
+    <color name="color_hint">#ff4c535f</color>
+    <color name="color_head">#ffa2abbe</color>
+    <color name="color_common">#ffcacaca</color>
+
+    <color name="color_up">#ff00c187</color>
+    <color name="color_down">#ffff4a5f</color>
+    <color name="color_main">#ff6D87A8</color>
 
 
 </resources>

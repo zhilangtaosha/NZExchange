@@ -55,6 +55,10 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
         ptrLv.setOnRefreshListener(this)
         val listView: ListView = ptrLv.refreshableView
         listView.adapter = lvAdapter
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            skipActivity(KLineActivity::class.java)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
