@@ -3,14 +3,221 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg"
     android:orientation="vertical"
     tools:context=".controller.market.KLineActivity">
 
-    <Button
-        android:id="@+id/btn1_ak"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="websocket" />
+        android:layout_height="44dp"
+        android:background="@color/color_title_bg">
 
+        <TextView
+            android:id="@+id/tv_transaction_name_kline"
+            style="@style/tx17_common"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@mipmap/left_arrow"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="BTC/USDT" />
+
+        <ImageView
+            android:id="@+id/iv_switch_kline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="7dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:src="@mipmap/switch_kline" />
+
+        <ImageView
+            android:id="@+id/iv_self_select_kline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_switch_kline"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="10dp"
+            android:src="@mipmap/start_norml" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_cost_kline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="15.1545666"
+                android:textColor="@color/color_up"
+                android:textSize="30sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp">
+
+                <TextView
+                    android:id="@+id/tv_hight_cost_key_kline"
+                    style="@style/tx14_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="24h最高价" />
+
+                <TextView
+                    android:id="@+id/tv_hight_cost_kline"
+                    style="@style/tx14_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_hight_cost_key_kline"
+                    android:text="0.12345678" />
+
+                <TextView
+                    android:id="@+id/tv_low_cost_key_kline"
+                    style="@style/tx14_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_hight_cost_key_kline"
+                    android:layout_marginTop="5dp"
+                    android:text="24h最低价" />
+
+                <TextView
+                    android:id="@+id/tv_low_cost_kline"
+                    style="@style/tx14_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/tv_low_cost_key_kline"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_low_cost_key_kline"
+                    android:text="0.12345678" />
+
+                <TextView
+                    android:id="@+id/tv_volume_key_kline"
+                    style="@style/tx14_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="190dp"
+                    android:text="24h成交量" />
+
+                <TextView
+                    android:id="@+id/tv_volume_kline"
+                    style="@style/tx14_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_volume_key_kline"
+                    android:text="2568" />
+
+                <TextView
+                    android:id="@+id/tv_range_key_kline"
+                    style="@style/tx14_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_hight_cost_key_kline"
+                    android:layout_marginLeft="190dp"
+                    android:layout_marginTop="5dp"
+                    android:text="24h涨跌幅" />
+
+                <TextView
+                    android:id="@+id/tv_range_kline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/tv_range_key_kline"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_range_key_kline"
+                    android:text="+2568"
+                    android:textColor="@color/color_up"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_fenshi_kline"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/color_title_bg"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+                <TextView
+                    android:id="@+id/tv_fenshi_kline"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:drawableRight="@mipmap/open_icon2"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="分时"
+                    android:textColor="@color/color_selector_abbe_87a8"
+                    android:textSize="15sp" />
+
+                <View
+                    android:id="@+id/view_fenshi_kline"
+                    android:layout_width="50dp"
+                    android:layout_height="1dp"
+                    android:layout_alignLeft="@+id/tv_fenshi_kline"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_main" />
+
+                <TextView
+                    android:id="@+id/tv_shendu_kline"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/tv_fenshi_kline"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="深度"
+                    android:textColor="@color/color_selector_abbe_87a8"
+                    android:textSize="15sp" />
+
+                <View
+                    android:id="@+id/view_shendu_kline"
+                    android:layout_width="50dp"
+                    android:layout_height="1dp"
+                    android:layout_alignLeft="@+id/tv_shendu_kline"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_main" />
+
+                <CheckBox
+                    android:id="@+id/cb_hide_kline"
+                    style="@style/tx13_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/selector_checkbox_asset_show_small"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="隐藏其它数据" />
+            </RelativeLayout>
+
+            <com.nze.nzexchange.widget.chart.KLineChartView
+                android:id="@+id/chart_kline"
+                android:layout_width="match_parent"
+                android:layout_height="270dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
