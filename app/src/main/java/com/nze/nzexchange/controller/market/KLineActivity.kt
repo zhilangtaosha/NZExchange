@@ -5,14 +5,24 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.KLineBean
+import com.nze.nzexchange.bean.TransactionPairsBean
+import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.NWebSocket
+import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.chart.*
 import com.nze.nzexchange.widget.chart.formatter.DateFormatter
+import com.nze.nzexchange.widget.depth.DepthData
+import com.nze.nzexchange.widget.depth.DepthDataBean
+import com.nze.nzexchange.widget.depth.DepthMapView
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
 import io.reactivex.FlowableOnSubscribe
@@ -22,6 +32,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_kline.*
 import okhttp3.*
 import okio.ByteString
+import org.json.JSONObject
+import java.util.ArrayList
 
 class KLineActivity : NBaseActivity(), View.OnClickListener {
 
@@ -49,15 +61,66 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
     }
     val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val chartAdapter by lazy { KLineChartAdapter() }
-    val fenshiPopup: FenshiPopup by lazy { FenshiPopup(this) }
+    val fenshiPopup: FenshiPopup by lazy {
+        FenshiPopup(this).apply {
+            onItemClick = {
+                showToast("position>>$it")
+                when (it) {
+                    0 -> {
+                        kChart.setMainDrawLine(true)
+                    }
+                    1 -> {
+                        kChart.setMainDrawLine(false)
+                    }
+                    2 -> {
+                    }
+                    3 -> {
+                    }
+                    4 -> {
+                    }
+                    5 -> {
+                    }
+                    6 -> {
+                    }
+                    7 -> {
+                    }
+                    8 -> {
+                    }
+                    9 -> {
+                    }
+                    10 -> {
+                    }
+                    11 -> {
+                    }
+                }
+            }
+        }
+    }
+    val depthView: DepthMapView by lazy { depth_view }
+
+
+    var pairsBean: TransactionPairsBean? = null
+    var userBean: UserBean? = UserBean.loadFromApp()
+    var nWebSocket: NWebSocket? = null
+    var socket: WebSocket? = null
+
 
     final val K_FENSHI = 0
     final val K_SHENDU = 1
     var kType: Int = K_FENSHI
 
+    final val DATA_TYPE_INIT = 0
+    final val DATA_TYPE_REFRESH = 1
+    final val DATA_TYPE_LISTENER = 2
+    var dataType = DATA_TYPE_INIT
+
+
     override fun getRootView(): Int = R.layout.activity_kline
 
     override fun initView() {
+        intent?.let {
+            pairsBean = it.getParcelableExtra(IntentConstant.PARAM_TRANSACTION_PAIR)
+        }
         fenshiTv.setOnClickListener(this)
         shenduTv.setOnClickListener(this)
 
@@ -71,16 +134,18 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
         }
         kChart.adapter = chartAdapter
         selectKline(kType)
-        getData()
-//        btn1_ak.setOnClickListener {
-//            val ws = KLinews()
-//
-//            val socket = NWebSocket.newInstance("ws://192.168.1.101:80/btcbch/websocket/007/fivesMinute", ws)
-//            socket.open()
-//        }
+        // getKData("oneMinute", userBean?.userId ?: System.currentTimeMillis().toString())
+        getKlineData()
+        getDepthData()
     }
 
-    private fun getData() {
+    //ws://192.168.1.101:800/btcbch/007/fivesMinute
+    private fun getKData(type: String, userId: String) {
+        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/${pairsBean?.currency?.toLowerCase()}${pairsBean?.mainCurrency?.toLowerCase()}/${userId}/${type}", wsListener)
+        socket = nWebSocket?.open()
+    }
+
+    private fun getKlineData() {
         Observable.create<List<KLineEntity>> {
             val list = DataRequest.getALL(this@KLineActivity).subList(0, 500)
             DataHelper.calculate(list)
@@ -96,13 +161,44 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
 
     }
 
+    private fun getDepthData() {
+        val jsonData = DepthData.depthB
+        val listDepthBuy = ArrayList<DepthDataBean>()
+        val listDepthSell = ArrayList<DepthDataBean>()
+
+        val jsonObject = JSONObject(jsonData)
+        val jsonTick = jsonObject.optJSONObject("tick")
+        val arrBids = jsonTick.optJSONArray("bids")
+        val arrAsks = jsonTick.optJSONArray("asks")
+
+        var obj: DepthDataBean
+        var price: String
+        var volume: String
+
+        for (i in 0 until arrBids.length()) {
+            obj = DepthDataBean()
+            price = arrBids.getString(i).replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+            volume = arrBids.getString(i).replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+            obj.volume = java.lang.Float.valueOf(volume)
+            obj.price = java.lang.Float.valueOf(price)
+            listDepthBuy.add(obj)
+        }
+        for (i in 0 until arrAsks.length()) {
+            obj = DepthDataBean()
+            price = arrAsks.getString(i).replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+            volume = arrAsks.getString(i).replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+            obj.volume = java.lang.Float.valueOf(volume)
+            obj.price = java.lang.Float.valueOf(price)
+            listDepthSell.add(obj)
+        }
+        depthView.setData(listDepthBuy, listDepthSell)
+    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_fenshi_kline -> {
                 if (kType == K_FENSHI) {
                     fenshiPopup.showPopupWindow(fenshiLayout)
-                    showToast("弹出")
                     return
                 }
                 selectKline(K_FENSHI)
@@ -119,6 +215,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
         fenshiView.visibility = if (type == K_FENSHI) View.VISIBLE else View.GONE
         shenduTv.isSelected = type == K_SHENDU
         shenduView.visibility = if (type == K_SHENDU) View.VISIBLE else View.GONE
+
+        kChart.visibility = if (type == K_FENSHI) View.VISIBLE else View.GONE
+        depthView.visibility = if (type == K_SHENDU) View.VISIBLE else View.GONE
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -141,8 +240,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
 
     override fun getContainerTargetView(): View? = null
 
-
-    class KLinews : WebSocketListener() {
+    private val wsListener = object : WebSocketListener() {
+        val gson: Gson = Gson()
         override fun onOpen(webSocket: WebSocket, response: Response) {
             super.onOpen(webSocket, response)
         }
@@ -157,6 +256,27 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
 
         override fun onMessage(webSocket: WebSocket, text: String) {
             NLog.i("text>>>$text")
+            if (dataType == DATA_TYPE_INIT) {
+                Observable.create<List<KLineEntity>> {
+                    var kLineBean: KLineBean = gson.fromJson(text, KLineBean::class.java)
+                    val rs = kLineBean.result
+                    val list: MutableList<KLineEntity> = mutableListOf()
+                    rs.forEach {
+                        val bean = KLineEntity()
+                        bean.Date = TimeTool.format(TimeTool.PATTERN7, it[0])
+
+                    }
+                }.subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+
+                        }
+            } else if (dataType == DATA_TYPE_REFRESH) {
+
+            } else {
+
+            }
+
             super.onMessage(webSocket, text)
         }
 

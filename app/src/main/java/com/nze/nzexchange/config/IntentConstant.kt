@@ -14,7 +14,8 @@ class IntentConstant {
         const val PARAM_COUNTRY_NUMBER = "countryNumber"
         const val PARAM_SELECT_CURRENCY = "selectType"
         const val PARAM_ASSET = "asset"
-        const val PARAM_DETAIL="detail"
+        const val PARAM_DETAIL = "detail"
+        const val PARAM_TRANSACTION_PAIR = "transactionPair"
 
         //设置支付方式
         const val TYPE_ZHIFUBAO = 0x001//支付宝

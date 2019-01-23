@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.market
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ListView
@@ -57,7 +58,8 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
         listView.adapter = lvAdapter
 
         listView.setOnItemClickListener { parent, view, position, id ->
-            skipActivity(KLineActivity::class.java)
+            startActivity(Intent(activity, KLineActivity::class.java)
+                    .putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, lvAdapter.getItem(position)))
         }
     }
 

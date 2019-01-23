@@ -9,4 +9,7 @@
     <dimen name="chart_top_padding">15dp</dimen>
     <dimen name="chart_bottom_padding">15dp</dimen>
     <dimen name="child_top_padding">10dp</dimen>
+
+
+    <dimen name="depth_text_size">10sp</dimen>
 </resources>

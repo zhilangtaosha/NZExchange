@@ -12,6 +12,7 @@ import okhttp3.WebSocketListener
  * @创建时间：2019/1/17
  */
 class NWebSocket(var url: String, var listener: WebSocketListener) {
+
     val request = Request.Builder()
             .url(url)
             .build()
@@ -27,6 +28,7 @@ class NWebSocket(var url: String, var listener: WebSocketListener) {
 
 
     companion object {
+        const val K_URL = "ws://192.168.1.101:800"
         fun newInstance(url: String, listener: WebSocketListener): NWebSocket {
             return NWebSocket(url, listener)
         }

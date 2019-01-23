@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -217,6 +218,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="270dp" />
 
+            <com.nze.nzexchange.widget.depth.DepthMapView
+                android:id="@+id/depth_view"
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                app:background_color="@color/depth_background"
+                app:buy_line_color="@color/depth_buy_line"
+                app:buy_path_color="@color/depth_buy_path"
+                app:circle_radius="8dp"
+                app:dot_radius="1.5dp"
+                app:line_count="4"
+                app:line_width="1.5dp"
+                app:sell_line_color="@color/depth_sell_line"
+                app:sell_path_color="@color/depth_sell_path"
+                app:text_color="@color/depth_text_color"
+                app:text_size="10sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@color/color_title_bg"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
