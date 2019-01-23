@@ -222,6 +222,7 @@
                 android:id="@+id/depth_view"
                 android:layout_width="match_parent"
                 android:layout_height="270dp"
+                android:visibility="gone"
                 app:background_color="@color/depth_background"
                 app:buy_line_color="@color/depth_buy_line"
                 app:buy_path_color="@color/depth_buy_path"
@@ -234,14 +235,17 @@
                 app:text_color="@color/depth_text_color"
                 app:text_size="10sp" />
 
-            <RelativeLayout
+            <com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
+                android:id="@+id/siv_kline"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:background="@color/color_title_bg"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                android:fillViewport="false" />
 
-            </RelativeLayout>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_kline"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
 

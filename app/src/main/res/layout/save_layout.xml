@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/color_title_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_order_kline"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="委托订单"
+            android:textColor="@color/color_selector_abbe_87a8"
+            android:textSize="15sp" />
+
+        <View
+            android:id="@+id/view_order_kline"
+            android:layout_width="80dp"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@+id/tv_order_kline"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_main" />
+
+        <TextView
+            android:id="@+id/tv_deal_kline"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_order_kline"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="最新成交"
+            android:textColor="@color/color_selector_abbe_87a8"
+            android:textSize="15sp" />
+
+        <View
+            android:id="@+id/view_deal_kline"
+            android:layout_width="80dp"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@+id/tv_deal_kline"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_main" />
+
+        <TextView
+            android:id="@+id/tv_currency_detail_kline"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_deal_kline"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="币种详情"
+            android:textColor="@color/color_selector_abbe_87a8"
+            android:textSize="15sp" />
+
+        <View
+            android:id="@+id/view_currency_detail_kline"
+            android:layout_width="80dp"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@+id/tv_currency_detail_kline"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_main" />
+    </RelativeLayout>
+</LinearLayout>

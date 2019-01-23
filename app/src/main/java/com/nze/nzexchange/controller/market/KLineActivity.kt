@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.market
 
+import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView
@@ -18,11 +19,17 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
+import com.nze.nzexchange.tools.dp2px
+import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.chart.*
 import com.nze.nzexchange.widget.chart.formatter.DateFormatter
 import com.nze.nzexchange.widget.depth.DepthData
 import com.nze.nzexchange.widget.depth.DepthDataBean
 import com.nze.nzexchange.widget.depth.DepthMapView
+import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
+import com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
+import com.nze.nzexchange.widget.indicator.indicator.slidebar.ColorBar
+import com.nze.nzexchange.widget.indicator.indicator.transition.OnTransitionTextListener
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
 import io.reactivex.FlowableOnSubscribe
@@ -115,6 +122,17 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
     var dataType = DATA_TYPE_INIT
 
 
+    val viewPager: ViewPager by lazy { vp_kline }
+    val scrollIndicatorView: ScrollIndicatorView by lazy { siv_kline }
+    private lateinit var indicatorViewPager: IndicatorViewPager
+    private val tabs by lazy {
+        mutableListOf<String>().apply {
+            add("委托订单")
+            add("最新成交")
+            add("币种详情")
+        }
+    }
+
     override fun getRootView(): Int = R.layout.activity_kline
 
     override fun initView() {
@@ -137,6 +155,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
         // getKData("oneMinute", userBean?.userId ?: System.currentTimeMillis().toString())
         getKlineData()
         getDepthData()
+        initViewPager()
     }
 
     //ws://192.168.1.101:800/btcbch/007/fivesMinute
@@ -192,6 +211,17 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
             listDepthSell.add(obj)
         }
         depthView.setData(listDepthBuy, listDepthSell)
+    }
+
+    private fun initViewPager() {
+        scrollIndicatorView.onTransitionListener = OnTransitionTextListener().setColor(getNColor(R.color.color_main), getNColor(R.color.color_head))
+
+        val colorBar = ColorBar(this, getNColor(R.color.color_main), 3)
+        colorBar.setWidth(dp2px(60F))
+        scrollIndicatorView.setScrollBar(colorBar)
+
+        viewPager.offscreenPageLimit = 2
+        indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
     }
 
     override fun onClick(v: View?) {
