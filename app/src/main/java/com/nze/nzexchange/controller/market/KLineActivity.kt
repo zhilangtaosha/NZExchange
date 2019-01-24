@@ -1,13 +1,9 @@
 package com.nze.nzexchange.controller.market
 
-import android.support.v4.view.ViewPager
+import android.net.Uri
 import android.view.View
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -17,32 +13,27 @@ import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
-import com.nze.nzexchange.tools.dp2px
-import com.nze.nzexchange.tools.getNColor
+import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.nze.nzexchange.widget.chart.*
 import com.nze.nzexchange.widget.chart.formatter.DateFormatter
 import com.nze.nzexchange.widget.depth.DepthData
 import com.nze.nzexchange.widget.depth.DepthDataBean
 import com.nze.nzexchange.widget.depth.DepthMapView
-import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
-import com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
-import com.nze.nzexchange.widget.indicator.indicator.slidebar.ColorBar
-import com.nze.nzexchange.widget.indicator.indicator.transition.OnTransitionTextListener
-import io.reactivex.Flowable
-import io.reactivex.FlowableEmitter
-import io.reactivex.FlowableOnSubscribe
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_kline.*
-import okhttp3.*
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import okio.ByteString
 import org.json.JSONObject
-import java.util.ArrayList
+import java.util.*
 
-class KLineActivity : NBaseActivity(), View.OnClickListener {
+class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFragmentInteractionListener {
 
 
     val transactionNameTv: TextView by lazy { tv_transaction_name_kline }//交易对名称
@@ -104,7 +95,23 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
         }
     }
     val depthView: DepthMapView by lazy { depth_view }
+    val orderTv: TextView by lazy { tv_order_kline }
+    val orderView: View by lazy { view_order_kline }
+    val newDealTv: TextView by lazy { tv_new_deal_kline }
+    val newDealView: View by lazy { view_new_deal_kline }
+    val currencyDetailTv: TextView by lazy { tv_currency_detail_kline }
+    val currencyDetailView: View by lazy { view_currency_detail_kline }
+    final val SELECT_ORDER = 0
+    final val SELECT_NEW_DEAL = 1
+    final val SELECT_CURRENCY_DETAIL = 2
+    var currentSelect = SELECT_ORDER
 
+
+    val orderLayout: LinearLayout by lazy { layout_order_kline }
+    val newDealLayout: LinearLayout by lazy { layout_new_deal_kline }
+    val currencyDetailLayout: LinearLayout by lazy { layout_currency_detail_kline }
+    val buyLv: LinearLayoutAsListView by lazy { lv_buy_kline }
+    val sellLv: LinearLayoutAsListView by lazy { lv_sell_kline }
 
     var pairsBean: TransactionPairsBean? = null
     var userBean: UserBean? = UserBean.loadFromApp()
@@ -122,17 +129,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
     var dataType = DATA_TYPE_INIT
 
 
-    val viewPager: ViewPager by lazy { vp_kline }
-    val scrollIndicatorView: ScrollIndicatorView by lazy { siv_kline }
-    private lateinit var indicatorViewPager: IndicatorViewPager
-    private val tabs by lazy {
-        mutableListOf<String>().apply {
-            add("委托订单")
-            add("最新成交")
-            add("币种详情")
-        }
-    }
-
     override fun getRootView(): Int = R.layout.activity_kline
 
     override fun initView() {
@@ -141,6 +137,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
         }
         fenshiTv.setOnClickListener(this)
         shenduTv.setOnClickListener(this)
+        orderTv.setOnClickListener(this)
+        newDealTv.setOnClickListener(this)
+        currencyDetailTv.setOnClickListener(this)
 
 
         fenshiPopup.setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
@@ -152,10 +151,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
         }
         kChart.adapter = chartAdapter
         selectKline(kType)
+        select(currentSelect)
         // getKData("oneMinute", userBean?.userId ?: System.currentTimeMillis().toString())
         getKlineData()
         getDepthData()
-        initViewPager()
     }
 
     //ws://192.168.1.101:800/btcbch/007/fivesMinute
@@ -213,16 +212,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
         depthView.setData(listDepthBuy, listDepthSell)
     }
 
-    private fun initViewPager() {
-        scrollIndicatorView.onTransitionListener = OnTransitionTextListener().setColor(getNColor(R.color.color_main), getNColor(R.color.color_head))
-
-        val colorBar = ColorBar(this, getNColor(R.color.color_main), 3)
-        colorBar.setWidth(dp2px(60F))
-        scrollIndicatorView.setScrollBar(colorBar)
-
-        viewPager.offscreenPageLimit = 2
-        indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
-    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -236,6 +225,18 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
             R.id.tv_shendu_kline -> {
                 selectKline(K_SHENDU)
             }
+            R.id.tv_order_kline -> {
+                currentSelect = SELECT_ORDER
+                select(currentSelect)
+            }
+            R.id.tv_new_deal_kline -> {
+                currentSelect = SELECT_NEW_DEAL
+                select(currentSelect)
+            }
+            R.id.tv_currency_detail_kline -> {
+                currentSelect = SELECT_CURRENCY_DETAIL
+                select(currentSelect)
+            }
         }
     }
 
@@ -248,6 +249,15 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
 
         kChart.visibility = if (type == K_FENSHI) View.VISIBLE else View.GONE
         depthView.visibility = if (type == K_SHENDU) View.VISIBLE else View.GONE
+    }
+
+    private fun select(select: Int) {
+        orderTv.isSelected = select == SELECT_ORDER
+        newDealTv.isSelected = select == SELECT_NEW_DEAL
+        currencyDetailTv.isSelected = select == SELECT_CURRENCY_DETAIL
+        orderView.visibility = if (select == SELECT_ORDER) View.VISIBLE else View.GONE
+        newDealView.visibility = if (select == SELECT_NEW_DEAL) View.VISIBLE else View.GONE
+        currencyDetailView.visibility = if (select == SELECT_CURRENCY_DETAIL) View.VISIBLE else View.GONE
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -319,4 +329,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener {
             super.onClosed(webSocket, code, reason)
         }
     }
+
+    override fun onFragmentInteraction(uri: Uri) {
+    }
+
 }
