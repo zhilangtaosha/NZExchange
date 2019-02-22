@@ -135,7 +135,7 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
                                     showToast("登录成功")
                                     NzeApp.instance.userBean = rs.result.cloneToUserBean()
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
-                                    this@EmailRegisterActivity
+                                    this@EmailRegisterActivity.finish()
                                 }
                             }, {
                                 it.message?.let { showToast(it) }

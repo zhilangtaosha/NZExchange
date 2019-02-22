@@ -14,6 +14,7 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.TextTool
 import com.nze.nzexchange.validation.EmptyValidation
@@ -35,6 +36,8 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     var flag: Boolean = true
 
     override fun getRootView(): Int = R.layout.activity_publish
+
+    private var userBean:UserBean?= UserBean.loadFromApp()
 
     override fun initView() {
         intent?.let {
@@ -108,7 +111,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 .subscribe {
                     if (btn_ap.validate()) {
                         if (currentType == TYPE_SALE) {
-                            submitNet(tokenId, NzeApp.instance.userId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+                            submitNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
                                     .compose(netTfWithDialog())
                                     .subscribe({
                                         Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
@@ -119,7 +122,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                                         }
                                     }, onError)
                         } else {
-                            sellNet(tokenId, NzeApp.instance.userId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+                            sellNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
                                     .compose(netTfWithDialog())
                                     .subscribe({
                                         Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()

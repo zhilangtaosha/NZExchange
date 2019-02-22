@@ -17,6 +17,9 @@ import kotlinx.android.synthetic.main.lv_bibi_current_order.view.*
  * @创建时间：2018/12/4
  */
 class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCurentOrderAdapter.ViewHolder>(mContext) {
+    var mainCurrency: String? = null
+    var currency: String? = null
+
     var cancelClick: ((position: Int, item: OrderPendBean) -> Unit)? = null
 
     override fun setLayout(): Int = R.layout.lv_bibi_current_order
@@ -31,9 +34,11 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
             vh.statusTv.setTxtColor(R.color.color_FF019D81)
             vh.statusTv.text = "买入"
         }
-
+        vh.costKeyTv.text = "价格($mainCurrency)"
         vh.costValueTv.text = item.price
+        vh.amountKeyTv.text = "数量($currency)"
         vh.amountValueTv.text = item.amount
+        vh.realAmountKeyTv.text = "实际成交($currency)"
         vh.realAmountValueTv.text = item.deal_money
 
         vh.cancelTv.setOnClickListener {
@@ -44,8 +49,11 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
     class ViewHolder(val view: View) {
         val statusTv: TextView = view.tv_status_lbco
         val cancelTv: TextView = view.tv_cancel_lbco
+        val costKeyTv: TextView = view.tv_cost_key_lbco
         val costValueTv: TextView = view.tv_cost_value_lbco
+        val amountKeyTv: TextView = view.tv_amount_key_lbco
         val amountValueTv: TextView = view.tv_amount_value_lbco
+        val realAmountKeyTv: TextView = view.tv_real_amount_key_lbco
         val realAmountValueTv: TextView = view.tv_real_amount_value_lbco
     }
 }

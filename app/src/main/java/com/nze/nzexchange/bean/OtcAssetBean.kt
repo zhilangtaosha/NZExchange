@@ -12,7 +12,7 @@ import io.reactivex.Flowable
  */
 data class OtcAssetBean(var currency: String = "",
                         var amount: Double,
-                        var tokenId: String = "",
+                        var tokenId: String ,
                         var freeze: Double) {
     var available: Double = 0.0
         get() {

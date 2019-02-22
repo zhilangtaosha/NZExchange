@@ -7,6 +7,7 @@ import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.SubOrderInfoBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.CurrencyTool
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
@@ -37,7 +38,7 @@ class TradeCommonDetailActivity : NBaseActivity() {
 
         }
 
-        SubOrderInfoBean.findSubOrderInfoNet(NzeApp.instance.userId, suborderId!!)
+        SubOrderInfoBean.findSubOrderInfoNet(UserBean.loadFromApp()?.userId!!, suborderId!!)
                 .compose(netTfWithDialog())
                 .subscribe({
                     this.subOrderInfoBean = it.result

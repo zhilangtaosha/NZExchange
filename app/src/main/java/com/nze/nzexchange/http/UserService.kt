@@ -22,7 +22,7 @@ interface UserService {
                  @Field("userPassworUcode") userPassworUcode: String,
                  @Field("checkcodeId") checkcodeId: String?,
                  @Field("checkcodeVal") checkcodeVal: String?
-    ): Flowable<Result<RegisterBean>>
+    ): Flowable<Result<Any>>
 
 
     //登录

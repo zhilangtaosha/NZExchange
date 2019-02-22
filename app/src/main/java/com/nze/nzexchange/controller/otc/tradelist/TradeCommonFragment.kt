@@ -16,6 +16,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.Accmoney
 import com.nze.nzexchange.bean.OtcOrder
 import com.nze.nzexchange.bean.SubOrderInfoBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
@@ -157,7 +158,7 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
     }
 
     override fun getDataFromNet() {
-        SubOrderInfoBean.findSubOrderPoolNet(NzeApp.instance.userId, page, PAGE_SIZE, requestStatus)
+        SubOrderInfoBean.findSubOrderPoolNet(UserBean.loadFromApp()?.userId!!, page, PAGE_SIZE, requestStatus)
                 .compose(netTf())
                 .subscribe({
                     var rList = it.result.map {

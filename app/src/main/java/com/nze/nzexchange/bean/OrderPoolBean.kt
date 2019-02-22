@@ -32,7 +32,7 @@ data class OrderPoolBean(
 ) : Parcelable {
     companion object {
         //购买列表
-        fun getFromNet(tokenId: String,
+        fun getFromNet(tokenId: String?,
                        pageNumber: Int,
                        pageSize: Int): Flowable<Result<MutableList<OrderPoolBean>>> {
             return Flowable.defer {

@@ -49,7 +49,7 @@ data class RegisterBean(
                         userName: String?,
                         userPassworUcode: String,
                         checkcodeId: String?,
-                        checkcodeVal: String?): Flowable<Result<RegisterBean>>{
+                        checkcodeVal: String?): Flowable<Result<Any>>{
             return Flowable.defer {
                 CRetrofit.instance
                         .userService()

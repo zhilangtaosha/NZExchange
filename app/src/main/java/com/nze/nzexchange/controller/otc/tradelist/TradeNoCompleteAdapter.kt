@@ -8,6 +8,7 @@ import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.SubOrderInfoBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.CurrencyTool
 import com.nze.nzexchange.controller.base.BaseAda
 import com.nze.nzexchange.controller.base.NBaseActivity
@@ -28,10 +29,10 @@ class TradeNoCompleteAdapter(mContext: Context, var fragment: NBaseFragment) : N
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: SubOrderInfoBean,position: Int) {
+    override fun initView(vh: ViewHolder, item: SubOrderInfoBean, position: Int) {
         item.run {
             var type = ""
-            if (NzeApp.instance.userId == item.userIdSell) {
+            if (UserBean.loadFromApp()?.userId == item.userIdSell) {
                 type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) "卖出" else "买入"
             } else {
                 type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) "买入" else "卖出"

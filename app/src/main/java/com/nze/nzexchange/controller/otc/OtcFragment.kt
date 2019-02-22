@@ -16,6 +16,7 @@ import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OtcAssetBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -57,7 +58,6 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     val sideAdapter: OtcSideAdapter by lazy {
         OtcSideAdapter(activity!!)
     }
-
 
     private val sideData = mutableListOf<OtcAssetBean>()
 
@@ -106,15 +106,15 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
             changeAva(currentItem)
         }
 
-
-        getAssetFromNet()
+        if (UserBean.loadFromApp()?.userId != null)
+            getAssetFromNet()
 
 
     }
 
 
     fun getAssetFromNet() {
-        OtcAssetBean.getAssetsNet(NzeApp.instance.userId)
+        OtcAssetBean.getAssetsNet(UserBean.loadFromApp()?.userId!!)
                 .compose(netTf())
                 .subscribe({
                     val list = it.result
@@ -188,6 +188,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
             }
         }
         val fragment = pages.get(current)
+        
         if (fragment is IOtcView)
             fragment.refresh(mCurrentAsset?.tokenId!!)
 

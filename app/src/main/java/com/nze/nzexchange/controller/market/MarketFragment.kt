@@ -98,7 +98,7 @@ class MarketFragment : NBaseFragment() {
                                 skipActivity(LoginActivity::class.java)
                                 indicatorViewPager.setCurrentItem(1, true)
                             } else if (currentItem == 0 && UserBean.isLogin()) {
-                                (pages[currentItem] as MarketContentFragment).refreshData()
+                                (pages[currentItem] as BibiSideContentFragment).refreshData()
                             } else {
 
                             }

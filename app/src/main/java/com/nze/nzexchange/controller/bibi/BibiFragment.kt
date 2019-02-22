@@ -274,7 +274,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     if (!checkPrice()) return
                     price = giveEt.getContent().toDouble()
                 }
-                if (!checkNum()) return
+                if (!checkNum()) {
+                    showToast("请填写交易数量")
+                    return
+                }
                 btnHandler(userBean!!, getEt.getContent().toDouble(), price)
             }
         }
@@ -369,7 +372,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             moreTv.text = it.transactionPair
             giveEt.setText(it.exchangeRate.formatForCurrency())
             giveUnitTv.text = it.mainCurrency
-            getUnitTv.text = it.mainCurrency
+            getUnitTv.text = it.currency
+
+            currentOrderAdapter.mainCurrency = it.mainCurrency
+            currentOrderAdapter.currency = it.currency
+
 
         }
 

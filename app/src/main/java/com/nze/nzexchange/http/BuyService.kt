@@ -27,7 +27,7 @@ interface BuyService {
     //OTC购买列表
     @FormUrlEncoded
     @POST("otc/buy/findOrderPool")
-    fun findOrderPool(@Field("tokenId") tokenId: String,
+    fun findOrderPool(@Field("tokenId") tokenId: String?,
                       @Field("pageNumber") pageNumber: Int,
                       @Field("pageSize") pageSize: Int
     ): Flowable<Result<MutableList<OrderPoolBean>>>

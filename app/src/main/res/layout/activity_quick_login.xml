@@ -18,4 +18,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="007用户" />
+
+    <Button
+        android:id="@+id/btn3_aql"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="8646494@qq.com" />
+
+    <Button
+        android:id="@+id/btn4_aql"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="zhouweiyong55@163.com" />
 </LinearLayout>

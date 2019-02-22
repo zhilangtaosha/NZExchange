@@ -14,6 +14,7 @@ import com.nze.nzexchange.R.id.et_num_value_ab
 import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.sellNet
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.submitNet
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.CurrencyTool
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
@@ -32,7 +33,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
     lateinit var orderPoolBean: OrderPoolBean
     private var price: Double = 0.0
     private var flag: Boolean = true
-
+    private var userBean:UserBean? = UserBean.loadFromApp()
 
     override fun getRootView(): Int = R.layout.activity_buy
 
@@ -128,7 +129,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                 if (type == OtcContentFragment.TYPE_BUY) {
 //                    skipActivity(BuyConfirmActivity::class.java)
                     orderPoolBean.run {
-                        submitNet(poolId, userId, NzeApp.instance.userId, et_num_value_ab.getContent(), tokenId)
+                        submitNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId)
                                 .compose(netTfWithDialog())
                                 .subscribe({
                                     showToast(it.message)
@@ -143,7 +144,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                     }
                 } else {
                     orderPoolBean.run {
-                        sellNet(poolId, userId, NzeApp.instance.userId, et_num_value_ab.getContent(), tokenId)
+                        sellNet(poolId, userId,userBean?.userId!!, et_num_value_ab.getContent(), tokenId)
                                 .compose(netTfWithDialog())
                                 .subscribe({
                                     showToast(it.message)

@@ -15,6 +15,7 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
@@ -26,7 +27,7 @@ class SaleConfirmActivity : NBaseActivity() {
     var subOrderInfoBean: SubOrderInfoBean? = null
     var time: Long = 0
     var suborderId: String? = null
-
+    private var userBean:UserBean?= UserBean.loadFromApp()
     override fun getRootView(): Int = R.layout.activity_buy_confirm
 
     override fun initView() {
@@ -40,7 +41,7 @@ class SaleConfirmActivity : NBaseActivity() {
         if (subOrderInfoBean != null) {
             refreshLayout()
         } else {
-            SubOrderInfoBean.findSubOrderInfoNet(NzeApp.instance.userId, suborderId!!)
+            SubOrderInfoBean.findSubOrderInfoNet(userBean?.userId!!, suborderId!!)
                     .compose(netTfWithDialog())
                     .subscribe({
                         this.subOrderInfoBean = it.result
@@ -79,7 +80,7 @@ class SaleConfirmActivity : NBaseActivity() {
             }
             var type = ""
             var titleContent = ""
-            if (NzeApp.instance.userId == userIdSell) {//商家
+            if (userBean?.userId!! == userIdSell) {//商家
                 type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//卖币
                     btn_cancle_abc.visibility = View.INVISIBLE
                     titleContent = "卖出${CurrencyTool.getCurrency(tokenId)}"
@@ -155,7 +156,7 @@ class SaleConfirmActivity : NBaseActivity() {
 
     //确认付款
     fun confirmPay(subOrderInfoBean: SubOrderInfoBean) {
-        if (NzeApp.instance.userId == subOrderInfoBean.userIdSell) {//本人是商家
+        if (userBean?.userId!! == subOrderInfoBean.userIdSell) {//本人是商家
             if (subOrderInfoBean.transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
                 //商家确认收款
                 NRetrofit.instance
@@ -220,7 +221,7 @@ class SaleConfirmActivity : NBaseActivity() {
 //        } else {//本人是用户
             NRetrofit.instance
                     .buyService()
-                    .userCancelOrder(NzeApp.instance.userId, subOrderInfoBean.suborderId)
+                    .userCancelOrder(userBean?.userId!!, subOrderInfoBean.suborderId)
                     .compose(netTf())
                     .subscribe({
                         cancel(it)

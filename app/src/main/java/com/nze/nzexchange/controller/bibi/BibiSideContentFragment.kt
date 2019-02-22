@@ -38,7 +38,7 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
     var mainCurrency: String? = null
     val adapter: BibiSideContentAdapter by lazy { BibiSideContentAdapter(activity!!) }
 
-    var userBean: UserBean? = NzeApp.instance.userBean
+    var userBean: UserBean? = UserBean.loadFromApp()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -178,7 +178,7 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
 
     override fun selftSelect(item: TransactionPairsBean, position: Int) {
         if (item.optional != 1) {
-            addOptional(item.id, NzeApp.instance.userId)
+            addOptional(item.id, userBean?.userId!!)
                     .compose(netTfWithDialog())
                     .subscribe({
                         item.optional = 1
@@ -190,7 +190,7 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
                         adapter.notifyDataSetChanged()
                     })
         } else {
-            deleteOptional(item.id, NzeApp.instance.userId)
+            deleteOptional(item.id, userBean?.userId!!)
                     .compose(netTfWithDialog())
                     .subscribe({
                         showToast(it.message)

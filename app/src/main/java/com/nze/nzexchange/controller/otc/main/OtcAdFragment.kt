@@ -17,6 +17,7 @@ import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
@@ -104,7 +105,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
 
 
     override fun getDataFromNet() {
-        FindSellBean.getFromNet(NzeApp.instance.userId, page, PAGE_SIZE)
+        FindSellBean.getFromNet(UserBean.loadFromApp()?.userId!!, page, PAGE_SIZE)
                 .compose(netTf())
                 .subscribe({
                     val rList = it.result
