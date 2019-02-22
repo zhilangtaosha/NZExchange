@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp">
+
+    <TextView
+        android:id="@+id/tv_time_lndk"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:text="16:18:16" />
+
+    <TextView
+        android:id="@+id/tv_price_lndk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="2313.23"
+        android:textColor="@color/color_up"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_amount_lndk"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="11.242" />
+
+</RelativeLayout>

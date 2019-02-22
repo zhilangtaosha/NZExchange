@@ -310,7 +310,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                android:paddingRight="15dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -343,13 +344,19 @@
                         android:id="@+id/lv_buy_kline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:orientation="vertical" />
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="1dp" />
 
                     <com.nze.nzexchange.widget.LinearLayoutAsListView
                         android:id="@+id/lv_sell_kline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:orientation="vertical" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -359,19 +366,173 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                android:paddingRight="15dp"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        style="@style/tx15_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="时间" />
+
+                    <TextView
+                        style="@style/tx15_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="价格" />
+
+                    <TextView
+                        style="@style/tx15_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="价格" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/color_line" />
+                </RelativeLayout>
+
+                <com.nze.nzexchange.widget.LinearLayoutAsListView
+                    android:id="@+id/lv_new_deal_kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/layout_currency_detail_kline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                android:paddingTop="18dp"
+                android:paddingRight="15dp"
+                android:visibility="gone">
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_coin_name_kline"
+                    style="@style/tx18_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="比特币 (Bitcoin)" />
+
+                <TextView
+                    android:id="@+id/issue_time_key_kline"
+                    style="@style/tx15_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_coin_name_kline"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="发行时间" />
+
+                <TextView
+                    android:id="@+id/issue_time_value_kline"
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/issue_time_key_kline"
+                    android:layout_alignParentRight="true"
+                    android:text="2017-08-27" />
+
+                <View
+                    android:id="@+id/view_issue_time_kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/issue_time_key_kline"
+                    android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/issue_amount_key_kline"
+                    style="@style/tx15_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_issue_time_kline"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="发行总量" />
+
+                <TextView
+                    android:id="@+id/issue_amount_value_kline"
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/issue_amount_key_kline"
+                    android:layout_alignParentRight="true"
+                    android:text="2017235" />
+
+                <View
+                    android:id="@+id/view_issue_amount_kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/issue_amount_key_kline"
+                    android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/circulation_amount_key_kline"
+                    style="@style/tx15_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_issue_amount_kline"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="流通总量" />
+
+                <TextView
+                    android:id="@+id/circulatio_amount_value_kline"
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/circulation_amount_key_kline"
+                    android:layout_alignParentRight="true"
+                    android:text="2017235" />
+
+                <View
+                    android:id="@+id/view_circulation_amount_kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/circulation_amount_key_kline"
+                    android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/crowd_funding_price_key_kline"
+                    style="@style/tx15_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_circulation_amount_kline"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="众筹价格" />
+
+                <TextView
+                    android:id="@+id/crowd_funding_price_value_kline"
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/crowd_funding_price_key_kline"
+                    android:layout_alignParentRight="true"
+                    android:text="--" />
+
+                <View
+                    android:id="@+id/view_crowd_funding_price_kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/crowd_funding_price_key_kline"
+                    android:background="@color/color_line" />
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 

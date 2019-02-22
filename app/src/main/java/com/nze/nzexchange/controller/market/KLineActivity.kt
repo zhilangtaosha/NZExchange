@@ -11,6 +11,8 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.KLineBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.bean2.KLineOrderBean
+import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -109,9 +111,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     val orderLayout: LinearLayout by lazy { layout_order_kline }
     val newDealLayout: LinearLayout by lazy { layout_new_deal_kline }
-    val currencyDetailLayout: LinearLayout by lazy { layout_currency_detail_kline }
+    val currencyDetailLayout: RelativeLayout by lazy { layout_currency_detail_kline }
     val buyLv: LinearLayoutAsListView by lazy { lv_buy_kline }
     val sellLv: LinearLayoutAsListView by lazy { lv_sell_kline }
+    val newDealLv: LinearLayoutAsListView by lazy { lv_new_deal_kline }
 
     var pairsBean: TransactionPairsBean? = null
     var userBean: UserBean? = UserBean.loadFromApp()
@@ -127,6 +130,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     final val DATA_TYPE_REFRESH = 1
     final val DATA_TYPE_LISTENER = 2
     var dataType = DATA_TYPE_INIT
+
+    private val buyAdapter: KLineBuyAdapter by lazy { KLineBuyAdapter(this) }
+    private val sellAdapter: KLineSellAdapter by lazy { KLineSellAdapter(this) }
+    private val newDealAdapter: KLineNewDealAdapter by lazy { KLineNewDealAdapter(this) }
 
 
     override fun getRootView(): Int = R.layout.activity_kline
@@ -155,6 +162,15 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         // getKData("oneMinute", userBean?.userId ?: System.currentTimeMillis().toString())
         getKlineData()
         getDepthData()
+
+        buyAdapter.group = ShenDubean.getList()
+        buyLv.adapter = buyAdapter
+
+        sellAdapter.group = ShenDubean.getList()
+        sellLv.adapter = sellAdapter
+
+        newDealAdapter.group = ShenDubean.getList()
+        newDealLv.adapter = newDealAdapter
     }
 
     //ws://192.168.1.101:800/btcbch/007/fivesMinute
@@ -258,6 +274,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         orderView.visibility = if (select == SELECT_ORDER) View.VISIBLE else View.GONE
         newDealView.visibility = if (select == SELECT_NEW_DEAL) View.VISIBLE else View.GONE
         currencyDetailView.visibility = if (select == SELECT_CURRENCY_DETAIL) View.VISIBLE else View.GONE
+        orderLayout.visibility = if (select == SELECT_ORDER) View.VISIBLE else View.GONE
+        newDealLayout.visibility = if (select == SELECT_NEW_DEAL) View.VISIBLE else View.GONE
+        currencyDetailLayout.visibility = if (select == SELECT_CURRENCY_DETAIL) View.VISIBLE else View.GONE
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
