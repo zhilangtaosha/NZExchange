@@ -8,5 +8,5 @@ package com.nze.nzexchange.controller.otc.main
  */
 interface IOtcView {
 
-    fun refresh(tokenId: String)
+    fun refresh(tokenId: String?)
 }

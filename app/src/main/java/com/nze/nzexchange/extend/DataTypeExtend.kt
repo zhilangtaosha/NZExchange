@@ -1,5 +1,6 @@
 package com.nze.nzexchange.extend
 
+import java.math.BigDecimal
 import java.text.DecimalFormat
 
 /**
@@ -9,7 +10,9 @@ import java.text.DecimalFormat
  * @创建时间：2018/12/10
  */
 fun Double.formatForCurrency(): String? {
-    val df = DecimalFormat("0.###########")
+//    var b: BigDecimal = BigDecimal(this)
+//    return b.setScale(10,BigDecimal.ROUND_HALF_DOWN).toString()
+    val df = DecimalFormat("0.#############")
     return df.format(this)
 }
 

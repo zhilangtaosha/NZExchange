@@ -1,6 +1,8 @@
 package com.nze.nzexchange.controller.my.asset.recharge
 
 import android.app.Activity
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -46,6 +48,8 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
     val tipTv: TextView by lazy { tv_tip_arc }
     var codeBitmap: Bitmap? = null
     var userAssetBean: UserAssetBean? = null
+    val clip: ClipboardManager by lazy { this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
+
 
     override fun getRootView(): Int = R.layout.activity_recharge_coin
 
@@ -53,6 +57,11 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
         topBar.setTitleRightIcon(R.mipmap.open_icon)
         intent?.let {
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
+        }
+
+        copyAddressTv.setOnClickListener {
+            clip.text = coinAddressTv.text
+            showToast("复制成功")
         }
 
         refreshLayout()

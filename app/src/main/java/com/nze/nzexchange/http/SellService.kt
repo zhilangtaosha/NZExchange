@@ -40,7 +40,7 @@ interface SellService {
     //出售列表
     @FormUrlEncoded
     @POST("otc/sell/findOrderPool")
-    fun findOrderPool(@Field("tokenId") tokenId: String,
+    fun findOrderPool(@Field("tokenId") tokenId: String?,
                       @Field("pageNumber") pageNumber: Int,
                       @Field("pageSize") pageSize: Int
     ): Flowable<Result<MutableList<OrderPoolBean>>>

@@ -87,7 +87,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     }
 
     override fun getContainerTargetView(): View? = null
-    override fun refresh(tokenId: String) {
+    override fun refresh(tokenId: String?) {
         ptrLv.doPullRefreshing(true, 200)
     }
 

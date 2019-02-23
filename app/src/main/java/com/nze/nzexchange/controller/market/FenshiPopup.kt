@@ -26,7 +26,7 @@ class FenshiPopup(context: Activity?) : BasePopupWindow(context) {
     val data = listOf<String>("分时", "1分", "5分", "15分", "30分", "1小时", "2小时", "4小时", "6小时", "12小时", "日线", "周线")
     val fenshiAdapter: FenshiAdapter by lazy { FenshiAdapter(context!!) }
     var currentIndex = 0
-    var onItemClick: ((position: Int) -> Unit)? = null
+    var onItemClick: ((position: Int,item:String) -> Unit)? = null
 
     init {
         gridView.adapter = fenshiAdapter
@@ -35,7 +35,7 @@ class FenshiPopup(context: Activity?) : BasePopupWindow(context) {
             currentIndex = position
             fenshiAdapter.currentIndex = currentIndex
             fenshiAdapter.notifyDataSetChanged()
-            onItemClick?.invoke(position)
+            onItemClick?.invoke(position,data[position])
             dismiss()
         }
     }

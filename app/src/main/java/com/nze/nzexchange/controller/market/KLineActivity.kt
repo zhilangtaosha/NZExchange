@@ -9,6 +9,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.KLineBean
+import com.nze.nzexchange.bean.Soketbean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean2.KLineOrderBean
@@ -63,9 +64,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val chartAdapter by lazy { KLineChartAdapter() }
     val fenshiPopup: FenshiPopup by lazy {
         FenshiPopup(this).apply {
-            onItemClick = {
-                showToast("position>>$it")
-                when (it) {
+            onItemClick = {position,item->
+//                showToast("position>>$position")
+                fenshiTv.text = item
+                when (position) {
                     0 -> {
                         kChart.setMainDrawLine(true)
                     }
@@ -157,6 +159,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             false
         }
         kChart.adapter = chartAdapter
+        //默认展示分时图
+        kChart.setMainDrawLine(true)
+        
         selectKline(kType)
         select(currentSelect)
         // getKData("oneMinute", userBean?.userId ?: System.currentTimeMillis().toString())
@@ -317,8 +322,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             NLog.i("text>>>$text")
             if (dataType == DATA_TYPE_INIT) {
                 Observable.create<List<KLineEntity>> {
-                    var kLineBean: KLineBean = gson.fromJson(text, KLineBean::class.java)
-                    val rs = kLineBean.result
+                    var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
+                    val rs = soketbean.kLineResult.result
                     val list: MutableList<KLineEntity> = mutableListOf()
                     rs.forEach {
                         val bean = KLineEntity()
@@ -350,6 +355,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     }
 
     override fun onFragmentInteraction(uri: Uri) {
+    }
+
+    override fun onStop() {
+        super.onStop()
+        nWebSocket?.close()
     }
 
 }

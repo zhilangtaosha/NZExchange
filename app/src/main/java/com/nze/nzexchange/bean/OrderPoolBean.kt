@@ -43,7 +43,7 @@ data class OrderPoolBean(
         }
 
         //出售列列表
-        fun getSellNet(tokenId: String,
+        fun getSellNet(tokenId: String?,
                        pageNumber: Int,
                        pageSize: Int): Flowable<Result<MutableList<OrderPoolBean>>> {
             return Flowable.defer {

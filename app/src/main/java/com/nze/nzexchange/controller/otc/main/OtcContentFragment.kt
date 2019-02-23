@@ -23,7 +23,7 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
 
     lateinit var ptrLv: PullToRefreshListView
     private var type: Int = 0
-    var tokenId: String = "token02"
+    var tokenId: String? = null
     private val orderPoolList: MutableList<OrderPoolBean> by lazy {
         mutableListOf<OrderPoolBean>()
     }
@@ -85,7 +85,7 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
 
     override fun getContainerTargetView(): View? = null
 
-    override fun refresh(tokenId: String) {
+    override fun refresh(tokenId: String?) {
         this.tokenId = tokenId
         ptrLv.doPullRefreshing(true, 200)
     }

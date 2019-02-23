@@ -79,11 +79,11 @@
                     android:layout_width="0dp"
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
-                    android:maxLines="1"
-                    android:inputType="text"
                     android:drawablePadding="5dp"
-                    android:singleLine="true"
-                    android:hint="输入或长按粘贴地址" />
+                    android:hint="输入或长按粘贴地址"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
                 <ImageView
                     android:id="@+id/iv_qcode_acw"
@@ -163,7 +163,7 @@
                     style="@style/tx15_aab9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="提现数量" />
+                    android:text="短信验证" />
 
                 <com.nze.nzexchange.widget.clearedit.ClearableEditText
                     android:id="@+id/et_phone_acw"

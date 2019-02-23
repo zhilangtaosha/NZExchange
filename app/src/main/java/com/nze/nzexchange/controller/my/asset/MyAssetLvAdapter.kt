@@ -7,6 +7,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.BibiAssetBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.formatForCurrency
 import kotlinx.android.synthetic.main.lv_my_asset.view.*
 
 /**
@@ -22,8 +23,8 @@ class MyAssetLvAdapter(mContext: Context) : NBaseAda<UserAssetBean, MyAssetLvAda
 
     override fun initView(vh: ViewHolder, item: UserAssetBean, position: Int) {
         vh.currencyNameTv.text = item.currency
-        vh.availableValueTv.text = item.available.toString()
-        vh.freezwValueTv.text = item.freeze.toString()
+        vh.availableValueTv.text = item.available.formatForCurrency()
+        vh.freezwValueTv.text = item.freeze.formatForCurrency()
     }
 
     class ViewHolder(view: View) {

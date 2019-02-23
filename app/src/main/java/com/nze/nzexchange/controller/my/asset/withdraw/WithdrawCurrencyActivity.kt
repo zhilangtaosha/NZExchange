@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -76,6 +77,12 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         allTv.setOnClickListener(this)
         verifyBtn.setOnClickListener(this)
         withdrawBtn.setOnClickListener(this)
+
+
+        RxTextView.textChanges(amountEt)
+                .subscribe {
+                    actualAmountTv.text = "${it} ${userAssetBean?.currency}"
+                }
 
         refreshLayout()
     }
@@ -189,6 +196,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             topBar.setTitle("${it.currency}提现")
             currencyTv.text = it.currency
             availableTv.text = it.available.toString()
+            amountEt.hint = "最小提现数量为200${it.currency}"
+            serviceChargeTv.text = "0.0${it.currency}"
         }
 
     }

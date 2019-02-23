@@ -20,6 +20,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.otc.main.IOtcView
 import com.nze.nzexchange.controller.otc.main.OtcAdFragment
 import com.nze.nzexchange.controller.otc.main.OtcContentFragment
@@ -103,6 +104,10 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 
         indicatorViewPager.setOnIndicatorPageChangeListener { preItem: Int, currentItem: Int ->
             this.currentItem = currentItem
+            if (currentItem == 2 && !UserBean.isLogin()) {
+                skipActivity(LoginActivity::class.java)
+                return@setOnIndicatorPageChangeListener
+            }
             changeAva(currentItem)
         }
 
@@ -128,6 +133,9 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         if (eventCenter.eventCode == EventCode.CODE_REFRESH_ASSET)
             getAssetFromNet()
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS){
+            getAssetFromNet()
+        }
     }
 
 
@@ -188,9 +196,9 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
             }
         }
         val fragment = pages.get(current)
-        
+
         if (fragment is IOtcView)
-            fragment.refresh(mCurrentAsset?.tokenId!!)
+            fragment.refresh(mCurrentAsset?.tokenId)
 
     }
 
