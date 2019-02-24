@@ -18,5 +18,6 @@ class EventCode {
         const val CODE_LOGOUT_SUCCESS = 0x008//退出登录
         const val CODE_REFRESH_MAIN_ACT = 0x009//通知刷新主页面
         const val CODE_REFRESH_USERBEAN = 0x010//通知刷新NzeApp的UserBean
+        const val CODE_TRADE_BIBI=0x011//k线页面通知币币页面买入卖出操作
     }
 }

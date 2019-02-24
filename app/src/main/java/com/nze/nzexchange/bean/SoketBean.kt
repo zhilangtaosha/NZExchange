@@ -7,8 +7,8 @@ package com.nze.nzexchange.bean
  * @创建时间：2019/1/23
  */
 data class Soketbean(
-        val kLineResult: KLineBean,
-        val handicap: Handicap
+        val kLineResult: KLineBean?,
+        val handicap: Handicap?
 ) {
 
 }
@@ -16,15 +16,15 @@ data class Soketbean(
 data class KLineBean(
         val start: String,
         val end: String,
-        val result: Array<Array<Long>>
+        val result: Array<Array<Long>>?
 ) {
 
 
 }
 
 data class Handicap(
-        val asks: Array<Array<Long>>,
-        val bids: Array<Array<Long>>
+        val asks: Array<Array<String>>?,//买入
+        val bids: Array<Array<String>>?//卖出
 ) {
 
 }

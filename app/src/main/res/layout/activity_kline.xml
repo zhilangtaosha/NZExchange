@@ -52,7 +52,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -161,7 +162,7 @@
 
                 <TextView
                     android:id="@+id/tv_fenshi_kline"
-                    android:layout_width="50dp"
+                    android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:drawableRight="@mipmap/open_icon2"
@@ -536,4 +537,35 @@
         </LinearLayout>
     </ScrollView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/color_FF181F27"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <Button
+            android:id="@+id/btn_buy_kline"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_green_btn_bg"
+            android:text="买入"
+            android:textColor="@color/white" />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_sale_kline"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_red_btn_bg"
+            android:text="卖出"
+            android:textColor="@color/white" />
+    </LinearLayout>
 </LinearLayout>

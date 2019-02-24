@@ -5,11 +5,14 @@ import android.view.View
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.HandicapBean
+import com.nze.nzexchange.bean.OrderPendBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.CommonTopBar
@@ -22,7 +25,16 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     val topBar: CommonTopBar by lazy { ctb_abao }
     val filterPopup by lazy { BibiFilterPopup(this) }
     val ptrLv: PullToRefreshListView by lazy { ptrlv_abao }
-    val orderAdapter: BibiCurentOrderAdapter by lazy { BibiCurentOrderAdapter(this) }
+    val orderAdapter: BibiCurentOrderAdapter by lazy {
+        BibiCurentOrderAdapter(this).apply {
+            cancelClick = { position, item ->
+                //撤销
+
+            }
+        }
+    }
+    var userBean: UserBean? = UserBean.loadFromApp()
+
 
     override fun getRootView(): Int = R.layout.activity_bibi_all_order
 
@@ -47,13 +59,14 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         listView.dividerHeight = 1
 
         listView.adapter = orderAdapter
+        orderTracking(null, null, userBean?.userId, null, null)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT
+    override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = BaseActivity.TransitionMode.DEFAULT
 
     override fun isBindEventBusHere(): Boolean = false
 
@@ -76,4 +89,17 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+
+    fun orderTracking(currency: String?, mainCurrency: String?, userId: String?, status: Int?, transactionType: Int?) {
+        OrderPendBean.orderTracking(currency, mainCurrency, userId, status, transactionType)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    val list = it.result
+                    if (list != null && list.size > 0) {
+                        orderAdapter.group = list
+                    }
+                }, onError)
+    }
+
 }

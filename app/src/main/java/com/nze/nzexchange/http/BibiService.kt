@@ -78,7 +78,7 @@ interface BibiService {
     @GET("cc/orderPending")
     fun orderPending(
             @Query("currencyId") currencyId: String,
-            @Query("userId") userId: String
+            @Query("userId") userId: String?
     ): Flowable<Result<MutableList<OrderPendBean>>>
 
     //取消订单
@@ -126,4 +126,14 @@ interface BibiService {
             @Query("pageSize") pageSize: Int
     ): Flowable<Result<MutableList<TickRecordBean>>>
 
+
+    //订单筛选
+    @GET("cc/orderTracking")
+    fun orderTracking(
+            @Query("currency") currency: String?,
+            @Query("mainCurrency") mainCurrency: String?,
+            @Query("userId") userId: String?,
+            @Query("status") status: Int?,
+            @Query("transactionType") transactionType: Int?
+    ): Flowable<Result<MutableList<OrderPendBean>>>
 }

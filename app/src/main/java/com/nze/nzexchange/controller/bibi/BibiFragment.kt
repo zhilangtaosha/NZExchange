@@ -1,9 +1,11 @@
 package com.nze.nzexchange.controller.bibi
 
 
+import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.*
+import com.google.gson.Gson
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -13,21 +15,31 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.login.LoginActivity
+import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
 import com.nze.nzexchange.extend.*
+import com.nze.nzexchange.http.NWebSocket
+import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.LinearLayoutAsListView
+import com.nze.nzexchange.widget.chart.KLineEntity
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_bibi.*
 import kotlinx.android.synthetic.main.fragment_bibi.view.*
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
+import okio.ByteString
 import org.greenrobot.eventbus.EventBus
 
 class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnListPopupItemClick, OnSeekChangeListener {
@@ -150,6 +162,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         }
     }
 
+    var nWebSocket: NWebSocket? = null
+    var socket: WebSocket? = null
+    final val DATA_TYPE_INIT = 0
+    final val DATA_TYPE_REFRESH = 1
+    final val DATA_TYPE_LISTENER = 2
+    var dataType = DATA_TYPE_INIT
+
+
     companion object {
         @JvmStatic
         fun newInstance() = BibiFragment().apply {
@@ -168,6 +188,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         limitTv.setOnClickListener(this)
         depthTv.setOnClickListener(this)
         transactionBtn.setShakeClickListener(this)
+        klineIv.setOnClickListener(this)
 
 
 
@@ -216,12 +237,18 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             currentTransactionPair = eventCenter.data as TransactionPairsBean
             refreshLayout()
             getPendingOrderInfo(currentTransactionPair?.id!!)
-            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+            orderPending(currentTransactionPair?.id!!, userBean?.userId)
+            socket?.close(1002, "")
+            getKData()
         }
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
             userBean = UserBean.loadFromApp()
             getPendingOrderInfo(currentTransactionPair?.id!!)
-            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+            orderPending(currentTransactionPair?.id!!, userBean?.userId)
+        }
+        if (eventCenter.eventCode == EventCode.CODE_TRADE_BIBI) {
+            val type: Int = eventCenter.data as Int
+            switchType(type)
         }
     }
 
@@ -279,6 +306,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     return
                 }
                 btnHandler(userBean!!, getEt.getContent().toDouble(), price)
+            }
+            R.id.iv_kline_bibi -> {
+              startActivity(Intent(activity,KLineActivity::class.java).putExtra(IntentConstant.PARAM_TRANSACTION_PAIR,currentTransactionPair))
             }
         }
     }
@@ -420,6 +450,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         if (userBean != null) {
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         }
+                        getKData()
                         RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
                                 .subscribeOn(Schedulers.io())
                     } else {
@@ -438,7 +469,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
 
-    private fun orderPending(currencyId: String, userId: String) {
+    private fun orderPending(currencyId: String, userId: String?) {
         OrderPendBean.orderPending(currencyId, userId)
                 .compose(netTf())
                 .subscribe({
@@ -447,6 +478,68 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         currentOrderLv.adapter = currentOrderAdapter
                     }
                 }, onError)
+    }
+
+    private fun getKData() {
+        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/${currentTransactionPair?.currency?.toLowerCase()}${currentTransactionPair?.mainCurrency?.toLowerCase()}/${System.currentTimeMillis()}/oneMinute", wsListener)
+        socket = nWebSocket?.open()
+    }
+
+    private val wsListener = object : WebSocketListener() {
+        val gson: Gson = Gson()
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+            super.onOpen(webSocket, response)
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            super.onFailure(webSocket, t, response)
+        }
+
+        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+            super.onClosing(webSocket, code, reason)
+        }
+
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            NLog.i("text>>>$text")
+            if (dataType == DATA_TYPE_INIT) {
+                Observable.create<Soketbean> {
+                    var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
+                    it.onNext(soketbean)
+
+                }.subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            val handicap = it.handicap
+                            val buyList = mutableListOf<HandicapBean>()
+                            val saleList = mutableListOf<HandicapBean>()
+                            handicap?.asks?.forEachIndexed { index, strings ->
+                                buyList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
+                            }
+                            handicap?.bids?.forEachIndexed { index, strings ->
+                                saleList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
+                            }
+                            handicapBuyAdapter.group = buyList
+                            handicapBuyLv.adapter = handicapBuyAdapter
+                            handicapSaleAdapter.group = saleList
+                            handicapSaleLv.adapter = handicapSaleAdapter
+                        }
+            } else if (dataType == DATA_TYPE_REFRESH) {
+
+            } else {
+
+            }
+
+            super.onMessage(webSocket, text)
+        }
+
+        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+            NLog.i("bytes>>>$bytes")
+            super.onMessage(webSocket, bytes)
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            super.onClosed(webSocket, code, reason)
+        }
     }
 
 }

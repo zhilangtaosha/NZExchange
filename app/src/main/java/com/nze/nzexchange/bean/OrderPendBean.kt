@@ -27,12 +27,13 @@ data class OrderPendBean(
         val source: String,
         val taker_fee: String,
         val type: Int,
-        val userId: String
+        val userId: String,
+        val ftime: Double
 ) {
     companion object {
         fun orderPending(
                 currencyId: String,
-                userId: String
+                userId: String?
         ): Flowable<Result<MutableList<OrderPendBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
@@ -51,6 +52,20 @@ data class OrderPendBean(
                 NRetrofit.instance
                         .bibiService()
                         .cancelOrder(orderId, userId, currencyId)
+            }
+        }
+
+        fun orderTracking(
+                currency: String?,
+                mainCurrency: String?,
+                userId: String?,
+                status: Int?,
+                transactionType: Int?
+        ): Flowable<Result<MutableList<OrderPendBean>>> {
+            return Flowable.defer {
+                NRetrofit.instance
+                        .bibiService()
+                        .orderTracking(currency, mainCurrency, userId, status, transactionType)
             }
         }
     }

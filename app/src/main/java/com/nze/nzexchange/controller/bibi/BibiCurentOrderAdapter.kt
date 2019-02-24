@@ -34,11 +34,14 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
             vh.statusTv.setTxtColor(R.color.color_FF019D81)
             vh.statusTv.text = "买入"
         }
-        vh.costKeyTv.text = "价格($mainCurrency)"
+//        vh.costKeyTv.text = "价格($mainCurrency)"
+        vh.costKeyTv.text = "价格BCH"
         vh.costValueTv.text = item.price
-        vh.amountKeyTv.text = "数量($currency)"
+//        vh.amountKeyTv.text = "数量($currency)"
+        vh.amountKeyTv.text = "数量BTC"
         vh.amountValueTv.text = item.amount
-        vh.realAmountKeyTv.text = "实际成交($currency)"
+//        vh.realAmountKeyTv.text = "实际成交($currency)"
+        vh.realAmountKeyTv.text = "实际成交BTC"
         vh.realAmountValueTv.text = item.deal_money
 
         vh.cancelTv.setOnClickListener {

@@ -14,6 +14,7 @@ import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean2.KLineOrderBean
 import com.nze.nzexchange.bean2.ShenDubean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -33,6 +34,7 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 import java.util.*
 
@@ -64,14 +66,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val chartAdapter by lazy { KLineChartAdapter() }
     val fenshiPopup: FenshiPopup by lazy {
         FenshiPopup(this).apply {
-            onItemClick = {position,item->
-//                showToast("position>>$position")
+            onItemClick = { position, item ->
+                //                showToast("position>>$position")
                 fenshiTv.text = item
                 when (position) {
                     0 -> {
                         kChart.setMainDrawLine(true)
                     }
-                    1 -> {
+                    in 1..11 -> {
                         kChart.setMainDrawLine(false)
                     }
                     2 -> {
@@ -117,6 +119,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val buyLv: LinearLayoutAsListView by lazy { lv_buy_kline }
     val sellLv: LinearLayoutAsListView by lazy { lv_sell_kline }
     val newDealLv: LinearLayoutAsListView by lazy { lv_new_deal_kline }
+    val buyBtn: Button by lazy { btn_buy_kline }
+    val saleBtn: Button by lazy { btn_sale_kline }
 
     var pairsBean: TransactionPairsBean? = null
     var userBean: UserBean? = UserBean.loadFromApp()
@@ -149,7 +153,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         orderTv.setOnClickListener(this)
         newDealTv.setOnClickListener(this)
         currencyDetailTv.setOnClickListener(this)
+        buyBtn.setOnClickListener(this)
+        saleBtn.setOnClickListener(this)
+        transactionNameTv.setOnClickListener(this)
 
+        transactionNameTv.text = pairsBean?.transactionPair
 
         fenshiPopup.setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
             if (anchorView != null) {
@@ -161,7 +169,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         kChart.adapter = chartAdapter
         //默认展示分时图
         kChart.setMainDrawLine(true)
-        
+
         selectKline(kType)
         select(currentSelect)
         // getKData("oneMinute", userBean?.userId ?: System.currentTimeMillis().toString())
@@ -258,6 +266,19 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 currentSelect = SELECT_CURRENCY_DETAIL
                 select(currentSelect)
             }
+            R.id.btn_buy_kline -> {
+                this@KLineActivity.finish()
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 2))
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 1))
+            }
+            R.id.btn_sale_kline -> {
+                this@KLineActivity.finish()
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 2))
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 0))
+            }
+            R.id.tv_transaction_name_kline -> {
+                finish()
+            }
         }
     }
 
@@ -323,9 +344,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             if (dataType == DATA_TYPE_INIT) {
                 Observable.create<List<KLineEntity>> {
                     var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
-                    val rs = soketbean.kLineResult.result
+                    val rs = soketbean.kLineResult?.result
                     val list: MutableList<KLineEntity> = mutableListOf()
-                    rs.forEach {
+                    rs?.forEach {
                         val bean = KLineEntity()
                         bean.Date = TimeTool.format(TimeTool.PATTERN7, it[0])
 
