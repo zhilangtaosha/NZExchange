@@ -8,6 +8,7 @@ import com.nze.nzexchange.bean.HandicapBean
 import com.nze.nzexchange.bean.OrderPendBean
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.setTxtColor
+import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_bibi_current_order.view.*
 
 /**
@@ -34,14 +35,17 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
             vh.statusTv.setTxtColor(R.color.color_FF019D81)
             vh.statusTv.text = "买入"
         }
+
+        vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2,(item.ftime*1000).toLong())
+
 //        vh.costKeyTv.text = "价格($mainCurrency)"
-        vh.costKeyTv.text = "价格BCH"
+        vh.costKeyTv.text = "价格(BCH)"
         vh.costValueTv.text = item.price
 //        vh.amountKeyTv.text = "数量($currency)"
-        vh.amountKeyTv.text = "数量BTC"
+        vh.amountKeyTv.text = "数量(BTC)"
         vh.amountValueTv.text = item.amount
 //        vh.realAmountKeyTv.text = "实际成交($currency)"
-        vh.realAmountKeyTv.text = "实际成交BTC"
+        vh.realAmountKeyTv.text = "实际成交(BTC)"
         vh.realAmountValueTv.text = item.deal_money
 
         vh.cancelTv.setOnClickListener {
@@ -50,6 +54,7 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
     }
 
     class ViewHolder(val view: View) {
+        val timeTv:TextView = view.tv_time_lbco
         val statusTv: TextView = view.tv_status_lbco
         val cancelTv: TextView = view.tv_cancel_lbco
         val costKeyTv: TextView = view.tv_cost_key_lbco

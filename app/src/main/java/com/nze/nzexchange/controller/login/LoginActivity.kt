@@ -91,7 +91,7 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
                     LoginBean.login(accountEt.getContent(), pwdStr)
                             .compose(netTfWithDialog())
                             .subscribe({
-                                showToast(it.message)
+//                                showToast(it.message)
                                 if (it.result.token != null) {
                                     NzeApp.instance.userBean = it.result.cloneToUserBean()
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))

@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.bibi
 
 import android.content.Intent
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.google.gson.Gson
@@ -281,6 +282,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 switchType(currentType)
             }
             R.id.tv_all_order_bibi -> {
+                if (userBean == null) {
+                    skipActivity(LoginActivity::class.java)
+                    return
+                }
                 skipActivity(BibiAllOrderActivity::class.java)
             }
             R.id.tv_limit_bibi -> {
@@ -308,7 +313,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 btnHandler(userBean!!, getEt.getContent().toDouble(), price)
             }
             R.id.iv_kline_bibi -> {
-              startActivity(Intent(activity,KLineActivity::class.java).putExtra(IntentConstant.PARAM_TRANSACTION_PAIR,currentTransactionPair))
+                startActivity(Intent(activity, KLineActivity::class.java).putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, currentTransactionPair))
             }
         }
     }
@@ -432,7 +437,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     if (it.success) {
                         val list = it.result
                         if (list != null && list.size > 0) {
-                            TransactionPairsBean.getTransactionPairs(list[0].currency, userBean?.userId?.getValue())
+                            TransactionPairsBean.getTransactionPairs(list[0].mainCurrency, userBean?.userId?.getValue())
                                     .subscribeOn(Schedulers.io())
                         } else {
                             Flowable.error<String>(Throwable("没有交易对"))

@@ -184,6 +184,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         newDealAdapter.group = ShenDubean.getList()
         newDealLv.adapter = newDealAdapter
+
+
     }
 
     //ws://192.168.1.101:800/btcbch/007/fivesMinute
