@@ -143,11 +143,12 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
             TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
                     .compose(netTf())
                     .subscribe({
+                        ptrLv.onPullDownRefreshComplete()
                         if (it.success) {
                             adapter.group = it.result
-                            ptrLv.onPullDownRefreshComplete()
                         }
                     }, {
+                        ptrLv.onPullDownRefreshComplete()
                         NLog.i("")
                     })
         } else if (mainCurrency != null) {
@@ -162,11 +163,13 @@ class BibiSideContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshList
                         }
                         .compose(netTf())
                         .subscribe({
+                            ptrLv.onPullDownRefreshComplete()
                             if (it.success) {
                                 adapter.group = it.result
-                                ptrLv.onPullDownRefreshComplete()
                             }
-                        }, onError)
+                        }, {
+                            ptrLv.onPullDownRefreshComplete()
+                        })
             }
         }
     }

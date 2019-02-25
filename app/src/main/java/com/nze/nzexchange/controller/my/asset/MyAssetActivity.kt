@@ -48,6 +48,15 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         listView.setOnItemClickListener(this)
 
         zbanner.setOnPageChangeLister {
+            when (it) {
+                0 -> {
+                    
+                }
+                1 -> {
+                }
+                2 -> {
+                }
+            }
             getBibiAsset()
         }
     }

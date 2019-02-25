@@ -19,7 +19,8 @@ data class UserAssetBean(
         val available: Double,
         val currency: String,
         val freeze: Double,
-        val remark: String
+        val remark: String,
+        val tokenId: String
 ) : Parcelable {
     companion object {
         fun getUserAssets(userId: String): Flowable<Result<MutableList<UserAssetBean>>> {

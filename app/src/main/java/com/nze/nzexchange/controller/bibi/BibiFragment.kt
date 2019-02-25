@@ -224,7 +224,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             buyIsb.visibility = View.GONE
             saleIsb.visibility = View.VISIBLE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_4a5f_bg)!!)
-            transactionBtn.text = "买出BTC"
+            transactionBtn.text = "卖出BTC"
             seekbarValueTv.text = "${saleIsb.progress}%"
         }
         if (userBean == null)
@@ -325,6 +325,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     .subscribe({
                         if (it.success) {
                             showToast("下单成功")
+                            getPendingOrderInfo(currentTransactionPair?.id!!)
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
                             showToast(it.message)
@@ -336,6 +337,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     .subscribe({
                         if (it.success) {
                             showToast("下单成功")
+                            getPendingOrderInfo(currentTransactionPair?.id!!)
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
                             showToast(it.message)
@@ -518,15 +520,16 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             val buyList = mutableListOf<HandicapBean>()
                             val saleList = mutableListOf<HandicapBean>()
                             handicap?.asks?.forEachIndexed { index, strings ->
-                                buyList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
-                            }
-                            handicap?.bids?.forEachIndexed { index, strings ->
                                 saleList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
                             }
-                            handicapBuyAdapter.group = buyList
+                            handicap?.bids?.forEachIndexed { index, strings ->
+                                buyList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
+                            }
+                            handicapBuyAdapter.group = buyList.take(5).toMutableList()
                             handicapBuyLv.adapter = handicapBuyAdapter
-                            handicapSaleAdapter.group = saleList
+                            handicapSaleAdapter.group = saleList.take(5).toMutableList()
                             handicapSaleLv.adapter = handicapSaleAdapter
+
                         }
             } else if (dataType == DATA_TYPE_REFRESH) {
 

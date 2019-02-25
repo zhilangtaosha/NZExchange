@@ -18,6 +18,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
+import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.widget.CommonButton
@@ -122,6 +123,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 skipActivity(SelectCurrencyAddressListActivity::class.java)
             }
             R.id.tv_all_acw -> {
+                amountEt.setText(userAssetBean?.available?.formatForCurrency())
             }
             R.id.btn_verify_acw -> {
                 verifyBtn.startVerify()
@@ -195,8 +197,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         userAssetBean?.let {
             topBar.setTitle("${it.currency}提现")
             currencyTv.text = it.currency
-            availableTv.text = it.available.toString()
-            amountEt.hint = "最小提现数量为200${it.currency}"
+            availableTv.text = "可提数量：${it.available} ${it.currency}"
+            amountEt.hint = "最小提现数量为200 ${it.currency}"
             serviceChargeTv.text = "0.0${it.currency}"
         }
 

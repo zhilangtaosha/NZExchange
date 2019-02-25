@@ -83,7 +83,6 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     override fun getContainerTargetView(): View? = null
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
