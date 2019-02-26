@@ -35,9 +35,9 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
             vh.statusTv.setTxtColor(R.color.color_FF019D81)
             vh.statusTv.text = "买入"
         }
-        val split = item.market.split("/")
-        val currency = split[0]
-        val mainCurrency = split[1]
+//        val split = item.market.split("/")
+        val currency = "BTC"
+        val mainCurrency = "BCH"
         vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2,(item.ftime*1000).toLong())
 
 //        vh.costKeyTv.text = "价格($mainCurrency)"
