@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.authentication.AuthenticationHomeActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="实名认证" />
+
+    <RelativeLayout
+        android:id="@+id/layout_primary_aah"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/color_title_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="初级认证" />
+
+        <TextView
+            android:id="@+id/status_primary_aah"
+            style="@style/tx15_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="已认证" />
+
+        <ImageView
+            android:id="@+id/iv_primary_aah"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/status_primary_aah"
+            android:src="@mipmap/hook_red" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_detail_primary_aah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_title_bg"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_line" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/tx15_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="姓名" />
+
+            <TextView
+                android:id="@+id/user_name_aah"
+                style="@style/tx15_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="杨玲君" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/tx15_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="账号" />
+
+            <TextView
+                android:id="@+id/account_aah"
+                style="@style/tx15_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="186***1564" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/tx15_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="国家" />
+
+            <TextView
+                android:id="@+id/country_aah"
+                style="@style/tx15_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="中国" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/tx15_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="证件" />
+
+            <TextView
+                android:id="@+id/certificate_aah"
+                style="@style/tx15_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="41****3684" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_real_name_aah"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/color_title_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="实名认证" />
+
+        <TextView
+            android:id="@+id/status_real_name_aah"
+            style="@style/tx15_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="已认证" />
+
+        <ImageView
+            android:id="@+id/iv_real_name_aah"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/status_real_name_aah"
+            android:src="@mipmap/hook_red" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_vedio_aah"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/color_title_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="视频认证" />
+
+        <TextView
+            android:id="@+id/status_vedio_aah"
+            style="@style/tx15_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="已认证" />
+
+        <ImageView
+            android:id="@+id/iv_vedio_aah"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/status_vedio_aah"
+            android:src="@mipmap/hook_red" />
+    </RelativeLayout>
+</LinearLayout>

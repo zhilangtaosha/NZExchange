@@ -14,6 +14,7 @@ import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
+import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
 import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity
 import com.nze.nzexchange.controller.my.paymethod.SetPayMethodActivity
 import com.nze.nzexchange.controller.my.safecenter.SafeCenterActivity
@@ -106,7 +107,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
                 skipActivity(SafeCenterActivity::class.java)
             }
             R.id.tv_authentication_my -> {
-                skipActivity(PrimaryAuthenticationActivity::class.java)
+                skipActivity(AuthenticationHomeActivity::class.java)
             }
             R.id.tv_setting_my -> {
                 skipActivity(SettingActivity::class.java)

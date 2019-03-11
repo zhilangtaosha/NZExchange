@@ -37,7 +37,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
             field = value
             countryTv.text = value
         }
-    var userBean: UserBean? = null
+    var userBean: UserBean? = UserBean.loadFromApp()
     override fun getRootView(): Int = R.layout.activity_primary_authentication
 
     override fun initView() {

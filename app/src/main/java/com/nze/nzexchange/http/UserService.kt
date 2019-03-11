@@ -15,7 +15,7 @@ import retrofit2.http.*
 interface UserService {
     //注册
     @FormUrlEncoded
-    @POST("meRunBus/meMemb/zyy/save_meMemb_regBus.json")
+    @POST("meRunBus/meMemb/save_meMemb_regBus.json")
     fun register(@Field("userPhone") userPhone: String?,
                  @Field("userEmail") userEmail: String?,
                  @Field("userName") userName: String?,
@@ -27,7 +27,7 @@ interface UserService {
 
     //登录
     @FormUrlEncoded
-    @POST("manaTokenRunBus/tokenLogin/zyy/manaTokenLogin.json")
+    @POST("manaTokenRunBus/tokenLogin/manaTokenLogin.json")
     fun login(@Field("userTag") userTag: String,
               @Field("userPassworUcode") userPassworUcode: String,
               @Field("checkCodeId") checkCodeId: String?,
@@ -36,7 +36,7 @@ interface UserService {
 
     //退出登录
     @FormUrlEncoded
-    @POST("/manaTokenAllBus/zyy/manaTokenDel.json")
+    @POST("/manaTokenAllBus/manaTokenDel.json")
     fun logout(@Field("tokenUserId") tokenUserId: String,
                @Field("tokenUserKey") tokenUserKey: String,
                @Field("tokenSystreeId") tokenSystreeId: String
@@ -45,7 +45,7 @@ interface UserService {
 
     //修改当前登录人的收款方式
     @FormUrlEncoded
-    @POST("/meRunBus/meAccmoney/zyy/saveOneEntity_meAccmoney_curToken_t.json")
+    @POST("/meRunBus/meAccmoney/saveOneEntity_meAccmoney_curToken_t.json")
     fun setPayMethod(
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String,
@@ -60,7 +60,7 @@ interface UserService {
 
     //获取当前用户的收款方式
     @FormUrlEncoded
-    @POST("/meRunBus/meAccmoney/zyy/findDataVoByBusKey_meAccmoney_curToken.json")
+    @POST("/meRunBus/meAccmoney/findDataVoByBusKey_meAccmoney_curToken.json")
     fun getPayMethod(
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String,
@@ -69,7 +69,7 @@ interface UserService {
 
     //获取验证码
     @FormUrlEncoded
-    @POST("/msgRunBus/msgMessagetreeSend/zyy/messagetree_sendMessage_checkCode.json")
+    @POST("/msgRunBus/msgMessagetreeSend/messagetree_sendMessage_checkCode.json")
     fun getVerifyCode(
             @Field("messageBustag") messageBustag: String,
             @Field("messageTo") messageTo: String
@@ -78,7 +78,7 @@ interface UserService {
 
     //重置密码
     @FormUrlEncoded
-    @POST("/manaTokenAllBus/zyy/manaTokenUpdatePwByUserTag.json")
+    @POST("/manaTokenAllBus/manaTokenUpdatePwByUserTag.json")
     fun findPassword(
             @Field("checkcodeId") checkcodeId: String,
             @Field("checkcodeVal") checkcodeVal: String,
@@ -90,7 +90,7 @@ interface UserService {
 
     //修改密码
     @FormUrlEncoded
-    @POST("/manaTokenAllBus/zyy/manaTokenUpdatePw.json")
+    @POST("/manaTokenAllBus/manaTokenUpdatePw.json")
     fun modifyPassword(
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String,
@@ -101,7 +101,7 @@ interface UserService {
 
     //上传文件
     @Multipart
-    @POST("/fileWebAllBus/zyy/uploadAttachement.json")
+    @POST("/fileWebAllBus/uploadAttachement.json")
     fun uploadFile(
             @Query("tokenUserId") tokenUserId: String,
             @Query("tokenUserKey") tokenUserKey: String,
@@ -113,7 +113,7 @@ interface UserService {
     ): Flowable<Result<UploadBean>>
 
     //提交实名信息
-    @GET("/meRunBus/meMemb/zyy/saveOneEntity_meMemb_curToken_t.json")
+    @GET("/meRunBus/meMemb/saveOneEntity_meMemb_curToken_t.json")
     fun primaryAuthentication(
             @Query("tokenUserId") tokenUserId: String,
             @Query("tokenUserKey") tokenUserKey: String,
