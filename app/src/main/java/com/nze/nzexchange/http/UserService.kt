@@ -122,4 +122,9 @@ interface UserService {
             @Query("membIdentitycard") membIdentitycard: String,
             @Query("membCountry") membCountry: String
     ): Flowable<Result<String>>
+
+
+    fun getAuthenticationInfo(){
+        
+    }
 }

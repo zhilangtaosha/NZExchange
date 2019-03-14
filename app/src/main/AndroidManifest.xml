@@ -138,7 +138,8 @@
             android:name=".controller.bibi.BibiSideActivity"
             android:theme="@style/DialogTheme" />
         <activity android:name=".controller.market.KLineActivity" />
-        <activity android:name=".controller.my.authentication.AuthenticationHomeActivity"></activity>
+        <activity android:name=".controller.my.authentication.AuthenticationHomeActivity" />
+        <activity android:name=".controller.my.authentication.VideoRecordActivity"></activity>
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg"
     android:orientation="vertical"
     tools:context=".controller.my.authentication.VideoAuthenticationActivity">
 
@@ -32,7 +33,16 @@
         android:paddingBottom="45dp"
         android:text="点击录制"
         android:textColor="@color/color_FFA3AAB9"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:visibility="visible" />
+
+    <SurfaceView
+        android:id="@+id/sfv_ava"
+        android:layout_width="300dp"
+        android:layout_height="185dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,6 +54,7 @@
         android:textSize="15sp" />
 
     <TextView
+        android:id="@+id/tv_tip_ava"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

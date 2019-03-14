@@ -13,7 +13,7 @@ import com.nze.nzexchange.exception.NoSdCardException
 class FileTool {
 
     companion object {
-        const val CACHE_DIR = "VSTOB"
+        const val CACHE_DIR = "NZExchange"
         const val CACHE_IMAGE = "$CACHE_DIR/images"
         const val CACHE_FILE = "$CACHE_DIR/files"
 
@@ -24,7 +24,7 @@ class FileTool {
          * @throws NoSdCardException
          */
         @Throws(NoSdCardException::class)
-        fun getPersistencePath(): String {
+        fun getFileCachePath(): String {
             return if (FileUtils.checkSDcard()) {
                 FileUtils.getSavePath(CACHE_DIR)
             } else {
