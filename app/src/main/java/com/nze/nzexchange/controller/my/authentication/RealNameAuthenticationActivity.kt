@@ -46,7 +46,7 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
         CommonListPopup(this).apply {
             addAllItem(itemLimit)
             setOnItemClick { position, item ->
-                val file: File = File(FileTool.getImageCachePath(), FileTool.getTempImageName())
+                val file: File = File(FileTool.getImageCachePath(), FileTool.getTempName("jpg"))
                 val imageUri: Uri = Uri.fromFile(file)
                 if (position == 0) {
                     takePhoto.onPickFromCaptureWithCrop(imageUri, TakePhotoTool.getCropOptions())

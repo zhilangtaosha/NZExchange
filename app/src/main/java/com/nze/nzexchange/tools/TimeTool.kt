@@ -18,6 +18,8 @@ class TimeTool {
         const val PATTERN5 = "HH:mm"
         const val PATTERN6 = "yyyy/MM/dd HH:mm:ss"
         const val PATTERN7 = "yyyy/MM/dd"
+        const val PATTERN8 = "HH:mm:ss"
+
 
         fun date(): Date = Date()
 
@@ -34,11 +36,20 @@ class TimeTool {
         fun getLastUpdateTime(): CharSequence = format(PATTERN2, date())
 
         //倒计时使用，单位秒
-        fun formatTime(t: Long): String = with(t) {
+        fun formatTime(t: Long): String = with(t/1000) {
             if (t > 0) {
                 "${this / 60}分${this % 60}秒"
             } else {
                 "0分0秒"
+            }
+        }
+
+        //计时
+        fun countTime(t: Long) = with(t) {
+            if (t >= 0) {
+                format(PATTERN8, t)
+            } else {
+                "00:00:00"
             }
         }
     }

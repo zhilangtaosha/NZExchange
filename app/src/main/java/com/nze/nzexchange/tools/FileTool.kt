@@ -2,6 +2,8 @@ package com.nze.nzexchange.tools
 
 import android.content.Context
 import com.nze.nzeframework.tool.FileUtils
+import com.nze.nzeframework.tool.NFileTool
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.exception.NoSdCardException
 
 /**
@@ -14,50 +16,21 @@ class FileTool {
 
     companion object {
         const val CACHE_DIR = "NZExchange"
-        const val CACHE_IMAGE = "$CACHE_DIR/images"
-        const val CACHE_FILE = "$CACHE_DIR/files"
+        const val CACHE_IMAGE = "images"
+        const val CACHE_FILE = "files"
+        const val CACHE_MOVIE = "movies"
 
-        /**
-         * 持久化保存文件夹
-         *
-         * @return
-         * @throws NoSdCardException
-         */
-        @Throws(NoSdCardException::class)
-        fun getFileCachePath(): String {
-            return if (FileUtils.checkSDcard()) {
-                FileUtils.getSavePath(CACHE_DIR)
-            } else {
-                throw NoSdCardException("没有找到SD卡")
-            }
-        }
 
-        @Throws(NoSdCardException::class)
         fun getImageCachePath(): String {
-            return if (FileUtils.checkSDcard()) {
-                FileUtils.getSavePath(CACHE_IMAGE)
-            } else {
-                throw NoSdCardException("没有找到SD卡")
-            }
+            return NFileTool.getCachePath(NzeApp.instance, CACHE_IMAGE)
         }
 
-        fun getTempImageName(): String {
-            return String.format("%s%s", System.currentTimeMillis().toString(), ".jpg")
+        fun getMovieCachePath(): String {
+            return NFileTool.getFilePath(NzeApp.instance, CACHE_MOVIE)
         }
 
-        /**
-         * 缓存文件夹
-         *
-         * @return
-         * @throws NoSdCardException
-         */
-        @Throws(NoSdCardException::class)
-        fun getCachePath(context: Context): String {
-            return if (FileUtils.checkSDcard()) {
-                context.externalCacheDir!!.absolutePath
-            } else {
-                throw NoSdCardException("没有找到SD卡")
-            }
+        fun getTempName(type: String): String {
+            return "${System.currentTimeMillis()}.$type"
         }
 
     }
