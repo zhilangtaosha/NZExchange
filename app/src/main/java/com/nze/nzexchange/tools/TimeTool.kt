@@ -1,5 +1,6 @@
 package com.nze.nzexchange.tools
 
+import com.nze.nzeframework.tool.NLog
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,7 +37,7 @@ class TimeTool {
         fun getLastUpdateTime(): CharSequence = format(PATTERN2, date())
 
         //倒计时使用，单位秒
-        fun formatTime(t: Long): String = with(t/1000) {
+        fun formatTime(t: Long): String = with(t) {
             if (t > 0) {
                 "${this / 60}分${this % 60}秒"
             } else {
@@ -45,9 +46,12 @@ class TimeTool {
         }
 
         //计时
-        fun countTime(t: Long) = with(t) {
+        fun countTime(t: Long) = with(t / 1000) {
             if (t >= 0) {
-                format(PATTERN8, t)
+                var s = this % 60
+                var m = this / 60
+                var h = this / 360
+                "${if (h < 10) "0$h" else "$h"}:${if (m < 10) "0$m" else "$m"}:${if (s < 10) "0$s" else "$s"}"
             } else {
                 "00:00:00"
             }

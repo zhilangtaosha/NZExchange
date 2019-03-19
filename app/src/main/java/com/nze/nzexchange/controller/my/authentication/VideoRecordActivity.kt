@@ -1,8 +1,12 @@
 package com.nze.nzexchange.controller.my.authentication
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
 import android.hardware.Camera
 import android.media.AudioManager
+import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Handler
@@ -14,11 +18,17 @@ import android.view.View
 import android.widget.*
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NFileTool
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.tools.FileTool
 import com.nze.nzexchange.tools.TimeTool
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_video_record.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -55,12 +65,18 @@ class VideoRecordActivity : NBaseActivity(), EasyPermissions.PermissionCallbacks
 
     override fun initView() {
 
+        intent?.let {
+            lastFileName = it.getStringExtra(IntentConstant.PARAM_VIDEO_PATH)
+        }
+
+        titleLeftTv.setOnClickListener(this)
         recordBtn.setOnClickListener(this)
         playBtn.setOnClickListener(this)
         recordAgainBtn.setOnClickListener(this)
         nextBtn.setOnClickListener(this)
 
         mSurfaceHolder = surfaceView.getHolder()
+//        mSurfaceHolder?.setKeepScreenOn(true)
         mSurfaceHolder?.addCallback(this)
         mSurfaceHolder?.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
 
@@ -81,8 +97,19 @@ class VideoRecordActivity : NBaseActivity(), EasyPermissions.PermissionCallbacks
     }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mIsRecording)
+            stopRecording()
+        if (mediaPlayer != null)
+            stopPlay()
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.tv_left_title_avr -> {
+                onBackPressed()
+            }
             R.id.btn_record_avr -> {
                 if (!mIsRecording) {
                     initMediaRecorder()
@@ -92,17 +119,31 @@ class VideoRecordActivity : NBaseActivity(), EasyPermissions.PermissionCallbacks
                 }
             }
             R.id.btn_play_avr -> {
+                if (mediaPlayer != null) {
+                    stopPlay()
+                }
                 play(0)
             }
             R.id.btn_record_again_avr -> {
                 recordBtn.visibility = View.VISIBLE
                 playBtn.visibility = View.GONE
                 bottomLayout.visibility = View.GONE
+                timeTv.visibility = View.VISIBLE
                 stopPlay()
                 startPreview()
             }
             R.id.btn_next_avr -> {
-
+                Observable.create<String> {
+                    it.onNext(screenshot(0))
+                }.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            val intent: Intent = Intent()
+                            intent.putExtra(IntentConstant.PARAM_IMAGE_PATH, it)
+                            intent.putExtra(IntentConstant.PARAM_VIDEO_PATH, lastFileName)
+                            this.setResult(Activity.RESULT_OK, intent)
+                            this.finish()
+                        }
             }
         }
     }
@@ -134,9 +175,19 @@ class VideoRecordActivity : NBaseActivity(), EasyPermissions.PermissionCallbacks
 
     @AfterPermissionGranted(RC_CAMERA_PERM)
     public fun initRecorder() {
-
         if (hasCameraPermission()) {
-            startPreview()
+            if (lastFileName.isNullOrEmpty()) {
+                startPreview()
+            } else {
+                recordBtn.visibility = View.GONE
+                playBtn.visibility = View.VISIBLE
+                bottomLayout.visibility = View.VISIBLE
+                timeTv.visibility = View.GONE
+                if (mediaPlayer != null) {
+                    stopPlay()
+                }
+                play(0)
+            }
         } else {
             EasyPermissions.requestPermissions(
                     this,
@@ -154,6 +205,23 @@ class VideoRecordActivity : NBaseActivity(), EasyPermissions.PermissionCallbacks
     private var isCount: Boolean = false
     var mHandler: Handler = Handler()
     private var mRunnable: Runnable? = null
+
+    //--------------视频截图----------------------------------------------
+    val retriever: MediaMetadataRetriever by lazy { MediaMetadataRetriever() }
+//    var screenFile: String? = null
+
+    /**
+     * 获取视频某一帧
+     * @param timeMs 毫秒
+     */
+    fun screenshot(time: Long): String {
+        retriever.setDataSource(lastFileName, HashMap<String, String>())
+        val bitmap = retriever.getFrameAtTime(time * 1000, MediaMetadataRetriever.OPTION_CLOSEST)
+        var screenFile = "${FileTool.getImageCachePath()}/${FileTool.getTempName("jpg")}"
+        NFileTool.bitmapToFile(bitmap, screenFile!!)
+        return screenFile
+    }
+
 
     //-----------------前摄像头预览--------------------------------
 
@@ -287,6 +355,7 @@ class VideoRecordActivity : NBaseActivity(), EasyPermissions.PermissionCallbacks
         recordBtn.visibility = View.GONE
         playBtn.visibility = View.VISIBLE
         bottomLayout.visibility = View.VISIBLE
+        timeTv.visibility = View.GONE
         stopPreview()
 
     }
@@ -305,6 +374,7 @@ class VideoRecordActivity : NBaseActivity(), EasyPermissions.PermissionCallbacks
         try {
             if (mediaPlayer == null) {
                 mediaPlayer = MediaPlayer()
+
                 mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
                 // 设置播放的视频源
                 mediaPlayer?.setDataSource(lastFileName)
@@ -312,12 +382,15 @@ class VideoRecordActivity : NBaseActivity(), EasyPermissions.PermissionCallbacks
                 mediaPlayer?.setDisplay(mSurfaceHolder)
                 mediaPlayer?.prepare();//同步装载
 //                mediaPlayer?.prepareAsync()//异步装载
+                mediaPlayer?.start()
             }
-            mediaPlayer?.start()
+
             // 按照初始位置播放
             mediaPlayer?.seekTo(msec)
             playBtn.visibility = View.GONE
             bottomLayout.visibility = View.GONE
+
+
 
             mediaPlayer?.setOnCompletionListener {
                 // 在播放完毕被回调

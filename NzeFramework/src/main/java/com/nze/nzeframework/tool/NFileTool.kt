@@ -1,8 +1,9 @@
 package com.nze.nzeframework.tool
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.os.Environment
-import java.io.File
+import java.io.*
 
 /**
  * @author: zwy
@@ -78,6 +79,61 @@ class NFileTool {
             if (!file.exists())
                 file.mkdirs()
             return file
+        }
+
+
+        /**
+         * 图片写入文件
+         *
+         * @param bitmap   图片
+         * @param filePath 文件路径
+         * @return 是否写入成功
+         */
+        fun bitmapToFile(bitmap: Bitmap?, filePath: String): Boolean {
+            var isSuccess = false
+            if (bitmap == null) {
+                return isSuccess
+            }
+            val file = File(filePath.substring(0,
+                    filePath.lastIndexOf(File.separator)))
+            if (!file.exists()) {
+                file.mkdirs()
+            }
+
+            var out: OutputStream? = null
+            try {
+                out = BufferedOutputStream(FileOutputStream(filePath),
+                        8 * 1024)
+                isSuccess = bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } finally {
+                closeIO(out!!)
+            }
+            return isSuccess
+        }
+
+        /**
+         * 关闭流
+         *
+         * @param closeables
+         */
+        fun closeIO(vararg closeables: Closeable) {
+            if (null == closeables || closeables.size <= 0) {
+                return
+            }
+            for (cb in closeables) {
+                try {
+                    if (null == cb) {
+                        continue
+                    }
+                    cb.close()
+                } catch (e: IOException) {
+                    throw RuntimeException(
+                            FileUtils::class.java.javaClass.name, e)
+                }
+
+            }
         }
     }
 }
