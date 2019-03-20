@@ -18,6 +18,7 @@ data class VerifyBean(val checkcodeId: String) {
     companion object {
         const val TYPE_FIND_PASSWORD = 0x001
         const val TYPE_REGISTER = 0x002
+        const val TYPE_COMMON = 0x003
         fun getVerifyCodeNet(account: String,
                              type: Int): Flowable<Result<VerifyBean>> {
             var messageBustag = when (type) {
@@ -33,6 +34,13 @@ data class VerifyBean(val checkcodeId: String) {
                         VerifyType.TYPE_RESIGER_BY_EMAIL
                     } else {
                         VerifyType.TYPE_RESIGER_BY_PHONE
+                    }
+                }
+                TYPE_COMMON -> {
+                    if (RegularTool.isEmail(account)) {
+                        VerifyType.TYPE_COMMON_BY_EMAIL
+                    } else {
+                        VerifyType.TYPE_COMMON_BY_PHONE
                     }
                 }
                 else -> ""

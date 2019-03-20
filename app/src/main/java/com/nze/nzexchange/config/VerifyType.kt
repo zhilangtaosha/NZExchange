@@ -13,6 +13,9 @@ class VerifyType {
         const val TYPE_RESIGER_BY_EMAIL = "checkCode_mail_regMemb_sendMemb"
         const val TYPE_FIND_PWD_BY_PHONE = "checkCode_sms_resetPw_sendMemb"
         const val TYPE_FIND_PWD_BY_EMAIL = "checkCode_mail_resetPw_sendMemb"
+        const val TYPE_COMMON_BY_PHONE = "checkCode_sms_randIntCode"
+        const val TYPE_COMMON_BY_EMAIL = "checkCode_mail_randIntCode"
+
 
     }
 }

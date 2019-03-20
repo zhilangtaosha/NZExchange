@@ -11,7 +11,7 @@ import android.widget.EditText
  * @创建时间：2018/12/11
  */
 
-fun EditText.getContent(): String = text.toString()
+fun EditText.getContent(): String = text.toString().trim()
 
 fun EditText.hidePassword() {
     transformationMethod = HideReturnsTransformationMethod.getInstance()

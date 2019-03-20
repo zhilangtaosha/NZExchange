@@ -6,14 +6,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.R.id.imageView
+import com.nze.nzexchange.bean.IndexNotices
 import com.nze.nzexchange.widget.bulletin.BulletinAdapter
 import kotlinx.android.synthetic.main.bulletin_simple_item.view.*
 import kotlinx.android.synthetic.main.fragment_carousel.view.*
 
-class SimpleBulletinAdapter(context: Context, dataList: List<String>) : BulletinAdapter<String>(context, dataList) {
+class SimpleBulletinAdapter(context: Context, dataList: List<IndexNotices>) : BulletinAdapter<IndexNotices>(context, dataList) {
 
     private var mImageDrawableID = R.drawable.shape_bulletin_tip
-
 
 
     override fun getView(position: Int): View {
@@ -25,7 +25,7 @@ class SimpleBulletinAdapter(context: Context, dataList: List<String>) : Bulletin
 
         val data = mData.get(position)
 //        view.iv_image.setImageResource(mImageDrawableID)
-        view.tv_content.setText(data)
+        view.tv_content.setText(data.noticeTitle)
         return view
     }
 

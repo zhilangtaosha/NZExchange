@@ -37,7 +37,7 @@ public class RoundImageView extends AppCompatImageView {
     /**
      * 圆角半径
      */
-    private int currRound = dp2px(10);
+    private int currRound = dp2px(2);
 
     public RoundImageView(Context context) {
         super(context);
