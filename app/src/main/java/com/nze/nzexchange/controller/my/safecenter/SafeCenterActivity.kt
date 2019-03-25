@@ -4,11 +4,15 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import com.leiyun.fingerprint.FingerprintDialog
+import com.leiyun.fingerprint.FingerprintHelper
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
 import kotlinx.android.synthetic.main.activity_safe_center.*
+import net.grandcentrix.tray.AppPreferences
 
 class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
 
@@ -20,6 +24,9 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
     val fingerprintPasswordSwitch: Switch by lazy { switch_fingerprint_password_asc }//指纹密码
     val fundPasswordIv: ImageView by lazy { iv_fund_password_asc }//资金密码
     val modifyPasswordIv: ImageView by lazy { iv_modify_password_asc }//修改登录密码
+    val appPreferences: AppPreferences by lazy { AppPreferences(this) }
+    var pwdType: Int = -1
+
 
     override fun getRootView(): Int = R.layout.activity_safe_center
 
@@ -29,6 +36,42 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
         bindGoogleTv.setOnClickListener(this)
         fundPasswordIv.setOnClickListener(this)
         modifyPasswordIv.setOnClickListener(this)
+
+        try {
+            pwdType = appPreferences.getInt(Preferences.COME_BACK_PWD, -1)
+        } catch (e: Exception) {
+        }
+        when (pwdType) {
+            Preferences.PWD_GESTURE -> {
+                gesturePasswordSwitch.isChecked = true
+            }
+            Preferences.PWD_FINGERPRINT -> {
+                fingerprintPasswordSwitch.isChecked = true
+            }
+        }
+
+        gesturePasswordSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                fingerprintPasswordSwitch.isChecked = false
+                appPreferences.put(Preferences.COME_BACK_PWD, Preferences.PWD_GESTURE)
+            }
+        }
+        FingerprintHelper.init(this)
+        fingerprintPasswordSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+
+                if (FingerprintHelper.isHardwareDetected()) {
+                    if (!FingerprintHelper.hasEnrolledFingerprints()) {
+                        showToast("本机尚未录入指纹")
+                    }else{
+                        gesturePasswordSwitch.isChecked = false
+                        appPreferences.put(Preferences.COME_BACK_PWD, Preferences.PWD_FINGERPRINT)
+                    }
+                } else {
+                    showToast("本机没有指纹解锁功能")
+                }
+            }
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

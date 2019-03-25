@@ -23,6 +23,7 @@ class CRetrofit private constructor() {
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(RetryIntercepter(3))
+                .addInterceptor(EncodeIntercepter())
                 .apply {
                     val interceptor = HttpLoggingInterceptor()
                     interceptor.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE

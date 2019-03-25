@@ -37,9 +37,9 @@ class HomeFragment : NBaseFragment() {
     val carouselAdapter:CarouselAdapter by lazy { CarouselAdapter(fragmentManager!!, imageUrls) }
 
     init {
-        imageUrls.add("http://bpic.588ku.com/back_pic/17/03/16/14391cb76638d75a22f35625dff40eee.jpg")
-        imageUrls.add("http://bpic.588ku.com/back_pic/04/83/26/3458d0f1ff16fa3.jpg")
-        imageUrls.add("http://bpic.588ku.com/element_origin_min_pic/16/12/06/165846749a5fbf0.jpg")
+//        imageUrls.add("http://bpic.588ku.com/back_pic/17/03/16/14391cb76638d75a22f35625dff40eee.jpg")
+//        imageUrls.add("http://bpic.588ku.com/back_pic/04/83/26/3458d0f1ff16fa3.jpg")
+//        imageUrls.add("http://bpic.588ku.com/element_origin_min_pic/16/12/06/165846749a5fbf0.jpg")
 
         hotDatas.add(TransactionPairBean("BTC/USDT", 0.16, 6362.57, 43733.86, 213321))
         hotDatas.add(TransactionPairBean("BTC/USDT", -0.16, 6362.57, 43733.86, 213321))
@@ -60,6 +60,7 @@ class HomeFragment : NBaseFragment() {
     override fun initView(rootView: View) {
         mCarousel = rootView.carousel_home
 //        val carouselAdapter = CarouselAdapter(fragmentManager!!, imageUrls)
+
 
 
         bulletinView = rootView.bulletin_view
@@ -97,6 +98,7 @@ class HomeFragment : NBaseFragment() {
                         imageUrls.add(it.imgUrl)
                     }
                     mCarousel.setAdapter(carouselAdapter)
+                    mCarousel.star()
 
                     val bulletinAdapter = SimpleBulletinAdapter(activity!!, noticeList)
                     bulletinView.setAdapter(bulletinAdapter)
@@ -122,8 +124,10 @@ class HomeFragment : NBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        mCarousel.star()
+
     }
+
+
 
     override fun onDestroy() {
         mCarousel.stop()

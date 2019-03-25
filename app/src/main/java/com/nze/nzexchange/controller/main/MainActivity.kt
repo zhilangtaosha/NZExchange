@@ -1,15 +1,23 @@
 package com.nze.nzexchange.controller.main
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.Toast
+import com.leiyun.fingerprint.FingerprintDialog
+import com.leiyun.fingerprint.FingerprintHelper
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.bibi.BibiFragment
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -19,6 +27,7 @@ import com.nze.nzexchange.controller.market.MarketFragment
 import com.nze.nzexchange.controller.my.MyFragment
 import com.nze.nzexchange.controller.otc.OtcFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import net.grandcentrix.tray.AppPreferences
 
 class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFragmentInteractionListener {
 
@@ -26,6 +35,14 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
     var mCurrentTab = 0
     var mLastTab = -1
     var mLastFragment: NBaseFragment? = null
+    //指纹解锁
+    val mDialog: FingerprintDialog by lazy {
+        FingerprintDialog().apply {
+            isCancelable = false
+        }
+    }
+    //share preferences
+    val appPreferences: AppPreferences by lazy { AppPreferences(this) }
 
 
     override fun isBindNetworkListener(): Boolean = false
@@ -48,13 +65,25 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
             selectTab(mCurrentTab)
         }
+        if (eventCenter.eventCode == EventCode.CODE_APP_TO_FRONT) {
+            val pwdType = appPreferences.getInt(Preferences.COME_BACK_PWD, -1)
+            if (pwdType==Preferences.PWD_FINGERPRINT){
+                if (FingerprintHelper.isHardwareDetected()) {
+                    if (FingerprintHelper.hasEnrolledFingerprints()) {
+                        mDialog.show(supportFragmentManager, "dialog")
+                    }
+                }
+            }
+        }
     }
 
     override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.RIGHT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        if (!hasPermission()) {
+            requestPermission()
+        }
     }
 
     override fun getRootView(): Int = R.layout.activity_main
@@ -66,6 +95,8 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         tab_otc_main.setOnClickListener(this)
         tab_my_main.setOnClickListener(this)
         selectTab(0)
+
+        FingerprintHelper.init(this)//指纹解锁
     }
 
     override fun onClick(v: View?) {
@@ -131,4 +162,26 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
 
     override fun onFragmentInteraction(uri: Uri) {
     }
+
+    val PERMISSION_REQUEST_CODE = 0x99
+    //进入app需加载的权限
+    fun hasPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED
+    }
+
+    fun requestPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.USE_FINGERPRINT), PERMISSION_REQUEST_CODE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(applicationContext, "已经获取指纹权限", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "已拒绝取指纹权限", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }

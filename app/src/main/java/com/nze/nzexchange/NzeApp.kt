@@ -1,15 +1,24 @@
 package com.nze.nzexchange
 
+import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import android.support.multidex.MultiDex
+import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseApplication
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.tools.AppFrontBackTool
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
+import org.greenrobot.eventbus.EventBus
 import kotlin.properties.Delegates
 
 class NzeApp : BaseApplication() {
     var userId = "007"
     var userBean: UserBean? = null
+    var activityNumber: Int = 0
+    var isFirst: Boolean = true
 
     companion object {
         lateinit var instance: NzeApp;
@@ -21,10 +30,58 @@ class NzeApp : BaseApplication() {
         instance = this
 
         ZXingLibrary.initDisplayOpinion(this)
+        registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
+
     }
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         MultiDex.install(this)
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        unregisterActivityLifecycleCallbacks(activityLifecycleCallbacks)
+    }
+
+    val activityLifecycleCallbacks: ActivityLifecycleCallbacks = object : ActivityLifecycleCallbacks {
+        override fun onActivityPaused(activity: Activity?) {
+
+        }
+
+        override fun onActivityResumed(activity: Activity?) {
+        }
+
+        override fun onActivityStarted(activity: Activity?) {
+            if (activityNumber == 0) {
+                NLog.i("app回到前台$activityNumber");
+                if (!isFirst) {
+                    NLog.i("app回到前台>>>不是第一次")
+                    EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_APP_TO_FRONT))
+                } else {
+                    isFirst = false
+                    NLog.i("app回到前台>>>第一次打开应用")
+                }
+            }
+            activityNumber++;
+        }
+
+        override fun onActivityDestroyed(activity: Activity?) {
+        }
+
+        override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+        }
+
+        override fun onActivityStopped(activity: Activity?) {
+            activityNumber--;
+            if (activityNumber == 0) {
+                // app回到后台
+                NLog.i("app回到后台");
+            }
+        }
+
+        override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+        }
+
     }
 }

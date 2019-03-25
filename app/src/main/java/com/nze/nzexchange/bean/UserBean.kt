@@ -28,6 +28,9 @@ data class UserBean(
 
         fun isLogin(): Boolean = loadFromApp() != null
 
+        fun logout() {
+            NzeApp.instance.userBean = null
+        }
 
     }
 }

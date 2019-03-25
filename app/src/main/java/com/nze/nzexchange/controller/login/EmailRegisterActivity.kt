@@ -24,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_email_register.*
 import org.greenrobot.eventbus.EventBus
+import java.net.URLDecoder
 
 class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
     private val emailEt: ClearableEditText by lazy { et_email_aer }
@@ -114,6 +115,7 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
                     showToast("请先获取验证码")
                     return
                 }
+                
                 if (registerBtn.validate()) {
                     val pwdStr = MD5Tool.getMd5_32(pwdEt.getContent())
                     RegisterBean.registerNet(null, emailEt.getContent(), null, pwdStr, checkcodeId, verifyEt.getContent())

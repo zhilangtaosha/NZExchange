@@ -42,6 +42,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
 
     val transactionNameTv: TextView by lazy { tv_transaction_name_kline }//交易对名称
+    val switchLeftIv: ImageView by lazy { iv_switch_left_kline }//左切换按钮
+    val switchRightIv: ImageView by lazy { iv_switch_right_kline }
+    val marketNameTv: TextView by lazy { tv_market_name_kline }//市场名称
+    val pairNameTv: TextView by lazy { tv_pair_name_kline }//交易对名称
+
     val switchIv: ImageView by lazy { iv_switch_kline }//切换全屏按钮
     val selfSelectIv: ImageView by lazy { iv_self_select_kline }//自选按钮
     val costTv: TextView by lazy { tv_cost_kline }//兑换价格
@@ -141,6 +146,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private val sellAdapter: KLineSellAdapter by lazy { KLineSellAdapter(this) }
     private val newDealAdapter: KLineNewDealAdapter by lazy { KLineNewDealAdapter(this) }
 
+
+    private val marketList: MutableList<String> by lazy {
+        mutableListOf<String>("AUS", "火币")
+    }
+    private var marketIndex: Int = 0
 
     override fun getRootView(): Int = R.layout.activity_kline
 

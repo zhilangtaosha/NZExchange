@@ -12,6 +12,7 @@ import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.CRetrofit
+import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.VerifyButton
@@ -62,16 +63,21 @@ class SetFundPasswordActivity : NBaseActivity(), View.OnClickListener {
                 if (checkcodeId == null)
                     showToast("验证码获取错误,请重新获取")
                 if (confirmBtn.validate()) {
-                    val pwdStr: String = pwdEt.getContent()
+                    var pwdStr: String = pwdEt.getContent()
                     val pwdConfirm: String = pwdConfirmEt.getContent()
                     if (pwdStr != pwdConfirm) {
                         showToast("两次密码不一致")
                         return
                     }
+                    pwdStr = MD5Tool.getMd5_32(pwdStr)
                     CRetrofit.instance
                             .userService()
-                            .setBuspw(checkcodeId!!, verifyEt.getContent(), userBean?.userEmail!!, pwdEt.getContent())
+                            .setBuspw(checkcodeId!!, verifyEt.getContent(), userBean?.userEmail!!, pwdStr)
+                            .compose(netTfWithDialog())
                             .subscribe({
+                                /**
+                                 * 3/22 没有状态判断设置是否成功
+                                 */
                                 NLog.i(it.message)
                             }, onError)
                 }

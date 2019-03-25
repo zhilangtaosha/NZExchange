@@ -15,15 +15,53 @@
         app:tb_backgroud="@color/color_bg"
         app:tb_title_text="邮箱注册" />
 
-    <com.nze.nzexchange.widget.clearedit.ClearableEditText
-        android:id="@+id/et_email_aer"
-        style="@style/et14"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:text="邮箱注册"
+        android:textColor="@color/color_common"
+        android:textSize="24sp" />
+
+    <TextView
+        style="@style/tx14_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@mipmap/exclamatory_mark_red"
+        android:drawablePadding="5dp"
+        android:text="国家或地区注册后不可更改" />
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="30dp"
-        android:hint="邮箱号码" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_country_apr"
+            style="@style/tx15_light"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableRight="@mipmap/open_icon"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="中国"
+            android:textColor="@color/color_FFA3AAB9" />
+
+        <com.nze.nzexchange.widget.clearedit.ClearableEditText
+            android:id="@+id/et_email_aer"
+            style="@style/et14"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="10dp"
+            android:hint="邮箱号码" />
+    </LinearLayout>
 
     <View
         android:id="@+id/line1_aer"
@@ -87,7 +125,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:hint="请输入密码" />
+            android:hint="密码(8-16位数字和字母组合)" />
 
         <CheckBox
             android:id="@+id/cb_pwd_aer"
@@ -120,10 +158,10 @@
             android:id="@+id/cb_agree_aer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/selector_checkbox_agreement"
             android:button="@null"
-            android:text="请阅读并同意"
+            android:drawableLeft="@drawable/selector_checkbox_agreement"
             android:drawablePadding="5dp"
+            android:text="请阅读并同意"
             android:textColor="@color/color_FF7F8592"
             android:textSize="13sp" />
 

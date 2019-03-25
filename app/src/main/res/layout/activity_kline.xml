@@ -22,8 +22,56 @@
             android:drawableLeft="@mipmap/left_arrow"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:text="BTC/USDT" />
+            android:paddingLeft="15dp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/iv_switch_left_kline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                android:src="@mipmap/k_switch_left" />
+
+            <LinearLayout
+                android:id="@+id/layout_market_kline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_switch_left_kline"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_market_name_kline"
+                    style="@style/tx15_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="OKEX" />
+
+                <TextView
+                    android:id="@+id/tv_pair_name_kline"
+                    style="@style/tx11_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="BTC/USDT" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_switch_right_kline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/layout_market_kline"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:src="@mipmap/k_switch_right" />
+
+
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/iv_switch_kline"
@@ -48,6 +96,19 @@
             android:paddingRight="7dp"
             android:paddingBottom="10dp"
             android:src="@mipmap/start_norml" />
+
+        <ImageView
+            android:id="@+id/iv_back_kline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_self_select_kline"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="10dp"
+            android:src="@mipmap/k_back_aus" />
+
     </RelativeLayout>
 
     <ScrollView

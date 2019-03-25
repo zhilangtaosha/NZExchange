@@ -97,7 +97,7 @@ interface UserService {
             @Field("tokenSystreeId") tokenSystreeId: String,
             @Field("curUserpasswordUcode") curUserpasswordUcode: String,
             @Field("newUserPassworUcode") newUserPassworUcode: String
-    ): Flowable<Result<HashMap<String, String>>>
+    ): Flowable<Result<Any>>
 
     //上传文件
     @Multipart
@@ -125,7 +125,7 @@ interface UserService {
 
     //首页
     @FormUrlEncoded
-    @POST("/indexAppRunBus/indexAllData_t.json")
+    @POST("indexAppRunBus/indexAllData_t.json")
     fun indexAllData(
             @Field("containNotice") containNotice: Boolean,
             @Field("containTempImg") containTempImg: Boolean,
@@ -134,11 +134,12 @@ interface UserService {
 
     //设置支付密码
     @FormUrlEncoded
-    @POST("/meRunBus/meBuspw/setBuspw_pay.json")
+    @POST("/meRunBus/meBuspw/resetBuspwByCheckcode_pay.json")
     fun setBuspw(
             @Field("checkcodeId") checkcodeId: String,
             @Field("checkcodeVal") checkcodeVal: String,
             @Field("userEmail") userEmail: String,
             @Field("newBuspwUcode") newBuspwUcode: String
-    ): Flowable<Result<HashMap<String, String>>>
+    ): Flowable<Result<Any>>
+
 }
