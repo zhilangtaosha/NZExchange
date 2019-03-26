@@ -8,14 +8,14 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.KLineBean
 import com.nze.nzexchange.bean.Soketbean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
-import com.nze.nzexchange.bean2.KLineOrderBean
 import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.KLineParam
+import com.nze.nzexchange.config.KLineRequestBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.http.NWebSocket
@@ -138,14 +138,21 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     var kType: Int = K_FENSHI
 
     final val DATA_TYPE_INIT = 0
-    final val DATA_TYPE_REFRESH = 1
-    final val DATA_TYPE_LISTENER = 2
+    final val DATA_TYPE_GET_DATA = 1
+    final val DATA_TYPE_REFRESH = 2
+    final val DATA_TYPE_LISTENER = 3
     var dataType = DATA_TYPE_INIT
 
     private val buyAdapter: KLineBuyAdapter by lazy { KLineBuyAdapter(this) }
     private val sellAdapter: KLineSellAdapter by lazy { KLineSellAdapter(this) }
     private val newDealAdapter: KLineNewDealAdapter by lazy { KLineNewDealAdapter(this) }
 
+    var socketRequestId: String = ""
+        get() {
+            return System.currentTimeMillis().toString()
+        }
+    val gson: Gson by lazy { Gson() }
+    var isSocketOpen: Boolean = false
 
     private val marketList: MutableList<String> by lazy {
         mutableListOf<String>("AUS", "火币")
@@ -195,13 +202,28 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         newDealAdapter.group = ShenDubean.getList()
         newDealLv.adapter = newDealAdapter
 
+        initKSocket(KLineParam.MARKET_MYSELF)
 
     }
 
     //ws://192.168.1.101:800/btcbch/007/fivesMinute
-    private fun getKData(type: String, userId: String) {
-        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/${pairsBean?.currency?.toLowerCase()}${pairsBean?.mainCurrency?.toLowerCase()}/${userId}/${type}", wsListener)
+    private fun initKSocket(market: String) {
+//        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/${pairsBean?.currency?.toLowerCase()}${pairsBean?.mainCurrency?.toLowerCase()}/${userId}/${type}", wsListener)
+        dataType = DATA_TYPE_INIT
+        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/$market", wsListener)
         socket = nWebSocket?.open()
+    }
+
+    private fun socketRequst() {
+        dataType = DATA_TYPE_GET_DATA
+        val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
+        requestBean.params.add("BTCBCH")
+        requestBean.params.add(KLineParam.TIME_ONE_DAY)
+        requestBean.params.add(socketRequestId)
+        val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
+        NLog.i("socketRequestId>>>$socketRequestId")
+        NLog.i(param)
+        socket?.send(param)
     }
 
     private fun getKlineData() {
@@ -341,58 +363,75 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         val gson: Gson = Gson()
         override fun onOpen(webSocket: WebSocket, response: Response) {
             super.onOpen(webSocket, response)
+            isSocketOpen = true
+            socketRequst()
+            NLog.i("onOpen")
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             super.onFailure(webSocket, t, response)
+            NLog.i("onFailure")
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
             super.onClosing(webSocket, code, reason)
+            NLog.i("onClosing")
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
             NLog.i("text>>>$text")
-            if (dataType == DATA_TYPE_INIT) {
-                Observable.create<List<KLineEntity>> {
-                    var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
-                    val rs = soketbean.kLineResult?.result
-                    val list: MutableList<KLineEntity> = mutableListOf()
-                    rs?.forEach {
-                        val bean = KLineEntity()
-                        bean.Date = TimeTool.format(TimeTool.PATTERN7, it[0])
-
-                    }
-                }.subscribeOn(Schedulers.computation())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
+            when (dataType) {
+                DATA_TYPE_INIT -> {
+                }
+                DATA_TYPE_GET_DATA -> {
+                    Observable.create<List<KLineEntity>> {
+                        var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
+                        val lineK = soketbean.lineK
+                        val handicap = soketbean.handicap
+                        val list: MutableList<KLineEntity> = mutableListOf()
+                        lineK?.result?.forEach {
+                            val bean = KLineEntity()
+                            bean.Date = TimeTool.format(TimeTool.PATTERN7, it[0])
+//                            bean.Open = it[1]
 
                         }
-            } else if (dataType == DATA_TYPE_REFRESH) {
+                    }.subscribeOn(Schedulers.computation())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {
 
-            } else {
-
+                            }
+                }
+                DATA_TYPE_REFRESH -> {
+                }
+                DATA_TYPE_LISTENER -> {
+                }
+                else -> {
+                }
             }
+
 
             super.onMessage(webSocket, text)
         }
 
         override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-            NLog.i("bytes>>>$bytes")
             super.onMessage(webSocket, bytes)
+            NLog.i("bytes>>>$bytes")
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
             super.onClosed(webSocket, code, reason)
+            NLog.i("onClosed")
         }
     }
 
     override fun onFragmentInteraction(uri: Uri) {
     }
 
-    override fun onStop() {
-        super.onStop()
+
+    override fun onDestroy() {
+        super.onDestroy()
         nWebSocket?.close()
+        socket?.cancel()
     }
 
 }

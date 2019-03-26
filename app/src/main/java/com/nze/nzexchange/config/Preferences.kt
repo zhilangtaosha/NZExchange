@@ -9,8 +9,9 @@ package com.nze.nzexchange.config
 class Preferences {
     companion object {
         val COME_BACK_PWD = "comeBackPwd"
-        val PWD_GESTURE = 0
-        val PWD_FINGERPRINT = 1
+        val BACK_PWD_GESTURE = 0
+        val BACK_PWD_FINGERPRINT = 1
+        val BACK_PWD_NO = -1
 
     }
 

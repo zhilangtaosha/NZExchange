@@ -9,6 +9,7 @@ import com.nze.nzeframework.loadcontrol.VaryViewHelperController
 import com.nze.nzeframework.netstatus.NetChangeObserver
 import com.nze.nzeframework.netstatus.NetStateReceiver
 import com.nze.nzeframework.netstatus.NetUtils
+import com.nze.nzeframework.tool.ActivityManager
 import com.nze.nzeframework.tool.EventCenter
 
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
@@ -55,6 +56,7 @@ abstract class BaseActivity : RxAppCompatActivity() {
             NetStateReceiver.registerNetworkStateReceiver(this)
         }
         super.onCreate(savedInstanceState)
+        ActivityManager.instance.addActivity(this)
         setContentView(getRootView())
         initView()
     }
@@ -88,6 +90,7 @@ abstract class BaseActivity : RxAppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        ActivityManager.instance.finishActivity(this)
         if (isBindNetworkListener())
             NetStateReceiver.removeRegisterObserver(mNetChangeObserver)
         if (isBindEventBusHere()) {

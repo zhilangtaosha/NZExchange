@@ -7,20 +7,23 @@ package com.nze.nzexchange.bean
  * @创建时间：2019/1/23
  */
 data class Soketbean(
-        val kLineResult: KLineBean?,
+        val lineK: LineKBean?,
         val handicap: Handicap?
 ) {
 
+    companion object {
+
+    }
 }
 
-data class KLineBean(
-        val start: String,
-        val end: String,
-        val result: Array<Array<Long>>?
-) {
+/**
+ *
+ */
+data class LineKBean(
+        val result: Array<Array<Long>>?,
+        val type: String
+)
 
-
-}
 
 data class Handicap(
         val asks: Array<Array<String>>?,//买入

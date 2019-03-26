@@ -25,7 +25,7 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
     val fundPasswordIv: ImageView by lazy { iv_fund_password_asc }//资金密码
     val modifyPasswordIv: ImageView by lazy { iv_modify_password_asc }//修改登录密码
     val appPreferences: AppPreferences by lazy { AppPreferences(this) }
-    var pwdType: Int = -1
+    var pwdType: Int = Preferences.BACK_PWD_NO
 
 
     override fun getRootView(): Int = R.layout.activity_safe_center
@@ -38,14 +38,14 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
         modifyPasswordIv.setOnClickListener(this)
 
         try {
-            pwdType = appPreferences.getInt(Preferences.COME_BACK_PWD, -1)
+            pwdType = appPreferences.getInt(Preferences.COME_BACK_PWD, Preferences.BACK_PWD_NO)
         } catch (e: Exception) {
         }
         when (pwdType) {
-            Preferences.PWD_GESTURE -> {
+            Preferences.BACK_PWD_GESTURE -> {
                 gesturePasswordSwitch.isChecked = true
             }
-            Preferences.PWD_FINGERPRINT -> {
+            Preferences.BACK_PWD_FINGERPRINT -> {
                 fingerprintPasswordSwitch.isChecked = true
             }
         }
@@ -53,23 +53,28 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
         gesturePasswordSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 fingerprintPasswordSwitch.isChecked = false
-                appPreferences.put(Preferences.COME_BACK_PWD, Preferences.PWD_GESTURE)
+                appPreferences.put(Preferences.COME_BACK_PWD, Preferences.BACK_PWD_GESTURE)
+            } else {
+                if (!fingerprintPasswordSwitch.isChecked)
+                    appPreferences.put(Preferences.COME_BACK_PWD, Preferences.BACK_PWD_NO)
             }
         }
         FingerprintHelper.init(this)
         fingerprintPasswordSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-
                 if (FingerprintHelper.isHardwareDetected()) {
                     if (!FingerprintHelper.hasEnrolledFingerprints()) {
                         showToast("本机尚未录入指纹")
-                    }else{
+                    } else {
                         gesturePasswordSwitch.isChecked = false
-                        appPreferences.put(Preferences.COME_BACK_PWD, Preferences.PWD_FINGERPRINT)
+                        appPreferences.put(Preferences.COME_BACK_PWD, Preferences.BACK_PWD_FINGERPRINT)
                     }
                 } else {
                     showToast("本机没有指纹解锁功能")
                 }
+            } else {
+                if (!gesturePasswordSwitch.isChecked)
+                    appPreferences.put(Preferences.COME_BACK_PWD, Preferences.BACK_PWD_NO)
             }
         }
     }

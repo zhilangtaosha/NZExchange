@@ -3,7 +3,6 @@ package com.nze.nzexchange.controller.main
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
@@ -13,14 +12,15 @@ import android.widget.Toast
 import com.leiyun.fingerprint.FingerprintDialog
 import com.leiyun.fingerprint.FingerprintHelper
 import com.nze.nzeframework.netstatus.NetUtils
+import com.nze.nzeframework.tool.ActivityManager
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.Preferences
-import com.nze.nzexchange.controller.bibi.BibiFragment
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.bibi.BibiFragment
 import com.nze.nzexchange.controller.home.HomeFragment
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.MarketFragment
@@ -67,10 +67,10 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         }
         if (eventCenter.eventCode == EventCode.CODE_APP_TO_FRONT) {
             val pwdType = appPreferences.getInt(Preferences.COME_BACK_PWD, -1)
-            if (pwdType==Preferences.PWD_FINGERPRINT){
+            if (pwdType==Preferences.BACK_PWD_FINGERPRINT){
                 if (FingerprintHelper.isHardwareDetected()) {
                     if (FingerprintHelper.hasEnrolledFingerprints()) {
-                        mDialog.show(supportFragmentManager, "dialog")
+                        mDialog.show(ActivityManager.instance.topActivity()?.supportFragmentManager, "dialog")
                     }
                 }
             }

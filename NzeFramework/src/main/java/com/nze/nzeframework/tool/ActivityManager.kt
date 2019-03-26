@@ -2,6 +2,7 @@ package com.nze.nzeframework.tool
 
 import android.app.Activity
 import android.content.Context
+import android.support.v7.app.AppCompatActivity
 import com.nze.nzeframework.ui.BaseActivity
 import java.util.*
 
@@ -15,6 +16,7 @@ class ActivityManager {
     companion object {
         val instance: ActivityManager by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { ActivityManager() }
     }
+
     private val activityStack: Stack<BaseActivity> by lazy { Stack<BaseActivity>() }
     private var mCurrentAct: Activity? = null
     /**
@@ -34,7 +36,7 @@ class ActivityManager {
     /**
      * 获取当前Activity（栈顶Activity）
      */
-    fun topActivity(): Activity? {
+    fun topActivity(): AppCompatActivity? {
         if (activityStack == null) {
             throw NullPointerException(
                     "Activity stack is Null,your Activity must extend BaseActivity")
@@ -43,7 +45,7 @@ class ActivityManager {
             return null
         }
         val activity = activityStack.lastElement()
-        return activity as Activity
+        return activity as AppCompatActivity
     }
 
     /**
@@ -142,11 +144,11 @@ class ActivityManager {
             return
         }
         mCurrentAct = activityStack.peek() as Activity
-//        while (null != mCurrentAct &&!mCurrentAct.javaClass.equals(cls)) {
-//            // mCurrentAct.finish();
-//            finishActivity(mCurrentAct)
-//            mCurrentAct = activityStack.peek() as Activity
-//        }
+        while (null != mCurrentAct && !(mCurrentAct as Any).javaClass.equals(cls)) {
+            // mCurrentAct.finish();
+            finishActivity(mCurrentAct)
+            mCurrentAct = activityStack.peek() as Activity
+        }
     }
 
 }
