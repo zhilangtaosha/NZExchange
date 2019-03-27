@@ -224,6 +224,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         NLog.i("socketRequestId>>>$socketRequestId")
         NLog.i(param)
         socket?.send(param)
+        
     }
 
     private fun getKlineData() {
