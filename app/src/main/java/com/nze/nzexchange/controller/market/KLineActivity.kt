@@ -8,6 +8,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.NewDealBean
 import com.nze.nzexchange.bean.Soketbean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
@@ -35,17 +36,21 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.annotations.Nls
 import org.json.JSONObject
 import java.util.*
 
+/**
+ * http://www.blue-zero.com/WebSocket/
+ */
 class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFragmentInteractionListener {
-
 
     val transactionNameTv: TextView by lazy { tv_transaction_name_kline }//交易对名称
     val switchLeftIv: ImageView by lazy { iv_switch_left_kline }//左切换按钮
     val switchRightIv: ImageView by lazy { iv_switch_right_kline }
     val marketNameTv: TextView by lazy { tv_market_name_kline }//市场名称
     val pairNameTv: TextView by lazy { tv_pair_name_kline }//交易对名称
+    val backMySelf: ImageView by lazy { iv_back_kline }//回到公司交易平台
 
     val switchIv: ImageView by lazy { iv_switch_kline }//切换全屏按钮
     val selfSelectIv: ImageView by lazy { iv_self_select_kline }//自选按钮
@@ -68,38 +73,46 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         }
     }
     val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
+    val kList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val chartAdapter by lazy { KLineChartAdapter() }
     val fenshiPopup: FenshiPopup by lazy {
+        //切换时间价格
         FenshiPopup(this).apply {
             onItemClick = { position, item ->
-                //                showToast("position>>$position")
                 fenshiTv.text = item
                 when (position) {
                     0 -> {
                         kChart.setMainDrawLine(true)
                     }
-                    in 1..11 -> {
+                    1 -> {
                         kChart.setMainDrawLine(false)
+                        changeTimeRequest(KLineParam.TIME_ONE_MIN)
                     }
                     2 -> {
+                        kChart.setMainDrawLine(false)
+                        changeTimeRequest(KLineParam.TIME_FIVE_MIN)
                     }
                     3 -> {
+                        kChart.setMainDrawLine(false)
+                        changeTimeRequest(KLineParam.TIME_FIFTEEN_MIN)
                     }
                     4 -> {
+                        kChart.setMainDrawLine(false)
+                        changeTimeRequest(KLineParam.TIME_THIRTY_MIN)
                     }
                     5 -> {
+                        kChart.setMainDrawLine(false)
+                        changeTimeRequest(KLineParam.TIME_ONE_HOUR)
                     }
                     6 -> {
                     }
                     7 -> {
+                        kChart.setMainDrawLine(false)
+                        changeTimeRequest(KLineParam.TIME_ONE_DAY)
                     }
                     8 -> {
-                    }
-                    9 -> {
-                    }
-                    10 -> {
-                    }
-                    11 -> {
+                        kChart.setMainDrawLine(false)
+                        changeTimeRequest(KLineParam.TIME_ONE_WEEK)
                     }
                 }
             }
@@ -112,9 +125,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val newDealView: View by lazy { view_new_deal_kline }
     val currencyDetailTv: TextView by lazy { tv_currency_detail_kline }
     val currencyDetailView: View by lazy { view_currency_detail_kline }
-    final val SELECT_ORDER = 0
-    final val SELECT_NEW_DEAL = 1
-    final val SELECT_CURRENCY_DETAIL = 2
+    val SELECT_ORDER = 0
+    val SELECT_NEW_DEAL = 1
+    val SELECT_CURRENCY_DETAIL = 2
     var currentSelect = SELECT_ORDER
 
 
@@ -137,15 +150,17 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     final val K_SHENDU = 1
     var kType: Int = K_FENSHI
 
-    final val DATA_TYPE_INIT = 0
-    final val DATA_TYPE_GET_DATA = 1
-    final val DATA_TYPE_REFRESH = 2
-    final val DATA_TYPE_LISTENER = 3
+    final val DATA_TYPE_INIT = 0//k线初始化
+    final val DATA_TYPE_GET_DATA = 1//k线获取数据
+    final val DATA_TYPE_REFRESH = 2//k线加载历史数据
     var dataType = DATA_TYPE_INIT
 
     private val buyAdapter: KLineBuyAdapter by lazy { KLineBuyAdapter(this) }
     private val sellAdapter: KLineSellAdapter by lazy { KLineSellAdapter(this) }
     private val newDealAdapter: KLineNewDealAdapter by lazy { KLineNewDealAdapter(this) }
+    private val buyList: MutableList<ShenDubean> by lazy { mutableListOf<ShenDubean>() }
+    private val sellList: MutableList<ShenDubean> by lazy { mutableListOf<ShenDubean>() }
+    private val newDealList: MutableList<NewDealBean> by lazy { mutableListOf<NewDealBean>() }
 
     var socketRequestId: String = ""
         get() {
@@ -154,8 +169,12 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val gson: Gson by lazy { Gson() }
     var isSocketOpen: Boolean = false
 
+
     private val marketList: MutableList<String> by lazy {
         mutableListOf<String>("AUS", "火币")
+    }
+    private val marketParamList: MutableList<String> by lazy {
+        mutableListOf<String>(KLineParam.MARKET_MYSELF, KLineParam.MARKET_HUOBI)
     }
     private var marketIndex: Int = 0
 
@@ -173,8 +192,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         buyBtn.setOnClickListener(this)
         saleBtn.setOnClickListener(this)
         transactionNameTv.setOnClickListener(this)
+        switchLeftIv.setOnClickListener(this)
+        switchRightIv.setOnClickListener(this)
 
-        transactionNameTv.text = pairsBean?.transactionPair
+        pairNameTv.text = pairsBean?.transactionPair
 
         fenshiPopup.setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
             if (anchorView != null) {
@@ -184,49 +205,96 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             false
         }
         kChart.adapter = chartAdapter
+
         //默认展示分时图
         kChart.setMainDrawLine(true)
-
         selectKline(kType)
         select(currentSelect)
         // getKData("oneMinute", userBean?.userId ?: System.currentTimeMillis().toString())
-        getKlineData()
+
         getDepthData()
+
+
+        changMarket(0)
+//        initKSocket(KLineParam.MARKET_MYSELF)
+//        test()
+    }
+
+    private fun test() {
+
+        getKlineData()
 
         buyAdapter.group = ShenDubean.getList()
         buyLv.adapter = buyAdapter
 
         sellAdapter.group = ShenDubean.getList()
         sellLv.adapter = sellAdapter
-
-        newDealAdapter.group = ShenDubean.getList()
-        newDealLv.adapter = newDealAdapter
-
-        initKSocket(KLineParam.MARKET_MYSELF)
-
     }
 
     //ws://192.168.1.101:800/btcbch/007/fivesMinute
     private fun initKSocket(market: String) {
+//        if (nWebSocket!=null&&socket != null) {
+//            nWebSocket?.close()
+//            socket?.cancel()
+//            socket = null
+//            nWebSocket = null
+//        }
 //        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/${pairsBean?.currency?.toLowerCase()}${pairsBean?.mainCurrency?.toLowerCase()}/${userId}/${type}", wsListener)
+        socket?.cancel()
         dataType = DATA_TYPE_INIT
         nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/$market", wsListener)
         socket = nWebSocket?.open()
+
     }
 
-    private fun socketRequst() {
+    /**
+     * 获取K线数据
+     */
+    private fun getKDataRequest() {
+        chartData.clear()
         dataType = DATA_TYPE_GET_DATA
         val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
-        requestBean.params.add("BTCBCH")
-        requestBean.params.add(KLineParam.TIME_ONE_DAY)
+        if (marketIndex % marketList.size == 0) {
+            requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
+        } else {
+            requestBean.params.add("${pairsBean?.mainCurrency?.toUpperCase()}${pairsBean?.currency?.toUpperCase()}")
+        }
+        requestBean.params.add(KLineParam.TIME_ONE_MIN)
         requestBean.params.add(socketRequestId)
         val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
         NLog.i("socketRequestId>>>$socketRequestId")
-        NLog.i(param)
+        NLog.i("getKDataRequest>>$param")
         socket?.send(param)
-        
     }
 
+    /**
+     * 切换k线时间间隔
+     */
+    private fun changeTimeRequest(time: String) {
+        chartData.clear()
+        dataType = DATA_TYPE_GET_DATA
+        val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_CHANGE_TIME, mutableListOf<String>())
+        requestBean.params.add(time)
+        val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
+        NLog.i("changeTimeRequest>>$param")
+        socket?.send(param)
+    }
+
+    /**
+     * k线加载更多历史数据
+     */
+    private fun loadMoreRequest(oldTime: String) {
+        dataType = DATA_TYPE_REFRESH
+        val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_HISTORY, mutableListOf<String>())
+        requestBean.params.add(oldTime)
+        val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
+        NLog.i("loadMoreRequest>>$param")
+        socket?.send(param)
+    }
+
+    /**
+     * K线测试数据
+     */
     private fun getKlineData() {
         Observable.create<List<KLineEntity>> {
             val list = DataRequest.getALL(this@KLineActivity).subList(0, 500)
@@ -243,6 +311,25 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     }
 
+    /**
+     * 切换市场
+     */
+    fun changMarket(index: Int) {
+        val len = marketList.size
+        val i = index % len
+        marketNameTv.text = marketList[i]
+//        if (nWebSocket != null && socket != null) {
+//            nWebSocket?.close()
+//            socket?.close(1000, "")
+//            socket = null
+//            nWebSocket = null
+//        }
+        initKSocket(marketParamList[i])
+    }
+
+    /**
+     * 深度图测试数据
+     */
     private fun getDepthData() {
         val jsonData = DepthData.depthB
         val listDepthBuy = ArrayList<DepthDataBean>()
@@ -279,6 +366,12 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.iv_switch_left_kline -> {
+                changMarket(Math.abs(--marketIndex))
+            }
+            R.id.iv_switch_right_kline -> {
+                changMarket(Math.abs(++marketIndex))
+            }
             R.id.tv_fenshi_kline -> {
                 if (kType == K_FENSHI) {
                     fenshiPopup.showPopupWindow(fenshiLayout)
@@ -365,8 +458,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         override fun onOpen(webSocket: WebSocket, response: Response) {
             super.onOpen(webSocket, response)
             isSocketOpen = true
-            socketRequst()
             NLog.i("onOpen")
+//            if (marketIndex == 0)
+                getKDataRequest()
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
@@ -379,37 +473,75 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             NLog.i("onClosing")
         }
 
+        val DATA_K = 0
+        val DATA_HANDICAP = 1
+        val DATE_NEW_DEAL = 2
         override fun onMessage(webSocket: WebSocket, text: String) {
             NLog.i("text>>>$text")
-            when (dataType) {
-                DATA_TYPE_INIT -> {
-                }
-                DATA_TYPE_GET_DATA -> {
-                    Observable.create<List<KLineEntity>> {
-                        var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
-                        val lineK = soketbean.lineK
-                        val handicap = soketbean.handicap
-                        val list: MutableList<KLineEntity> = mutableListOf()
-                        lineK?.result?.forEach {
+
+            Observable.create<Int> {
+                var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
+                val lineK = soketbean.lineK
+                val handicap = soketbean.handicap
+                val latestDeal = soketbean.latestDeal
+                if (lineK != null) {
+                    kList.clear()
+                    lineK.result?.let {
+                        it.forEach {
                             val bean = KLineEntity()
-                            bean.Date = TimeTool.format(TimeTool.PATTERN7, it[0])
-//                            bean.Open = it[1]
-
+                            bean.Date = TimeTool.format(TimeTool.PATTERN7, it[0].toLong() * 1000)
+                            bean.Open = it[1].toFloat()
+                            bean.Close = it[2].toFloat()
+                            bean.High = it[3].toFloat()
+                            bean.Low = it[4].toFloat()
+                            bean.Volume = it[5].toFloat()
+                            kList.add(bean)
                         }
-                    }.subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {
+                    }
+                    it.onNext(DATA_K)
+                }
 
+                if (handicap != null) {
+                    buyList.clear()
+                    handicap.asks?.forEach {
+                        val bean = ShenDubean(it[1], it[0])
+                        buyList.add(bean)
+                    }
+                    sellList.clear()
+                    handicap.bids?.forEach {
+                        val bean = ShenDubean(it[1], it[0])
+                        sellList.add(bean)
+                    }
+                    it.onNext(DATA_HANDICAP)
+                }
+
+                if (latestDeal != null) {
+                    newDealList.clear()
+                    newDealList.addAll(latestDeal)
+                    it.onNext(DATE_NEW_DEAL)
+                }
+            }.subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        when (it) {
+                            DATA_K -> {//k线数据
+                                chartData.addAll(kList)
+                                chartAdapter.addFooterData(chartData)
+                                chartAdapter.notifyDataSetChanged()
                             }
-                }
-                DATA_TYPE_REFRESH -> {
-                }
-                DATA_TYPE_LISTENER -> {
-                }
-                else -> {
-                }
-            }
+                            DATA_HANDICAP -> {//盘口数据
+                                buyAdapter.group = buyList
+                                buyLv.adapter = buyAdapter
 
+                                sellAdapter.group = sellList
+                                sellLv.adapter = sellAdapter
+                            }
+                            DATE_NEW_DEAL -> {//最新成交数据
+                                newDealAdapter.group = newDealList
+                                newDealLv.adapter = newDealAdapter
+                            }
+                        }
+                    }
 
             super.onMessage(webSocket, text)
         }
@@ -422,6 +554,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
             super.onClosed(webSocket, code, reason)
             NLog.i("onClosed")
+//            if (isChangeMarket) {
+//                initKSocket(marketParamList[marketIndex % marketList.size])
+//            }
         }
     }
 

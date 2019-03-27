@@ -3,12 +3,13 @@ package com.nze.nzexchange.bean
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
- * @类 说 明:
+ * @类 说 明:  K线页面Socket实体
  * @创建时间：2019/1/23
  */
 data class Soketbean(
         val lineK: LineKBean?,
-        val handicap: Handicap?
+        val handicap: Handicap?,
+        val latestDeal: List<NewDealBean>?
 ) {
 
     companion object {
@@ -17,17 +18,30 @@ data class Soketbean(
 }
 
 /**
- *
+ *K线数据
  */
 data class LineKBean(
-        val result: Array<Array<Long>>?,
+        val result: Array<Array<String>>?,
         val type: String
 )
 
-
+/**
+ * k线盘口
+ */
 data class Handicap(
         val asks: Array<Array<String>>?,//买入
         val bids: Array<Array<String>>?//卖出
 ) {
 
 }
+
+/**
+ * k线实时成交
+ */
+data class NewDealBean(
+        val amount: String,
+        val id: String,
+        val price: String,
+        val time: Double,
+        val type: String
+)

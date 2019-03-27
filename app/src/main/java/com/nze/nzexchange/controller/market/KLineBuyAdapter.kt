@@ -20,7 +20,8 @@ class KLineBuyAdapter(mContext: Context) : NBaseAda<ShenDubean, KLineBuyAdapter.
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: ShenDubean, position: Int) {
-
+        vh.amountTv.text = item.amount
+        vh.priceTv.text = item.price
     }
 
 
