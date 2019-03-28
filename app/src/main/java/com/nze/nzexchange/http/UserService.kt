@@ -16,12 +16,13 @@ interface UserService {
     //注册
     @FormUrlEncoded
     @POST("meRunBus/meMemb/save_meMemb_regBus.json")
-    fun register(@Field("userPhone") userPhone: String?,
-                 @Field("userEmail") userEmail: String?,
-                 @Field("userName") userName: String?,
-                 @Field("userPassworUcode") userPassworUcode: String,
-                 @Field("checkcodeId") checkcodeId: String?,
-                 @Field("checkcodeVal") checkcodeVal: String?
+    fun register(@Field("userPhone") userPhone: String?,//手机注册
+                 @Field("userPhonePrecode") userPhonePrecode: String?,//国家电话区号
+                 @Field("userEmail") userEmail: String?,//邮箱注册
+                 @Field("userPassworUcode") userPassworUcode: String,//密码
+                 @Field("checkcodeId") checkcodeId: String,//验证码id
+                 @Field("checkcodeVal") checkcodeVal: String,//验证码
+                 @Field("membCountry") membCountry: String?//国家码
     ): Flowable<Result<Any>>
 
 
@@ -134,7 +135,7 @@ interface UserService {
 
     //设置支付密码
     @FormUrlEncoded
-    @POST("/meRunBus/meBuspw/resetBuspwByCheckcode_pay.json")
+    @POST("meRunBus/meBuspw/resetBuspwByCheckcode_pay.json")
     fun setBuspw(
             @Field("checkcodeId") checkcodeId: String,
             @Field("checkcodeVal") checkcodeVal: String,
@@ -142,4 +143,14 @@ interface UserService {
             @Field("newBuspwUcode") newBuspwUcode: String
     ): Flowable<Result<Any>>
 
+    //绑定手机
+    @FormUrlEncoded
+    @POST("manaTokenAllBus/manaToken_bindUserPhone_curToken.json")
+    fun bindPhone(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("checkcodeId") checkcodeId: String,
+            @Field("checkcodeVal") checkcodeVal: String,
+            @Field("userPhone") userPhone: String
+    ): Flowable<Result<Any>>
 }

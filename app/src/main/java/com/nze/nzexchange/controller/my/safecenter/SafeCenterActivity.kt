@@ -9,8 +9,10 @@ import com.leiyun.fingerprint.FingerprintHelper
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.extend.setTxtColor
 import kotlinx.android.synthetic.main.activity_safe_center.*
 import net.grandcentrix.tray.AppPreferences
 
@@ -26,7 +28,7 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
     val modifyPasswordIv: ImageView by lazy { iv_modify_password_asc }//修改登录密码
     val appPreferences: AppPreferences by lazy { AppPreferences(this) }
     var pwdType: Int = Preferences.BACK_PWD_NO
-
+    var userBean = UserBean.loadFromApp()
 
     override fun getRootView(): Int = R.layout.activity_safe_center
 
@@ -76,6 +78,32 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
                 if (!gesturePasswordSwitch.isChecked)
                     appPreferences.put(Preferences.COME_BACK_PWD, Preferences.BACK_PWD_NO)
             }
+        }
+
+        userBean?.let {
+            if (it.userPhone.isNullOrEmpty()) {
+                bindTv(bindPhoneTv, false)
+            } else {
+                bindTv(bindPhoneTv, true)
+            }
+            if (it.userEmail.isNullOrEmpty()) {
+                bindTv(bindEmailTv, false)
+            } else {
+                bindTv(bindEmailTv, true)
+            }
+
+        }
+    }
+
+    fun bindTv(tv: TextView, isBind: Boolean) {
+        if (isBind) {
+            tv.setTxtColor(R.color.color_FF676C7A)
+            tv.text = "已绑定"
+            tv.isClickable = false
+        } else {
+            tv.setTxtColor(R.color.color_main)
+            tv.text = "未绑定"
+            tv.isClickable = true
         }
     }
 

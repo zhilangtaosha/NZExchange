@@ -43,6 +43,9 @@ class SelectCountryActivity : NBaseActivity() {
     override fun initView() {
         mSideBar.setTextView(mDialogTv)
 
+        mCancelTv.setOnClickListener {
+            onBackPressed()
+        }
         Collections.sort(mAllCountryList, mComparator)
         mListView.adapter = mSortAdapter
 

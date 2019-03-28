@@ -8,18 +8,21 @@
     android:orientation="vertical"
     tools:context=".controller.login.EmailRegisterActivity">
 
-    <com.nze.nzexchange.widget.CommonTopBar
-        android:id="@+id/ctb_aer"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        app:tb_backgroud="@color/color_bg"
-        app:tb_title_text="邮箱注册" />
+    <TextView
+        android:id="@+id/tv_cancel_aer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/tx15_main"
+        android:text="取消"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="30dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="邮箱注册"
         android:textColor="@color/color_common"
         android:textSize="24sp" />
@@ -48,7 +51,7 @@
             style="@style/tx15_light"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableRight="@mipmap/open_icon"
+            android:drawableRight="@mipmap/open_white_icon"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:text="中国"
@@ -87,7 +90,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:hint="请输入邮箱验证码" />
+            android:hint="请输入邮箱验证码"
+            android:inputType="number"
+            android:maxLength="4" />
 
         <com.nze.nzexchange.widget.VerifyButton
             android:id="@+id/tv_verify_aer"
@@ -212,7 +217,7 @@
             android:id="@+id/tv_to_login_aer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20dp"
+            android:padding="10dp"
             android:text="已有账号？"
             android:textColor="@color/color_FF7F8592"
             android:textSize="15sp" />

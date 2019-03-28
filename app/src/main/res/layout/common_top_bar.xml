@@ -15,8 +15,8 @@
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:textColor="#333333"
-        android:textSize="14sp" />
+        android:drawablePadding="5dp"
+        style="@style/tx15_main" />
 
     <TextView
         android:id="@+id/tv_title_tb"

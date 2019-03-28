@@ -2,6 +2,7 @@ package com.nze.nzexchange.bean
 
 import com.nze.nzexchange.http.CRetrofit
 import io.reactivex.Flowable
+import retrofit2.http.Field
 
 /**
  * @author: zwy
@@ -44,18 +45,19 @@ data class RegisterBean(
         val userPhone: String
 ) {
     companion object {
-        fun registerNet(userPhone: String?,
-                        userEmail: String?,
-                        userName: String?,
-                        userPassworUcode: String,
-                        checkcodeId: String?,
-                        checkcodeVal: String?): Flowable<Result<Any>>{
+        fun registerNet(userPhone: String?,//手机注册
+                        userPhonePrecode: String?,//国家电话区号
+                        userEmail: String?,//邮箱注册
+                        userPassworUcode: String,//密码
+                        checkcodeId: String,//验证码id
+                        checkcodeVal: String,//验证码
+                        membCountry: String?//国家码
+        ): Flowable<Result<Any>> {
             return Flowable.defer {
                 CRetrofit.instance
                         .userService()
-                        .register(userPhone, userEmail, userName, userPassworUcode, checkcodeId, checkcodeVal)
+                        .register(userPhone, userPhonePrecode, userEmail, userPassworUcode, checkcodeId, checkcodeVal, membCountry)
             }
-
 
 
         }

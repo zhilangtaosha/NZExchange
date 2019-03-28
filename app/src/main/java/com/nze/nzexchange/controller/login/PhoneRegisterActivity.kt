@@ -11,15 +11,16 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.bean.RegisterBean
+import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.setTextFromHtml
-import com.nze.nzexchange.bean.Result
-import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
+import com.nze.nzexchange.validation.PasswordValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.VerifyButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
@@ -33,7 +34,6 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     val REQUEST_CODE = 0x112
     var countryName = "中国"
     var countryNumber = "+86"
-    val countryTv: TextView by lazy { tv_country_apr }
     val countryCodeTv: TextView by lazy { tv_country_code_apr }
     val phoneEt: ClearableEditText by lazy { et_phone_apr }
     val verifyEt: ClearableEditText by lazy { et_verify_apr }
@@ -48,18 +48,18 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     override fun getRootView(): Int = R.layout.activity_phone_register
 
     override fun initView() {
-        ctb_apr.setRightClick {
+        tv_cancel_apr.setOnClickListener {
             this@PhoneRegisterActivity.finish()
         }
         tv_to_login_apr.setTextFromHtml("已有账号？<font color=\"#6D87A8\">登录</font>")
         tv_go_email_apr.setOnClickListener(this)
         tv_to_login_apr.setOnClickListener(this)
-        countryTv.setOnClickListener(this)
+        countryCodeTv.setOnClickListener(this)
 
         registerBtn.initValidator()
                 .add(phoneEt, EmptyValidation())
                 .add(verifyEt, EmptyValidation())
-                .add(pwdEt, EmptyValidation())
+                .add(pwdEt, PasswordValidation())
                 .executeValidator()
 
         verifyButton.setVerifyClick(this)
@@ -85,7 +85,6 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     override fun getContainerTargetView(): View? = null
 
 
-
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_go_email_apr -> {
@@ -98,11 +97,16 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
             }
-            R.id.tv_country_apr -> {
+            R.id.tv_country_code_apr -> {
                 startActivityForResult(Intent(this@PhoneRegisterActivity, SelectCountryActivity::class.java), REQUEST_CODE)
             }
             R.id.tv_verify_apr -> {
-                VerifyBean.getVerifyCodeNet(phoneEt.getContent(), VerifyBean.TYPE_REGISTER)
+                var phone = phoneEt.getContent()
+                if (phone.isNullOrEmpty()) {
+                    showToast("请输入邮箱号码")
+                    return
+                }
+                VerifyBean.getVerifyCodeNet(phone, VerifyBean.TYPE_REGISTER)
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {
@@ -117,10 +121,13 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                     showToast("请先获取验证码")
                     return
                 }
-
+                if (!agreeCb.isChecked) {
+                    showToast("请先同意用户协议")
+                    return
+                }
                 if (registerBtn.validate()) {
                     val pwdStr = MD5Tool.getMd5_32(pwdEt.getContent())
-                    RegisterBean.registerNet(phoneEt.getContent(), null, null, pwdStr, checkcodeId, verifyEt.getContent())
+                    RegisterBean.registerNet(phoneEt.getContent(), countryNumber.substring(1), null, pwdStr, checkcodeId!!, verifyEt.getContent(), null)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .flatMap {
@@ -129,7 +136,7 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                                     LoginBean.login(phoneEt.getContent(), pwdStr)
                                             .subscribeOn(Schedulers.io())
                                 } else {
-                                    Flowable.error<String>(Throwable("注册失败"))
+                                    Flowable.error<String>(Throwable(it.message))
                                 }
                             }
                             .observeOn(AndroidSchedulers.mainThread())
@@ -156,7 +163,6 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                 countryName = getStringExtra(IntentConstant.PARAM_COUNTRY_NAME)
                 countryNumber = getStringExtra(IntentConstant.PARAM_COUNTRY_NUMBER)
             }
-            countryTv.text = countryName
             countryCodeTv.text = countryNumber
         }
         super.onActivityResult(requestCode, resultCode, data)

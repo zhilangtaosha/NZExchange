@@ -99,7 +99,7 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
                                 }
 
                             }, {
-                                showToast("登录失败")
+                                showToast("登录失败,登录账号或者密码错误")
                             })
                 }
             }

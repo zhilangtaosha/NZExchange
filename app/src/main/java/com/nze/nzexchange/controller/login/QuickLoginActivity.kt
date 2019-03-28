@@ -20,7 +20,7 @@ class QuickLoginActivity : NBaseActivity() {
 
     override fun initView() {
         btn1_aql.setOnClickListener {
-            loginNet("1@163.com", "123456")
+            loginNet("16681805@qq.com", "nz123456")
         }
         btn2_aql.setOnClickListener {
             loginNet("18666666666", "123456")
@@ -30,6 +30,9 @@ class QuickLoginActivity : NBaseActivity() {
         }
         btn4_aql.setOnClickListener {
             loginNet("zhouweiyong55@163.com", "123456")
+        }
+        btn5_aql.setOnClickListener {
+            loginNet("13603041983", "nz123456")
         }
     }
 
