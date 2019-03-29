@@ -34,7 +34,7 @@ public class DataRequest {
         if (datas == null) {
             final List<KLineEntity> data = new Gson().fromJson(getStringFromAssert(context, "ibm.json"), new TypeToken<List<KLineEntity>>() {
             }.getType());
-            DataHelper.calculate(data);
+//            DataHelper.calculate(data);
             datas = data;
         }
         return datas;

@@ -35,7 +35,7 @@ public class KLineChartAdapter extends BaseKLineChartAdapter {
      */
     public void addHeaderData(List<KLineEntity> data) {
         if (data != null && !data.isEmpty()) {
-            datas.clear();
+//            datas.clear();
             datas.addAll(data);
         }
     }
@@ -45,7 +45,7 @@ public class KLineChartAdapter extends BaseKLineChartAdapter {
      */
     public void addFooterData(List<KLineEntity> data) {
         if (data != null && !data.isEmpty()) {
-            datas.clear();
+//            datas.clear();
             datas.addAll(0, data);
         }
     }

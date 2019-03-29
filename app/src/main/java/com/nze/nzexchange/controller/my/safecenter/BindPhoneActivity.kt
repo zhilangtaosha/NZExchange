@@ -67,7 +67,11 @@ class BindPhoneActivity : NBaseActivity(), View.OnClickListener {
                             .bindPhone(userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, checkcodeId!!, verifyEt.getContent(), phoneEt.getContent())
                             .compose(netTfWithDialog())
                             .subscribe({
-                                NLog.i("")
+                                if (it.success) {
+
+                                } else {
+                                    
+                                }
                             }, onError)
                 }
             }

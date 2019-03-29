@@ -73,8 +73,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         }
     }
     val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
-    val kList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
+    val kNowList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
+    val kNewList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
+    val kOldList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val chartAdapter by lazy { KLineChartAdapter() }
+    var pattern: String = TimeTool.PATTERN5
     val fenshiPopup: FenshiPopup by lazy {
         //切换时间价格
         FenshiPopup(this).apply {
@@ -82,35 +85,44 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 fenshiTv.text = item
                 when (position) {
                     0 -> {
+                        pattern = TimeTool.PATTERN5
                         kChart.setMainDrawLine(true)
-                    }
-                    1 -> {
-                        kChart.setMainDrawLine(false)
                         changeTimeRequest(KLineParam.TIME_ONE_MIN)
                     }
+                    1 -> {
+                        pattern = TimeTool.PATTERN5
+                        kChart.setMainDrawLine(false)
+//                        changeTimeRequest(KLineParam.TIME_ONE_MIN)
+                    }
                     2 -> {
+                        pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
                         changeTimeRequest(KLineParam.TIME_FIVE_MIN)
                     }
                     3 -> {
+                        pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
                         changeTimeRequest(KLineParam.TIME_FIFTEEN_MIN)
                     }
                     4 -> {
+                        pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
                         changeTimeRequest(KLineParam.TIME_THIRTY_MIN)
                     }
                     5 -> {
+                        pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
                         changeTimeRequest(KLineParam.TIME_ONE_HOUR)
                     }
                     6 -> {
                     }
                     7 -> {
+                        pattern = TimeTool.PATTERN10
                         kChart.setMainDrawLine(false)
                         changeTimeRequest(KLineParam.TIME_ONE_DAY)
                     }
                     8 -> {
+                        pattern = TimeTool.PATTERN10
                         kChart.setMainDrawLine(false)
                         changeTimeRequest(KLineParam.TIME_ONE_WEEK)
                     }
@@ -154,6 +166,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     final val DATA_TYPE_GET_DATA = 1//k线获取数据
     final val DATA_TYPE_REFRESH = 2//k线加载历史数据
     var dataType = DATA_TYPE_INIT
+    val KLINE_TYPE_NOWLINEK = "nowLineK"
+    val KLINE_TYPE_OLDLINEK = "oldLineK"
+    val KLINE_TYPE_NEWLINEK = "newLineK"
 
     private val buyAdapter: KLineBuyAdapter by lazy { KLineBuyAdapter(this) }
     private val sellAdapter: KLineSellAdapter by lazy { KLineSellAdapter(this) }
@@ -215,9 +230,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         getDepthData()
 
 
+//        test()
         changMarket(0)
 //        initKSocket(KLineParam.MARKET_MYSELF)
-//        test()
     }
 
     private fun test() {
@@ -251,7 +266,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
      * 获取K线数据
      */
     private fun getKDataRequest() {
-        chartData.clear()
         dataType = DATA_TYPE_GET_DATA
         val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
         if (marketIndex % marketList.size == 0) {
@@ -271,7 +285,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
      * 切换k线时间间隔
      */
     private fun changeTimeRequest(time: String) {
-        chartData.clear()
+        chartAdapter.clearData()
         dataType = DATA_TYPE_GET_DATA
         val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_CHANGE_TIME, mutableListOf<String>())
         requestBean.params.add(time)
@@ -298,14 +312,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private fun getKlineData() {
         Observable.create<List<KLineEntity>> {
             val list = DataRequest.getALL(this@KLineActivity).subList(0, 500)
-            DataHelper.calculate(list)
+//            DataHelper.calculate(list)
             it.onNext(list)
             it.onComplete()
         }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     chartData.addAll(it)
-                    chartAdapter.addFooterData(chartData)
+                    chartAdapter.addFooterData(it)
                     chartAdapter.notifyDataSetChanged()
                 }
 
@@ -324,6 +338,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 //            socket = null
 //            nWebSocket = null
 //        }
+        chartAdapter.clearData()
         initKSocket(marketParamList[i])
     }
 
@@ -460,7 +475,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             isSocketOpen = true
             NLog.i("onOpen")
 //            if (marketIndex == 0)
-                getKDataRequest()
+            getKDataRequest()
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
@@ -476,29 +491,49 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         val DATA_K = 0
         val DATA_HANDICAP = 1
         val DATE_NEW_DEAL = 2
+        val DATA_NOW_LINEK = 3
+        val DATA_OLD_LINEK = 4
+        val DATA_NEW_LINEK = 5
         override fun onMessage(webSocket: WebSocket, text: String) {
             NLog.i("text>>>$text")
-
             Observable.create<Int> {
                 var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
                 val lineK = soketbean.lineK
                 val handicap = soketbean.handicap
                 val latestDeal = soketbean.latestDeal
                 if (lineK != null) {
-                    kList.clear()
+                    val kList = mutableListOf<KLineEntity>()
                     lineK.result?.let {
                         it.forEach {
                             val bean = KLineEntity()
-                            bean.Date = TimeTool.format(TimeTool.PATTERN7, it[0].toLong() * 1000)
-                            bean.Open = it[1].toFloat()
-                            bean.Close = it[2].toFloat()
-                            bean.High = it[3].toFloat()
-                            bean.Low = it[4].toFloat()
-                            bean.Volume = it[5].toFloat()
+                            bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
+                            bean.Open = it[1].toFloat() * 100000
+                            bean.Close = it[2].toFloat() * 100000
+                            bean.High = it[3].toFloat() * 100000
+                            bean.Low = it[4].toFloat() * 100000
+                            bean.Volume = it[5].toFloat() * 100000
                             kList.add(bean)
                         }
+                        kList.sortBy { TimeTool.dateToStamp(it.Date, pattern) }
+//                        DataHelper.calculate(kList)
                     }
-                    it.onNext(DATA_K)
+                    when (lineK.type) {
+                        KLINE_TYPE_NOWLINEK -> {
+                            kNowList.clear()
+                            kNowList.addAll(kList)
+                            it.onNext(DATA_NOW_LINEK)
+                        }
+                        KLINE_TYPE_NEWLINEK -> {
+                            kNewList.clear()
+                            kNewList.addAll(kList)
+                            it.onNext(DATA_NEW_LINEK)
+                        }
+                        KLINE_TYPE_OLDLINEK -> {
+                            kOldList.clear()
+                            kOldList.addAll(kList)
+                            it.onNext(DATA_OLD_LINEK)
+                        }
+                    }
                 }
 
                 if (handicap != null) {
@@ -524,9 +559,20 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         when (it) {
-                            DATA_K -> {//k线数据
-                                chartData.addAll(kList)
-                                chartAdapter.addFooterData(chartData)
+                            DATA_NOW_LINEK -> {//k线数据
+//                                chartData.addAll(kList)
+                                NLog.i("nowLineK>>>>>>>>>>")
+                                chartAdapter.addFooterData(kNowList)
+//                                chartAdapter.addFooterData(chartData)
+                                chartAdapter.notifyDataSetChanged()
+                            }
+                            DATA_NEW_LINEK -> {
+                                NLog.i("newLineK>>>>>>>>>")
+                                chartAdapter.addHeaderData(kNewList)
+                                chartAdapter.notifyDataSetChanged()
+                            }
+                            DATA_OLD_LINEK -> {
+                                chartAdapter.addFooterData(kOldList)
                                 chartAdapter.notifyDataSetChanged()
                             }
                             DATA_HANDICAP -> {//盘口数据

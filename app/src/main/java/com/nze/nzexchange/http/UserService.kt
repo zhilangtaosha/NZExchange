@@ -153,4 +153,15 @@ interface UserService {
             @Field("checkcodeVal") checkcodeVal: String,
             @Field("userPhone") userPhone: String
     ): Flowable<Result<Any>>
+
+    //绑定邮箱
+    @FormUrlEncoded
+    @POST("manaTokenAllBus/manaToken_bindUserEmail_curToken.json")
+    fun bindEmail(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("checkcodeId") checkcodeId: String,
+            @Field("checkcodeVal") checkcodeVal: String,
+            @Field("userEmail") userEmail: String
+    ): Flowable<Result<Any>>
 }

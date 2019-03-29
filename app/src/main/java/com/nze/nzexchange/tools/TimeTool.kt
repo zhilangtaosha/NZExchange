@@ -20,6 +20,8 @@ class TimeTool {
         const val PATTERN6 = "yyyy/MM/dd HH:mm:ss"
         const val PATTERN7 = "yyyy/MM/dd"
         const val PATTERN8 = "HH:mm:ss"
+        const val PATTERN9 = "MM-dd HH:mm"
+        const val PATTERN10 = "yyyy-MM-dd"
 
 
         fun date(): Date = Date()
@@ -56,5 +58,19 @@ class TimeTool {
                 "00:00:00"
             }
         }
+
+
+        //时间转时间戳
+        fun dateToStamp(date: String, pattern: String): Long {
+            val sdf = SimpleDateFormat(pattern,Locale.CHINA)
+            try {
+                val date = sdf.parse(date)
+                return date.time / 1000
+            } catch (e: Exception) {
+                return 0
+            }
+        }
     }
+
+
 }

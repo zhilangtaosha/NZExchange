@@ -3,11 +3,13 @@ package com.nze.nzexchange.controller.my.safecenter
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.VerifyButton
@@ -55,6 +57,19 @@ class BindEmailActivity : NBaseActivity(), View.OnClickListener {
                         }, onError)
             }
             R.id.btn_confirm_abe -> {
+                if (checkcodeId.isNullOrEmpty()) {
+                    showToast("请先获取验证码")
+                    return
+                }
+                if (confirmBtn.validate()) {
+                    CRetrofit.instance
+                            .userService()
+                            .bindEmail(userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, checkcodeId!!, verifyEt.getContent(), emailEt.getContent())
+                            .compose(netTfWithDialog())
+                            .subscribe({
+                                NLog.i("")
+                            }, onError)
+                }
             }
         }
     }
