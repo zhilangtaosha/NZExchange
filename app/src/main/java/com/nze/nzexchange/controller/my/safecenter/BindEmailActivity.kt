@@ -4,9 +4,11 @@ import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean.VerifyBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.CRetrofit
@@ -15,6 +17,7 @@ import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.VerifyButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import kotlinx.android.synthetic.main.activity_bind_email.*
+import org.greenrobot.eventbus.EventBus
 
 class BindEmailActivity : NBaseActivity(), View.OnClickListener {
 
@@ -67,7 +70,13 @@ class BindEmailActivity : NBaseActivity(), View.OnClickListener {
                             .bindEmail(userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, checkcodeId!!, verifyEt.getContent(), emailEt.getContent())
                             .compose(netTfWithDialog())
                             .subscribe({
-                                NLog.i("")
+                                if (it.success) {
+                                    NzeApp.instance.userBean?.userEmail = emailEt.getContent()
+                                    EventBus.getDefault().post(EventCenter<String>(EventCode.CODE_REFRESH_USERBEAN))
+                                    this.finish()
+                                } else {
+                                    showToast(it.message)
+                                }
                             }, onError)
                 }
             }

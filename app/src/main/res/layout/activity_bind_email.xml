@@ -61,6 +61,8 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="30dp"
             android:layout_weight="1"
+            android:maxLength="4"
+            android:inputType="number"
             android:hint="请输入邮箱验证码" />
 
         <com.nze.nzexchange.widget.VerifyButton

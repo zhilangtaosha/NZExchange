@@ -502,20 +502,32 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 val handicap = soketbean.handicap
                 val latestDeal = soketbean.latestDeal
                 if (lineK != null) {
-                    val kList = mutableListOf<KLineEntity>()
+                    var kList = mutableListOf<KLineEntity>()
                     lineK.result?.let {
-                        it.forEach {
+                        it.forEachIndexed { index, it ->
                             val bean = KLineEntity()
-                            bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
-                            bean.Open = it[1].toFloat() * 100000
-                            bean.Close = it[2].toFloat() * 100000
-                            bean.High = it[3].toFloat() * 100000
-                            bean.Low = it[4].toFloat() * 100000
-                            bean.Volume = it[5].toFloat() * 100000
+//                            bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
+                            bean.Date = it[0]
+                            bean.Open = it[1].toFloat()
+                            bean.Close = it[2].toFloat()
+                            bean.High = it[3].toFloat()
+                            bean.Low = it[4].toFloat()
+                            bean.Volume = it[5].toFloat()
+                            if (bean.High < bean.Open || bean.High < bean.Close || bean.High < bean.Low) {
+                                NLog.i("最高值出错>>>index=$index")
+                            }
+                            if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
+                                NLog.i("最小值出错>>>index=$index")
+                            }
                             kList.add(bean)
                         }
-                        kList.sortBy { TimeTool.dateToStamp(it.Date, pattern) }
-//                        DataHelper.calculate(kList)
+//                        kList.sortBy { TimeTool.dateToStamp(it.Date, pattern) }
+                        kList=  kList.distinctBy { it.date.toLong() }.toMutableList()
+                        kList.sortBy { it.date.toLong() }
+                        kList.forEach {
+                            it.Date = TimeTool.format(pattern,it.Date.toLong() * 1000)
+                        }
+                        DataHelper.calculate(kList)
                     }
                     when (lineK.type) {
                         KLINE_TYPE_NOWLINEK -> {

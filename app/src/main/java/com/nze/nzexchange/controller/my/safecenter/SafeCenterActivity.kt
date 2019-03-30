@@ -10,6 +10,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.setTxtColor
@@ -80,6 +81,10 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
             }
         }
 
+        refreshView()
+    }
+
+    fun refreshView() {
         userBean?.let {
             if (it.userPhone.isNullOrEmpty()) {
                 bindTv(bindPhoneTv, false)
@@ -108,12 +113,15 @@ class SafeCenterActivity : NBaseActivity(), View.OnClickListener {
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (eventCenter.eventCode == EventCode.CODE_REFRESH_USERBEAN) {
+            userBean = UserBean.loadFromApp()
+            refreshView()
+        }
     }
 
     override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 
