@@ -486,7 +486,7 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/tv_coin_name_kline"
+                    android:id="@+id/tv_token_name_kline"
                     style="@style/tx18_light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -497,7 +497,7 @@
                     style="@style/tx15_hint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_coin_name_kline"
+                    android:layout_below="@+id/tv_token_name_kline"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="发行时间" />
@@ -595,6 +595,103 @@
                     android:layout_height="1dp"
                     android:layout_below="@+id/crowd_funding_price_key_kline"
                     android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/white_paper_key_kline"
+                    style="@style/tx15_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_crowd_funding_price_kline"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="白皮书" />
+
+                <TextView
+                    android:id="@+id/white_paper_value_kline"
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/white_paper_key_kline"
+                    android:layout_alignParentRight="true"
+                    android:text="--" />
+
+                <View
+                    android:id="@+id/view_white_paper_key_kline_kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/white_paper_key_kline"
+                    android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/official_website_key_kline"
+                    style="@style/tx15_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_white_paper_key_kline_kline"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="官网" />
+
+                <TextView
+                    android:id="@+id/official_website_value_kline"
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/official_website_key_kline"
+                    android:layout_alignParentRight="true"
+                    android:text="--" />
+
+                <View
+                    android:id="@+id/view_official_website_kline_kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/official_website_key_kline"
+                    android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/block_query_key_kline"
+                    style="@style/tx15_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_official_website_kline_kline"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="区块链查询" />
+
+                <TextView
+                    android:id="@+id/block_query_value_kline"
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/block_query_key_kline"
+                    android:layout_alignParentRight="true"
+                    android:text="--" />
+
+                <View
+                    android:id="@+id/view_block_query_kline"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/block_query_key_kline"
+                    android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/introduction_key_kline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_block_query_kline"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="简介"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/introduction_value_kline"
+                    style="@style/tx15_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/introduction_key_kline"
+                    android:text="比特币（BitCoin）的概念最初由中本聪在2009年提出，根据中本聪的思路设计发布的开源软件以及建构其上的P2P网络。比特币是一种P2P形式的数字货币。点对点的传输意味着一个去中心化的支付系统。与大多数货币不同，比特币不依靠特定货币机构发行特性与算法本身可以确保无法通过大量制造比特币来人为操控币值。基于密码学的设计可以使比特币只能被真实的拥有者转移或支付。" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

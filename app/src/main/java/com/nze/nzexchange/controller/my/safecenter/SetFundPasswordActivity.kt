@@ -75,10 +75,11 @@ class SetFundPasswordActivity : NBaseActivity(), View.OnClickListener {
                             .setBuspw(checkcodeId!!, verifyEt.getContent(), userBean?.userEmail!!, pwdStr)
                             .compose(netTfWithDialog())
                             .subscribe({
-                                /**
-                                 * 3/22 没有状态判断设置是否成功
-                                 */
-                                NLog.i(it.message)
+                                if (it.success) {
+                                    this@SetFundPasswordActivity.finish()
+                                } else {
+                                    showToast(it.message)
+                                }
                             }, onError)
                 }
             }

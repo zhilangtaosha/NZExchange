@@ -8,10 +8,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.NewDealBean
-import com.nze.nzexchange.bean.Soketbean
-import com.nze.nzexchange.bean.TransactionPairsBean
-import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
@@ -38,6 +35,7 @@ import okio.ByteString
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.annotations.Nls
 import org.json.JSONObject
+import org.w3c.dom.Text
 import java.util.*
 
 /**
@@ -176,13 +174,18 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private val buyList: MutableList<ShenDubean> by lazy { mutableListOf<ShenDubean>() }
     private val sellList: MutableList<ShenDubean> by lazy { mutableListOf<ShenDubean>() }
     private val newDealList: MutableList<NewDealBean> by lazy { mutableListOf<NewDealBean>() }
+    //------------------------币种详情--------------------------------------------
+    private val tokenNameTv: TextView by lazy { tv_token_name_kline }//交易币名称
+    private val issueTimeTv:TextView by lazy {issue_time_value_kline  }//发行时间
+    private val issueAmountTv:TextView by lazy {issue_amount_value_kline  }//发行总量
+    private val circulatioAmountTv:TextView by lazy {circulatio_amount_value_kline  }//流通总量
+    private val crowdFundingPriceTv:TextView by lazy { crowd_funding_price_value_kline }
 
     var socketRequestId: String = ""
         get() {
             return System.currentTimeMillis().toString()
         }
     val gson: Gson by lazy { Gson() }
-    var isSocketOpen: Boolean = false
 
 
     private val marketList: MutableList<String> by lazy {
@@ -225,7 +228,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         kChart.setMainDrawLine(true)
         selectKline(kType)
         select(currentSelect)
-        // getKData("oneMinute", userBean?.userId ?: System.currentTimeMillis().toString())
 
         getDepthData()
 
@@ -233,6 +235,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 //        test()
         changMarket(0)
 //        initKSocket(KLineParam.MARKET_MYSELF)
+
+        getTokenInfo()
     }
 
     private fun test() {
@@ -285,7 +289,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
      * 切换k线时间间隔
      */
     private fun changeTimeRequest(time: String) {
-        chartAdapter.clearData()
+        chartData.clear()
         dataType = DATA_TYPE_GET_DATA
         val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_CHANGE_TIME, mutableListOf<String>())
         requestBean.params.add(time)
@@ -312,7 +316,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private fun getKlineData() {
         Observable.create<List<KLineEntity>> {
             val list = DataRequest.getALL(this@KLineActivity).subList(0, 500)
-//            DataHelper.calculate(list)
+            DataHelper.calculate(list)
             it.onNext(list)
             it.onComplete()
         }.subscribeOn(Schedulers.io())
@@ -338,7 +342,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 //            socket = null
 //            nWebSocket = null
 //        }
-        chartAdapter.clearData()
+        chartData.clear()
         initKSocket(marketParamList[i])
     }
 
@@ -378,6 +382,20 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         depthView.setData(listDepthBuy, listDepthSell)
     }
 
+    /**
+     * 获取币种详情
+     */
+    fun getTokenInfo() {
+        TokenInfoBean.getTokenInfo(pairsBean?.currency!!)
+                .compose(netTf())
+                .subscribe({
+                    if (it.success) {
+                        NLog.i("")
+                    }
+                }, {
+                    NLog.i("")
+                })
+    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -472,7 +490,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         val gson: Gson = Gson()
         override fun onOpen(webSocket: WebSocket, response: Response) {
             super.onOpen(webSocket, response)
-            isSocketOpen = true
             NLog.i("onOpen")
 //            if (marketIndex == 0)
             getKDataRequest()
@@ -521,31 +538,33 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                             }
                             kList.add(bean)
                         }
-//                        kList.sortBy { TimeTool.dateToStamp(it.Date, pattern) }
-                        kList=  kList.distinctBy { it.date.toLong() }.toMutableList()
-                        kList.sortBy { it.date.toLong() }
+
                         kList.forEach {
-                            it.Date = TimeTool.format(pattern,it.Date.toLong() * 1000)
+                            it.Date = TimeTool.format(pattern, it.Date.toLong() * 1000)
                         }
-                        DataHelper.calculate(kList)
+//                        DataHelper.calculate(kList)
                     }
                     when (lineK.type) {
                         KLINE_TYPE_NOWLINEK -> {
-                            kNowList.clear()
-                            kNowList.addAll(kList)
+//                            kNowList.clear()
+//                            kNowList.addAll(kList)
+                            chartData.addAll(0, kList)
                             it.onNext(DATA_NOW_LINEK)
                         }
                         KLINE_TYPE_NEWLINEK -> {
-                            kNewList.clear()
-                            kNewList.addAll(kList)
+//                            kNewList.clear()
+//                            kNewList.addAll(kList)
+                            chartData.addAll(kList)
                             it.onNext(DATA_NEW_LINEK)
                         }
                         KLINE_TYPE_OLDLINEK -> {
-                            kOldList.clear()
-                            kOldList.addAll(kList)
+//                            kOldList.clear()
+//                            kOldList.addAll(kList)
+                            chartData.addAll(0, kList)
                             it.onNext(DATA_OLD_LINEK)
                         }
                     }
+                    DataHelper.calculate(chartData)
                 }
 
                 if (handicap != null) {
@@ -574,17 +593,22 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                             DATA_NOW_LINEK -> {//k线数据
 //                                chartData.addAll(kList)
                                 NLog.i("nowLineK>>>>>>>>>>")
-                                chartAdapter.addFooterData(kNowList)
+//                                DataHelper.calculate(chartData)
+                                chartAdapter.addFooterData(chartData)
 //                                chartAdapter.addFooterData(chartData)
                                 chartAdapter.notifyDataSetChanged()
                             }
                             DATA_NEW_LINEK -> {
                                 NLog.i("newLineK>>>>>>>>>")
-                                chartAdapter.addHeaderData(kNewList)
+
+//                                DataHelper.calculate(chartData)
+                                chartAdapter.addHeaderData(chartData)
                                 chartAdapter.notifyDataSetChanged()
                             }
                             DATA_OLD_LINEK -> {
-                                chartAdapter.addFooterData(kOldList)
+
+//                                DataHelper.calculate(chartData)
+                                chartAdapter.addFooterData(chartData)
                                 chartAdapter.notifyDataSetChanged()
                             }
                             DATA_HANDICAP -> {//盘口数据

@@ -3,6 +3,7 @@ package com.nze.nzexchange.http
 import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.SubOrderInfoBean
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.TokenInfoBean
 import io.reactivex.Flowable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -68,4 +69,12 @@ interface SellService {
     fun userCancelOrder(@Field("userId") userId: String,
                         @Field("subOrderId") subOrderId: String
     ): Flowable<Result<Boolean>>
+
+    //k线页面数字货币信息
+    @FormUrlEncoded
+    @POST("zyy-otc/otc/token/getTokenInfo")
+    fun getTokenInfo(
+            @Field("tokenName") tokenName: String
+    ): Flowable<Result<TokenInfoBean>>
+
 }
