@@ -72,7 +72,7 @@ interface SellService {
 
     //k线页面数字货币信息
     @FormUrlEncoded
-    @POST("zyy-otc/otc/token/getTokenInfo")
+    @POST("otc/token/getTokenInfo")
     fun getTokenInfo(
             @Field("tokenName") tokenName: String
     ): Flowable<Result<TokenInfoBean>>

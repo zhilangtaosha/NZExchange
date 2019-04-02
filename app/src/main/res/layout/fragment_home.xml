@@ -19,8 +19,8 @@
             android:background="@color/color_FF181F27"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
-            android:text="2326122979@qq.com"
-            android:textColor="@color/color_FFA3AAB9" />
+            android:text="AUSCoin Exchange"
+            style="@style/tx15_common"/>
 
         <com.zhuang.zbannerlibrary.ZBanner
             android:id="@+id/carousel_home"

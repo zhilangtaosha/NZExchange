@@ -67,7 +67,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         }
         if (eventCenter.eventCode == EventCode.CODE_APP_TO_FRONT) {
             val pwdType = appPreferences.getInt(Preferences.COME_BACK_PWD, -1)
-            if (pwdType==Preferences.BACK_PWD_FINGERPRINT){
+            if (pwdType == Preferences.BACK_PWD_FINGERPRINT) {
                 if (FingerprintHelper.isHardwareDetected()) {
                     if (FingerprintHelper.hasEnrolledFingerprints()) {
                         mDialog.show(ActivityManager.instance.topActivity()?.supportFragmentManager, "dialog")

@@ -164,4 +164,12 @@ interface UserService {
             @Field("checkcodeVal") checkcodeVal: String,
             @Field("userEmail") userEmail: String
     ): Flowable<Result<Any>>
+
+    //实名材料信息
+    @FormUrlEncoded
+    @POST("meRunBus/meMereally/findDataVoByBusKey_meMereally_curToken.json")
+    fun getReanNameAuthentication(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String
+    ): Flowable<Result<RealNameAuthenticationBean>>
 }

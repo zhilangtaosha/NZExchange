@@ -37,6 +37,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
             field = value
             countryTv.text = value
         }
+    var countryNumber = "+086"
     var userBean: UserBean? = UserBean.loadFromApp()
     override fun getRootView(): Int = R.layout.activity_primary_authentication
 
@@ -79,6 +80,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
         if (resultCode == Activity.RESULT_OK) {
             data?.run {
                 countryName = getStringExtra(IntentConstant.PARAM_COUNTRY_NAME)
+                countryNumber = getStringExtra(IntentConstant.PARAM_COUNTRY_NUMBER)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -88,11 +90,11 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
         userBean!!.tokenReqVo.let {
             CRetrofit.instance
                     .userService()
-                    .primaryAuthentication(it.tokenUserId, it.tokenUserKey, it.tokenSystreeId, nameEt.getContent(), credentialsEt.getContent(), countryTv.text.toString())
+                    .primaryAuthentication(it.tokenUserId, it.tokenUserKey, it.tokenSystreeId, nameEt.getContent(), credentialsEt.getContent(), countryNumber.substring(1))
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
-
+                            this.finish()
                         }
                     }, onError)
         }

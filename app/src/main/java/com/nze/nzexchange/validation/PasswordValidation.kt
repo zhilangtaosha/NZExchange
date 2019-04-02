@@ -17,7 +17,7 @@ class PasswordValidation : ValidationExecutor() {
         val len: Int = text.length
         if (len > 0) {
             if (len < 8 || len > 16) {
-                Toast.makeText(context, "请输入8-20位密码", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "请输入8-16位密码", Toast.LENGTH_SHORT).show()
                 return false
             }
             val pattern = "^[a-zA-Z]\\w{5,17}$"

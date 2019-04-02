@@ -9,6 +9,8 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.RealNameAuthenticationBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import kotlinx.android.synthetic.main.activity_authentication_home.*
 
@@ -27,9 +29,28 @@ class AuthenticationHomeActivity : NBaseActivity(), View.OnClickListener {
     private val vedioLayout: RelativeLayout by lazy { layout_vedio_aah }
     private val vedioStatusTv: TextView by lazy { status_vedio_aah }
     private val vedioIv: ImageView by lazy { iv_vedio_aah }
-    override fun getRootView(): Int = R.layout.activity_authentication_home
+    var realNameAuthenticationBean: RealNameAuthenticationBean? = null
+    var userBean = UserBean.loadFromApp()
 
+    companion object {
+        val INTENT_REAL_NAME_BEAN = "realName"
+    }
+
+    override fun getRootView(): Int = R.layout.activity_authentication_home
     override fun initView() {
+        realNameAuthenticationBean = intent.getParcelableExtra<RealNameAuthenticationBean>(INTENT_REAL_NAME_BEAN)
+
+        realNameAuthenticationBean?.let {
+            userNameTv.text = it.membName
+            certificateTv.text = it.membIdentitycard
+        }
+
+        if (userBean?.userPhone.isNullOrEmpty()) {
+            accountTv.text = userBean?.userPhone
+        } else {
+            accountTv.text = userBean?.userEmail
+        }
+
         primaryLayout.setOnClickListener(this)
         realNameLayout.setOnClickListener(this)
         vedioLayout.setOnClickListener(this)

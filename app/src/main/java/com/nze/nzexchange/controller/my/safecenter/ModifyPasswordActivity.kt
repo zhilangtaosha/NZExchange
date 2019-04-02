@@ -1,18 +1,24 @@
 package com.nze.nzexchange.controller.my.safecenter
 
+import android.content.Intent
 import android.view.View
 import android.widget.EditText
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
+import com.nze.nzexchange.validation.PasswordValidation
 import com.nze.nzexchange.widget.CommonButton
 import kotlinx.android.synthetic.main.activity_modify_password.*
+import org.greenrobot.eventbus.EventBus
 
 class ModifyPasswordActivity : NBaseActivity() {
     val oldPwdEt: EditText by lazy { et_old_password_amp }
@@ -26,7 +32,7 @@ class ModifyPasswordActivity : NBaseActivity() {
     override fun initView() {
         confirmBtn.initValidator()
                 .add(oldPwdEt, EmptyValidation())
-                .add(newPwdEt, EmptyValidation())
+                .add(newPwdEt, PasswordValidation())
                 .add(newPwdConfirmEt, EmptyValidation())
                 .executeValidator()
                 .setOnCommonClick {
@@ -50,7 +56,14 @@ class ModifyPasswordActivity : NBaseActivity() {
                         .modifyPassword(it.tokenUserId, it.tokenUserKey, it.tokenSystreeId, oldPwd, newPwd)
                         .compose(netTfWithDialog())
                         .subscribe({
-                            showToast(it.message)
+                            if (it.success) {
+                                UserBean.logout()
+                                val intent = Intent(this@ModifyPasswordActivity, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                startActivity(intent)
+                                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 0))
+                                EventBus.getDefault().post(EventCenter<String>(EventCode.CODE_LOGOUT_SUCCESS))
+                            }
                         }, onError)
             }
 

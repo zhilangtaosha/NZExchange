@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.my.safecenter
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -24,11 +25,14 @@ class SetFundPasswordActivity : NBaseActivity(), View.OnClickListener {
 
     val pwdEt: ClearableEditText by lazy { et_password_asfp }
     val pwdConfirmEt: ClearableEditText by lazy { et_password_confirm_asfp }
+    val verifyTv: TextView by lazy { tv_verify_asfp }
     val verifyEt: ClearableEditText by lazy { et_verify_asfp }
     val verifyBtn: VerifyButton by lazy { btn_verify_asfp }
     val confirmBtn: CommonButton by lazy { btn_confirm_asfp }
     var userBean = UserBean.loadFromApp()
     var checkcodeId: String? = null
+    var verifyAccount: String? = null
+
 
     override fun getRootView(): Int = R.layout.activity_set_fund_password
 
@@ -43,18 +47,28 @@ class SetFundPasswordActivity : NBaseActivity(), View.OnClickListener {
         verifyBtn.setOnClickListener(this)
         confirmBtn.setOnCommonClick(this)
 
+        userBean?.let {
+            if (!it.userPhone.isNullOrEmpty()) {
+                verifyTv.text = "短信验证"
+                verifyAccount = it.userPhone
+            } else {
+                verifyTv.text = "邮箱验证"
+                verifyAccount = it.userEmail
+            }
+        }
+
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_verify_asfp -> {
-                VerifyBean.getVerifyCodeNet(userBean?.userEmail!!, VerifyBean.TYPE_COMMON)
+                VerifyBean.getVerifyCodeNet(verifyAccount!!, VerifyBean.TYPE_COMMON)
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {
                                 verifyBtn.startVerify()
                                 checkcodeId = it.result.checkcodeId
-                                showToast("验证码已经发送到${userBean?.userEmail}")
+                                showToast("验证码已经发送到$verifyAccount")
                             }
                         }, onError)
             }
@@ -72,7 +86,7 @@ class SetFundPasswordActivity : NBaseActivity(), View.OnClickListener {
                     pwdStr = MD5Tool.getMd5_32(pwdStr)
                     CRetrofit.instance
                             .userService()
-                            .setBuspw(checkcodeId!!, verifyEt.getContent(), userBean?.userEmail!!, pwdStr)
+                            .setBuspw(checkcodeId!!, verifyEt.getContent(), verifyAccount!!, pwdStr)
                             .compose(netTfWithDialog())
                             .subscribe({
                                 if (it.success) {

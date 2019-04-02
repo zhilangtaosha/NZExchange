@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.my
 
 
+import android.content.Intent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -8,6 +9,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -38,6 +40,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     private val settingTv: TextView by lazy { rootView.tv_setting_my }
 
     var userBean: UserBean? = NzeApp.instance.userBean
+    var realNameAuthenticationBean:RealNameAuthenticationBean?=null
 
     companion object {
         @JvmStatic
@@ -70,6 +73,10 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        getReanNameAuthentication()
+    }
 
     override fun isBindEventBusHere(): Boolean = true
 
@@ -84,6 +91,10 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     override fun getContainerTargetView(): View? = null
 
     override fun onClick(v: View?) {
+        if (!UserBean.isLogin()) {
+            skipActivity(LoginActivity::class.java)
+            return
+        }
         when (v?.id) {
             R.id.tv_user_name_my -> {
                 skipActivity(LoginActivity::class.java)
@@ -107,14 +118,19 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
                 skipActivity(SafeCenterActivity::class.java)
             }
             R.id.tv_authentication_my -> {
-                skipActivity(AuthenticationHomeActivity::class.java)
+                if (realNameAuthenticationBean?.membName.isNullOrEmpty()){
+                    skipActivity(PrimaryAuthenticationActivity::class.java)
+                }else{
+                    val intent = Intent(activity,AuthenticationHomeActivity::class.java)
+                    intent.putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN,realNameAuthenticationBean)
+                    startActivity(intent)
+                }
             }
             R.id.tv_setting_my -> {
                 skipActivity(SettingActivity::class.java)
             }
         }
     }
-
 
     fun changeForLogin() {
         if (userBean != null) {
@@ -124,5 +140,14 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
             userNameTV.isClickable = true
             userNameTV.text = "登录"
         }
+    }
+
+    fun getReanNameAuthentication(){
+        RealNameAuthenticationBean.getReanNameAuthentication(userBean?.tokenReqVo?.tokenUserId!!,userBean?.tokenReqVo?.tokenUserKey!!)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    realNameAuthenticationBean = it.result
+
+                },onError)
     }
 }

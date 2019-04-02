@@ -176,10 +176,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private val newDealList: MutableList<NewDealBean> by lazy { mutableListOf<NewDealBean>() }
     //------------------------币种详情--------------------------------------------
     private val tokenNameTv: TextView by lazy { tv_token_name_kline }//交易币名称
-    private val issueTimeTv:TextView by lazy {issue_time_value_kline  }//发行时间
-    private val issueAmountTv:TextView by lazy {issue_amount_value_kline  }//发行总量
-    private val circulatioAmountTv:TextView by lazy {circulatio_amount_value_kline  }//流通总量
-    private val crowdFundingPriceTv:TextView by lazy { crowd_funding_price_value_kline }
+    private val issueTimeTv: TextView by lazy { issue_time_value_kline }//发行时间
+    private val issueAmountTv: TextView by lazy { issue_amount_value_kline }//发行总量
+    private val circulatioAmountTv: TextView by lazy { circulatio_amount_value_kline }//流通总量
+    private val crowdFundingPriceTv: TextView by lazy { crowd_funding_price_value_kline }//众筹价格
+    private val whitePaperTv: TextView by lazy { white_paper_value_kline }//白皮书地址
+    private val officialWebsiteTv: TextView by lazy { official_website_value_kline }//官网地址
+    private val blockQueryTv: TextView by lazy { block_query_value_kline }//区块查询地址
+    private val introductionTv: TextView by lazy { introduction_value_kline }//简介
 
     var socketRequestId: String = ""
         get() {
@@ -231,10 +235,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         getDepthData()
 
-
+        //测试数据
 //        test()
+        //先关闭测试币种详情接口
         changMarket(0)
-//        initKSocket(KLineParam.MARKET_MYSELF)
 
         getTokenInfo()
     }
@@ -390,7 +394,17 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
-                        NLog.i("")
+                        it.result.let {
+                            tokenNameTv.text = it.tokenSymbol
+                            issueTimeTv.text = TimeTool.format(TimeTool.PATTERN10, it.tokenCreateTime)
+                            issueAmountTv.text = it.tokenAmount
+                            circulatioAmountTv.text = it.tokenCirculate
+                            crowdFundingPriceTv.text = it.tokenPrice
+                            whitePaperTv.text = it.tokenPaper
+                            officialWebsiteTv.text = it.tokenWebsite
+                            blockQueryTv.text = it.tokenChaintype
+                            introductionTv.text = it.tokenIco
+                        }
                     }
                 }, {
                     NLog.i("")

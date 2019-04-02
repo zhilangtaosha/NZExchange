@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="初级认证" />
+            android:text="实名认证" />
 
         <TextView
             android:id="@+id/status_primary_aah"
