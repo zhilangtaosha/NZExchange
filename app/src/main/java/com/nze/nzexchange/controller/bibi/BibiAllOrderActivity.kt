@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
@@ -29,7 +30,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         BibiCurentOrderAdapter(this).apply {
             cancelClick = { position, item ->
                 //撤销
-
+                NLog.i("positon>>$position")
             }
         }
     }

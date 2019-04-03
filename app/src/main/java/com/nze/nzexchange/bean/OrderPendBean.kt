@@ -28,7 +28,8 @@ data class OrderPendBean(
         val taker_fee: String,
         val type: Int,
         val userId: String,
-        val ftime: Double
+        val ftime: Double,
+        val status: Int
 ) {
     companion object {
         fun orderPending(
