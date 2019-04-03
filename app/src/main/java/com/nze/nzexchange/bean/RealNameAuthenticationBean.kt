@@ -17,31 +17,31 @@ import retrofit2.http.Field
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class RealNameAuthenticationBean(
-        val membCountry: String,
-        val membId: String,
+        val membCountry: String?,
+        val membId: String?,
         //身份证
-        val membIdentitycard: String,
-        val membName: String,
-        val membSn: String,
-        val membTruename: String,
-        val mereallyCreateTime: Long,
-        val mereallyCreateTimeStr: String,
-        val mereallyCreateUser: String,
-        val mereallyId: String,
+        val membIdentitycard: String?,
+        val membName: String?,
+        val membSn: String?,
+        val membTruename: String?,
+        val mereallyCreateTime: Long?,
+        val mereallyCreateTimeStr: String?,
+        val mereallyCreateUser: String?,
+        val mereallyId: String?,
         //实名第一步审核 中 101 //实名第二步审核 中 //实名第一步审核 不通过 1011 //实名第二步审核 不通过 1031 //实名审核通过 110
-        val mereallyStatus: Int,
-        val mereallyStatusStr: String,
-        val mereallyStep1Fileurl: String,
-        val mereallyStep1Name: String,
-        val mereallyStep2Fileurl: String,
-        val mereallyStep2Name: String,
-        val mereallyStep2Pars: String,
-        val mereallyUpdateTime: Long,
-        val mereallyUpdateTimeStr: String,
-        val mereallyUpdateUser: String,
-        val treeauthCode: String,
-        val treeauthName: String,
-        val userId: String
+        val mereallyStatus: Int?,
+        val mereallyStatusStr: String?,
+        val mereallyStep1Fileurl: String?,
+        val mereallyStep1Name: String?,
+        val mereallyStep2Fileurl: String?,
+        val mereallyStep2Name: String?,
+        val mereallyStep2Pars: String?,
+        val mereallyUpdateTime: Long?,
+        val mereallyUpdateTimeStr: String?,
+        val mereallyUpdateUser: String?,
+        val treeauthCode: String?,
+        val treeauthName: String?,
+        val userId: String?
 ) : Parcelable {
     companion object {
         fun getReanNameAuthentication(
