@@ -10,8 +10,10 @@ import android.view.animation.TranslateAnimation
 import android.widget.*
 import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.AllOrderFilterBean
 import com.nze.nzexchange.bean.BibiFilterBean
 import com.nze.nzexchange.controller.base.BaseAda
+import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.dp2px
 import kotlinx.android.synthetic.main.gv_bibi_popup_filter.view.*
 import kotlinx.android.synthetic.main.notification_template_lines_media.view.*
@@ -36,15 +38,16 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
 
     val unitAdapter: UnitGvAdapter by lazy { UnitGvAdapter(context!!) }
 
+    var onFilterClick: ((bean: AllOrderFilterBean) -> Unit)? = null
 
     init {
         unitCurrencyTv.setOnClickListener {
             if (unitGv.visibility == View.GONE) {
                 unitGv.visibility = View.VISIBLE
-                unitCurrencyTv.setCompoundDrawablesWithIntrinsicBounds(null,null,ContextCompat.getDrawable(context!!,R.mipmap.close_icon2),null)
+                unitCurrencyTv.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(context!!, R.mipmap.close_icon2), null)
             } else {
                 unitGv.visibility = View.GONE
-                unitCurrencyTv.setCompoundDrawablesWithIntrinsicBounds(null,null,ContextCompat.getDrawable(context!!,R.mipmap.open_icon2),null)
+                unitCurrencyTv.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(context!!, R.mipmap.open_icon2), null)
             }
             buyCurrencyEt.clearFocus()
         }
@@ -61,7 +64,7 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
         }
 
         resetBtn.setOnClickListener { reset() }
-        confirmBtn.setOnClickListener { }
+        confirmBtn.setOnClickListener { confirm() }
     }
 
     fun reset() {
@@ -76,7 +79,27 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
     }
 
     fun confirm() {
+        val bean: AllOrderFilterBean = AllOrderFilterBean()
+        val currency = buyCurrencyEt.getContent()
+        val mainCurrency = unitCurrencyTv.text.toString()
+        if (currency.isNullOrEmpty())
+            bean.currency = currency
+        if (mainCurrency.isNullOrEmpty())
+            bean.mainCurrency = mainCurrency
+        if (!(buyCb.isChecked && saleCb.isChecked)) {
+            if (buyCb.isChecked)
+                bean.tradeType = 1
+            if (saleCb.isChecked)
+                bean.tradeType = 0
+        }
 
+        if (!(completeCb.isChecked && cancelCb.isChecked)) {
+            if (completeCb.isChecked)
+                bean.orderStatus = 1003
+            if (cancelCb.isChecked)
+                bean.orderStatus = 1004
+        }
+        onFilterClick?.invoke(bean)
     }
 
     override fun initShowAnimation(): Animation {

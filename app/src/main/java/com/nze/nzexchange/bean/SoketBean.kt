@@ -43,5 +43,5 @@ data class NewDealBean(
         val id: String,
         val price: String,
         val time: Double,
-        val type: String
+        val type: Int//0购买，1出售
 )

@@ -13,6 +13,7 @@ import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.bibi.BibiAllOrderActivity
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
@@ -110,6 +111,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
                 skipActivity(MyAssetActivity::class.java)
             }
             R.id.tv_order_manage_my -> {
+                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity,BibiAllOrderActivity.FROM_MY)
             }
             R.id.tv_pay_method_my -> {
                 skipActivity(SetPayMethodActivity::class.java)

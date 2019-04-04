@@ -286,7 +286,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     skipActivity(LoginActivity::class.java)
                     return
                 }
-                skipActivity(BibiAllOrderActivity::class.java)
+                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity!!, BibiAllOrderActivity.FROM_BIBI)
             }
             R.id.tv_limit_bibi -> {
                 currentPopupType = POPUP_LIMIT
@@ -475,7 +475,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     }
 
-
+    /**
+     * 获取当前委托
+     */
     private fun orderPending(currencyId: String, userId: String?) {
         OrderPendBean.orderPending(currencyId, userId)
                 .compose(netTf())

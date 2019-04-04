@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.bibi
 
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.ListView
@@ -24,16 +25,40 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
 
 
     val topBar: CommonTopBar by lazy { ctb_abao }
-    val filterPopup by lazy { BibiFilterPopup(this) }
+    val filterPopup by lazy { BibiFilterPopup(this).apply {
+        onFilterClick={
+            orderTracking(it.currency,it.mainCurrency,userBean?.userId,it.orderStatus,it.tradeType)
+            this.dismiss()
+        }
+    } }
     val ptrLv: PullToRefreshListView by lazy { ptrlv_abao }
     val orderAdapter: BibiCurentOrderAdapter by lazy {
         BibiCurentOrderAdapter(this).apply {
             cancelClick = { position, item ->
                 //撤销
-                NLog.i("positon>>$position")
+//                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!)
+//                        .compose(netTfWithDialog())
+//                        .subscribe({
+//                            if (it.success) {
+////                                orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+//                            }
+//                        }, onError)
             }
         }
     }
+
+    companion object {
+        val FROM = "from"
+        val FROM_BIBI = 0
+        val FROM_MY = 1
+        fun toAllOrderActivity(activity: BaseActivity, from: Int) {
+            val intent = Intent(activity, BibiAllOrderActivity::class.java)
+            intent.putExtra(FROM, from)
+            activity.startActivity(intent)
+        }
+    }
+
+
     var userBean: UserBean? = UserBean.loadFromApp()
 
 
@@ -43,6 +68,12 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         topBar.setRightClick {
             if (!filterPopup.isShowing)
                 filterPopup.showPopupWindow(topBar)
+        }
+        val from = intent.getIntExtra(FROM, FROM_BIBI)
+        if (from == FROM_BIBI) {
+            topBar.setTitle("全部委托")
+        } else {
+            topBar.setTitle("订单管理")
         }
         filterPopup.setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
             if (anchorView != null) {
