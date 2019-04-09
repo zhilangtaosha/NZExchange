@@ -1,7 +1,9 @@
 package com.nze.nzexchange.controller.bibi
 
 import android.content.Context
+import android.view.TextureView
 import android.view.View
+import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.nze.nzeframework.tool.NLog
@@ -28,7 +30,8 @@ class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean,
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: TransactionPairsBean, position: Int) {
-        vh.transactionTv.text = item.transactionPair
+        vh.currencyTv.text = item.currency
+        vh.mainCurrencyTv.text = "${item.mainCurrency}"
         vh.costTv.text = item.exchangeRate.formatForCurrency()
 
         vh.choiceCb.isSelected = item.optional == 1
@@ -58,14 +61,15 @@ class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean,
     var onItemClick: OnItemClickListener? = null
 
     interface OnItemClickListener {
-//        fun itemClick(item: TransactionPairsBean)
+        //        fun itemClick(item: TransactionPairsBean)
         fun selftSelect(item: TransactionPairsBean, position: Int)
     }
 
     class ViewHolder(var view: View) {
         val rootLayout = view.layout_root_lbsc
         val choiceCb = view.cb_choice_lbsc
-        val transactionTv = view.tv_transaction_lbsc
+        val currencyTv = view.tv_currency_lbsc
+        val mainCurrencyTv: TextView = view.tv_main_currecy_lbsc
         val costTv = view.tv_cost_lbsc
         val changeTv = view.tv_change_lbsc
     }

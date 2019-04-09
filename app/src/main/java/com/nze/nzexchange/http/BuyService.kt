@@ -5,6 +5,7 @@ import com.nze.nzexchange.bean.Result
 import io.reactivex.Flowable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface BuyService {
@@ -27,7 +28,8 @@ interface BuyService {
     //OTC购买列表
     @FormUrlEncoded
     @POST("otc/buy/findOrderPool")
-    fun findOrderPool(@Field("tokenId") tokenId: String?,
+    fun findOrderPool(@Field("userId") userId: String?,
+                      @Field("tokenId") tokenId: String?,
                       @Field("pageNumber") pageNumber: Int,
                       @Field("pageSize") pageSize: Int
     ): Flowable<Result<MutableList<OrderPoolBean>>>
@@ -95,4 +97,9 @@ interface BuyService {
     fun userCancelOrder(@Field("userId") userId: String,
                         @Field("subOrderId") subOrderId: String
     ): Flowable<Result<Boolean>>
+
+
+    //获取计价币种
+    @GET("otc/buy/getCurrency")
+    fun getCurrency(): Flowable<Result<MutableList<MainCurrencyBean>>>
 }

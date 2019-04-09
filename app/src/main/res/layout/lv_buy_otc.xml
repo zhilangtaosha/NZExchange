@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="15dp"
     android:paddingTop="23dp"
+    android:paddingRight="15dp"
     android:paddingBottom="16dp">
 
     <TextView
@@ -37,8 +39,8 @@
         android:id="@+id/layout_pay_lbo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_below="@+id/tv_total_num_lbo"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal" />
 
     <TextView
@@ -68,9 +70,9 @@
         android:layout_height="24dp"
         android:layout_below="@+id/tv_price_lbo"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="14dp"
         android:background="@drawable/shape_radius_9d81_bg"
         android:text="买入"
-        android:layout_marginTop="14dp"
         android:textColor="@color/white"
         android:textSize="12sp" />
 </RelativeLayout>

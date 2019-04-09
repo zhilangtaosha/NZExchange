@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.otc.main
 
 
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.support.v4.app.Fragment
 import android.view.View
@@ -9,15 +10,14 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
-import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.FindSellBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.otc.PublishActivity
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.bean.Result
-import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
  */
 class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
 
-
     private val findSellList: MutableList<FindSellBean> by lazy {
         mutableListOf<FindSellBean>()
     }
@@ -39,6 +38,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         OtcAdAdapter(activity!!)
     }
     lateinit var ptrLv: PullToRefreshListView
+    var mMainCurrencyBean: MainCurrencyBean? = null
 
     companion object {
         @JvmStatic
@@ -67,11 +67,22 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
                             ptrLv.doPullRefreshing(true, 200)
                     }, onError)
         }
+
+        rootView.iv_add_ad.setOnClickListener {
+            startActivity(Intent(activity, PublishActivity::class.java)
+                    .putExtra(IntentConstant.PARAM_TOKENID, mMainCurrencyBean?.tokenId)
+                    .putExtra(IntentConstant.PARAM_CURRENCY, mMainCurrencyBean?.tokenSymbol))
+
+        }
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         if (eventCenter.eventCode == EventCode.CODE_PULISH)
             ptrLv.doPullRefreshing(true, 200)
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
+            ptrLv.doPullRefreshing(true, 200)
+        }
     }
 
     override fun isBindEventBusHere(): Boolean = true
@@ -149,4 +160,6 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
                     .cancelOrder(poolId, userId)
         }
     }
+
+
 }

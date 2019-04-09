@@ -32,24 +32,26 @@ data class OrderPoolBean(
 ) : Parcelable {
     companion object {
         //购买列表
-        fun getFromNet(tokenId: String?,
+        fun getFromNet(userId:String?,
+                tokenId: String?,
                        pageNumber: Int,
                        pageSize: Int): Flowable<Result<MutableList<OrderPoolBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .buyService()
-                        .findOrderPool(tokenId, pageNumber, pageSize)
+                        .findOrderPool(userId,tokenId, pageNumber, pageSize)
             }
         }
 
         //出售列列表
-        fun getSellNet(tokenId: String?,
+        fun getSellNet(userId:String?,
+                tokenId: String?,
                        pageNumber: Int,
                        pageSize: Int): Flowable<Result<MutableList<OrderPoolBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .sellService()
-                        .findOrderPool(tokenId, pageNumber, pageSize)
+                        .findOrderPool(userId,tokenId, pageNumber, pageSize)
             }
         }
     }

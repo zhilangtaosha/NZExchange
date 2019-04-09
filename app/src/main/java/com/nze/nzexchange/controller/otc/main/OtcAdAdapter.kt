@@ -9,14 +9,21 @@ import com.nze.nzexchange.bean.FindSellBean
 import com.nze.nzexchange.bean.OtcBean
 import com.nze.nzexchange.config.CurrencyTool
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_ad_otc.view.*
 
 class OtcAdAdapter(mContext: Context) : NBaseAda<FindSellBean, OtcAdAdapter.ViewHolder>(mContext) {
     var onClick: ((String, String) -> Unit)? = null
-    override fun initView(vh: ViewHolder, item: FindSellBean,position: Int) {
+    override fun initView(vh: ViewHolder, item: FindSellBean, position: Int) {
         item.run {
-            val tip = if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) "买入" else "卖出"
+            val tip = if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
+                vh.nameTv.setTxtColor(R.color.color_buy)
+                "购买"
+            } else {
+                vh.nameTv.setTxtColor(R.color.color_sale)
+                "出售"
+            }
             vh.nameTv.text = "${tip}${CurrencyTool.getCurrency(tokenId)}"
             vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, poolCreateTime)
             vh.priceTv.text = poolPrice.toString()

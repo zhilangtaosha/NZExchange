@@ -24,7 +24,7 @@ class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, Market
 
     override fun initView(vh: ViewHolder, item: TransactionPairsBean, position: Int) {
         vh.transactionTv.text = item.currency
-        vh.mainCurrencyTv.text = item.mainCurrency
+        vh.mainCurrencyTv.text = "/${item.mainCurrency}"
         vh.exchangeTv.text = item.exchangeRate.formatForCurrency()
         if (item.gain > 0) {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)

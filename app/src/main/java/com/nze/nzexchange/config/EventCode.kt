@@ -8,7 +8,7 @@ package com.nze.nzexchange.config
  */
 class EventCode {
     companion object {
-        const val CODE_PULISH = 0x001
+        const val CODE_PULISH = 0x001//OTC发布广告通知
         const val CODE_CONFIRM_PAY = 0x002
         const val CODE_REFRESH_ASSET = 0x003
         const val CODE_GET_MAIN_CURRENCY = 0x004

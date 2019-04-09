@@ -13,6 +13,7 @@ import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
@@ -30,7 +31,7 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
     private val buyAdapter: OtcBuyAdapter by lazy {
         OtcBuyAdapter(activity!!, type)
     }
-
+    private var userBean = UserBean.loadFromApp()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,9 +143,9 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
 
     fun getFlowable(): Flowable<Result<MutableList<OrderPoolBean>>> {
         return if (type == TYPE_BUY) {
-            OrderPoolBean.getFromNet(tokenId, page, PAGE_SIZE)
+            OrderPoolBean.getFromNet(userBean?.userId, tokenId, page, PAGE_SIZE)
         } else {
-            OrderPoolBean.getSellNet(tokenId, page, PAGE_SIZE)
+            OrderPoolBean.getSellNet(userBean?.userId, tokenId, page, PAGE_SIZE)
         }
     }
 }

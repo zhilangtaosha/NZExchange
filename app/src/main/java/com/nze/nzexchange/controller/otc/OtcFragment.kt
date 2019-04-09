@@ -15,6 +15,7 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.MainCurrencyBean
 import com.nze.nzexchange.bean.OtcAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
@@ -49,18 +50,25 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     lateinit var indicatorViewPager: IndicatorViewPager
     lateinit var viewPager: ViewPager
     lateinit var scrollIndicatorView: ScrollIndicatorView
+    private var otcAdFragment: OtcAdFragment = OtcAdFragment.newInstance()
     private val tabs = listOf<String>("购买", "出售", "广告")
     private val pages = listOf<NBaseFragment>(OtcContentFragment.newInstance(OtcContentFragment.TYPE_BUY),
             OtcContentFragment.newInstance(OtcContentFragment.TYPE_SALE),
-            OtcAdFragment.newInstance())
+            otcAdFragment)
 
     var currentItem: Int = 0
-    var mCurrentAsset: OtcAssetBean? = null
+    private var mCurrentAsset: OtcAssetBean? = null
+    private var mMainCurrencyBean: MainCurrencyBean? = null
+        set(value) {
+            otcAdFragment.mMainCurrencyBean = value
+            field = value
+        }
+
     val sideAdapter: OtcSideAdapter by lazy {
         OtcSideAdapter(activity!!)
     }
 
-    private val sideData = mutableListOf<OtcAssetBean>()
+    private val sideData = mutableListOf<MainCurrencyBean>()
 
     companion object {
         @JvmStatic
@@ -111,35 +119,43 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
             changeAva(currentItem)
         }
 
-        if (UserBean.loadFromApp()?.userId != null)
-            getAssetFromNet()
-
+        getCurrencyNet()
 
     }
 
+
+    fun getCurrencyNet() {
+        MainCurrencyBean.getCurrency()
+                .compose(netTfWithDialog())
+                .subscribe({
+                    val list = it.result
+                    sideData.addAll(list)
+                    sideAdapter.group = list
+                    mMainCurrencyBean = list.get(0)
+                    moreTv.setText(mMainCurrencyBean!!.tokenSymbol)
+                    changeAva(currentItem)
+                }, onError)
+    }
 
     fun getAssetFromNet() {
         OtcAssetBean.getAssetsNet(UserBean.loadFromApp()?.userId!!)
                 .compose(netTf())
                 .subscribe({
                     val list = it.result
-                    sideData.addAll(list)
-                    sideAdapter.group = list
-                    mCurrentAsset = list.get(0)
-                    changeAva(currentItem)
+//                    sideData.addAll(list)
+//                    sideAdapter.group = list
+//                    mCurrentAsset = list.get(0)
+//                    moreTv.setText(mCurrentAsset!!.currency)
+//                    changeAva(currentItem)
                 }, onError)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_REFRESH_ASSET)
-            getAssetFromNet()
-        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS){
-            getAssetFromNet()
-        }
+
     }
 
 
-    override fun isBindEventBusHere(): Boolean = true
+    override fun isBindEventBusHere(): Boolean = false
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -161,18 +177,18 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
                 }
             }
             R.id.layout_available_otc -> {
-                when (currentItem) {
-                    0, 1 -> {
-                        skipActivity(CapitalTransferActivity::class.java)
-                    }
-                    2 -> {
-                        startActivity(Intent(activity, PublishActivity::class.java)
-                                .putExtra(IntentConstant.PARAM_TOKENID, mCurrentAsset?.tokenId)
-                                .putExtra(IntentConstant.PARAM_CURRENCY, mCurrentAsset?.currency))
-                    }
-                    else -> {
-                    }
-                }
+//                when (currentItem) {
+//                    0, 1 -> {
+//                        skipActivity(CapitalTransferActivity::class.java)
+//                    }
+//                    2 -> {
+//                        startActivity(Intent(activity, PublishActivity::class.java)
+//                                .putExtra(IntentConstant.PARAM_TOKENID, mCurrentAsset?.tokenId)
+//                                .putExtra(IntentConstant.PARAM_CURRENCY, mCurrentAsset?.currency))
+//                    }
+//                    else -> {
+//                    }
+//                }
             }
             R.id.iv_trade_list_market -> {
                 skipActivity(TradeListActivity::class.java)
@@ -183,22 +199,22 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     }
 
     fun changeAva(current: Int) {
-        when (current) {
-            0, 1 -> {
-                refreshLayout()
-            }
-            2 -> {
-                availableTv.text = "发布广告"
-                frozenTv.text = "零手续费"
-            }
-            else -> {
-
-            }
-        }
+//        when (current) {
+//            0, 1 -> {
+//                refreshLayout()
+//            }
+//            2 -> {
+//                availableTv.text = "发布广告"
+//                frozenTv.text = "零手续费"
+//            }
+//            else -> {
+//
+//            }
+//        }
         val fragment = pages.get(current)
 
         if (fragment is IOtcView)
-            fragment.refresh(mCurrentAsset?.tokenId)
+            fragment.refresh(mMainCurrencyBean?.tokenId)
 
     }
 
@@ -211,8 +227,8 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         drawerLayout.closeDrawer(leftLayout)
-        mCurrentAsset = sideData.get(position)
-        moreTv.setText(mCurrentAsset!!.currency)
+        mMainCurrencyBean = sideData.get(position)
+        moreTv.setText(mMainCurrencyBean!!.tokenSymbol)
         changeAva(currentItem)
     }
 }

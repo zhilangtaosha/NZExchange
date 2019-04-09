@@ -58,7 +58,9 @@
     <color name="color_common">#ffcacaca</color>
 
     <color name="color_up">#ff00c187</color>
+    <color name="color_buy">#ff00c187</color>
     <color name="color_down">#ffff4a5f</color>
+    <color name="color_sale">#ffff4a5f</color>
     <color name="color_main">#ff6D87A8</color>
 
 

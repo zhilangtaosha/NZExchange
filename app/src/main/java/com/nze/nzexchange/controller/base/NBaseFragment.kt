@@ -86,7 +86,7 @@ abstract class NBaseFragment : BaseFragment() {
 
 
     val onError: (e: Throwable) -> Unit = { e: Throwable ->
-        NLog.i("")
+        NLog.i("onError...")
     }
 
     fun showToast(content: String) {
