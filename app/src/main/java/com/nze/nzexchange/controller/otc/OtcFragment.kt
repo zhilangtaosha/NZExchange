@@ -111,7 +111,6 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         indicatorViewPager.adapter = indicatorAdapter
 
         indicatorViewPager.setOnIndicatorPageChangeListener { preItem: Int, currentItem: Int ->
-            this.currentItem = currentItem
             if (currentItem == 2 && !UserBean.isLogin()) {
                 skipActivity(LoginActivity::class.java)
                 return@setOnIndicatorPageChangeListener
@@ -151,11 +150,12 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-
+        if (eventCenter.eventCode == EventCode.CODE_NO_LOGIN)
+            indicatorViewPager.setCurrentItem(currentItem, false)
     }
 
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -199,6 +199,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     }
 
     fun changeAva(current: Int) {
+        this.currentItem = current
 //        when (current) {
 //            0, 1 -> {
 //                refreshLayout()
@@ -215,6 +216,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 
         if (fragment is IOtcView)
             fragment.refresh(mMainCurrencyBean?.tokenId)
+
 
     }
 

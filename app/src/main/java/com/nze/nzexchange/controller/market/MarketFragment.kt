@@ -85,7 +85,7 @@ class MarketFragment : NBaseFragment() {
                         tabs.clear()
                         tabs.add("自选")
                         pages.clear()
-                        pages.add(BibiSideContentFragment.newInstance(tabs[0]))
+                        pages.add(MarketOptionalFragment.newInstance(tabs[0]))
                         mainCurrencyList.forEach {
                             tabs.add(it.mainCurrency)
                             pages.add(MarketContentFragment.newInstance(it.mainCurrency))
@@ -98,7 +98,7 @@ class MarketFragment : NBaseFragment() {
                                 skipActivity(LoginActivity::class.java)
                                 indicatorViewPager.setCurrentItem(1, true)
                             } else if (currentItem == 0 && UserBean.isLogin()) {
-                                (pages[currentItem] as BibiSideContentFragment).refreshData()
+                                (pages[currentItem] as MarketOptionalFragment).refreshData()
                             } else {
 
                             }

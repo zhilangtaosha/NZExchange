@@ -40,7 +40,7 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
         setWindowStatusBarColor(R.color.color_bg)
 
         topBar.setRightClick {
-            this@LoginActivity.finish()
+            onBackPressed()
         }
         tv_register_al.setOnClickListener(this)
         forgetTv.setOnClickListener(this)
@@ -54,6 +54,11 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
         btn_quick_my.setOnClickListener {
             skipActivity(QuickLoginActivity::class.java)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_NO_LOGIN))
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -91,7 +96,7 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
                     LoginBean.login(accountEt.getContent(), pwdStr)
                             .compose(netTfWithDialog())
                             .subscribe({
-//                                showToast(it.message)
+                                //                                showToast(it.message)
                                 if (it.result.token != null) {
                                     NzeApp.instance.userBean = it.result.cloneToUserBean()
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
