@@ -121,6 +121,7 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
 //                                        logoutBtn.text = "登录"
 //                                        EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGOUT_SUCCESS, true))
                                         EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 0))
+                                        EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_LOGOUT_SUCCESS, 0))
                                         skipActivity(MainActivity::class.java)
                                     }
                                 }, onError)

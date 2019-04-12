@@ -18,6 +18,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.bibi.BibiSideContentFragment
+import com.nze.nzexchange.database.dao.impl.PairDaoImpl
 import kotlinx.android.synthetic.main.fragment_market_content.view.*
 
 class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<ListView> {
@@ -30,6 +31,7 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
     }
     var mainCurrency: String? = null
     var userBean: UserBean? = UserBean.loadFromApp()
+    val pairDao = PairDaoImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,10 +66,11 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS || eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
             userBean = UserBean.loadFromApp()
             refreshData()
         }
+
     }
 
     override fun isBindEventBusHere(): Boolean = true
@@ -98,36 +101,44 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
 
 
     override fun getDataFromNet() {
-        if (mainCurrency != null && mainCurrency != "自选") {
-            TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
-                    .compose(netTf())
-                    .subscribe({
-                        if (it.success) {
-                            lvAdapter.group = it.result
-                            ptrLv.onPullDownRefreshComplete()
-                        }
-                    }, {
-                        NLog.i("")
-                    })
-        } else if (mainCurrency != null) {
-            if (userBean != null) {
-                TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
-                        .map {
-                            it.apply {
-                                result.map {
-                                    it.optional = 1
-                                }
-                            }
-                        }
-                        .compose(netTf())
-                        .subscribe({
-                            if (it.success) {
-                                lvAdapter.group = it.result
-                                ptrLv.onPullDownRefreshComplete()
-                            }
-                        }, onError)
-            }
-        }
+//        if (mainCurrency != null && mainCurrency != "自选") {
+        TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
+                .map {
+                    if (it.success) {
+                        pairDao.addList(it.result)
+                    }
+                    it
+                }
+                .compose(netTf())
+                .subscribe({
+                    if (it.success) {
+                        val list = it.result
+                        lvAdapter.group = list
+                        ptrLv.onPullDownRefreshComplete()
+                    }
+                }, {
+                    NLog.i("getTransactionPairs error....")
+                    ptrLv.onPullDownRefreshComplete()
+                })
+//        } else if (mainCurrency != null) {
+//            if (userBean != null) {
+//                TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
+//                        .map {
+//                            it.apply {
+//                                result.map {
+//                                    it.optional = 1
+//                                }
+//                            }
+//                        }
+//                        .compose(netTf())
+//                        .subscribe({
+//                            if (it.success) {
+//                                lvAdapter.group = it.result
+//                                ptrLv.onPullDownRefreshComplete()
+//                            }
+//                        }, onError)
+//            }
+//        }
     }
 
     override fun onFirstRequest() {

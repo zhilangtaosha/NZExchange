@@ -7,21 +7,46 @@
     android:orientation="vertical"
     tools:context=".controller.market.MarketFragment">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@color/color_title_bg"
-        android:gravity="center"
-        android:text="行情"
-        style="@style/tx18_common"
-        android:textStyle="bold" />
+        android:layout_height="44dp">
+
+        <TextView
+            style="@style/tx18_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@color/color_title_bg"
+            android:text="行情"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_search_market"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/search_icon" />
+
+        <ImageView
+            android:id="@+id/iv_edit_market"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/optional_edit"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 
     <com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
         android:id="@+id/siv_market"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@color/color_title_bg"
         android:layout_marginTop="1dp"
+        android:background="@color/color_title_bg"
         android:fillViewport="false" />
 
     <View

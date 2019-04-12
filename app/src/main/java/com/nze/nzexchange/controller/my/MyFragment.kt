@@ -64,19 +64,22 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
         settingTv.setOnClickListener(this)
 
         changeForLogin()
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS || eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS ||eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS ) {
             userBean = NzeApp.instance.userBean
             changeForLogin()
         }
+
 
     }
 
     override fun onResume() {
         super.onResume()
-        getReanNameAuthentication()
+        if (userBean!=null)
+            getReanNameAuthentication()
     }
 
     override fun isBindEventBusHere(): Boolean = true

@@ -1,19 +1,16 @@
 package com.nze.nzexchange.controller.market
 
 
-import android.os.Handler
 import android.support.v4.view.ViewPager
 import android.view.View
+import android.widget.ImageView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
-
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseFragment
-import com.nze.nzexchange.controller.bibi.BibiSideContentFragment
 import com.nze.nzexchange.controller.login.LoginActivity
-import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
@@ -23,7 +20,12 @@ import com.nze.nzexchange.widget.indicator.indicator.transition.OnTransitionText
 import kotlinx.android.synthetic.main.fragment_market.view.*
 
 
-class MarketFragment : NBaseFragment() {
+class MarketFragment : NBaseFragment(), View.OnClickListener {
+
+
+    lateinit var searchIv: ImageView
+    lateinit var editIv: ImageView
+
     lateinit var indicatorViewPager: IndicatorViewPager
     lateinit var viewPager: ViewPager
     lateinit var scrollIndicatorView: ScrollIndicatorView
@@ -43,6 +45,9 @@ class MarketFragment : NBaseFragment() {
     override fun getRootView(): Int = R.layout.fragment_market
 
     override fun initView(rootView: View) {
+        searchIv = rootView.iv_search_market
+        editIv = rootView.iv_edit_market
+        searchIv.setOnClickListener(this)
         scrollIndicatorView = rootView.siv_market
         viewPager = rootView.vp_market
 
@@ -54,11 +59,21 @@ class MarketFragment : NBaseFragment() {
 
         viewPager.offscreenPageLimit = 2
         indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
-//        val indicatorAdapter = MarketIndicatorAdapter(fragmentManager!!, activity!!, tabs, pages)
-//        indicatorViewPager.adapter = indicatorAdapter
+
 
         getTransactionPair()
     }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.iv_search_market -> {
+                skipActivity(PairSearchActivity::class.java)
+            }
+            R.id.iv_edit_market -> {
+            }
+        }
+    }
+
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
     }
@@ -99,11 +114,20 @@ class MarketFragment : NBaseFragment() {
                                 indicatorViewPager.setCurrentItem(1, true)
                             } else if (currentItem == 0 && UserBean.isLogin()) {
                                 (pages[currentItem] as MarketOptionalFragment).refreshData()
-                            } else {
-
+                                searchIv.visibility = View.GONE
+                                editIv.visibility = View.VISIBLE
+                            } else if (currentItem != 0) {
+                                searchIv.visibility = View.VISIBLE
+                                editIv.visibility = View.GONE
                             }
+
                         }
                         indicatorViewPager.setCurrentItem(1, true)
+                        if (pages.size>2){
+                           for (i in 2..pages.size-1){
+                               (pages[i] as MarketContentFragment).refreshData()
+                           }
+                        }
                     }
                 }, onError)
     }

@@ -9,7 +9,8 @@ package com.nze.nzexchange.bean
 data class Soketbean(
         val lineK: LineKBean?,
         val handicap: Handicap?,
-        val latestDeal: List<NewDealBean>?
+        val latestDeal: List<NewDealBean>?,
+        val quotation: Array<String>?
 ) {
 
     companion object {

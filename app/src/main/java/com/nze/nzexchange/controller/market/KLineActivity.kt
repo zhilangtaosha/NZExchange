@@ -276,11 +276,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private fun getKDataRequest() {
         dataType = DATA_TYPE_GET_DATA
         val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
-        if (marketIndex % marketList.size == 0) {
+//        if (marketIndex % marketList.size == 0) {
             requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
-        } else {
-            requestBean.params.add("${pairsBean?.mainCurrency?.toUpperCase()}${pairsBean?.currency?.toUpperCase()}")
-        }
+//        } else {
+//            requestBean.params.add("${pairsBean?.mainCurrency?.toUpperCase()}${pairsBean?.currency?.toUpperCase()}")
+//        }
         requestBean.params.add(KLineParam.TIME_ONE_MIN)
         requestBean.params.add(socketRequestId)
         val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
