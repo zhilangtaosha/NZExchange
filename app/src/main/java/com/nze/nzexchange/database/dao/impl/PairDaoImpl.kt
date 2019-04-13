@@ -14,7 +14,23 @@ import com.nze.nzexchange.database.dao.PairDao
  * @创建时间：2019/4/12
  */
 class PairDaoImpl : PairDao {
+    val dbs = mutableListOf<SQLiteDatabase>()
 
+    override fun update(it: TransactionPairsBean) {
+        val dbHelper = DbHelper.getInstance(NzeApp.instance)
+        val db = dbHelper.writableDatabase
+        val cv = ContentValues()
+        cv.put("createTime", it.createTime)
+        cv.put("currency", it.currency)
+        cv.put("exchangeRate", it.exchangeRate)
+        cv.put("mainCurrency", it.mainCurrency)
+        cv.put("status", it.status)
+        cv.put("transactionPair", it.transactionPair)
+        cv.put("gain", it.gain)
+        cv.put("optional", it.optional)
+        db.update(DbHelper.TAB_TRANSACTION_PAIR, cv, "tid=?", arrayOf("${it.id}"))
+        db.close()
+    }
 
     override fun deleteAll() {
         val dbHelper = DbHelper.getInstance(NzeApp.instance)
@@ -32,6 +48,7 @@ class PairDaoImpl : PairDao {
     override fun addList(list: List<TransactionPairsBean>) {
         val dbHelper = DbHelper.getInstance(NzeApp.instance)
         val db = dbHelper.writableDatabase
+        dbs.add(db)
         val cv = ContentValues()
         list.forEach {
             if (isExistById(db, it.id)) {
@@ -107,4 +124,10 @@ class PairDaoImpl : PairDao {
     }
 
 
+    fun close() {
+        dbs.forEach {
+            if (it.isOpen)
+                it.close()
+        }
+    }
 }

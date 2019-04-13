@@ -13,8 +13,9 @@ import android.database.sqlite.SQLiteOpenHelper
 class DbHelper private constructor(context: Context?, name: String?, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, name, factory, version) {
     companion object {
         val DB_VERSION = 1
-        val DB_NAME="aus.db"
-        val TAB_TRANSACTION_PAIR="transaction_pair"
+        val DB_NAME = "aus.db"
+        val TAB_TRANSACTION_PAIR = "transaction_pair"
+        val TAB_SEARCH_HISTORY = "search_history"
         @Volatile
         var instance: DbHelper? = null
 
@@ -29,11 +30,15 @@ class DbHelper private constructor(context: Context?, name: String?, factory: SQ
             return instance!!
         }
     }
+
     private constructor(context: Context) : this(context, DB_NAME, null, DB_VERSION) {
     }
+
     override fun onCreate(db: SQLiteDatabase?) {
-        val sql = "create table $TAB_TRANSACTION_PAIR(id integer primary key autoincrement,tid text ,createTime integer,currency text,exchangeRate real,mainCurrency text,status integer,transactionPair text,gain real,optional integer)"
-        db?.execSQL(sql)
+        val searchHistorySql = "create table $TAB_SEARCH_HISTORY(id integer primary key autoincrement,tid text ,createTime integer,currency text,exchangeRate real,mainCurrency text,status integer,transactionPair text,gain real,optional integer)"
+        db?.execSQL(searchHistorySql)
+        val transactionPairSql = "create table $TAB_TRANSACTION_PAIR(id integer primary key autoincrement,tid text ,createTime integer,currency text,exchangeRate real,mainCurrency text,status integer,transactionPair text,gain real,optional integer)"
+        db?.execSQL(transactionPairSql)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

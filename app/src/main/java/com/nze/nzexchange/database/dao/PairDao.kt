@@ -18,4 +18,6 @@ interface PairDao {
 
     fun deleteAll()
 
+    fun update(bean: TransactionPairsBean)
+
 }

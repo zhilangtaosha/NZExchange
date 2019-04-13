@@ -101,7 +101,6 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
 
 
     override fun getDataFromNet() {
-//        if (mainCurrency != null && mainCurrency != "自选") {
         TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
                 .map {
                     if (it.success) {
@@ -120,25 +119,7 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
                     NLog.i("getTransactionPairs error....")
                     ptrLv.onPullDownRefreshComplete()
                 })
-//        } else if (mainCurrency != null) {
-//            if (userBean != null) {
-//                TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
-//                        .map {
-//                            it.apply {
-//                                result.map {
-//                                    it.optional = 1
-//                                }
-//                            }
-//                        }
-//                        .compose(netTf())
-//                        .subscribe({
-//                            if (it.success) {
-//                                lvAdapter.group = it.result
-//                                ptrLv.onPullDownRefreshComplete()
-//                            }
-//                        }, onError)
-//            }
-//        }
+
     }
 
     override fun onFirstRequest() {

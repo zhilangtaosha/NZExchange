@@ -44,7 +44,36 @@
     <ListView
         android:id="@+id/lv_search_aps"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
+    <RelativeLayout
+        android:id="@+id/layout_history_aps"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_history_aps"
+            style="@style/tx14_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="历史记录" />
+
+        <ImageView
+            android:id="@+id/iv_delete_aps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="15dp"
+            android:src="@mipmap/delete_icon" />
+
+        <LinearLayout
+            android:id="@+id/flayout_history_aps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/tv_history_aps" />
+    </RelativeLayout>
 
 </LinearLayout>

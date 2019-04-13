@@ -1,5 +1,7 @@
 package com.nze.nzexchange.controller.market
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.widget.*
@@ -200,6 +202,15 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     }
     private var marketIndex: Int = 0
 
+
+    companion object {
+        fun skip(context: Context, bean: TransactionPairsBean) {
+            val intent = Intent(context, KLineActivity::class.java)
+            intent.putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, bean)
+            context.startActivity(intent)
+        }
+    }
+
     override fun getRootView(): Int = R.layout.activity_kline
 
     override fun initView() {
@@ -277,7 +288,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         dataType = DATA_TYPE_GET_DATA
         val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
 //        if (marketIndex % marketList.size == 0) {
-            requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
+        requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
 //        } else {
 //            requestBean.params.add("${pairsBean?.mainCurrency?.toUpperCase()}${pairsBean?.currency?.toUpperCase()}")
 //        }
