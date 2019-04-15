@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".controller.market.PairSearchActivity">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -50,7 +51,7 @@
     <RelativeLayout
         android:id="@+id/layout_history_aps"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_history_aps"
@@ -68,12 +69,13 @@
             android:padding="15dp"
             android:src="@mipmap/delete_icon" />
 
-        <LinearLayout
+        <com.nze.nzexchange.widget.flowlayout.FlowTagLayout
             android:id="@+id/flayout_history_aps"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_below="@+id/tv_history_aps" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_history_aps"
+            android:layout_marginRight="15dp" />
     </RelativeLayout>
+
 
 </LinearLayout>

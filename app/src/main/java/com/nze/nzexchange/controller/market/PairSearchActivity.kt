@@ -1,7 +1,11 @@
 package com.nze.nzexchange.controller.market
 
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ListView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -15,16 +19,13 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.database.dao.impl.PairDaoImpl
 import com.nze.nzexchange.database.dao.impl.SearchHistoryDaoImpl
-import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.widget.FlowLayout
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
-import io.reactivex.BackpressureStrategy
+import com.nze.nzexchange.widget.flowlayout.FlowTagLayout
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_pair_search.*
-import android.widget.LinearLayout
 
 
 class PairSearchActivity : NBaseActivity() {
@@ -33,7 +34,8 @@ class PairSearchActivity : NBaseActivity() {
     val listView: ListView by lazy { lv_search_aps }
     val historyLayout: RelativeLayout by lazy { layout_history_aps }
     val deleteIv: ImageView by lazy { iv_delete_aps }
-    val flowLayout: LinearLayout by lazy { flayout_history_aps }
+    val flowLayout: FlowTagLayout by lazy { flayout_history_aps }
+    val historyAdapter: HistoryFlowAdapter by lazy { HistoryFlowAdapter(this) }
 
     val searchAdapter: PairSearchAdapter by lazy {
         PairSearchAdapter(this).apply {
@@ -79,6 +81,21 @@ class PairSearchActivity : NBaseActivity() {
             val item = searchAdapter.getItem(position)
             KLineActivity.skip(this, item!!)
             searchHistoryDao.add(item)
+            searchEt.setText("")
+        }
+
+        //搜索历史记录
+        flowLayout.adapter = historyAdapter
+        flowLayout.setOnTagClickListener { parent, view, position ->
+            val pairsBean = historyAdapter.getItem(position)
+            KLineActivity.skip(this, pairsBean!!)
+        }
+
+        //删除搜索记录
+        deleteIv.setOnClickListener {
+            searchHistoryDao.delete()
+            historyAdapter.clearGroup(true)
+            toggleShowEmpty(true, "暂无搜索记录", R.mipmap.no_data_search)
         }
     }
 
@@ -104,19 +121,18 @@ class PairSearchActivity : NBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        showHistory()
+    }
+
+    fun showHistory() {
         switchLayout(true)
         val list = searchHistoryDao.findAll()
-        flowLayout.removeAllViews()
-        list.forEach {
-            NLog.i("history:id->${it.id} transactionPair->${it.transactionPair}")
-            val tv = TextView(this)
-            val LP_WW = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            tv.layoutParams = LP_WW
-            tv.text = it.transactionPair
-            flowLayout.addView(tv)
+        if (list.size > 0) {
+            stopAllView()
+            historyAdapter.group = list.toMutableList()
+        } else {
+            toggleShowEmpty(true, "暂无搜索记录", R.mipmap.no_data_search)
         }
-        flowLayout.invalidate()
     }
 
     override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT
@@ -131,7 +147,7 @@ class PairSearchActivity : NBaseActivity() {
     override fun onNetworkDisConnected() {
     }
 
-    override fun getContainerTargetView(): View? = null
+    override fun getContainerTargetView(): View? = flowLayout
 
 
     fun selftSelect(item: TransactionPairsBean, position: Int) {

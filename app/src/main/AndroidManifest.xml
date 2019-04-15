@@ -141,7 +141,12 @@
         <activity android:name=".controller.market.KLineActivity" />
         <activity android:name=".controller.my.authentication.AuthenticationHomeActivity" />
         <activity android:name=".controller.my.authentication.VideoRecordActivity" />
-        <activity android:name=".controller.market.PairSearchActivity"></activity>
+        <activity android:name=".controller.market.PairSearchActivity" />
+
+        <service
+            android:name=".controller.bibi.KLineService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

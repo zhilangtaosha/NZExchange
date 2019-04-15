@@ -124,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_weight="1"
-            android:background="@drawable/asset_btn_bg"
+            android:background="@drawable/shape_line2a32_bg1f27"
             android:drawableLeft="@mipmap/asset_recharge"
             android:drawablePadding="10dp"
             android:paddingLeft="30dp"
