@@ -1,6 +1,10 @@
 package com.nze.nzexchange.bean
 
+import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import com.nze.nzexchange.NzeApp
+import com.nze.nzexchange.controller.login.LoginActivity
 
 /**
  * @author: zwy
@@ -32,5 +36,14 @@ data class UserBean(
             NzeApp.instance.userBean = null
         }
 
+        fun isLogin(context: Context): Boolean {
+            var userBean = loadFromApp()
+            var isLogin = true
+            if (userBean == null) {
+                isLogin = false
+                startActivity(context, Intent(context, LoginActivity::class.java), null)
+            }
+            return isLogin
+        }
     }
 }

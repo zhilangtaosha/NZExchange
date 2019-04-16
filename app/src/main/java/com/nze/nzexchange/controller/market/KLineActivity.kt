@@ -536,84 +536,90 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         val DATA_NOW_LINEK = 3
         val DATA_OLD_LINEK = 4
         val DATA_NEW_LINEK = 5
+        val DATA_QUOTES = 6
+        val DATA_DEPTH = 7
         override fun onMessage(webSocket: WebSocket, text: String) {
             NLog.i("text>>>$text")
             Observable.create<Int> {
-                var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
-                val lineK = soketbean.lineK
-                val handicap = soketbean.handicap
-                val latestDeal = soketbean.latestDeal
-                if (lineK != null) {
-                    var kList = mutableListOf<KLineEntity>()
-                    lineK.result?.let {
-                        it.forEachIndexed { index, it ->
-                            val bean = KLineEntity()
-//                            bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
-                            bean.Date = it[0]
-                            bean.Open = it[1].toFloat()
-                            bean.Close = it[2].toFloat()
-                            bean.High = it[3].toFloat()
-                            bean.Low = it[4].toFloat()
-                            bean.Volume = it[5].toFloat()
-                            if (bean.High < bean.Open || bean.High < bean.Close || bean.High < bean.Low) {
-                                NLog.i("最高值出错>>>index=$index")
+                try {
+                    var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
+                    val lineK = soketbean.lineK
+                    val handicap = soketbean.handicap
+                    val latestDeal = soketbean.latestDeal
+                    if (lineK != null) {
+                        var kList = mutableListOf<KLineEntity>()
+                        lineK.result?.let {
+                            it.forEachIndexed { index, it ->
+                                val bean = KLineEntity()
+                                //                            bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
+                                bean.Date = it[0]
+                                bean.Open = it[1].toFloat()
+                                bean.Close = it[2].toFloat()
+                                bean.High = it[3].toFloat()
+                                bean.Low = it[4].toFloat()
+                                bean.Volume = it[5].toFloat()
+                                if (bean.High < bean.Open || bean.High < bean.Close || bean.High < bean.Low) {
+                                    NLog.i("最高值出错>>>index=$index")
+                                }
+                                if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
+                                    NLog.i("最小值出错>>>index=$index")
+                                }
+                                kList.add(bean)
                             }
-                            if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
-                                NLog.i("最小值出错>>>index=$index")
+
+                            kList.forEach {
+                                it.Date = TimeTool.format(pattern, it.Date.toLong() * 1000)
                             }
-                            kList.add(bean)
+                            //                        DataHelper.calculate(kList)
                         }
+                        when (lineK.type) {
+                            KLINE_TYPE_NOWLINEK -> {
+                                //                            kNowList.clear()
+                                //                            kNowList.addAll(kList)
+                                chartData.addAll(0, kList)
+                                it.onNext(DATA_NOW_LINEK)
+                            }
+                            KLINE_TYPE_NEWLINEK -> {
+                                //                            kNewList.clear()
+                                //                            kNewList.addAll(kList)
+                                chartData.addAll(kList)
+                                it.onNext(DATA_NEW_LINEK)
+                            }
+                            KLINE_TYPE_OLDLINEK -> {
+                                //                            kOldList.clear()
+                                //                            kOldList.addAll(kList)
+                                chartData.addAll(0, kList)
+                                it.onNext(DATA_OLD_LINEK)
+                            }
+                        }
+                        DataHelper.calculate(chartData)
+                    }
 
-                        kList.forEach {
-                            it.Date = TimeTool.format(pattern, it.Date.toLong() * 1000)
+                    if (handicap != null) {
+                        buyList.clear()
+                        handicap.asks?.forEach {
+                            val bean = ShenDubean(it[1], it[0])
+                            buyList.add(bean)
                         }
-//                        DataHelper.calculate(kList)
+                        sellList.clear()
+                        handicap.bids?.forEach {
+                            val bean = ShenDubean(it[1], it[0])
+                            sellList.add(bean)
+                        }
+                        it.onNext(DATA_HANDICAP)
                     }
-                    when (lineK.type) {
-                        KLINE_TYPE_NOWLINEK -> {
-//                            kNowList.clear()
-//                            kNowList.addAll(kList)
-                            chartData.addAll(0, kList)
-                            it.onNext(DATA_NOW_LINEK)
-                        }
-                        KLINE_TYPE_NEWLINEK -> {
-//                            kNewList.clear()
-//                            kNewList.addAll(kList)
-                            chartData.addAll(kList)
-                            it.onNext(DATA_NEW_LINEK)
-                        }
-                        KLINE_TYPE_OLDLINEK -> {
-//                            kOldList.clear()
-//                            kOldList.addAll(kList)
-                            chartData.addAll(0, kList)
-                            it.onNext(DATA_OLD_LINEK)
-                        }
-                    }
-                    DataHelper.calculate(chartData)
-                }
 
-                if (handicap != null) {
-                    buyList.clear()
-                    handicap.asks?.forEach {
-                        val bean = ShenDubean(it[1], it[0])
-                        buyList.add(bean)
+                    if (latestDeal != null) {
+                        newDealList.clear()
+                        newDealList.addAll(latestDeal)
+                        it.onNext(DATE_NEW_DEAL)
                     }
-                    sellList.clear()
-                    handicap.bids?.forEach {
-                        val bean = ShenDubean(it[1], it[0])
-                        sellList.add(bean)
-                    }
-                    it.onNext(DATA_HANDICAP)
-                }
-
-                if (latestDeal != null) {
-                    newDealList.clear()
-                    newDealList.addAll(latestDeal)
-                    it.onNext(DATE_NEW_DEAL)
+                } catch (e: Exception) {
+                    it.onError(Throwable("不存在该条交易对的K线信息"))
                 }
             }.subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
+                    .subscribe({
                         when (it) {
                             DATA_NOW_LINEK -> {//k线数据
 //                                chartData.addAll(kList)
@@ -648,7 +654,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                                 newDealLv.adapter = newDealAdapter
                             }
                         }
-                    }
+                    }, {
+                        showToast(it.message!!)
+                    })
 
             super.onMessage(webSocket, text)
         }

@@ -1,7 +1,11 @@
 package com.nze.nzexchange.controller.bibi
 
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.View
@@ -17,6 +21,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.CommonListPopup
@@ -163,12 +168,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         }
     }
 
-    var nWebSocket: NWebSocket? = null
-    var socket: WebSocket? = null
-    final val DATA_TYPE_INIT = 0
-    final val DATA_TYPE_REFRESH = 1
-    final val DATA_TYPE_LISTENER = 2
-    var dataType = DATA_TYPE_INIT
+
+
+    var binder: KLineService.KBinder? = null
+    var isBinder = false
 
 
     companion object {
@@ -192,20 +195,19 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         klineIv.setOnClickListener(this)
 
 
-
-        handicapSaleAdapter.group = HandicapBean.getList()
-        handicapBuyAdapter.group = HandicapBean.getList()
-        handicapSaleLv.adapter = handicapSaleAdapter
-        handicapBuyLv.adapter = handicapBuyAdapter
+//        handicapSaleAdapter.group = HandicapBean.getList()
+//        handicapBuyAdapter.group = HandicapBean.getList()
+//        handicapSaleLv.adapter = handicapSaleAdapter
+//        handicapBuyLv.adapter = handicapBuyAdapter
 
         currentOrderLv.adapter = currentOrderAdapter
 
-        switchType(currentType)
         getTransactionPair()
     }
 
 
     private fun switchType(type: Int) {
+        currentType = type
         if (type == TYPE_BUY) {
             buyTv.isSelected = true
             saleTv.isSelected = false
@@ -214,7 +216,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             buyIsb.visibility = View.VISIBLE
             saleIsb.visibility = View.GONE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_9d81_bg)!!)
-            transactionBtn.text = "买入BTC"
+            transactionBtn.text = "买入${currentTransactionPair!!.currency}"
             seekbarValueTv.text = "${buyIsb.progress}%"
         } else {
             buyTv.isSelected = false
@@ -224,7 +226,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             buyIsb.visibility = View.GONE
             saleIsb.visibility = View.VISIBLE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_4a5f_bg)!!)
-            transactionBtn.text = "卖出BTC"
+            transactionBtn.text = "卖出${currentTransactionPair!!.currency}"
             seekbarValueTv.text = "${saleIsb.progress}%"
         }
         if (userBean == null)
@@ -233,14 +235,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         if (eventCenter.eventCode == EventCode.CODE_SELECT_TRANSACTIONPAIR) {
-//            sidePopup.dismiss()
             NLog.i("bibifragment get select event....")
             currentTransactionPair = eventCenter.data as TransactionPairsBean
             refreshLayout()
             getPendingOrderInfo(currentTransactionPair?.id!!)
             orderPending(currentTransactionPair?.id!!, userBean?.userId)
-            socket?.close(1002, "")
-            getKData()
+            //切换交易对，切换盘口
+            changePair()
         }
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
             userBean = UserBean.loadFromApp()
@@ -250,6 +251,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (eventCenter.eventCode == EventCode.CODE_TRADE_BIBI) {
             val type: Int = eventCenter.data as Int
             switchType(type)
+        }
+        if (eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
+            userBean = UserBean.loadFromApp()
+            restOrderBean = null
+            switchType(currentType)
+            currentOrderAdapter.clearGroup(false)
+            currentOrderLv.adapter = currentOrderAdapter
         }
     }
 
@@ -490,66 +498,56 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     private fun getKData() {
-        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/${currentTransactionPair?.currency?.toLowerCase()}${currentTransactionPair?.mainCurrency?.toLowerCase()}/${System.currentTimeMillis()}/oneMinute", wsListener)
-        socket = nWebSocket?.open()
+        binder?.getKDataRequest(currentTransactionPair!!)
     }
 
-    private val wsListener = object : WebSocketListener() {
-        val gson: Gson = Gson()
-        override fun onOpen(webSocket: WebSocket, response: Response) {
-            super.onOpen(webSocket, response)
+
+
+    override fun onResume() {
+        super.onResume()
+        activity!!.bindService(Intent(activity, KLineService::class.java), connection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binder?.close()
+        activity!!.unbindService(connection)
+    }
+
+    fun changePair() {
+        handicapBuyAdapter.clearGroup(true)
+        handicapBuyLv.adapter = handicapBuyAdapter
+        handicapSaleAdapter.clearGroup(true)
+        handicapSaleLv.adapter = handicapSaleAdapter
+        binder?.changePair(currentTransactionPair!!)
+    }
+
+    val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i("zwy", "onServiceDisconnected")
+            isBinder = false
         }
 
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            super.onFailure(webSocket, t, response)
-        }
-
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            super.onClosing(webSocket, code, reason)
-        }
-
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            NLog.i("text>>>$text")
-            if (dataType == DATA_TYPE_INIT) {
-                Observable.create<Soketbean> {
-                    var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
-                    it.onNext(soketbean)
-
-                }.subscribeOn(Schedulers.computation())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            val handicap = it.handicap
-                            val buyList = mutableListOf<HandicapBean>()
-                            val saleList = mutableListOf<HandicapBean>()
-                            handicap?.asks?.forEachIndexed { index, strings ->
-                                saleList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
-                            }
-                            handicap?.bids?.forEachIndexed { index, strings ->
-                                buyList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
-                            }
-                            handicapBuyAdapter.group = buyList.take(5).toMutableList()
-                            handicapBuyLv.adapter = handicapBuyAdapter
-                            handicapSaleAdapter.group = saleList.take(5).toMutableList()
-                            handicapSaleLv.adapter = handicapSaleAdapter
-
-                        }
-            } else if (dataType == DATA_TYPE_REFRESH) {
-
-            } else {
-
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i("zwy", "onServiceConnected")
+            binder = service as KLineService.KBinder?
+            isBinder = true
+            binder?.initKSocket(KLineParam.MARKET_MYSELF) { lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth? ->
+                if (handicap != null) {
+                    val buyList = mutableListOf<HandicapBean>()
+                    val saleList = mutableListOf<HandicapBean>()
+                    handicap?.asks?.forEachIndexed { index, strings ->
+                        saleList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
+                    }
+                    handicap?.bids?.forEachIndexed { index, strings ->
+                        buyList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
+                    }
+                    handicapBuyAdapter.group = buyList.take(5).toMutableList()
+                    handicapBuyLv.adapter = handicapBuyAdapter
+                    handicapSaleAdapter.group = saleList.take(5).toMutableList()
+                    handicapSaleLv.adapter = handicapSaleAdapter
+                }
             }
-
-            super.onMessage(webSocket, text)
-        }
-
-        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-            NLog.i("bytes>>>$bytes")
-            super.onMessage(webSocket, bytes)
-        }
-
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            super.onClosed(webSocket, code, reason)
         }
     }
-
 }

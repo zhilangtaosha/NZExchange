@@ -40,6 +40,8 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     val assetAdapter: MyAssetLvAdapter by lazy { MyAssetLvAdapter(this) }
     val userBean: UserBean? = UserBean.loadFromApp()
 
+
+
     override fun getRootView(): Int = R.layout.activity_my_asset
 
     override fun initView() {
@@ -50,14 +52,14 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         zbanner.setOnPageChangeLister {
             when (it) {
                 0 -> {
-                    
+                    assetInquiry()
                 }
                 1 -> {
                 }
                 2 -> {
+                    getBibiAsset()
                 }
             }
-            getBibiAsset()
         }
     }
 
@@ -89,7 +91,6 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
 
 
     override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     class AssetBannerAdapter(fm: FragmentManager?, var typeList: List<Int>) : ZBannerAdapter(fm) {
@@ -109,6 +110,15 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                     if (it.success) {
                         assetAdapter.group = it.result
                     }
+                }, onError)
+    }
+
+    fun assetInquiry() {
+        UserAssetBean.assetInquiry(userBean?.userId!!)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success)
+                        assetAdapter.group = it.result
                 }, onError)
     }
 }

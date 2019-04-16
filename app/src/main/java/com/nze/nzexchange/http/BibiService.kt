@@ -91,9 +91,15 @@ interface BibiService {
     ): Flowable<Result<OrderPendBean>>
 
 
-    //查询账户资产
+    //查询OTC账户资产
     @GET("assets/getUserAssets")
     fun getUserAssets(@Query("userId") userId: String): Flowable<Result<MutableList<UserAssetBean>>>
+
+    //查询币币账户资产
+    @GET("balance/assetInquiry")
+    fun assetInquiry(
+            @Query("userId") userId: String
+    ): Flowable<Result<MutableList<UserAssetBean>>>
 
     //提币
     @FormUrlEncoded

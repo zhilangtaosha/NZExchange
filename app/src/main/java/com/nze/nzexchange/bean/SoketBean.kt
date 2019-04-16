@@ -10,7 +10,8 @@ data class Soketbean(
         val lineK: LineKBean?,
         val handicap: Handicap?,
         val latestDeal: List<NewDealBean>?,
-        val quotation: Array<String>?
+        val quotes: Array<String>?,
+        val depth:Depth?
 ) {
 
     companion object {
@@ -45,4 +46,9 @@ data class NewDealBean(
         val price: String,
         val time: Double,
         val type: Int//0购买，1出售
+)
+
+data class Depth(
+        val bids: Array<Array<Double>>,
+        val asks: Array<Array<Double>>
 )

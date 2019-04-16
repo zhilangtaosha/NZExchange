@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.otc
 
 
 import android.content.Intent
+import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.view.View
@@ -191,7 +192,8 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 //                }
             }
             R.id.iv_trade_list_market -> {
-                skipActivity(TradeListActivity::class.java)
+                if (UserBean.isLogin(activity!!))
+                    skipActivity(TradeListActivity::class.java)
             }
             else -> {
             }

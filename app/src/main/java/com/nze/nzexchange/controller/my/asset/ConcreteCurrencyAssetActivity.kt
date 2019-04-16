@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.my.asset
 
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.Button
@@ -12,6 +13,8 @@ import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean2.ConcreteAssetBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity.Companion.TYPE_BIBI
+import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity.Companion.TYPE_OTC
 import com.nze.nzexchange.controller.my.asset.recharge.RechargeCurrencyActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawCurrencyActivity
 import kotlinx.android.synthetic.main.activity_concrete_currency_asset.*
@@ -28,15 +31,33 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
     val moneyValueTv: TextView by lazy { tv_money_value_acca }
     val rechargeBtn: Button by lazy { btn_recharge_acca }
     val withdrawBtn: Button by lazy { btn_withdraw_acca }
+    val transferBtn: Button by lazy { btn_transfer_acca }
+    val tradeBtn: Button by lazy { btn_trade_acca }
+    val view1: View by lazy { view1_acca }
+    val view2: View by lazy { view2_acca }
+    val view3: View by lazy { view3_acca }
+
     val listView: ListView by lazy { listView_acca }
     val concreteAdapter: ConcreteAssetAdapter by lazy { ConcreteAssetAdapter(this) }
     var userAssetBean: UserAssetBean? = null
+    var type: Int = TYPE_BIBI
+
+    companion object {
+        val PARAM_TYPE = "type"
+        fun skip(context: Context, type: Int, userAssetBean: UserAssetBean) {
+            val intent = Intent(context, ConcreteCurrencyAssetActivity::class.java)
+            intent.putExtra(IntentConstant.PARAM_ASSET, userAssetBean)
+            intent.putExtra(PARAM_TYPE, type)
+            context.startActivity(intent)
+        }
+    }
 
     override fun getRootView(): Int = R.layout.activity_concrete_currency_asset
 
     override fun initView() {
         intent?.let {
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
+            type = it.getIntExtra(PARAM_TYPE, TYPE_BIBI)
         }
         userAssetBean?.let {
             currencyNameTv.text = it.currency
@@ -50,6 +71,9 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
 
         rechargeBtn.setOnClickListener(this)
         withdrawBtn.setOnClickListener(this)
+        transferBtn.setOnClickListener(this)
+        tradeBtn.setOnClickListener(this)
+        swithLayout(type)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -82,7 +106,22 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
                 startActivity(Intent(this@ConcreteCurrencyAssetActivity, WithdrawCurrencyActivity::class.java)
                         .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
             }
+            R.id.btn_transfer_acca -> {
+            }
+            R.id.btn_trade_acca -> {
+            }
         }
     }
 
+
+    fun swithLayout(type: Int) {
+        if (type == TYPE_OTC) {
+            withdrawBtn.visibility = View.GONE
+            view1.visibility = View.GONE
+            withdrawBtn.visibility = View.GONE
+            view2.visibility = View.GONE
+            view3.visibility = View.VISIBLE
+            tradeBtn.visibility = View.VISIBLE
+        }
+    }
 }
