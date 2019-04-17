@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.transfer.TransferActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_at"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_backgroud="@color/color_title_bg"
+        app:tb_right_icon="@mipmap/transfer_history"
+        app:tb_title_text="资金划转" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_title_bg">
+
+        <TextView
+            android:id="@+id/tv_currency_at"
+            style="@style/tx15_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="BTC" />
+
+        <TextView
+            android:id="@+id/tv_select_currency_at"
+            style="@style/tx14_head"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/right_arrow2"
+            android:drawablePadding="7dp"
+            android:gravity="center_vertical"
+            android:paddingRight="10dp"
+            android:text="选择币种" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/tx15_common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:text="账户" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_line2a32_bg1f27">
+
+        <TextView
+            android:id="@+id/tv_from_key_at"
+            style="@style/tx15_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="从" />
+
+        <TextView
+            android:id="@+id/tv_to_key_at"
+            style="@style/tx15_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_below="@+id/tv_from_key_at"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="到" />
+
+        <ImageView
+            android:id="@+id/iv_swap_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="15dp"
+            android:src="@mipmap/swap_icon" />
+
+        <TextView
+            android:id="@+id/tv_from_account_at"
+            style="@style/tx15_light"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_toLeftOf="@+id/iv_swap_at"
+            android:gravity="center_vertical"
+            android:text="币币账户" />
+
+        <TextView
+            android:id="@+id/tv_to_account_at"
+            style="@style/tx15_light"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_below="@+id/tv_from_account_at"
+            android:layout_toLeftOf="@+id/iv_swap_at"
+            android:gravity="center_vertical"
+            android:text="OTC账户" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/tv_from_key_at"
+            android:layout_toLeftOf="@+id/iv_swap_at"
+            android:background="@color/color_line" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/tx15_common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:text="划转数量" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginLeft="15dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_transfer_at"
+            style="@style/et15"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:hint="请输入划转数量" />
+
+        <TextView
+            android:id="@+id/tv_unit_at"
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingRight="10dp"
+            android:text="BTC" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/color_line" />
+
+        <TextView
+            android:id="@+id/tv_all_at"
+            style="@style/tx15_main"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="全部" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_line" />
+
+    <TextView
+        android:id="@+id/tv_available_at"
+        style="@style/tx13_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="可用0.00000BTC" />
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_transfer_at"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:text="划转" />
+</LinearLayout>

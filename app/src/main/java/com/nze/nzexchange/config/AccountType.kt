@@ -6,9 +6,9 @@ package com.nze.nzexchange.config
 class AccountType {
     companion object {
         const val BIBI: Int = 0//币币账户
-        const val WITHDRAW: Int = 1//提现账户
-        const val OTC: Int = 3//OTC账户
-        const val LEGAL: Int = 2//法币账户
+        const val LEGAL: Int = 1//法币账户
+        const val OTC: Int = 2//OTC账户
+        const val WITHDRAW: Int = 3//提现账户
 
         fun getAccountName(type: Int): String = when (type) {
             BIBI -> "币币账户"

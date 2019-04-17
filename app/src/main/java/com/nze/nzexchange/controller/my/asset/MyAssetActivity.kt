@@ -16,7 +16,9 @@ import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.BibiAssetBean
 import com.nze.nzexchange.bean.UserAssetBean
+import com.nze.nzexchange.bean.UserAssetBean.Companion.assetInquiry
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
@@ -39,7 +41,9 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     val listView: ListView by lazy { lv_ama }
     val assetAdapter: MyAssetLvAdapter by lazy { MyAssetLvAdapter(this) }
     val userBean: UserBean? = UserBean.loadFromApp()
-
+    var type = AccountType.BIBI
+    val otcList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
+    val bibiList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
 
 
     override fun getRootView(): Int = R.layout.activity_my_asset
@@ -52,15 +56,18 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         zbanner.setOnPageChangeLister {
             when (it) {
                 0 -> {
-                    assetInquiry()
+                    getBibiAsset()
+                    type = AccountType.BIBI
                 }
                 1 -> {
                 }
                 2 -> {
-                    getBibiAsset()
+                    getOtcAsset()
+                    type = AccountType.OTC
                 }
             }
         }
+        getOtcAsset()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -85,8 +92,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        startActivity(Intent(this@MyAssetActivity, ConcreteCurrencyAssetActivity::class.java)
-                .putExtra(IntentConstant.PARAM_ASSET, assetAdapter.getItem(position)))
+        ConcreteCurrencyAssetActivity.skip(this, type, assetAdapter.getItem(position)!!,otcList,bibiList)
     }
 
 
@@ -103,22 +109,27 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     }
 
 
-    fun getBibiAsset() {
+    fun getOtcAsset() {
         UserAssetBean.getUserAssets(userBean?.userId!!)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-                        assetAdapter.group = it.result
+                        otcList.clear()
+                        otcList.addAll(it.result)
+                        assetAdapter.group = otcList
                     }
                 }, onError)
     }
 
-    fun assetInquiry() {
+    fun getBibiAsset() {
         UserAssetBean.assetInquiry(userBean?.userId!!)
                 .compose(netTfWithDialog())
                 .subscribe({
-                    if (it.success)
-                        assetAdapter.group = it.result
+                    if (it.success) {
+                        bibiList.clear()
+                        bibiList.addAll(it.result)
+                        assetAdapter.group = bibiList
+                    }
                 }, onError)
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.transfer.TransferHistoryActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_ath"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_backgroud="@color/color_title_bg"
+        app:tb_right_icon="@mipmap/filter_icon"
+        app:tb_title_text="划转记录" />
+
+    <com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
+        android:id="@+id/ptrlv_ath"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

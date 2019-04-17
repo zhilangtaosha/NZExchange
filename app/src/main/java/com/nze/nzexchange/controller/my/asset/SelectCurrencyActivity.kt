@@ -1,9 +1,11 @@
 package com.nze.nzexchange.controller.my.asset
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.view.View
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
@@ -11,6 +13,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import kotlinx.android.synthetic.main.activity_select_currency.*
@@ -29,16 +32,24 @@ class SelectCurrencyActivity : NBaseActivity() {
 
     var userBean: UserBean? = UserBean.loadFromApp()
     val userAssetList: MutableList<UserAssetBean> by lazy { mutableListOf<UserAssetBean>() }
+    var type: Int = AccountType.BIBI
 
     companion object {
-        const val TYPE_BIBI = 0
-        const val TYPE_LEGAL = 1
-        const val TYPE_OTC = 2
+        fun skipForResult(activity: FragmentActivity, type: Int) {
+            val intent = Intent(activity, SelectCurrencyActivity::class.java)
+            intent.putExtra(IntentConstant.PARAM_TYPE, type)
+            activity.startActivityForResult(intent, 1)
+        }
     }
 
     override fun getRootView(): Int = R.layout.activity_select_currency
 
     override fun initView() {
+
+        intent?.let {
+            type = it.getIntExtra(IntentConstant.PARAM_TYPE, AccountType.BIBI)
+        }
+
         listView.adapter = currencyAdapter
         listView.setOnItemClickListener { parent, view, position, id ->
             val intent = Intent()
@@ -48,7 +59,11 @@ class SelectCurrencyActivity : NBaseActivity() {
 
         }
 
-        getBibiAsset()
+        if (type == AccountType.OTC) {
+            getOtcAsset()
+        } else {
+            getBibiAsset()
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -71,8 +86,22 @@ class SelectCurrencyActivity : NBaseActivity() {
 
     override fun getContainerTargetView(): View? = null
 
-    fun getBibiAsset() {
+    fun getOtcAsset() {
         UserAssetBean.getUserAssets(userBean?.userId!!)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        userAssetList.addAll(it.result)
+                        userAssetList.forEach {
+                            currencyList.add(it.currency)
+                            currencyAdapter.group = currencyList
+                        }
+                    }
+                }, onError)
+    }
+
+    fun getBibiAsset() {
+        UserAssetBean.assetInquiry(userBean?.userId!!)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {

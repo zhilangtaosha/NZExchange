@@ -146,7 +146,10 @@
         <service
             android:name=".controller.bibi.KLineService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".controller.my.asset.transfer.TransferActivity" />
+        <activity android:name=".controller.my.asset.transfer.TransferHistoryActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingTop="15dp"
+    android:paddingRight="15dp">
+
+    <TextView
+        android:id="@+id/tv_currency_lth"
+        style="@style/tx15_common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ETH" />
+
+    <TextView
+        android:id="@+id/tv_date_lth"
+        style="@style/tx13_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_currency_lth"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/tv_currency_lth"
+        android:text="10/23 16:12" />
+
+    <TextView
+        android:id="@+id/tv_amount_key_lth"
+        style="@style/tx13_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_currency_lth"
+        android:layout_marginTop="10dp"
+        android:text="数量" />
+
+    <TextView
+        android:id="@+id/tv_amount_value_lth"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_amount_key_lth"
+        android:layout_marginTop="10dp"
+        android:text="0.0135" />
+
+    <TextView
+        android:id="@+id/tv_type_key_lth"
+        style="@style/tx13_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_currency_lth"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="10dp"
+        android:text="类型" />
+
+    <TextView
+        android:id="@+id/tv_type_value_lth"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_type_key_lth"
+        android:layout_alignLeft="@+id/tv_type_key_lth"
+        android:layout_marginTop="10dp"
+        android:text="OTC账户到币币账户" />
+</RelativeLayout>

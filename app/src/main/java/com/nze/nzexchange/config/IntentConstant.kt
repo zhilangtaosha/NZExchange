@@ -16,8 +16,12 @@ class IntentConstant {
         const val PARAM_ASSET = "asset"
         const val PARAM_DETAIL = "detail"
         const val PARAM_TRANSACTION_PAIR = "transactionPair"
-        const val PARAM_IMAGE_PATH="imagePath"
+        const val PARAM_IMAGE_PATH = "imagePath"
         const val PARAM_VIDEO_PATH = "videoPath"
+        const val PARAM_TYPE = "type"
+        const val PARAM_OTC_ACCOUNT = "otcAccount"
+        const val PARAM_BIBI_ACCOUNT = "bibAccount"
+        const val PARAM_BUNDLE = "bundle"
 
         //设置支付方式
         const val TYPE_ZHIFUBAO = 0x001//支付宝

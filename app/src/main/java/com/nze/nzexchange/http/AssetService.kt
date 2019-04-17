@@ -35,4 +35,16 @@ interface AssetService {
 //    @Headers("Content-Type: application/json;Accept: application/json")
     @POST("/")
     fun zhangNet(@Body info: RequestBody):Flowable<Any>
+
+    //资产划转
+    @FormUrlEncoded
+    @POST("transferAssets")
+    fun transferAssets(
+            @Field("userId") userId: String,
+            @Field("token") token: String,
+            @Field("from") from: String,
+            @Field("to") to: String,
+            @Field("amount") amount: Double,
+            @Field("remark") remark: String?
+    ): Flowable<Result<Any>>
 }

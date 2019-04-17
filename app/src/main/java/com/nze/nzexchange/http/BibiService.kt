@@ -142,4 +142,6 @@ interface BibiService {
             @Query("status") status: Int?,
             @Query("transactionType") transactionType: Int?
     ): Flowable<Result<MutableList<OrderPendBean>>>
+
+
 }
