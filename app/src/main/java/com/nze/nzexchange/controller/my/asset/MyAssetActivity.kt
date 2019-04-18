@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_my_asset.*
 class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionListener, AdapterView.OnItemClickListener {
 
     val zbanner: ZBanner by lazy { carousel_ama }
-    val accoutTypeList: List<Int> = listOf<Int>(AssetBannerFragment.ACCOUT_TYPE_BIBI, AssetBannerFragment.ACCOUT_TYPE_LEGAL, AssetBannerFragment.ACCOUT_TYPE_OTC)
+    val accoutTypeList: List<Int> = listOf<Int>(AssetBannerFragment.ACCOUT_TYPE_BIBI, AssetBannerFragment.ACCOUT_TYPE_OTC, AssetBannerFragment.ACCOUT_TYPE_BIBI, AssetBannerFragment.ACCOUT_TYPE_OTC)
     val bannerAdapter: AssetBannerAdapter by lazy { AssetBannerAdapter(supportFragmentManager, accoutTypeList) }
 
     val searchEt: ClearableEditText by lazy { et_search_ama }
@@ -44,7 +44,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     var type = AccountType.BIBI
     val otcList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
     val bibiList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
-
+    var isFirst = true
 
     override fun getRootView(): Int = R.layout.activity_my_asset
 
@@ -60,14 +60,30 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                     type = AccountType.BIBI
                 }
                 1 -> {
+                    getOtcAsset()
+                    type = AccountType.OTC
                 }
                 2 -> {
+                    getBibiAsset()
+                    type = AccountType.BIBI
+                }
+                3 -> {
                     getOtcAsset()
                     type = AccountType.OTC
                 }
             }
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         getOtcAsset()
+        if (!isFirst) {
+            getBibiAsset()
+        }else{
+            isFirst = false
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -92,7 +108,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        ConcreteCurrencyAssetActivity.skip(this, type, assetAdapter.getItem(position)!!,otcList,bibiList)
+        ConcreteCurrencyAssetActivity.skip(this, type, assetAdapter.getItem(position)!!, otcList, bibiList)
     }
 
 
@@ -116,7 +132,8 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                     if (it.success) {
                         otcList.clear()
                         otcList.addAll(it.result)
-                        assetAdapter.group = otcList
+                        if (type == AccountType.OTC)
+                            assetAdapter.group = otcList
                     }
                 }, onError)
     }
@@ -128,7 +145,8 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                     if (it.success) {
                         bibiList.clear()
                         bibiList.addAll(it.result)
-                        assetAdapter.group = bibiList
+                        if (type == AccountType.BIBI)
+                            assetAdapter.group = bibiList
                     }
                 }, onError)
     }

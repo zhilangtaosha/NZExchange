@@ -2,6 +2,7 @@ package com.nze.nzexchange.http
 
 import com.nze.nzexchange.bean.BibiAssetBean
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.TransferRecordBean
 import io.reactivex.Flowable
 import retrofit2.http.*
 import okhttp3.RequestBody
@@ -47,4 +48,12 @@ interface AssetService {
             @Field("amount") amount: Double,
             @Field("remark") remark: String?
     ): Flowable<Result<Any>>
+
+    //资产划转记录筛选
+    @GET("screeningTransferRecord")
+    fun transferRecord(
+        @Query("userId" ) userId:String,
+        @Query("from" ) from:String?,
+        @Query("to" ) to:String?
+    ):Flowable<Result<MutableList<TransferRecordBean>>>
 }

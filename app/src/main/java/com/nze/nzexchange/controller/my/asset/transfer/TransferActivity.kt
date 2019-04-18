@@ -46,32 +46,11 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
     val TRANSFER_OTC = "outside"
     val TRANSFER_BIBI = "coin"
 
-    private val itemLimit: MutableList<String> by lazy {
-        mutableListOf<String>().apply {
-            add("全部")
-            add("OTC账户到币币账户")
-            add("币币账户到OTC账户")
-        }
-    }
 
-    val filterPopup: CommonListPopup by lazy {
-        CommonListPopup(this).apply {
-            addAllItem(itemLimit)
-            setOnItemClick { position, item ->
-                when (position) {
-                    0 -> {
-                    }
-                    1 -> {
-                    }
-                    2 -> {
-                    }
-                }
-            }
-        }
-    }
     var bundle: Bundle? = null
     lateinit var otcList: ArrayList<UserAssetBean>
     lateinit var bibiList: ArrayList<UserAssetBean>
+    val dialog: TransferSuccessDialog  by lazy { TransferSuccessDialog(this) }
 
     companion object {
         fun skip(context: Context, bundle: Bundle) {
@@ -85,13 +64,14 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
 
     override fun initView() {
         topBar.setRightClick {
-            filterPopup.showPopupWindow()
+            skipActivity(TransferHistoryActivity::class.java)
         }
         intent?.let {
             bundle = it.getBundleExtra(IntentConstant.PARAM_BUNDLE)
 
         }
         bundle?.let {
+            type = it.getInt(IntentConstant.PARAM_TYPE)
             userAssetBean = it.getParcelable(IntentConstant.PARAM_ASSET)
             otcList = it.getParcelableArrayList(IntentConstant.PARAM_OTC_ACCOUNT)
             bibiList = it.getParcelableArrayList(IntentConstant.PARAM_BIBI_ACCOUNT)
@@ -106,6 +86,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
         swapIv.setOnClickListener(this)
         allTv.setOnClickListener(this)
         transferBtn.setOnCommonClick(this)
+        swapAccount(type)
     }
 
     override fun onClick(v: View?) {
@@ -198,7 +179,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-
+                        dialog.show(type)
                     } else {
                         showToast(it.message)
                     }

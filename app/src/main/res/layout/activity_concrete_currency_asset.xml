@@ -190,7 +190,7 @@
             android:drawablePadding="10dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:text="法币交易"
+            android:text="OTC交易"
             android:textColor="@color/color_FF6D87A8"
             android:textSize="16sp"
             android:visibility="gone" />

@@ -18,6 +18,7 @@ import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.config.KLineRequestBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.http.HRetrofit
 import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.LinearLayoutAsListView
@@ -76,6 +77,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val kNowList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val kNewList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val kOldList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
+    val depthBuyList: MutableList<DepthDataBean> by lazy { mutableListOf<DepthDataBean>() }
+    val depthSellList: MutableList<DepthDataBean> by lazy { mutableListOf<DepthDataBean>() }
     val chartAdapter by lazy { KLineChartAdapter() }
     var pattern: String = TimeTool.PATTERN5
     val fenshiPopup: FenshiPopup by lazy {
@@ -92,7 +95,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     1 -> {
                         pattern = TimeTool.PATTERN5
                         kChart.setMainDrawLine(false)
-//                        changeTimeRequest(KLineParam.TIME_ONE_MIN)
+                        changeTimeRequest(KLineParam.TIME_ONE_MIN)
                     }
                     2 -> {
                         pattern = TimeTool.PATTERN9
@@ -244,7 +247,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         selectKline(kType)
         select(currentSelect)
 
-        getDepthData()
+//        getDepthData()
 
         //测试数据
 //        test()
@@ -252,6 +255,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         changMarket(0)
 
         getTokenInfo()
+
+        checkMarket()
     }
 
     private fun test() {
@@ -546,13 +551,15 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     val lineK = soketbean.lineK
                     val handicap = soketbean.handicap
                     val latestDeal = soketbean.latestDeal
+                    val quotes = soketbean.quotes
+                    val depth = soketbean.depth
                     if (lineK != null) {
                         var kList = mutableListOf<KLineEntity>()
                         lineK.result?.let {
                             it.forEachIndexed { index, it ->
                                 val bean = KLineEntity()
-                                //                            bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
-                                bean.Date = it[0]
+//                                bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
+                                bean.Date = "${TimeTool.format3(pattern,it[0].toLong())}"
                                 bean.Open = it[1].toFloat()
                                 bean.Close = it[2].toFloat()
                                 bean.High = it[3].toFloat()
@@ -567,32 +574,46 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                                 kList.add(bean)
                             }
 
-                            kList.forEach {
-                                it.Date = TimeTool.format(pattern, it.Date.toLong() * 1000)
-                            }
-                            //                        DataHelper.calculate(kList)
+//                            kList.forEach {
+//                                it.Date = TimeTool.format(pattern, it.Date.toLong() * 1000)
+//                            }
                         }
                         when (lineK.type) {
                             KLINE_TYPE_NOWLINEK -> {
-                                //                            kNowList.clear()
-                                //                            kNowList.addAll(kList)
                                 chartData.addAll(0, kList)
                                 it.onNext(DATA_NOW_LINEK)
                             }
                             KLINE_TYPE_NEWLINEK -> {
-                                //                            kNewList.clear()
-                                //                            kNewList.addAll(kList)
                                 chartData.addAll(kList)
                                 it.onNext(DATA_NEW_LINEK)
                             }
                             KLINE_TYPE_OLDLINEK -> {
-                                //                            kOldList.clear()
-                                //                            kOldList.addAll(kList)
                                 chartData.addAll(0, kList)
                                 it.onNext(DATA_OLD_LINEK)
                             }
                         }
                         DataHelper.calculate(chartData)
+                    }
+                    if (quotes != null) {//聚合行情
+
+                        it.onNext(DATA_QUOTES)
+                    }
+                    if (depth != null) {//深度图
+                        depthBuyList.clear()
+                        depthSellList.clear()
+                        depth.asks.forEach {
+                            val bean = DepthDataBean()
+                            bean.price = it[0]
+                            bean.volume = it[1]
+                            depthBuyList.add(bean)
+                        }
+                        depth.bids.forEach {
+                            val bean = DepthDataBean()
+                            bean.price = it[0]
+                            bean.volume = it[1]
+                            depthSellList.add(bean)
+                        }
+                        it.onNext(DATA_DEPTH)
                     }
 
                     if (handicap != null) {
@@ -615,7 +636,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                         it.onNext(DATE_NEW_DEAL)
                     }
                 } catch (e: Exception) {
-                    it.onError(Throwable("不存在该条交易对的K线信息"))
+//                    it.onError(Throwable("不存在该条交易对的K线信息"))
                 }
             }.subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -653,6 +674,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                                 newDealAdapter.group = newDealList
                                 newDealLv.adapter = newDealAdapter
                             }
+                            DATA_DEPTH -> {
+                                depthView.setData(depthSellList, depthBuyList)
+                            }
                         }
                     }, {
                         showToast(it.message!!)
@@ -669,9 +693,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
             super.onClosed(webSocket, code, reason)
             NLog.i("onClosed")
-//            if (isChangeMarket) {
-//                initKSocket(marketParamList[marketIndex % marketList.size])
-//            }
         }
     }
 
@@ -685,4 +706,19 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         socket?.cancel()
     }
 
+
+    fun checkMarket() {
+        HRetrofit.instance
+                .huoService()
+                .checkMarket("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+
+                    } else {
+                        marketList.removeAt(1)
+                    }
+                }, onError)
+
+    }
 }

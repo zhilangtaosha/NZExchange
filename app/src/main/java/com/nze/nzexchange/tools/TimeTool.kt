@@ -22,21 +22,30 @@ class TimeTool {
         const val PATTERN8 = "HH:mm:ss"
         const val PATTERN9 = "MM-dd HH:mm"
         const val PATTERN10 = "yyyy-MM-dd"
-
+        
 
         fun date(): Date = Date()
 
-        fun format(pattern: String, date: Date): String {
-            val formatter = SimpleDateFormat(pattern, Locale.CHINA)
+        fun format2(pattern: String, date: Date): String {
+//            val tz = TimeZone.getTimeZone("Asia/Shanghai")
+//            TimeZone.setDefault(tz)
+            val formatter = SimpleDateFormat(pattern)
             return formatter.format(date)
         }
 
         fun format(pattern: String, time: Long): String {
-            return format(pattern, Date(time))
+            return format2(pattern, Date(time))
         }
 
+        fun format3(pattern: String,time: Long): String {
+            val tz = TimeZone.getTimeZone("Asia/Shanghai")
+            TimeZone.setDefault(tz)
+            val sdf = SimpleDateFormat(pattern)
+            val format = sdf.format(Date(time*1000))
+            return format;
+        }
 
-        fun getLastUpdateTime(): CharSequence = format(PATTERN2, date())
+        fun getLastUpdateTime(): CharSequence = format2(PATTERN2, date())
 
         //倒计时使用，单位秒
         fun formatTime(t: Long): String = with(t) {
@@ -62,7 +71,7 @@ class TimeTool {
 
         //时间转时间戳
         fun dateToStamp(date: String, pattern: String): Long {
-            val sdf = SimpleDateFormat(pattern,Locale.CHINA)
+            val sdf = SimpleDateFormat(pattern, Locale.CHINA)
             try {
                 val date = sdf.parse(date)
                 return date.time / 1000

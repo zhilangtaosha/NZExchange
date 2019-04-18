@@ -110,7 +110,7 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
                             month
                         }.forEach {
                             NLog.i(it.toString())
-                            val current = TimeTool.format(TimeTool.PATTERN3, TimeTool.date())
+                            val current = TimeTool.format2(TimeTool.PATTERN3, TimeTool.date())
                             if (it.key == current) {
                                 tmpList.add(RechargeHistoryBean(title = "本月", isTitle = true))
                             } else {
