@@ -149,7 +149,8 @@
             android:exported="true" />
 
         <activity android:name=".controller.my.asset.transfer.TransferActivity" />
-        <activity android:name=".controller.my.asset.transfer.TransferHistoryActivity"></activity>
+        <activity android:name=".controller.my.asset.transfer.TransferHistoryActivity" />
+        <activity android:name=".controller.my.asset.legal.LegalRechargeActivity"></activity>
     </application>
 
 </manifest>

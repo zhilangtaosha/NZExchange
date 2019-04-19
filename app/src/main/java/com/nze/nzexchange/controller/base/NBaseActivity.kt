@@ -32,6 +32,15 @@ abstract class NBaseActivity : BaseActivity() {
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
     }
 
+    fun showLoad() {
+        mProgressDialog.show()
+    }
+
+    fun dismissLoad() {
+        if (mProgressDialog.isShowing) {
+            mProgressDialog.dismiss()
+        }
+    }
 
     fun skipActivity(cls: Class<*>) {
         startActivity(Intent(this, cls))

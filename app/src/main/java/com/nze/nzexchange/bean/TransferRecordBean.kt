@@ -21,7 +21,8 @@ data class TransferRecordBean(
         val userId: String
 ) {
     companion object {
-
+        val ACCOUNT_OTC = "outside"
+        val ACCOUNT_BIBI = "coin"
         fun transferRecord(userId: String, from: String? = null, to: String? = null): Flowable<Result<MutableList<TransferRecordBean>>> {
             return Flowable.defer {
                 NRetrofit.instance

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.legal.LegalRechargeActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_alr"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_backgroud="@color/color_title_bg"
+        app:tb_right_icon="@mipmap/transfer_history"
+        app:tb_title_text="法币充值" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_FF141a20"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_recharge_mode_alr"
+            style="@style/tx16_light"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="@color/color_FF171d25"
+            android:drawableLeft="@mipmap/bank_icon"
+            android:drawableRight="@mipmap/right_arrow2"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="15dp"
+            android:text="中国工商银行卡(0413)" />
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="充值金额" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="¥"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/et_amount_alr"
+                style="@style/et_no_size"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="30dp"
+            android:background="@color/color_line" />
+    </LinearLayout>
+
+    <com.nze.nzexchange.widget.CommonButton
+        android:id="@+id/btn_next_alr"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="15dp"
+        android:text="下一步" />
+
+</LinearLayout>

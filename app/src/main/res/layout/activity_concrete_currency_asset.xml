@@ -145,7 +145,7 @@
             android:layout_alignParentRight="true"
             android:layout_weight="1"
             android:background="@drawable/shape_line2a32_bg1f27"
-            android:drawableLeft="@mipmap/asset_recharge"
+            android:drawableLeft="@mipmap/asset_withdraw"
             android:drawablePadding="10dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"

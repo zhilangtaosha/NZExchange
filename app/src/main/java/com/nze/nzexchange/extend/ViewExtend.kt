@@ -19,18 +19,6 @@ fun View.setBg(drawableId: Int) {
     }
 }
 
-fun TextView.setTxtColor(colorId: Int) {
-    setTextColor(ContextCompat.getColor(context, colorId))
-}
-
-fun TextView.setTextFromHtml(source: String) {
-    if (Build.VERSION.SDK_INT < 24) {
-        text = Html.fromHtml(source)
-    } else {
-        text = Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY)
-    }
-}
-
 
 fun Button.setBgByDrawable(drawable: Drawable) {
     if (Build.VERSION.SDK_INT > 16) {
