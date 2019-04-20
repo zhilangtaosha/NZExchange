@@ -10,6 +10,13 @@
         android:id="@+id/tv_lsrp"
         style="@style/tx15_light"
         android:layout_width="match_parent"
-        android:layout_height="60dp" />
+        android:layout_height="60dp"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/color_line" />
 
 </LinearLayout>

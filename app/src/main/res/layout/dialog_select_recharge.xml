@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/color_bg"
-        android:orientation="vertical"
-        android:paddingBottom="50dp">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,5 +42,25 @@
             android:id="@+id/lv_dsr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/color_line" />
+
+        <TextView
+            android:id="@+id/tv_add_dsr"
+            style="@style/tx15_common"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:drawableLeft="@mipmap/add_icon"
+            android:drawableRight="@mipmap/right_arrow"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="添加充值方式" />
     </LinearLayout>
 </RelativeLayout>
