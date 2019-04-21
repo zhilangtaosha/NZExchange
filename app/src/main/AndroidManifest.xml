@@ -152,7 +152,8 @@
         <activity android:name=".controller.my.asset.transfer.TransferHistoryActivity" />
         <activity android:name=".controller.my.asset.legal.LegalRechargeActivity" />
         <activity android:name=".controller.my.asset.legal.BindRechargeActivity" />
-        <activity android:name=".controller.my.asset.legal.RechargeConfirmActivity"></activity>
+        <activity android:name=".controller.my.asset.legal.RechargeConfirmActivity" />
+        <activity android:name=".controller.my.asset.legal.LegalWithdrawActivity"></activity>
     </application>
 
 </manifest>

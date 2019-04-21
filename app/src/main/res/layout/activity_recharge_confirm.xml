@@ -87,7 +87,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
@@ -95,9 +95,52 @@
         <TextView
             style="@style/tx15_common"
             android:layout_width="120dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:background="@color/color_FF1F2833"
             android:gravity="center"
             android:text="取消" />
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            style="@style/tx15_main"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/color_FF1F2833"
+            android:gravity="center"
+            android:text="确认已付款" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/shape_radius_line678c_bg"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            style="@style/tx15_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/tip_icon"
+            android:drawablePadding="10dp"
+            android:text="注意事项" />
+
+        <TextView
+            style="@style/tx14_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="1.须在您的银行转帐的说明/参考中加上识别码，否则可能会大大延误您的存款。
+2.银行账户信息如有更改，恕不另行通知，请使用AUD存款页面中指定的账户，该账户可能不是您之前存入的账户。
+3.存款时间因银行处理时间而议，通常1-3个工作日
+4.只允许来自澳大利亚银行账户的法定存款且不接受现金存款。" />
     </LinearLayout>
 </LinearLayout>
