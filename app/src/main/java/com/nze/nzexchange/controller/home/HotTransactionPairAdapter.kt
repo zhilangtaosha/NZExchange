@@ -9,17 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.MarketPopularBean
 import com.nze.nzexchange.bean.TransactionPairBean
+import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.widget.recyclerview.ViewType
 import kotlinx.android.synthetic.main.recyclerview_hot_transaction_pair.view.*
 
 /**
  * 热门交易对adapter
  */
-class HotTransactionPairAdapter(var context: Context, var datas: MutableList<TransactionPairBean>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HotTransactionPairAdapter(var context: Context, var datas: MutableList<MarketPopularBean>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     init {
-        datas.add(0, TransactionPairBean())
+        datas.add(0, MarketPopularBean(1, "", 1.0, 1.0, "", "", 1, "", 1, ""))
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -38,16 +40,16 @@ class HotTransactionPairAdapter(var context: Context, var datas: MutableList<Tra
         } else {
             holder as HTPViewHolder
             val pairBean = datas[position]
-            if (pairBean.change > 0) {
-                holder.tvChange.text = "+${pairBean.change}%"
+            holder.tvChange.text = "${pairBean.gain}%"
+            if (pairBean.gain > 0) {
+                holder.tvChange.setTxtColor(R.color.color_up)
             } else {
-                holder.tvChange.text = "${pairBean.change}%"
-                holder.tvChange.setTextColor(ContextCompat.getColor(context, R.color.color_FFFF4A5F))
+                holder.tvChange.setTxtColor(R.color.color_down)
             }
 
-            holder.tvName.text = pairBean.name
-            holder.tvExchange.text = pairBean.exchange.toString()
-            holder.tvCost.text = pairBean.cost.toString()
+            holder.tvName.text = pairBean.transactionPair
+            holder.tvExchange.text = pairBean.exchangeRate.toString()
+            holder.tvCost.text = (pairBean.exchangeRate * 500).toString()
         }
     }
 

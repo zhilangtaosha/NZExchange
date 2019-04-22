@@ -48,6 +48,7 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
         searchIv = rootView.iv_search_market
         editIv = rootView.iv_edit_market
         searchIv.setOnClickListener(this)
+        editIv.setOnClickListener(this)
         scrollIndicatorView = rootView.siv_market
         viewPager = rootView.vp_market
 
@@ -70,6 +71,7 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
                 skipActivity(PairSearchActivity::class.java)
             }
             R.id.iv_edit_market -> {
+                skipActivity(OptionalEditActivity::class.java)
             }
         }
     }
@@ -123,10 +125,10 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
 
                         }
                         indicatorViewPager.setCurrentItem(1, true)
-                        if (pages.size>2){
-                           for (i in 2..pages.size-1){
-                               (pages[i] as MarketContentFragment).refreshData()
-                           }
+                        if (pages.size > 2) {
+                            for (i in 2..pages.size - 1) {
+                                (pages[i] as MarketContentFragment).refreshData()
+                            }
                         }
                     }
                 }, onError)

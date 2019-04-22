@@ -62,6 +62,9 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
             userBean = UserBean.loadFromApp()
             refreshData()
         }
+        if (eventCenter.eventCode == EventCode.CODE_SELF_SELECT) {
+            refreshData()
+        }
     }
 
     override fun isBindEventBusHere(): Boolean = true

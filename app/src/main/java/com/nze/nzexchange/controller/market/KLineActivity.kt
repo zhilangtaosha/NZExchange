@@ -18,6 +18,7 @@ import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.config.KLineRequestBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.http.HRetrofit
 import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
@@ -40,6 +41,7 @@ import org.jetbrains.annotations.Nls
 import org.json.JSONObject
 import org.w3c.dom.Text
 import java.util.*
+import kotlin.math.cos
 
 /**
  * http://www.blue-zero.com/WebSocket/
@@ -73,6 +75,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             setGridColumns(4)
         }
     }
+    var quote: Array<String>? = null
     val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val kNowList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val kNewList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
@@ -559,7 +562,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                             it.forEachIndexed { index, it ->
                                 val bean = KLineEntity()
 //                                bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
-                                bean.Date = "${TimeTool.format3(pattern,it[0].toLong())}"
+                                bean.Date = "${TimeTool.format3(pattern, it[0].toLong())}"
                                 bean.Open = it[1].toFloat()
                                 bean.Close = it[2].toFloat()
                                 bean.High = it[3].toFloat()
@@ -595,7 +598,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                         DataHelper.calculate(chartData)
                     }
                     if (quotes != null) {//聚合行情
-
+                        quote = quotes
                         it.onNext(DATA_QUOTES)
                     }
                     if (depth != null) {//深度图
@@ -642,6 +645,20 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         when (it) {
+                            DATA_QUOTES -> {
+                                hightCostTv.text = quote?.get(2)
+                                lowCostTv.text = quote?.get(3)
+                                volumeTv.text = quote?.get(4)
+                                try {
+                                    costTv.text = quote?.get(6)
+                                    val w: Double = ((quote?.get(6))!!.toDouble() - (quote?.get(0))!!.toDouble()) / (quote?.get(0))!!.toDouble()
+                                    setPriceWave(w)
+                                } catch (e: Exception) {
+                                    costTv.text = quote?.get(1)
+                                    val w: Double = ((quote?.get(1))!!.toDouble() - (quote?.get(0))!!.toDouble()) / (quote?.get(0))!!.toDouble()
+                                    setPriceWave(w)
+                                }
+                            }
                             DATA_NOW_LINEK -> {//k线数据
 //                                chartData.addAll(kList)
                                 NLog.i("nowLineK>>>>>>>>>>")
@@ -719,6 +736,19 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                         marketList.removeAt(1)
                     }
                 }, onError)
+    }
 
+    /**
+     * 设置涨跌幅
+     */
+    fun setPriceWave(w: Double) {
+        if (w > 0) {
+            rangeTv.setTxtColor(R.color.color_up)
+            costTv.setTxtColor(R.color.color_up)
+        } else {
+            rangeTv.setTxtColor(R.color.color_down)
+            costTv.setTxtColor(R.color.color_down)
+        }
+        rangeTv.text = w.toString()
     }
 }

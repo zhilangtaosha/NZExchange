@@ -184,12 +184,13 @@
 
                 <TextView
                     android:id="@+id/tv_volume_kline"
-                    style="@style/tx14_common"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/tv_volume_key_kline"
-                    android:text="2568" />
+                    android:text="2568"
+                    android:textColor="@color/color_common"
+                    android:textSize="8sp" />
 
                 <TextView
                     android:id="@+id/tv_range_key_kline"
@@ -208,9 +209,9 @@
                     android:layout_alignBottom="@+id/tv_range_key_kline"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/tv_range_key_kline"
-                    android:text="+2568"
+                    android:text="+1326.12345678"
                     android:textColor="@color/color_up"
-                    android:textSize="14sp" />
+                    android:textSize="9sp" />
             </RelativeLayout>
 
             <RelativeLayout

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <ImageView
+        android:id="@+id/iv_remove_loe"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp"
+        android:src="@mipmap/remove_icon" />
+
+    <TextView
+        android:id="@+id/tv_currency_loe"
+        style="@style/tx16_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/iv_remove_loe"
+        android:text="USDT/BTC" />
+
+    <ImageView
+        android:id="@+id/iv_drag_loe"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp"
+        android:src="@mipmap/drag_icon" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
+
+</RelativeLayout>

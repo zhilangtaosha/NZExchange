@@ -143,5 +143,7 @@ interface BibiService {
             @Query("transactionType") transactionType: Int?
     ): Flowable<Result<MutableList<OrderPendBean>>>
 
-    
+    //首页热门交易对
+    @GET("market/marketPopular")
+    fun marketPopular(): Flowable<Result<MutableList<MarketPopularBean>>>
 }

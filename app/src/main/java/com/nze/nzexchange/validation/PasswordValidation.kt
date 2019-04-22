@@ -17,12 +17,15 @@ class PasswordValidation : ValidationExecutor() {
         val len: Int = text.length
         if (len > 0) {
             if (len < 8 || len > 16) {
-                Toast.makeText(context, "请输入8-16位密码", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "密码为8-16位数字和字母组合", Toast.LENGTH_SHORT).show()
                 return false
             }
-            val pattern = "^[a-zA-Z]\\w{5,17}$"
+            val pattern = "^\\w*[a-zA-Z]+\\w*\$"
             val r = Pattern.compile(pattern).matcher(text).find()
-            if (!r) {
+
+            val pattern2 = "^\\w*[0-9]+\\w*\$"
+            val r2 = Pattern.compile(pattern2).matcher(text).find()
+            if (!r||!r2) {
                 Toast.makeText(context, "密码为8-16位数字和字母组合", Toast.LENGTH_SHORT).show()
                 return false
             }

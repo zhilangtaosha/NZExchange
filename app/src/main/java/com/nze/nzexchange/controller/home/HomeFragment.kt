@@ -9,10 +9,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.IndexImgs
-import com.nze.nzexchange.bean.IndexNotices
-import com.nze.nzexchange.bean.IndexTopBean
-import com.nze.nzexchange.bean.TransactionPairBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.home.carousel.CarouselAdapter
 import com.nze.nzexchange.controller.home.carousel.SimpleBulletinAdapter
@@ -24,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : NBaseFragment() {
     lateinit var mCarousel: ZBanner
-    lateinit var bulletinView:BulletinView
+    lateinit var bulletinView: BulletinView
     lateinit var mHotRView: RecyclerView
     lateinit var mHotAdapter: HotTransactionPairAdapter
     val imageUrls: MutableList<String> = mutableListOf()
@@ -34,7 +31,7 @@ class HomeFragment : NBaseFragment() {
             " 习近平上海考察，强调的这些事极具深意  专题 ",
             " 农业新“格局”  国外媒体高度评价  会场艺术珍品  专题 ")
     val hotDatas = mutableListOf<TransactionPairBean>()
-    val carouselAdapter:CarouselAdapter by lazy { CarouselAdapter(fragmentManager!!, imageUrls) }
+    val carouselAdapter: CarouselAdapter by lazy { CarouselAdapter(fragmentManager!!, imageUrls) }
 
     init {
 //        imageUrls.add("http://bpic.588ku.com/back_pic/17/03/16/14391cb76638d75a22f35625dff40eee.jpg")
@@ -62,7 +59,6 @@ class HomeFragment : NBaseFragment() {
 //        val carouselAdapter = CarouselAdapter(fragmentManager!!, imageUrls)
 
 
-
         bulletinView = rootView.bulletin_view
 
 
@@ -72,8 +68,7 @@ class HomeFragment : NBaseFragment() {
         divider.setWidth(8)
 
         mHotRView.addItemDecoration(divider)
-        mHotAdapter = HotTransactionPairAdapter(activity!!, hotDatas)
-        mHotRView.adapter = mHotAdapter
+
 
         val mRandAdapter = RankListAdapter(activity!!)
 
@@ -84,6 +79,7 @@ class HomeFragment : NBaseFragment() {
         }, 3000)
 
         initTopData()
+        marketPopular()
     }
 
     fun initTopData() {
@@ -102,8 +98,22 @@ class HomeFragment : NBaseFragment() {
 
                     val bulletinAdapter = SimpleBulletinAdapter(activity!!, noticeList)
                     bulletinView.setAdapter(bulletinAdapter)
-                    
+
                 }, onError)
+    }
+
+    /**
+     * 获取热门交易对数据
+     */
+    fun marketPopular() {
+        MarketPopularBean.marketPopular()
+                .compose(netTf())
+                .subscribe({
+                    if (it.success){
+                        mHotAdapter = HotTransactionPairAdapter(activity!!, it.result)
+                        mHotRView.adapter = mHotAdapter
+                    }
+                },onError)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -126,7 +136,6 @@ class HomeFragment : NBaseFragment() {
         super.onResume()
 
     }
-
 
 
     override fun onDestroy() {

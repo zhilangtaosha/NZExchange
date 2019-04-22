@@ -16,8 +16,7 @@ import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
-import com.nze.nzexchange.extend.getContent
-import com.nze.nzexchange.extend.setTextFromHtml
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.validation.PasswordValidation
@@ -55,6 +54,15 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
         tv_go_email_apr.setOnClickListener(this)
         tv_to_login_apr.setOnClickListener(this)
         countryCodeTv.setOnClickListener(this)
+
+        pwdCb.getCheckListener()
+                .subscribe {
+                    if (it) {
+                        pwdEt.hidePassword()
+                    } else {
+                        pwdEt.showPassword()
+                    }
+                }
 
         registerBtn.initValidator()
                 .add(phoneEt, EmptyValidation())
