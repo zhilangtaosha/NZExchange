@@ -143,9 +143,9 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
 
     fun getFlowable(): Flowable<Result<MutableList<OrderPoolBean>>> {
         return if (type == TYPE_BUY) {
-            OrderPoolBean.getFromNet(userBean?.userId, tokenId, page, PAGE_SIZE)
+            OrderPoolBean.getFromNet(null, tokenId, page, PAGE_SIZE)
         } else {
-            OrderPoolBean.getSellNet(userBean?.userId, tokenId, page, PAGE_SIZE)
+            OrderPoolBean.getSellNet(null, tokenId, page, PAGE_SIZE)
         }
     }
 }

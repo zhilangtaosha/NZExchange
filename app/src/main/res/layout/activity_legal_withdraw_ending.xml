@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.legal.LegalWithdrawEndingActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_alwe"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_backgroud="@color/color_title_bg"
+        app:tb_right_text="完成"
+        app:tb_title_text="结果详情" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp">
+
+        <ImageView
+            android:id="@+id/iv_apply_alwe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/hook_icon3" />
+
+        <View
+            android:id="@+id/view_p_alwe"
+            android:layout_width="2dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/iv_apply_alwe"
+            android:layout_marginLeft="7dp"
+            android:background="@mipmap/legal_withdraw_p" />
+
+        <ImageView
+            android:id="@+id/iv_account_alwe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_p_alwe"
+            android:src="@mipmap/legal_icon" />
+
+        <TextView
+            android:id="@+id/tv_apply_alwe"
+            style="@style/tx15_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:text="提现申请已提交，等待后台处理" />
+
+        <TextView
+            android:id="@+id/tv_apply_time_alwe"
+            style="@style/tx15_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_apply_alwe"
+            android:layout_marginLeft="35dp"
+            android:text="04-10 16:24" />
+
+        <TextView
+            android:id="@+id/tv_account_alwe"
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iv_account_alwe"
+            android:layout_marginLeft="30dp"
+            android:text="预计到账时间" />
+
+        <TextView
+            android:id="@+id/tv_account_time_alwe"
+            style="@style/tx15_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_account_alwe"
+            android:layout_marginLeft="35dp"
+            android:text="04-10 16:24" />
+
+        <TextView
+            android:id="@+id/tv_history_alwe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/tx15_main"
+            android:text="提现记录"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:padding="30dp"/>
+    </RelativeLayout>
+
+</LinearLayout>

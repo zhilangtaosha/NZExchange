@@ -16,7 +16,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class OrderPoolBean(
         val accmoney: Accmoney,
-        val nick: String,
+        val nick: String?="",
         val poolAllCount: Double,
         val poolId: String,
         val poolMaxamount: Double,

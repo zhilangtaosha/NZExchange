@@ -19,6 +19,7 @@ import com.nze.nzeframework.widget.takephoto.permission.PermissionManager
 import com.nze.nzeframework.widget.takephoto.permission.TakePhotoInvocationHandler
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.bean.UploadBean
 import com.nze.nzexchange.bean.UserBean
@@ -98,14 +99,18 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
 
     var imageUrl = ""
     var account = ""
+    var realNameAuthenticationBean: RealNameAuthenticationBean? = null
 
     override fun getRootView(): Int = R.layout.activity_add_zhifubao
 
     override fun initView() {
         intent?.let {
             type = it.getIntExtra(IntentConstant.PARAM_PAY, IntentConstant.TYPE_ZHIFUBAO)
+            realNameAuthenticationBean = it.getParcelableExtra(IntentConstant.INTENT_REAL_NAME_BEAN)
         }
-
+        realNameAuthenticationBean?.let {
+            nameValueTv.text = it.membName
+        }
         if (type == IntentConstant.TYPE_ZHIFUBAO) {
             ctb_aaz.setTitle("添加支付宝")
             et_cardno_value_aaz.hint = "请输入支付宝账号"
@@ -160,7 +165,7 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                                 null,
                                 null,
                                 null,
-                                accmoneyWeixinurl, accmoneyWeixinacc, accmoneyZfburl, accmoneyZfbacc)
+                                accmoneyWeixinurl, accmoneyWeixinacc, accmoneyZfburl, accmoneyZfbacc,null)
                                 .compose(netTfWithDialog())
                                 .subscribe({
                                     if (it.success) {

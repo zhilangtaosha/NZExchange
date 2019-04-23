@@ -62,12 +62,14 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
         }
 
         vh.btn.setOnClickListener {
-            if (UserBean.loadFromApp()?.userId != item?.userId) {
-                mContext.startActivity(Intent(mContext, BuyActivity::class.java)
-                        .putExtra(OtcContentFragment.PARAM_TYPE, type)
-                        .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
-            } else {
-                (mContext as NBaseActivity).showToast("不能与自己交易哦~")
+            if (UserBean.isLogin(mContext)) {
+                if (UserBean.loadFromApp()?.userId != item?.userId) {
+                    mContext.startActivity(Intent(mContext, BuyActivity::class.java)
+                            .putExtra(OtcContentFragment.PARAM_TYPE, type)
+                            .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
+                } else {
+                    (mContext as NBaseActivity).showToast("不能与自己交易哦~")
+                }
             }
         }
         return cView!!

@@ -12,11 +12,13 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.bibi.BibiAllOrderActivity
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalRechargeActivity
+import com.nze.nzexchange.controller.my.asset.legal.LegalWithdrawActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
 import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
 import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity
@@ -42,7 +44,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     private val settingTv: TextView by lazy { rootView.tv_setting_my }
 
     var userBean: UserBean? = NzeApp.instance.userBean
-    var realNameAuthenticationBean:RealNameAuthenticationBean?=null
+    var realNameAuthenticationBean: RealNameAuthenticationBean? = null
 
     companion object {
         @JvmStatic
@@ -69,7 +71,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS ||eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS ) {
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS || eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
             userBean = NzeApp.instance.userBean
             changeForLogin()
         }
@@ -79,7 +81,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        if (userBean!=null)
+        if (userBean != null)
             getReanNameAuthentication()
     }
 
@@ -111,26 +113,31 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
                 skipActivity(LegalRechargeActivity::class.java)
             }
             R.id.tv_withdraw_my -> {
-                skipActivity(CurrencyAddressSetListActivity::class.java)
+                skipActivity(LegalWithdrawActivity::class.java)
             }
             R.id.tv_asset_my -> {
                 skipActivity(MyAssetActivity::class.java)
             }
             R.id.tv_order_manage_my -> {
-                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity,BibiAllOrderActivity.FROM_MY)
+                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity, BibiAllOrderActivity.FROM_MY)
             }
             R.id.tv_pay_method_my -> {
-                skipActivity(SetPayMethodActivity::class.java)
+                if (!realNameAuthenticationBean?.membName.isNullOrEmpty()) {
+                    startActivity(Intent(activity, SetPayMethodActivity::class.java)
+                            .putExtra(IntentConstant.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
+                } else {
+                    showToast("请先实名认证")
+                }
             }
             R.id.tv_safe_center_my -> {
                 skipActivity(SafeCenterActivity::class.java)
             }
             R.id.tv_authentication_my -> {
-                if (realNameAuthenticationBean?.membName.isNullOrEmpty()){
+                if (realNameAuthenticationBean?.membName.isNullOrEmpty()) {
                     skipActivity(PrimaryAuthenticationActivity::class.java)
-                }else{
-                    val intent = Intent(activity,AuthenticationHomeActivity::class.java)
-                    intent.putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN,realNameAuthenticationBean)
+                } else {
+                    val intent = Intent(activity, AuthenticationHomeActivity::class.java)
+                    intent.putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean)
                     startActivity(intent)
                 }
             }
@@ -150,12 +157,12 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
         }
     }
 
-    fun getReanNameAuthentication(){
-        RealNameAuthenticationBean.getReanNameAuthentication(userBean?.tokenReqVo?.tokenUserId!!,userBean?.tokenReqVo?.tokenUserKey!!)
+    fun getReanNameAuthentication() {
+        RealNameAuthenticationBean.getReanNameAuthentication(userBean?.tokenReqVo?.tokenUserId!!, userBean?.tokenReqVo?.tokenUserKey!!)
                 .compose(netTfWithDialog())
                 .subscribe({
                     realNameAuthenticationBean = it.result
 
-                },onError)
+                }, onError)
     }
 }

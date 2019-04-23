@@ -7,10 +7,14 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.FundPasswordPopup
+import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.getValue
 import com.nze.nzexchange.validation.EmptyValidation
@@ -28,15 +32,24 @@ class AddBankActivity : NBaseActivity() {
     val addressValueEt: EditText by lazy { et_address_value_aac }
     val saveBtn: CommonButton by lazy { btn_save_aac }
     val userBean: UserBean? by lazy { NzeApp.instance.userBean }
-
+    var realNameAuthenticationBean: RealNameAuthenticationBean? = null
+    val fundPopup: FundPasswordPopup by lazy { FundPasswordPopup(this).apply {
+        onPasswordClick={
+            setPayMethod(it)
+        }
+    } }
 
     override fun getRootView(): Int = R.layout.activity_add_card
 
     override fun initView() {
+        realNameAuthenticationBean = intent.getParcelableExtra<RealNameAuthenticationBean>(IntentConstant.INTENT_REAL_NAME_BEAN)
+        realNameAuthenticationBean?.let {
+            nameValueTv.text = it.membName
+        }
         userBean?.payMethod?.run {
             cartNoValueEt.setText(this.accmoneyBankcard?.getValue() ?: "")
-            bankValueEt.setText(this.accmoneyBank?.getValue() ?: "")
-            addressValueEt.setText(this.accmoneyBanktype?.getValue() ?: "")
+            bankValueEt.setText(this.accmoneyBanktype?.getValue() ?: "")
+            addressValueEt .setText(this.accmoneyBank?.getValue() ?: "")
         }
         saveBtn.initValidator()
                 .add(cartNoValueEt, EmptyValidation())
@@ -44,28 +57,31 @@ class AddBankActivity : NBaseActivity() {
                 .add(addressValueEt, EmptyValidation())
                 .executeValidator()
         saveBtn.setOnCommonClick {
-            if (saveBtn.validate()) {
-                userBean?.run {
-                    SetPayMethodBean.setPayMethodNet(tokenReqVo.tokenUserId,
-                            tokenReqVo.tokenUserKey,
-                            addressValueEt.getContent(),
-                            cartNoValueEt.getContent(),
-                            bankValueEt.getContent(),
-                            null, null, null, null)
-                            .compose(netTfWithDialog())
-                            .subscribe({
-                                if (it.success) {
-                                    val payMethodBean = it.result
-                                    userBean?.payMethod?.accmoneyBank = payMethodBean.accmoneyBank
-                                    userBean?.payMethod?.accmoneyBankcard = payMethodBean.accmoneyBankcard
-                                    userBean?.payMethod?.accmoneyBanktype = payMethodBean.accmoneyBanktype
-                                    NzeApp.instance.userBean = userBean
-                                    this@AddBankActivity.finish()
-                                }
-                            }, onError)
-                }
+            fundPopup.showPopupWindow()
+        }
+    }
 
-            }
+    fun setPayMethod(pwd:String){
+            userBean?.run {
+                SetPayMethodBean.setPayMethodNet(tokenReqVo.tokenUserId,
+                        tokenReqVo.tokenUserKey,
+                        addressValueEt.getContent(),
+                        cartNoValueEt.getContent(),
+                        bankValueEt.getContent(),
+                        null, null, null, null
+                        ,pwd)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                val payMethodBean = it.result
+                                userBean?.payMethod?.accmoneyBank = payMethodBean.accmoneyBank
+                                userBean?.payMethod?.accmoneyBankcard = payMethodBean.accmoneyBankcard
+                                userBean?.payMethod?.accmoneyBanktype = payMethodBean.accmoneyBanktype
+                                NzeApp.instance.userBean = userBean
+                                this@AddBankActivity.finish()
+                            }
+                        }, onError)
+
         }
     }
 

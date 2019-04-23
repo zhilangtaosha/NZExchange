@@ -39,7 +39,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="45dp"
             android:layout_toRightOf="@+id/tv_name_aac"
-            android:text="杨林军"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="14sp" />
     </RelativeLayout>

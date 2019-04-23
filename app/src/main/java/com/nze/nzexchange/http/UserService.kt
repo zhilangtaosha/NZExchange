@@ -56,7 +56,8 @@ interface UserService {
             @Field("accmoneyWeixinurl") accmoneyWeixinurl: String?,
             @Field("accmoneyWeixinacc") accmoneyWeixinacc: String?,
             @Field("accmoneyZfburl") accmoneyZfburl: String?,
-            @Field("accmoneyZfbacc") accmoneyZfbacc: String?
+            @Field("accmoneyZfbacc") accmoneyZfbacc: String?,
+            @Field("curBuspwUcode") curBuspwUcode: String?
     ): Flowable<Result<SetPayMethodBean>>
 
     //获取当前用户的收款方式

@@ -154,7 +154,9 @@
         <activity android:name=".controller.my.asset.legal.BindRechargeActivity" />
         <activity android:name=".controller.my.asset.legal.RechargeConfirmActivity" />
         <activity android:name=".controller.my.asset.legal.LegalWithdrawActivity" />
-        <activity android:name=".controller.market.OptionalEditActivity"></activity>
+        <activity android:name=".controller.market.OptionalEditActivity" />
+        <activity android:name=".controller.my.asset.legal.LegalWithdrawEndingActivity" />
+        <activity android:name=".controller.my.asset.legal.LegalWithdrawHistoryActivity"></activity>
     </application>
 
 </manifest>

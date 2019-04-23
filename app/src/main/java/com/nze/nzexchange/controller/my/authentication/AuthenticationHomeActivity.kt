@@ -45,7 +45,7 @@ class AuthenticationHomeActivity : NBaseActivity(), View.OnClickListener {
             certificateTv.text = it.membIdentitycard
         }
 
-        if (userBean?.userPhone.isNullOrEmpty()) {
+        if (!userBean?.userPhone.isNullOrEmpty()) {
             accountTv.text = userBean?.userPhone
         } else {
             accountTv.text = userBean?.userEmail

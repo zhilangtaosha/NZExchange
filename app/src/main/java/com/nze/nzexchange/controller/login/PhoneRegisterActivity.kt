@@ -136,11 +136,11 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                 if (registerBtn.validate()) {
                     val pwdStr = MD5Tool.getMd5_32(pwdEt.getContent())
                     RegisterBean.registerNet(phoneEt.getContent(), countryNumber.substring(1), null, pwdStr, checkcodeId!!, verifyEt.getContent(), null)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
+                            .compose(netTfWithDialog())
                             .flatMap {
                                 if (it.success) {
                                     showToast("注册成功，正在自动登录..")
+                                    showLoad()
                                     LoginBean.login(phoneEt.getContent(), pwdStr)
                                             .subscribeOn(Schedulers.io())
                                 } else {
@@ -149,6 +149,7 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                             }
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
+                                dismissLoad()
                                 val rs = it as Result<LoginBean>
                                 if (rs.success) {
                                     showToast("登录成功")
@@ -157,6 +158,7 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                                     this@PhoneRegisterActivity.finish()
                                 }
                             }, {
+                                dismissLoad()
                                 it.message?.let { showToast(it) }
                             })
 

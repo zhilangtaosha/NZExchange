@@ -54,6 +54,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         listView.setOnItemClickListener(this)
 
         zbanner.setOnPageChangeLister {
+            assetAdapter.clearGroup(true)
             when (it) {
                 0 -> {
                     getBibiAsset()
@@ -81,7 +82,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         getOtcAsset()
         if (!isFirst) {
             getBibiAsset()
-        }else{
+        } else {
             isFirst = false
         }
     }
@@ -132,8 +133,9 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                     if (it.success) {
                         otcList.clear()
                         otcList.addAll(it.result)
-                        if (type == AccountType.OTC)
+                        if (type == AccountType.OTC) {
                             assetAdapter.group = otcList
+                        }
                     }
                 }, onError)
     }

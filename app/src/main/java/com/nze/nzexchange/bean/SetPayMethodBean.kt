@@ -46,7 +46,8 @@ data class SetPayMethodBean(
                 accmoneyWeixinurl: String?,
                 accmoneyWeixinacc: String?,
                 accmoneyZfburl: String?,
-                accmoneyZfbacc: String?
+                accmoneyZfbacc: String?,
+                curBuspwUcode:String?
         ): Flowable<Result<SetPayMethodBean>> {
             return Flowable.defer {
                 CRetrofit.instance
@@ -59,7 +60,8 @@ data class SetPayMethodBean(
                                 accmoneyWeixinurl,
                                 accmoneyWeixinacc,
                                 accmoneyZfburl,
-                                accmoneyZfbacc)
+                                accmoneyZfbacc,
+                                curBuspwUcode)
             }
         }
 

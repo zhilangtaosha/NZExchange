@@ -33,7 +33,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
     lateinit var orderPoolBean: OrderPoolBean
     private var price: Double = 0.0
     private var flag: Boolean = true
-    private var userBean:UserBean? = UserBean.loadFromApp()
+    private var userBean: UserBean? = UserBean.loadFromApp()
 
     override fun getRootView(): Int = R.layout.activity_buy
 
@@ -58,11 +58,11 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
             price = poolPrice
             accmoney
         }.run {
-            if (accmoneyWeixinurl?.isNotEmpty()!!)
+            if (accmoneyWeixinurl != null && accmoneyWeixinurl.isNotEmpty())
                 layout_pay_ab.addView(ViewFactory.createRightPayMethod(R.mipmap.wechat_icon))
-            if (accmoneyZfburl?.isNotEmpty()!!)
+            if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty())
                 layout_pay_ab.addView(ViewFactory.createRightPayMethod(R.mipmap.zhifubao_icon))
-            if (accmoneyBankcard?.isNotEmpty()!!)
+            if (accmoneyBankcard != null && accmoneyBankcard.isNotEmpty())
                 layout_pay_ab.addView(ViewFactory.createRightPayMethod(R.mipmap.card_icon))
         }
 
@@ -144,7 +144,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                     }
                 } else {
                     orderPoolBean.run {
-                        sellNet(poolId, userId,userBean?.userId!!, et_num_value_ab.getContent(), tokenId)
+                        sellNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId)
                                 .compose(netTfWithDialog())
                                 .subscribe({
                                     showToast(it.message)
