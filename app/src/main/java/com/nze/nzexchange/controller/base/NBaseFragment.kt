@@ -3,11 +3,14 @@ package com.nze.nzexchange.controller.base
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.nze.nzeframework.tool.NLog
@@ -134,5 +137,19 @@ abstract class NBaseFragment : BaseFragment() {
 
     }
 
+    fun setWindowStatusBarColor(colorResId: Int) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                val window = window
+                activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                activity!!.window.statusBarColor = ContextCompat.getColor(activity!!, colorResId)
 
+                //底部导航栏
+                //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
 }

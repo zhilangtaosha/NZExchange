@@ -30,9 +30,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="zhouweiyong55@163.com" />
+
     <Button
         android:id="@+id/btn5_aql"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="13603041983" />
+
+    <Button
+        android:id="@+id/btn6_aql"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="18718527348" />
+
+    <Button
+        android:id="@+id/btn7_aql"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="zhangwengege@126.com" />
 </LinearLayout>

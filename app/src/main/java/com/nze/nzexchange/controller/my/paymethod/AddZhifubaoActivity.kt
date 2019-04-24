@@ -26,6 +26,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.CommonListPopup
+import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.getValue
 import com.nze.nzexchange.tools.FileTool
@@ -100,6 +101,14 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
     var imageUrl = ""
     var account = ""
     var realNameAuthenticationBean: RealNameAuthenticationBean? = null
+    val fundPopup: FundPasswordPopup by lazy {
+        FundPasswordPopup(this).apply {
+            onPasswordClick = {
+                setPayMethod(it)
+            }
+        }
+    }
+
 
     override fun getRootView(): Int = R.layout.activity_add_zhifubao
 
@@ -159,34 +168,41 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                     } else {
                         accmoneyWeixinacc = cardNoValueEt.getContent()
                     }
-                    userBean?.run {
-                        SetPayMethodBean.setPayMethodNet(tokenReqVo.tokenUserId,
-                                tokenReqVo.tokenUserKey,
-                                null,
-                                null,
-                                null,
-                                accmoneyWeixinurl, accmoneyWeixinacc, accmoneyZfburl, accmoneyZfbacc,null)
-                                .compose(netTfWithDialog())
-                                .subscribe({
-                                    if (it.success) {
-                                        val payMethodBean = it.result
-                                        if (type == IntentConstant.TYPE_ZHIFUBAO) {
-                                            userBean?.payMethod?.accmoneyZfbacc = payMethodBean.accmoneyZfbacc
-                                            userBean?.payMethod?.accmoneyZfburl = payMethodBean.accmoneyZfburl
-                                        } else {
-                                            userBean?.payMethod?.accmoneyWeixinacc = payMethodBean.accmoneyWeixinacc
-                                            userBean?.payMethod?.accmoneyWeixinurl = payMethodBean.accmoneyWeixinurl
-                                        }
-                                        NzeApp.instance.userBean = userBean
-                                        this@AddZhifubaoActivity.finish()
-                                    }
-                                }, onError)
-                    }
+                    fundPopup.showPopupWindow()
                 }
             }
         }
     }
 
+
+    fun setPayMethod(pwd: String) {
+        userBean?.run {
+            SetPayMethodBean.setPayMethodNet(tokenReqVo.tokenUserId,
+                    tokenReqVo.tokenUserKey,
+                    null,
+                    null,
+                    null,
+                    accmoneyWeixinurl,
+                    accmoneyWeixinacc,
+                    accmoneyZfburl,
+                    accmoneyZfbacc, pwd)
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        if (it.success) {
+                            val payMethodBean = it.result
+                            if (type == IntentConstant.TYPE_ZHIFUBAO) {
+                                userBean?.payMethod?.accmoneyZfbacc = payMethodBean.accmoneyZfbacc
+                                userBean?.payMethod?.accmoneyZfburl = payMethodBean.accmoneyZfburl
+                            } else {
+                                userBean?.payMethod?.accmoneyWeixinacc = payMethodBean.accmoneyWeixinacc
+                                userBean?.payMethod?.accmoneyWeixinurl = payMethodBean.accmoneyWeixinurl
+                            }
+                            NzeApp.instance.userBean = userBean
+                            this@AddZhifubaoActivity.finish()
+                        }
+                    }, onError)
+        }
+    }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

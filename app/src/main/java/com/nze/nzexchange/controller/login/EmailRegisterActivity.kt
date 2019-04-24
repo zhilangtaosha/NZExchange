@@ -15,6 +15,7 @@ import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.MD5Tool
@@ -27,6 +28,7 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_email_register.*
+import net.grandcentrix.tray.AppPreferences
 import org.greenrobot.eventbus.EventBus
 
 class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
@@ -42,7 +44,7 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
     var countryName = "中国"
     var countryNumber = "+86"
     private var checkcodeId: String? = null
-
+    val appPreferences: AppPreferences by lazy { AppPreferences(this) }
     override fun getRootView(): Int = R.layout.activity_email_register
 
     override fun initView() {
@@ -153,6 +155,7 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
                                 val rs = it as Result<LoginBean>
                                 if (rs.success) {
                                     showToast("登录成功")
+                                    appPreferences.put(Preferences.LOGIN_USER_NAME, emailEt.getContent())
                                     NzeApp.instance.userBean = rs.result.cloneToUserBean()
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
                                     this@EmailRegisterActivity.finish()

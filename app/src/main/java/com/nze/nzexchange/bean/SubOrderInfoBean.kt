@@ -50,7 +50,7 @@ data class SubOrderInfoBean(
 
         //请求子订单列表分类
         //1002未完成 1003已完成  1004取消
-        const val REQUEST_NO_COMPLETE = 1002
+        const val REQUEST_NO_COMPLETE = 1001
         const val REQUEST_COMPLETED = 1003
         const val REQUEST_CANCEL = 1004
 
@@ -81,7 +81,7 @@ data class SubOrderInfoBean(
         fun findSubOrderPoolNet(userId: String,
                                 pageNumber: Int,
                                 pageSize: Int,
-                                suborderStatus: Int): Flowable<Result<MutableList<SubOrderInfoBean>>> {
+                                suborderStatus: Int?): Flowable<Result<MutableList<SubOrderInfoBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .buyService()

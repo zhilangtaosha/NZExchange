@@ -17,14 +17,18 @@ class LegalWithdrawEndingActivity : NBaseActivity() {
     val applyTimeTv: TextView by lazy { tv_apply_time_alwe }
     val accountTv: TextView by lazy { tv_account_alwe }
     val accountTimeTv: TextView by lazy { tv_account_time_alwe }
-    val historyTv:TextView by lazy {tv_history_alwe  }
+    val historyTv: TextView by lazy { tv_history_alwe }
 
 
     override fun getRootView(): Int = R.layout.activity_legal_withdraw_ending
 
     override fun initView() {
         topBar.setRightClick {
-            finish()
+            onBackPressed()
+        }
+
+        historyTv.setOnClickListener {
+            skipActivity(LegalWithdrawHistoryActivity::class.java)
         }
     }
 

@@ -66,7 +66,7 @@ interface BuyService {
             @Field("userId") userId: String,
             @Field("pageNumber") pageNumber: Int,
             @Field("pageSize") pageSize: Int,
-            @Field("suborderStatus") suborderStatus: Int
+            @Field("suborderStatus") suborderStatus: Int?
     ): Flowable<Result<MutableList<SubOrderInfoBean>>>
 
     //获取子订单详情

@@ -89,6 +89,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
     override fun getRootView(): Int = R.layout.activity_main
 
     override fun initView() {
+        setWindowStatusBarColor(R.color.color_title_bg)
         tab_home_main.setOnClickListener(this)
         tab_market_main.setOnClickListener(this)
         tab_bibi_main.setOnClickListener(this)

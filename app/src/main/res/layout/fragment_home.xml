@@ -105,7 +105,7 @@
                     android:layout_centerInParent="true"
                     android:drawableLeft="@mipmap/help_center"
                     android:drawablePadding="4dp"
-                    android:text="法币交易"
+                    android:text="帮助中心"
                     android:textColor="@color/color_FFBD3EE9"
                     android:textSize="14sp" />
             </RelativeLayout>

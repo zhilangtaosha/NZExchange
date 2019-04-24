@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingTop="20dp"
+    android:paddingRight="15dp"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:id="@+id/tv_name_llwh"
+        style="@style/tx15_common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="法币提现" />
+
+    <TextView
+        android:id="@+id/tv_status_llwh"
+        style="@style/tx13_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:drawableRight="@mipmap/right_arrow2"
+        android:drawablePadding="10dp"
+        android:text="已成交" />
+
+    <TextView
+        android:id="@+id/tv_time_key_llwh"
+        style="@style/tx13_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name_llwh"
+        android:layout_marginTop="10dp"
+        android:text="时间" />
+
+    <TextView
+        android:id="@+id/tv_amount_key_llwh"
+        style="@style/tx13_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name_llwh"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="提现数量" />
+
+    <TextView
+        android:id="@+id/tv_balance_key_llwh"
+        style="@style/tx13_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name_llwh"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="法币余额" />
+
+    <TextView
+        android:id="@+id/tv_time_value_llwh"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_key_llwh"
+        android:layout_marginTop="10dp"
+        android:text="01/21 14:36" />
+
+    <TextView
+        android:id="@+id/tv_amount_value_llwh"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_key_llwh"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="-200" />
+
+    <TextView
+        android:id="@+id/tv_balance_value_llwh"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_key_llwh"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="200" />
+</RelativeLayout>

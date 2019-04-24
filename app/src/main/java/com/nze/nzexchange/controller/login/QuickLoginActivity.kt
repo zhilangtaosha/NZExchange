@@ -34,6 +34,12 @@ class QuickLoginActivity : NBaseActivity() {
         btn5_aql.setOnClickListener {
             loginNet("13603041983", "nz123456")
         }
+        btn6_aql.setOnClickListener {
+            loginNet("18718527348", "aA123456")
+        }
+        btn7_aql.setOnClickListener {
+            loginNet("zhangwengege@126.com", "123456aA")
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

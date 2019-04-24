@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     tools:context=".controller.login.LoginActivity">
 
-    <com.nze.nzexchange.widget.CommonTopBar
-        android:id="@+id/ctb_al"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_cancel_al"
+        style="@style/tx15_main"
+        android:layout_width="wrap_content"
         android:layout_height="44dp"
-        app:tb_backgroud="@color/color_bg"
-        app:tb_right_text="取消"
-        app:tb_title_text="登录" />
+        android:gravity="center_vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="15dp"
+        android:text="取消" />
 
+    <TextView
+        android:id="@+id/tv_platform_name_al"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/tv_cancel_al"
+        android:text="登录AUSCoin"
+        android:textColor="@color/color_common"
+        android:textSize="24sp" />
 
     <com.nze.nzexchange.widget.clearedit.ClearableEditText
         android:id="@+id/et_account_al"
         style="@style/et14"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_below="@+id/ctb_al"
+        android:layout_below="@+id/tv_platform_name_al"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="50dp"
         android:layout_marginRight="30dp"
         android:hint="手机号或邮箱号码" />
 

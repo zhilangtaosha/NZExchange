@@ -1,7 +1,5 @@
 package com.nze.nzexchange.controller.login
 
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
@@ -11,35 +9,31 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
-import com.nze.nzexchange.widget.CommonTopBar
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import kotlinx.android.synthetic.main.activity_login.*
+import net.grandcentrix.tray.AppPreferences
 import org.greenrobot.eventbus.EventBus
-import kotlin.math.log
 
 class LoginActivity : NBaseActivity(), View.OnClickListener {
-    val topBar: CommonTopBar by lazy {
-        ctb_al.apply {
-            hideLeft()
-        }
-    }
+    val cancelTv: TextView by lazy { tv_cancel_al }
     val accountEt: ClearableEditText by lazy { et_account_al }
     val passwordEt: ClearableEditText by lazy { et_password_al }
     val loginBtn: CommonButton by lazy { btn_login_al }
     val forgetTv: TextView by lazy { tv_forget_al }
 
+    val appPreferences: AppPreferences by lazy { AppPreferences(this) }
 
     override fun getRootView(): Int = R.layout.activity_login
 
     override fun initView() {
         setWindowStatusBarColor(R.color.color_bg)
-
-        topBar.setRightClick {
+        cancelTv.setOnClickListener {
             onBackPressed()
         }
         tv_register_al.setOnClickListener(this)
@@ -82,6 +76,12 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
 
     override fun getContainerTargetView(): View? = null
 
+    override fun onResume() {
+        super.onResume()
+        val userName = appPreferences.getString(Preferences.LOGIN_USER_NAME, "")
+        accountEt.setText(userName)
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_forget_al -> {
@@ -92,6 +92,7 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
             }
             R.id.btn_login_al -> {
                 if (loginBtn.validate()) {
+                    val userName = accountEt.getContent()
                     val pwdStr = MD5Tool.getMd5_32(passwordEt.getContent())
                     LoginBean.login(accountEt.getContent(), pwdStr)
                             .compose(netTfWithDialog())
@@ -100,6 +101,7 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
                                 if (it.result.token != null) {
                                     NzeApp.instance.userBean = it.result.cloneToUserBean()
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
+                                    appPreferences.put(Preferences.LOGIN_USER_NAME, userName)
                                     this@LoginActivity.finish()
                                 }
 

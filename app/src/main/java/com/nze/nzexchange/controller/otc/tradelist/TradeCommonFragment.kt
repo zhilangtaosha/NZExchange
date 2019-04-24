@@ -41,7 +41,7 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
 
     lateinit var ptrLv: PullToRefreshListView
     var type: Int = 0
-    var requestStatus = SubOrderInfoBean.REQUEST_NO_COMPLETE
+    var requestStatus:Int? = SubOrderInfoBean.REQUEST_NO_COMPLETE
 
     val commonAdapter: TradeCommonAdapter by lazy {
         TradeCommonAdapter(activity!!, type, this)

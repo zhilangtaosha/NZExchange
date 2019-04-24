@@ -30,7 +30,7 @@ interface SellService {
 
     //吃单
     @FormUrlEncoded
-    @POST("otc//sell/placeAnOrder")
+    @POST("otc/sell/placeAnOrder")
     fun placeAnOrder(@Field("poolId") poolId: String,
                      @Field("userIdSell") userIdSell: String,
                      @Field("userIdBu") userIdBu: String,

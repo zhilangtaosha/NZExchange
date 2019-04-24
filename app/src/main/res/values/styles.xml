@@ -264,7 +264,7 @@
         <item name="android:textColor">@color/color_main</item>
         <item name="android:textSize">12sp</item>
     </style>
-  
+
     <style name="DialogTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- 边框 -->
         <!--<item name="android:windowAnimationStyle">@style/AnimBottom</item>-->

@@ -13,6 +13,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.R.id.layout_root_ctb
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.tools.getNColor
 import kotlinx.android.synthetic.main.common_top_bar.view.*
 
@@ -81,7 +82,9 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
             (context as Activity).finish()
         }
 
-
+       if(context is NBaseActivity) {
+           context.setWindowStatusBarColor(R.color.color_title_bg)
+       }
     }
 
     fun setTitle(resid: Int): CommonTopBar {

@@ -31,6 +31,19 @@ class CRetrofit private constructor() {
                 }
     }
 
+    val upBuilder by lazy {
+        OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(RetryIntercepter(3))
+                .apply {
+                    val interceptor = HttpLoggingInterceptor()
+                    interceptor.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+                    addInterceptor(interceptor)
+                }
+    }
+
     init {
 //        builder = OkHttpClient.Builder()
 //                .connectTimeout(30, TimeUnit.SECONDS)
@@ -57,7 +70,7 @@ class CRetrofit private constructor() {
 
     fun uploadService(): UserService {
         return Retrofit.Builder()
-                .client(builder.build())
+                .client(upBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(SERVER_FILE)

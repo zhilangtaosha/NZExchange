@@ -74,7 +74,7 @@ class RankListAdapter(mContext: Context) : BaseAda<TransactionPairBean>(mContext
                 vh.orderNumTv.setTxtColor(R.color.color_head)
             }
         }
-        vh.orderNumTv.text = position.toString()
+        vh.orderNumTv.text = (position+1).toString()
 
         return cView!!
     }

@@ -134,6 +134,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                 .subscribe({
                                     showToast(it.message)
                                     if (it.success) {
+//                                        EventBus.getDefault().post(EventCenter)
                                         startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
                                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
                                                 .putExtra(IntentConstant.PARAM_PLACE_AN_ORDER, it.result))

@@ -15,6 +15,7 @@ import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.MD5Tool
@@ -27,6 +28,7 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_phone_register.*
+import net.grandcentrix.tray.AppPreferences
 import org.greenrobot.eventbus.EventBus
 
 class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
@@ -41,6 +43,7 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     val pwdCb: CheckBox by lazy { cb_pwd_apr }
     val agreeCb: CheckBox by lazy { cb_agree_apr }
     val registerBtn: CommonButton by lazy { btn_register_apr }
+    val appPreferences: AppPreferences by lazy { AppPreferences(this) }
 
     private var checkcodeId: String? = null
 
@@ -153,6 +156,7 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                                 val rs = it as Result<LoginBean>
                                 if (rs.success) {
                                     showToast("登录成功")
+                                    appPreferences.put(Preferences.LOGIN_USER_NAME, phoneEt.getContent())
                                     NzeApp.instance.userBean = rs.result.cloneToUserBean()
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
                                     this@PhoneRegisterActivity.finish()
