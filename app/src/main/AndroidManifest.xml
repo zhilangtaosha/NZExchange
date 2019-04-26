@@ -155,8 +155,10 @@
         <activity android:name=".controller.my.asset.legal.RechargeConfirmActivity" />
         <activity android:name=".controller.my.asset.legal.LegalWithdrawActivity" />
         <activity android:name=".controller.market.OptionalEditActivity" />
-        <activity android:name=".controller.my.asset.legal.LegalWithdrawEndingActivity" />
-        <activity android:name=".controller.my.asset.legal.LegalWithdrawHistoryActivity"></activity>
+        <activity android:name=".controller.my.asset.legal.WithdrawPendingActivity" />
+        <activity android:name=".controller.my.asset.legal.LegalWithdrawHistoryActivity" />
+        <activity android:name=".controller.my.asset.legal.WithdrawSuccessActivity" />
+        <activity android:name=".controller.otc.OtcSettingActivity"></activity>
     </application>
 
 </manifest>

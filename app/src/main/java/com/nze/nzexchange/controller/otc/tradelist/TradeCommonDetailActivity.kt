@@ -64,7 +64,7 @@ class TradeCommonDetailActivity : NBaseActivity() {
             tv_pass_time_atcd.text = TimeTool.format(TimeTool.PATTERN_DEFAULT, suborderReleaseTime)
 
             accmoney
-        }.run {
+        }?.run {
             tv_name_atcd.text = trueName
             tv_receive_atcd.text = trueName
 

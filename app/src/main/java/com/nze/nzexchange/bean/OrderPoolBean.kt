@@ -15,8 +15,8 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class OrderPoolBean(
-        val accmoney: Accmoney,
-        val nick: String?="",
+        val accmoney: Accmoney?,
+        val nick: String? = "",
         val poolAllCount: Double,
         val poolId: String,
         val poolMaxamount: Double,
@@ -32,26 +32,26 @@ data class OrderPoolBean(
 ) : Parcelable {
     companion object {
         //购买列表
-        fun getFromNet(userId:String?,
-                tokenId: String?,
+        fun getFromNet(userId: String?,
+                       tokenId: String?,
                        pageNumber: Int,
                        pageSize: Int): Flowable<Result<MutableList<OrderPoolBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .buyService()
-                        .findOrderPool(userId,tokenId, pageNumber, pageSize)
+                        .findOrderPool(userId, tokenId, pageNumber, pageSize)
             }
         }
 
         //出售列列表
-        fun getSellNet(userId:String?,
-                tokenId: String?,
+        fun getSellNet(userId: String?,
+                       tokenId: String?,
                        pageNumber: Int,
                        pageSize: Int): Flowable<Result<MutableList<OrderPoolBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .sellService()
-                        .findOrderPool(userId,tokenId, pageNumber, pageSize)
+                        .findOrderPool(userId, tokenId, pageNumber, pageSize)
             }
         }
     }

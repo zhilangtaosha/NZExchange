@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.legal.WithdrawSuccessActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="账单详情" />
+
+    <TextView
+        android:id="@+id/tv_bank_aws"
+        style="@style/tx17_common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@mipmap/bank_icon"
+        android:drawablePadding="10dp"
+        android:text="中国工商银行" />
+
+    <TextView
+        android:id="@+id/tv_amount_aws"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="5000.00"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_status_aws"
+        style="@style/tx15_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:text="交易成功" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="转出进度" />
+
+        <ImageView
+            android:id="@+id/iv_apply_aws"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="3dp"
+            android:src="@mipmap/hook_icon3" />
+
+        <View
+            android:id="@+id/view_apply_aws"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/iv_apply_aws"
+            android:layout_marginLeft="108dp"
+            android:background="@color/color_FF6D87A8" />
+
+        <ImageView
+            android:id="@+id/iv_process_aws"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_apply_aws"
+            android:layout_marginLeft="100dp"
+            android:src="@mipmap/hook_icon3" />
+
+        <View
+            android:id="@+id/view_process_aws"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/iv_process_aws"
+            android:layout_marginLeft="108dp"
+            android:background="@color/color_FF6D87A8" />
+
+        <ImageView
+            android:id="@+id/iv_success_aws"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_process_aws"
+            android:layout_marginLeft="100dp"
+            android:src="@mipmap/hook_icon3" />
+
+        <TextView
+            android:id="@+id/tv_apply_aws"
+            style="@style/tx15_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/iv_apply_aws"
+            android:text="提现申请" />
+
+        <TextView
+            android:id="@+id/tv_apply_time_aws"
+            style="@style/tx15_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_apply_aws"
+            android:text="04-10 16:24" />
+
+        <TextView
+            android:id="@+id/tv_process_aws"
+            style="@style/tx15_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_apply_aws"
+            android:layout_alignBottom="@+id/iv_process_aws"
+            android:text="处理中" />
+
+        <TextView
+            android:id="@+id/tv_process_time_aws"
+            style="@style/tx15_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_apply_time_aws"
+            android:layout_alignBottom="@+id/iv_process_aws"
+            android:text="04-10 16:24" />
+
+        <TextView
+            android:id="@+id/tv_success_aws"
+            style="@style/tx15_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_apply_aws"
+            android:layout_alignBottom="@+id/iv_success_aws"
+            android:text="提现成功" />
+
+        <TextView
+            android:id="@+id/tv_success_time_aws"
+            style="@style/tx15_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_apply_time_aws"
+            android:layout_alignBottom="@+id/iv_success_aws"
+            android:text="04-10 16:24" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="转入账户" />
+
+        <TextView
+            android:id="@+id/tv_change_bank_aws"
+            style="@style/tx15_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="中国工商银行（0314）" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_line" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="创建时间" />
+
+        <TextView
+            android:id="@+id/tv_found_time_aws"
+            style="@style/tx15_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="2019-04-10 16:24" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_line" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="订单编号" />
+
+        <TextView
+            android:id="@+id/tv_order_num_aws"
+            style="@style/tx15_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="201904101624112513" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_line" />
+    </RelativeLayout>
+</LinearLayout>

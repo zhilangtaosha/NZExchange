@@ -19,7 +19,9 @@ import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc_content.view.*
 
-
+/**
+ * OTC购买和出售列表
+ */
 class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
 
     lateinit var ptrLv: PullToRefreshListView
@@ -85,6 +87,11 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
     }
 
     override fun getContainerTargetView(): View? = null
+
+    override fun onResume() {
+        super.onResume()
+        refresh(tokenId)
+    }
 
     override fun refresh(tokenId: String?) {
         this.tokenId = tokenId

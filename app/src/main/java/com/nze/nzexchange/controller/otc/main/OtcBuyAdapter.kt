@@ -43,6 +43,7 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
             vh.priceTv.setTxtColor(R.color.color_FFE05760)
         }
         val item = getItem(position)
+        vh.payLayout.removeAllViews()
         item?.let {
             vh.nameTv.text = it.nick
             vh.orderNumTv.text = "${it.totalOrder}单"
@@ -52,7 +53,6 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
 
             it.accmoney
         }?.run {
-            vh.payLayout.removeAllViews()
             if (accmoneyWeixinurl != null && accmoneyWeixinurl.isNotEmpty())
                 vh.payLayout.addView(ViewFactory.createLeftPayMethod(R.mipmap.wechat_icon))
             if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty())

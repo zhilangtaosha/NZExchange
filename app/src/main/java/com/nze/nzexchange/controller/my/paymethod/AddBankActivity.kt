@@ -33,11 +33,13 @@ class AddBankActivity : NBaseActivity() {
     val saveBtn: CommonButton by lazy { btn_save_aac }
     val userBean: UserBean? by lazy { NzeApp.instance.userBean }
     var realNameAuthenticationBean: RealNameAuthenticationBean? = null
-    val fundPopup: FundPasswordPopup by lazy { FundPasswordPopup(this).apply {
-        onPasswordClick={
-            setPayMethod(it)
+    val fundPopup: FundPasswordPopup by lazy {
+        FundPasswordPopup(this).apply {
+            onPasswordClick = {
+                setPayMethod(it)
+            }
         }
-    } }
+    }
 
     override fun getRootView(): Int = R.layout.activity_add_card
 
@@ -49,7 +51,7 @@ class AddBankActivity : NBaseActivity() {
         userBean?.payMethod?.run {
             cartNoValueEt.setText(this.accmoneyBankcard?.getValue() ?: "")
             bankValueEt.setText(this.accmoneyBanktype?.getValue() ?: "")
-            addressValueEt .setText(this.accmoneyBank?.getValue() ?: "")
+            addressValueEt.setText(this.accmoneyBank?.getValue() ?: "")
         }
         saveBtn.initValidator()
                 .add(cartNoValueEt, EmptyValidation())
@@ -61,26 +63,28 @@ class AddBankActivity : NBaseActivity() {
         }
     }
 
-    fun setPayMethod(pwd:String){
-            userBean?.run {
-                SetPayMethodBean.setPayMethodNet(tokenReqVo.tokenUserId,
-                        tokenReqVo.tokenUserKey,
-                        addressValueEt.getContent(),
-                        cartNoValueEt.getContent(),
-                        bankValueEt.getContent(),
-                        null, null, null, null
-                        ,pwd)
-                        .compose(netTfWithDialog())
-                        .subscribe({
-                            if (it.success) {
-                                val payMethodBean = it.result
-                                userBean?.payMethod?.accmoneyBank = payMethodBean.accmoneyBank
-                                userBean?.payMethod?.accmoneyBankcard = payMethodBean.accmoneyBankcard
-                                userBean?.payMethod?.accmoneyBanktype = payMethodBean.accmoneyBanktype
-                                NzeApp.instance.userBean = userBean
-                                this@AddBankActivity.finish()
-                            }
-                        }, onError)
+    fun setPayMethod(pwd: String) {
+        userBean?.run {
+            SetPayMethodBean.setPayMethodNet(tokenReqVo.tokenUserId,
+                    tokenReqVo.tokenUserKey,
+                    addressValueEt.getContent(),
+                    cartNoValueEt.getContent(),
+                    bankValueEt.getContent(),
+                    null, null, null, null
+                    , pwd)
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        if (it.success) {
+                            val payMethodBean = it.result
+                            userBean?.payMethod?.accmoneyBank = payMethodBean.accmoneyBank
+                            userBean?.payMethod?.accmoneyBankcard = payMethodBean.accmoneyBankcard
+                            userBean?.payMethod?.accmoneyBanktype = payMethodBean.accmoneyBanktype
+                            NzeApp.instance.userBean = userBean
+                            this@AddBankActivity.finish()
+                        } else {
+                            showToast(it.message)
+                        }
+                    }, onError)
 
         }
     }

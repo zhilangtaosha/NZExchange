@@ -15,7 +15,7 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class SubOrderInfoBean(
-        val accmoney: Accmoney,
+        val accmoney: Accmoney?,
         val poolId: String,
         val suborderAmount: Double,
         val suborderCreateTime: Long,

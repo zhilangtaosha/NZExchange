@@ -13,13 +13,16 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean2.ConcreteAssetBean
 import com.nze.nzexchange.config.AccountType
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.controller.my.asset.recharge.RechargeCurrencyActivity
 import com.nze.nzexchange.controller.my.asset.transfer.TransferActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency
 import kotlinx.android.synthetic.main.activity_concrete_currency_asset.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * 具体某种币的资产页面
@@ -123,6 +126,8 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
                 TransferActivity.skip(this, bundle!!)
             }
             R.id.btn_trade_acca -> {
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT,3))
+                skipActivity(MainActivity::class.java)
             }
         }
     }

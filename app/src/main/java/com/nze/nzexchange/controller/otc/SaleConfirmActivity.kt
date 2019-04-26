@@ -32,7 +32,6 @@ class SaleConfirmActivity : NBaseActivity() {
 
     override fun initView() {
         intent?.let {
-            subOrderInfoBean = it.getParcelableExtra(IntentConstant.PARAM_PLACE_AN_ORDER)
             suborderId = it.getStringExtra(IntentConstant.PARAM_SUBORDERID)
         }
         (topbar_abc as CommonTopBar).setRightClick {

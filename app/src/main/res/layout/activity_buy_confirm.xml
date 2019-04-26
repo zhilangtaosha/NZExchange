@@ -79,7 +79,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
-            android:text="黄娟娟"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="14sp" />
     </LinearLayout>
@@ -105,7 +104,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
-            android:text="13602341256"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="14sp" />
     </LinearLayout>
@@ -131,7 +129,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
-            android:text="1.0321CNY"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="14sp" />
     </LinearLayout>
@@ -157,7 +154,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
-            android:text="4215.32USDT"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="14sp" />
     </LinearLayout>
@@ -183,7 +179,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
-            android:text="2435.42CNY"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="14sp" />
     </LinearLayout>

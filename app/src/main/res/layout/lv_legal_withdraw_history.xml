@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="15dp"
     android:paddingTop="20dp"
-    android:paddingRight="15dp"
-    android:paddingBottom="20dp">
+    android:paddingRight="15dp">
 
     <TextView
         android:id="@+id/tv_name_llwh"
@@ -80,5 +79,12 @@
         android:layout_below="@+id/tv_time_key_llwh"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
         android:text="200" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_line" />
 </RelativeLayout>

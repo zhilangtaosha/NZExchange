@@ -45,7 +45,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
     val amountEt: ClearableEditText by lazy { et_amount_acw }
     val availableTv: TextView by lazy { tv_available_acw }
     val allTv: TextView by lazy { tv_all_acw }
-    val phoneEt: ClearableEditText by lazy { et_phone_acw }
+    val verifyKeyTv: TextView by lazy { tv_verify_key_acw }
+    val verifyValueEt: ClearableEditText by lazy { et_verify_value_acw }
     val verifyBtn: VerifyButton by lazy { btn_verify_acw }
     val serviceChargeTv: TextView by lazy { tv_service_charge_acw }
     val actualAmountTv: TextView by lazy { tv_actual_amount_acw }
@@ -61,6 +62,9 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
     private val REQUEST_CAMERA_PERM: Int = 101
     var userAssetBean: UserAssetBean? = null
     var userBean: UserBean? = UserBean.loadFromApp()
+    val VERIFY_PHONE = 0
+    val VERIFY_EMAIL = 1
+    var verifyType = VERIFY_PHONE
 
     override fun getRootView(): Int = R.layout.activity_coin_withdraw
 
@@ -72,6 +76,15 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             startActivity(Intent(this@WithdrawCurrencyActivity, WithdrawHistoryActivity::class.java)
                     .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
         }
+
+        userBean?.let {
+            if (!it.userPhone.isNullOrEmpty()) {
+                verifyKeyTv.text = "短信验证"
+            } else {
+                verifyKeyTv.text = "邮箱验证"
+            }
+        }
+
         selectCurrencyIv.setOnClickListener(this)
         qcodeIv.setOnClickListener(this)
         addressIv.setOnClickListener(this)

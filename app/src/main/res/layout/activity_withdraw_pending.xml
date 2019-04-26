@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     android:orientation="vertical"
-    tools:context=".controller.my.asset.legal.LegalWithdrawEndingActivity">
+    tools:context=".controller.my.asset.legal.WithdrawPendingActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
         android:id="@+id/ctb_alwe"

@@ -27,6 +27,9 @@ import com.nze.nzexchange.validation.EmptyValidation
 import kotlinx.android.synthetic.main.activity_buy.*
 import org.greenrobot.eventbus.EventBus
 
+/**
+ * 发布购买和出售委托单
+ */
 class BuyActivity : NBaseActivity(), View.OnClickListener {
 
     var type = OtcContentFragment.TYPE_BUY
@@ -57,7 +60,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
 
             price = poolPrice
             accmoney
-        }.run {
+        }?.run {
             if (accmoneyWeixinurl != null && accmoneyWeixinurl.isNotEmpty())
                 layout_pay_ab.addView(ViewFactory.createRightPayMethod(R.mipmap.wechat_icon))
             if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty())
@@ -137,7 +140,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
 //                                        EventBus.getDefault().post(EventCenter)
                                         startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
                                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
-                                                .putExtra(IntentConstant.PARAM_PLACE_AN_ORDER, it.result))
+                                                .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
                                     }
                                 }, onError, {
                                     this@BuyActivity.finish()
@@ -153,7 +156,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                         EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
                                         startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
                                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
-                                                .putExtra(IntentConstant.PARAM_PLACE_AN_ORDER, it.result))
+                                                .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
                                     }
                                 }, onError, {
                                     this@BuyActivity.finish()

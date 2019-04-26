@@ -1,17 +1,18 @@
 package com.nze.nzexchange.controller.my.asset.legal
 
-import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.widget.CommonTopBar
-import kotlinx.android.synthetic.main.activity_legal_withdraw_ending.*
+import kotlinx.android.synthetic.main.activity_withdraw_pending.*
 
-class LegalWithdrawEndingActivity : NBaseActivity() {
+/**
+ * 提现待处理状态页面
+ */
+class WithdrawPendingActivity : NBaseActivity() {
     val topBar: CommonTopBar by lazy { ctb_alwe }
     val applyTv: TextView by lazy { tv_apply_alwe }
     val applyTimeTv: TextView by lazy { tv_apply_time_alwe }
@@ -20,7 +21,7 @@ class LegalWithdrawEndingActivity : NBaseActivity() {
     val historyTv: TextView by lazy { tv_history_alwe }
 
 
-    override fun getRootView(): Int = R.layout.activity_legal_withdraw_ending
+    override fun getRootView(): Int = R.layout.activity_withdraw_pending
 
     override fun initView() {
         topBar.setRightClick {
@@ -52,9 +53,5 @@ class LegalWithdrawEndingActivity : NBaseActivity() {
     override fun getContainerTargetView(): View? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_legal_withdraw_ending)
-    }
+    
 }
