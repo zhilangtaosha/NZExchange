@@ -22,5 +22,6 @@ class EventCode {
         const val CODE_APP_TO_FRONT = 0x012//app从后台返回前台
         const val CODE_NO_LOGIN = 0x013//取消登录
         const val CODE_OTC_TRADE_SUCCESS = 0x014//OTC交易成功
+        const val CODE_LOGIN_FAIL=0x015//登录失效
     }
 }

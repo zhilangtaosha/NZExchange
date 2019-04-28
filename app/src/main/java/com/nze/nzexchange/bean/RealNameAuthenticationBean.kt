@@ -46,12 +46,13 @@ data class RealNameAuthenticationBean(
     companion object {
         fun getReanNameAuthentication(
                 tokenUserId: String,
-                tokenUserKey: String
+                tokenUserKey: String?,
+                tokenSystreeId:String?
         ): Flowable<Result<RealNameAuthenticationBean>> {
             return Flowable.defer {
                 CRetrofit.instance
                         .userService()
-                        .getReanNameAuthentication(tokenUserId, tokenUserKey)
+                        .getReanNameAuthentication(tokenUserId, tokenUserKey,tokenSystreeId)
             }
         }
     }

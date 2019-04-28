@@ -75,6 +75,10 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
                 }
             }
         }
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_FAIL){
+            skipActivity(MainActivity::class.java)
+            skipActivity(LoginActivity::class.java)
+        }
     }
 
     override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.RIGHT

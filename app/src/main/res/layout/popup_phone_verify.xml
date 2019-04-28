@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_black_tran">
+
+    <LinearLayout
+        android:id="@+id/layout_root_pfp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_FF12161C"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="30dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <TextView
+                style="@style/tx15_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="安全验证" />
+
+            <TextView
+                android:id="@+id/tv_cancel_ppv"
+                style="@style/tx14_main"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:text="取消" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_line" />
+
+        <TextView
+            android:id="@+id/tv_phone_ppv"
+            style="@style/tx14_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/et_password_ppv"
+                style="@style/et15"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:hint="请输入短信验证码"
+                android:paddingLeft="0dp" />
+
+            <TextView
+                android:id="@+id/tv_send_ppv"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:text="发送"
+                style="@style/tx15_main"/>
+        </LinearLayout>
+
+        <com.nze.nzexchange.widget.CommonButton
+            android:id="@+id/btn_confirm_ppv"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="确定" />
+    </LinearLayout>
+
+</RelativeLayout>

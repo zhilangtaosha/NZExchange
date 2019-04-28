@@ -20,3 +20,8 @@ fun Double.formatForCurrency(): String? {
 fun String.getValue(): String {
     return this
 }
+
+fun Double.twoPlace():String{
+    val df = DecimalFormat("0.00")
+    return df.format(this)
+}

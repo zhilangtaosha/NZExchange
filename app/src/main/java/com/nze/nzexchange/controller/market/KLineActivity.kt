@@ -19,6 +19,7 @@ import com.nze.nzexchange.config.KLineRequestBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.extend.setTxtColor
+import com.nze.nzexchange.extend.twoPlace
 import com.nze.nzexchange.http.HRetrofit
 import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
@@ -651,12 +652,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                                 volumeTv.text = quote?.get(4)
                                 try {
                                     costTv.text = quote?.get(6)
-                                    val w: Double = ((quote?.get(6))!!.toDouble() - (quote?.get(0))!!.toDouble()) / (quote?.get(0))!!.toDouble()
-                                    setPriceWave(w)
+                                    setPriceWave(quote?.get(0)!!.toDouble(), quote?.get(6)!!.toDouble())
                                 } catch (e: Exception) {
                                     costTv.text = quote?.get(1)
-                                    val w: Double = ((quote?.get(1))!!.toDouble() - (quote?.get(0))!!.toDouble()) / (quote?.get(0))!!.toDouble()
-                                    setPriceWave(w)
+                                    setPriceWave(quote?.get(0)!!.toDouble(), quote?.get(1)!!.toDouble())
                                 }
                             }
                             DATA_NOW_LINEK -> {//k线数据
@@ -741,7 +740,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     /**
      * 设置涨跌幅
      */
-    fun setPriceWave(w: Double) {
+    fun setPriceWave(start: Double, end: Double) {
+        var w = (end-start)/start
         if (w > 0) {
             rangeTv.setTxtColor(R.color.color_up)
             costTv.setTxtColor(R.color.color_up)
@@ -749,6 +749,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             rangeTv.setTxtColor(R.color.color_down)
             costTv.setTxtColor(R.color.color_down)
         }
-        rangeTv.text = w.toString()
+        rangeTv.text = "${(w*100).twoPlace()}%"
     }
 }

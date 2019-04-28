@@ -158,7 +158,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     }
 
     fun getReanNameAuthentication() {
-        RealNameAuthenticationBean.getReanNameAuthentication(userBean?.tokenReqVo?.tokenUserId!!, userBean?.tokenReqVo?.tokenUserKey!!)
+        RealNameAuthenticationBean.getReanNameAuthentication(userBean?.tokenReqVo?.tokenUserId!!, userBean?.tokenReqVo?.tokenUserKey!!,userBean?.tokenReqVo?.tokenSystreeId!!)
                 .compose(netTfWithDialog())
                 .subscribe({
                     realNameAuthenticationBean = it.result
