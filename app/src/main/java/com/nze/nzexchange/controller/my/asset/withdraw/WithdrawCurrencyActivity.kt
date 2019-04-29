@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -52,6 +53,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
     val actualAmountTv: TextView by lazy { tv_actual_amount_acw }
     val withdrawBtn: CommonButton by lazy { btn_withdraw_acw }
     val attentionTv: TextView by lazy { tv_attention_acw }
+    val labelLayout: RelativeLayout by lazy { layout_label_acw }
+    val labelEt: ClearableEditText by lazy { et_label_acw }
 
     val REQUEST_CODE_QCODE = 1
     val REQUEST_CODE_CURRENCY = 2
@@ -213,8 +216,17 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             availableTv.text = "可提数量：${it.available} ${it.currency}"
             amountEt.hint = "最小提现数量为200 ${it.currency}"
             serviceChargeTv.text = "0.0${it.currency}"
+            switchLayout(it)
         }
 
+    }
+
+    fun switchLayout(bean: UserAssetBean) {
+        if (bean.currency != "EOS") {
+            labelLayout.visibility = View.GONE
+        } else {
+            labelLayout.visibility = View.VISIBLE
+        }
     }
 
 

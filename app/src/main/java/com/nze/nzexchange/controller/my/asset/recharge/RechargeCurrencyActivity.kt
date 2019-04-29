@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -46,6 +47,13 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
     val coinAddressTv: TextView by lazy { tv_coin_address_arc }
     val copyAddressTv: TextView by lazy { tv_copy_address_arc }
     val tipTv: TextView by lazy { tv_tip_arc }
+    val eosAddressLayout: LinearLayout by lazy { layout_eos_address_arc }
+    val eosAddressTv: TextView by lazy { tv_eos_address_arc }
+    val eosCopyIv: ImageView by lazy { iv_eos_copy_arc }
+    val labelLayout: LinearLayout by lazy { layout_label_arc }
+    val labelTv: TextView by lazy { tv_label_arc }
+    val labelCopyIv: ImageView by lazy { iv_label_copy_arc }
+
     var codeBitmap: Bitmap? = null
     var userAssetBean: UserAssetBean? = null
     val clip: ClipboardManager by lazy { this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
@@ -63,7 +71,9 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
             clip.text = coinAddressTv.text
             showToast("复制成功")
         }
-
+        copyAddressTv.setOnClickListener(this)
+        eosCopyIv.setOnClickListener(this)
+        labelCopyIv.setOnClickListener(this)
         refreshLayout()
     }
 
@@ -90,7 +100,20 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-
+        when (v?.id) {
+            R.id.tv_copy_address_arc -> {
+                clip.text = coinAddressTv.text
+                showToast("复制成功")
+            }
+            R.id.iv_eos_copy_arc -> {
+                clip.text = eosAddressTv.text
+                showToast("复制成功")
+            }
+            R.id.iv_label_copy_arc -> {
+                clip.text = labelTv.text
+                showToast("复制成功")
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -107,6 +130,22 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
             codeBitmap = CodeUtils.createImage(it.address, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
             coinAddressIv.setImageBitmap(codeBitmap)
             coinAddressTv.text = it.address
+            eosAddressTv.text = it.address
+            switchLayout(it)
+        }
+    }
+
+    fun switchLayout(bean: UserAssetBean) {
+        if (bean.currency != "EOS") {
+            eosAddressLayout.visibility = View.GONE
+            labelLayout.visibility = View.GONE
+            coinAddressTv.visibility = View.VISIBLE
+            copyAddressTv.visibility = View.VISIBLE
+        } else {
+            eosAddressLayout.visibility = View.VISIBLE
+            labelLayout.visibility = View.VISIBLE
+            coinAddressTv.visibility = View.GONE
+            copyAddressTv.visibility = View.GONE
         }
     }
 
