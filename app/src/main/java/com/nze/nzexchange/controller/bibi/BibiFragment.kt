@@ -118,6 +118,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     private val sidePopup: BibiSidePopup by lazy { BibiSidePopup(mBaseActivity, childFragmentManager!!) }
     private var currentTransactionPair: TransactionPairsBean? = null
+    private var preCurrentTransactionPair: TransactionPairsBean? = null
     private var restOrderBean: RestOrderBean? = null
 
     val POPUP_LIMIT = 0
@@ -167,7 +168,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             addAllItem(itemDepth)
         }
     }
-
 
 
     var binder: KLineService.KBinder? = null
@@ -236,12 +236,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         if (eventCenter.eventCode == EventCode.CODE_SELECT_TRANSACTIONPAIR) {
             NLog.i("bibifragment get select event....")
+            preCurrentTransactionPair = currentTransactionPair
             currentTransactionPair = eventCenter.data as TransactionPairsBean
             refreshLayout()
             getPendingOrderInfo(currentTransactionPair?.id!!)
             orderPending(currentTransactionPair?.id!!, userBean?.userId)
             //切换交易对，切换盘口
-            changePair()
+            if (preCurrentTransactionPair == null || preCurrentTransactionPair?.id != currentTransactionPair?.id)
+                changePair()
         }
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
             userBean = UserBean.loadFromApp()
@@ -500,7 +502,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     private fun getKData() {
         binder?.getKDataRequest(currentTransactionPair!!)
     }
-
 
 
     override fun onResume() {

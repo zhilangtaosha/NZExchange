@@ -158,7 +158,8 @@
         <activity android:name=".controller.my.asset.legal.WithdrawPendingActivity" />
         <activity android:name=".controller.my.asset.legal.LegalWithdrawHistoryActivity" />
         <activity android:name=".controller.my.asset.legal.WithdrawSuccessActivity" />
-        <activity android:name=".controller.otc.OtcSettingActivity"></activity>
+        <activity android:name=".controller.otc.OtcSettingActivity" />
+        <activity android:name=".controller.my.asset.legal.WithdrawRejectActivity"></activity>
     </application>
 
 </manifest>
