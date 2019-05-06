@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/tv_style_awd"
-            style="@style/tx14_8592"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -51,12 +51,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp">
+        android:layout_marginRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <TextView
+            android:id="@+id/tv_address_key_awd"
             style="@style/tx15_aab9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,11 +68,14 @@
 
         <TextView
             android:id="@+id/tv_address_awd"
-            style="@style/tx14_8592"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_address_key_awd"
+            android:gravity="left"
             android:text="31421314562347586fvcx243546gfsd" />
     </RelativeLayout>
 
@@ -91,13 +97,12 @@
 
         <TextView
             android:id="@+id/tv_status_awd"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="已完成"
-            android:textColor="@color/color_FF676C7A"
-            android:textSize="14sp" />
+            android:text="已完成" />
     </RelativeLayout>
 
     <include layout="@layout/common_line_margin15" />
@@ -118,7 +123,7 @@
 
         <TextView
             android:id="@+id/tv_service_charge_awd"
-            style="@style/tx14_8592"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -141,18 +146,50 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="区块链交易ID" />
+            android:text="区块编号" />
 
         <TextView
             android:id="@+id/tv_trade_id_awd"
-            style="@style/tx12_8592"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_toRightOf="@+id/tv_trade_id_key_awd"
-            android:layout_marginLeft="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_trade_id_key_awd"
+            android:gravity="right"
+            android:text="31421314562347586f" />
+    </RelativeLayout>
+
+    <include layout="@layout/common_line_margin15" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/tv_trade_hash_key_awd"
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="交易哈希" />
+
+        <TextView
+            android:id="@+id/tv_trade_hash_awd"
+            style="@style/tx14_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_trade_hash_key_awd"
+            android:gravity="left"
             android:text="31421314562347586f" />
     </RelativeLayout>
 
@@ -174,7 +211,7 @@
 
         <TextView
             android:id="@+id/tv_date_awd"
-            style="@style/tx14_8592"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

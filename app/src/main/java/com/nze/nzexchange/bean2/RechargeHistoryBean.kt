@@ -1,6 +1,7 @@
 package com.nze.nzexchange.bean2
 
 import android.os.Parcelable
+import com.nze.nzexchange.bean.TransactionListBean
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -18,22 +19,23 @@ data class RechargeHistoryBean(
         var rechargeAmount: String = "",
         var totalAmount: String = "余额 12345.23USDT",
         var address: String = "",
-        var datetime: Long=0,
-        var isTitle: Boolean = false
+        var datetime: Long = 0,
+        var isTitle: Boolean = false,
+        var transactionListBean: TransactionListBean?=null
 ) : Parcelable {
 
-    companion object {
-
-        fun getList() = mutableListOf<RechargeHistoryBean>().apply {
-            add(RechargeHistoryBean("本月", isTitle = true))
-            add(RechargeHistoryBean(month = "12-21"))
-            add(RechargeHistoryBean(month = "12-18"))
-            add(RechargeHistoryBean(month = "12-02"))
-
-            add(RechargeHistoryBean("2018-11", isTitle = true))
-            add(RechargeHistoryBean(month = "11-27"))
-            add(RechargeHistoryBean(month = "11-13"))
-            add(RechargeHistoryBean(month = "11-06"))
-        }
-    }
+//    companion object {
+//
+//        fun getList() = mutableListOf<RechargeHistoryBean>().apply {
+//            add(RechargeHistoryBean("本月", isTitle = true))
+//            add(RechargeHistoryBean(month = "12-21"))
+//            add(RechargeHistoryBean(month = "12-18"))
+//            add(RechargeHistoryBean(month = "12-02"))
+//
+//            add(RechargeHistoryBean("2018-11", isTitle = true))
+//            add(RechargeHistoryBean(month = "11-27"))
+//            add(RechargeHistoryBean(month = "11-13"))
+//            add(RechargeHistoryBean(month = "11-06"))
+//        }
+//    }
 }

@@ -5,8 +5,10 @@ import android.view.View
 import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TickRecordBean
+import com.nze.nzexchange.bean.TransactionListBean
 import com.nze.nzexchange.bean2.WithdrawHistoryBean
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_withdraw_history.view.*
 
@@ -16,16 +18,16 @@ import kotlinx.android.synthetic.main.lv_withdraw_history.view.*
  * @类 说 明:
  * @创建时间：2018/12/26
  */
-class WithdrawHistoryAdapter(mContext: Context) : NBaseAda<TickRecordBean, WithdrawHistoryAdapter.ViewHolder>(mContext) {
+class WithdrawHistoryAdapter(mContext: Context) : NBaseAda<TransactionListBean, WithdrawHistoryAdapter.ViewHolder>(mContext) {
 
     override fun setLayout(): Int = R.layout.lv_withdraw_history
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: TickRecordBean, position: Int) {
-        vh.amountTv.text = item.number
+    override fun initView(vh: ViewHolder, item: TransactionListBean, position: Int) {
+        vh.amountTv.text = item.amount.formatForCurrency()
         vh.statusTv.text = "已完成"
-        vh.dateTv.text = TimeTool.format(TimeTool.PATTERN2, item.datetime)
+        vh.dateTv.text = TimeTool.format(TimeTool.PATTERN2, item.createTime)
     }
 
 

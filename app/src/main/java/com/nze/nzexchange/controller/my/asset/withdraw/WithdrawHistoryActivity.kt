@@ -9,6 +9,7 @@ import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TickRecordBean
+import com.nze.nzexchange.bean.TransactionListBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
@@ -24,9 +25,7 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         ptrLv.refreshableView.apply {
             setOnItemClickListener { parent, view, position, id ->
                 //                skipActivity(WithdrawDetailActivity::class.java)
-                startActivity(Intent(this@WithdrawHistoryActivity, WithdrawDetailActivity::class.java)
-                        .putExtra(IntentConstant.PARAM_DETAIL, historyAdapter.getItem(position))
-                        .putExtra(IntentConstant.PARAM_CURRENCY, userAssetBean?.currency))
+                WithdrawDetailActivity.skip(this@WithdrawHistoryActivity, historyAdapter.getItem(position)!!, userAssetBean?.currency!!, WithdrawDetailActivity.TYPE_WITHDRAW)
             }
         }
     }
@@ -40,7 +39,7 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         intent?.let {
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
-        ptrLv.isPullLoadEnabled = true
+        ptrLv.isPullLoadEnabled = false
         ptrLv.setOnRefreshListener(this)
         listView.adapter = historyAdapter
 
@@ -80,7 +79,7 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
     }
 
     fun tickRecord() {
-        TickRecordBean.tickRecord(userBean?.userId!!, userAssetBean?.currency!!, page, PAGE_SIZE)
+        TransactionListBean.tickRecord(userBean?.userId!!, userAssetBean?.currency!!, page, PAGE_SIZE)
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {

@@ -14,22 +14,23 @@ import retrofit2.http.Query
  */
 @Parcelize
 data class TickRecordBean(
+        val amount: Double,
         val blockNo: String,
-        val datetime: Long,
-        val fee: Int,
+        val datetime: String,
+        val createTime: Long,
+        val fee: Double,
         val from: String,
-        val number: String,
         val state: String,
         val to: String,
         val txid: String
-):Parcelable {
+) : Parcelable {
     companion object {
         fun tickRecord(
                 userId: String,
                 currency: String,
                 pageNumber: Int,
                 pageSize: Int
-        ): Flowable<Result<MutableList<TickRecordBean>>> {
+        ): Flowable<Result<MutableList<TransactionListBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()

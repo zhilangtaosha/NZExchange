@@ -19,6 +19,8 @@ import com.nze.nzexchange.bean2.RechargeHistoryBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawDetailActivity
+import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.recyclerview.Divider
@@ -33,12 +35,10 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
     val rcvAdapter: RechargeHistoryAdapter by lazy {
         RechargeHistoryAdapter(this).apply {
             setDetailClick { position, item ->
-                startActivity(Intent(this@RechargeHistoryActivity, RechargeDetailActivity::class.java)
-                        .putExtra(IntentConstant.PARAM_DETAIL, item))
+                //                startActivity(Intent(this@RechargeHistoryActivity, RechargeDetailActivity::class.java)
+//                        .putExtra(IntentConstant.PARAM_DETAIL, item))
+                WithdrawDetailActivity.skip(this@RechargeHistoryActivity, item.transactionListBean!!, userAssetBean?.currency!!, WithdrawDetailActivity.TYPE_RECHARGE)
             }
-//            setDetailClick {
-//                skipActivity(RechargeDetailActivity::class.java)
-//            }
         }
     }
 
@@ -53,8 +53,8 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         intent?.let {
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
+        ptrrv.isPullLoadEnabled = false
         ptrrv.setOnRefreshListener(this)
-        ptrrv.isPullLoadEnabled = true
         rcv.layoutManager = layoutManager
         rcv.adapter = rcvAdapter
 
@@ -100,13 +100,13 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
 
     fun getTransactionList(userId: String, currency: String, pageNumber: Int, pageSize: Int) {
         TransactionListBean.getTransactionList(userId, currency, pageNumber, pageSize)
-                .compose(netTfWithDialog())
+                .compose(netTf())
                 .subscribe({
                     if (it.success) {
                         val list = it.result
                         val tmpList: MutableList<RechargeHistoryBean> = mutableListOf()
                         list.groupBy {
-                            val month = TimeTool.format(TimeTool.PATTERN3, it.datetime)
+                            val month = TimeTool.format(TimeTool.PATTERN3, it.createTime)
                             month
                         }.forEach {
                             NLog.i(it.toString())
@@ -118,13 +118,14 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
                             }
                             it.value.forEach {
                                 tmpList.add(RechargeHistoryBean(
-                                        month = TimeTool.format(TimeTool.PATTERN4, it.datetime),
-                                        time = TimeTool.format(TimeTool.PATTERN5, it.datetime),
+                                        month = TimeTool.format(TimeTool.PATTERN4, it.createTime),
+                                        time = TimeTool.format(TimeTool.PATTERN5, it.createTime),
                                         currency = userAssetBean?.currency!!,
-                                        rechargeAmount = it.number,
-                                        address = it.address,
-                                        datetime = it.datetime,
-                                        isTitle = false
+                                        rechargeAmount = it.amount.formatForCurrency()!!,
+                                        address = it.to,
+                                        datetime = it.createTime,
+                                        isTitle = false,
+                                        transactionListBean = it
                                 ))
                             }
                         }
@@ -149,6 +150,9 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
                         if (historyList.size >= it.totalSize)
                             ptrrv.setHasMoreData(false)
                     }
-                }, onError)
+                    ptrrv.onPullDownRefreshComplete()
+                }, {
+                    ptrrv.onPullDownRefreshComplete()
+                })
     }
 }

@@ -118,7 +118,7 @@ interface BibiService {
     @GET("assets/getTransactionList")
     fun getTransactionList(
             @Query("userId") userId: String,
-            @Query("currency") currency: String,
+            @Query("token") token: String,
             @Query("pageNumber") pageNumber: Int,
             @Query("pageSize") pageSize: Int
     ): Flowable<Result<MutableList<TransactionListBean>>>
@@ -130,7 +130,7 @@ interface BibiService {
             @Query("currency") currency: String,
             @Query("pageNumber") pageNumber: Int,
             @Query("pageSize") pageSize: Int
-    ): Flowable<Result<MutableList<TickRecordBean>>>
+    ): Flowable<Result<MutableList<TransactionListBean>>>
 
 
     //订单筛选

@@ -11,6 +11,8 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import com.google.gson.Gson
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -59,21 +61,17 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val saleTv: TextView by lazy { rootView.tv_sale_bibi }
     val limitTv: TextView by lazy { rootView.tv_limit_bibi }
     val giveEt: EditText by lazy { rootView.et_give_bibi }
-    val giveUnitTv: TextView by lazy { rootView.tv_give_unit_bibi }
+    //    val giveUnitTv: TextView by lazy { rootView.tv_give_unit_bibi }
     val priceTv: TextView by lazy { rootView.tv_price_bibi }
     val getEt: EditText by lazy { rootView.et_get_bibi }
-    val getUnitTv: TextView by lazy { rootView.tv_get_unit_bibi }
+    //    val getUnitTv: TextView by lazy { rootView.tv_get_unit_bibi }
     val availableTv: TextView by lazy { rootView.tv_available_bibi }
     val seekbarValueTv: TextView by lazy { rootView.tv_seekbar_value_bibi }
     val buyIsb: IndicatorSeekBar by lazy {
-        rootView.isb_buy_bibi.apply {
-            onSeekChangeListener = this@BibiFragment
-        }
+        rootView.isb_buy_bibi
     }
     val saleIsb: IndicatorSeekBar by lazy {
-        rootView.isb_sale_bibi.apply {
-            onSeekChangeListener = this@BibiFragment
-        }
+        rootView.isb_sale_bibi
     }
     val totalTransactionTv: TextView by lazy { rootView.tv_total_transaction_bibi }
     val transactionBtn: Button by lazy { rootView.btn_transaction_bibi }
@@ -194,6 +192,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         transactionBtn.setShakeClickListener(this)
         klineIv.setOnClickListener(this)
 
+        buyIsb.onSeekChangeListener = this
+        saleIsb.onSeekChangeListener = this
 
 //        handicapSaleAdapter.group = HandicapBean.getList()
 //        handicapBuyAdapter.group = HandicapBean.getList()
@@ -201,6 +201,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 //        handicapBuyLv.adapter = handicapBuyAdapter
 
         currentOrderLv.adapter = currentOrderAdapter
+
+
+        RxTextView.textChanges(getEt)
+                .subscribe {
+                    if (restOrderBean!=null){
+                        
+                    }
+                }
 
         getTransactionPair()
     }
@@ -376,20 +384,21 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         return true
     }
 
+    /**
+     * 市价和限价转换
+     */
     override fun clickItem(position: Int, item: String) {
         if (currentPopupType == POPUP_LIMIT) {
             limitTv.text = item
             transactionType = if (position == 0) {
                 giveEt.isFocusable = true
                 giveEt.isFocusableInTouchMode = true
-                giveEt.hint = "价格"
-                giveUnitTv.visibility = View.VISIBLE
+                giveEt.hint = "价格(${currentTransactionPair?.mainCurrency})"
                 TRANSACTIONTYPE_LIMIT
             } else {
                 giveEt.isFocusable = false
                 giveEt.setText("")
-                giveEt.hint = "以当前最优价格交易"
-                giveUnitTv.visibility = View.GONE
+                giveEt.hint = "以当前最优惠价格交易"
                 TRANSACTIONTYPE_MARKET
             }
         } else {
@@ -400,6 +409,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     //----------------------seekbar监听-------------------------
     override fun onSeeking(seekParams: SeekParams?) {
         seekbarValueTv.text = "${seekParams?.progress}%"
+        if (currentType == TYPE_BUY) {
+
+        } else {
+
+        }
     }
 
     override fun onStartTrackingTouch(seekBar: IndicatorSeekBar?) {
@@ -417,13 +431,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         currentTransactionPair?.let {
             //            switchType(currentType)
             moreTv.text = it.transactionPair
+            giveEt.hint = "价格(${it.mainCurrency})"
             giveEt.setText(it.exchangeRate.formatForCurrency())
-            giveUnitTv.text = it.mainCurrency
-            getUnitTv.text = it.currency
+            getEt.hint = "数量(${it.currency})"
 
             currentOrderAdapter.mainCurrency = it.mainCurrency
             currentOrderAdapter.currency = it.currency
-
 
         }
 
@@ -441,7 +454,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 }, onError)
     }
 
-
+    /**
+     * 获取所有计价货币，取第一个计价货币的第一个交易对作为默认交易对
+     */
     private fun getTransactionPair() {
         TransactionPairsBean.getAllTransactionPairs()
                 .compose(netTfWithDialog())
@@ -449,6 +464,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     if (it.success) {
                         val list = it.result
                         if (list != null && list.size > 0) {
+                            //获取第一个计价货币的所有交易对
                             TransactionPairsBean.getTransactionPairs(list[0].mainCurrency, userBean?.userId?.getValue())
                                     .subscribeOn(Schedulers.io())
                         } else {
@@ -465,9 +481,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         currentTransactionPair = it.result[0]
                         refreshLayout()
                         if (userBean != null) {
+                            //获取订单
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         }
+                        //获取盘口
                         getKData()
+                        //获取交易对的挂单信息
                         RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
                                 .subscribeOn(Schedulers.io())
                     } else {
