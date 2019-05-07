@@ -38,38 +38,6 @@
             android:src="@mipmap/kline_icon" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@color/color_FF222A32"
-            android:gravity="center"
-            android:text="－"
-            android:textColor="@color/color_head"
-            android:textSize="24sp" />
-
-        <EditText
-            style="@style/et15"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/shape_line2a32_bg1f27"
-            android:gravity="center"
-            android:hint="价格" />
-
-        <TextView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@color/color_FF222A32"
-            android:gravity="center"
-            android:text="＋"
-            android:textColor="@color/color_head"
-            android:textSize="24sp" />
-    </LinearLayout>
 
     <com.nze.nzexchange.widget.ReboundScrollView
         android:layout_width="match_parent"
@@ -253,7 +221,7 @@
                         android:layout_marginRight="-13dp"
                         android:orientation="vertical">
 
-                        <com.warkiz.widget.IndicatorSeekBar
+                        <com.nze.nzexchange.widget.indicatorseekbar.IndicatorSeekBar
                             android:id="@+id/isb_buy_bibi"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -266,7 +234,7 @@
                             app:isb_track_background_color="#FF1F2532"
                             app:isb_track_progress_color="#FF0DA187" />
 
-                        <com.warkiz.widget.IndicatorSeekBar
+                        <com.nze.nzexchange.widget.indicatorseekbar.IndicatorSeekBar
                             android:id="@+id/isb_sale_bibi"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

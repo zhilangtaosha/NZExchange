@@ -2,8 +2,10 @@ package com.nze.nzexchange.tools
 
 import android.view.LayoutInflater
 import android.widget.ImageView
+import android.widget.TextView
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.extend.setDrawables
 
 /**
  * @author: zwy
@@ -26,6 +28,11 @@ class ViewFactory {
             iv.setImageResource(iconId)
             iv.setPadding(dp2px(5F), 0, 0, 0)
             return iv
+        }
+
+        fun createPayMehod(layout: Int): TextView {
+            val tv: TextView = LayoutInflater.from(NzeApp.instance).inflate(layout, null) as TextView
+            return tv
         }
 
     }

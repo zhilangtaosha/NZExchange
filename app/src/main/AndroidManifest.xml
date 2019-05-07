@@ -159,7 +159,8 @@
         <activity android:name=".controller.my.asset.legal.LegalWithdrawHistoryActivity" />
         <activity android:name=".controller.my.asset.legal.WithdrawSuccessActivity" />
         <activity android:name=".controller.otc.OtcSettingActivity" />
-        <activity android:name=".controller.my.asset.legal.WithdrawRejectActivity"></activity>
+        <activity android:name=".controller.my.asset.legal.WithdrawRejectActivity" />
+        <activity android:name=".controller.common.ShowImagePaymethodActivity"></activity>
     </application>
 
 </manifest>

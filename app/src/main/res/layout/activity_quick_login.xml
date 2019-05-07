@@ -48,4 +48,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="zhangwengege@126.com" />
+    <Button
+        android:id="@+id/btn8_aql"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="13043489996" />
+    <Button
+        android:id="@+id/btn9_aql"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="460717470@qq.com" />
 </LinearLayout>

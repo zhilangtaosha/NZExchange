@@ -155,7 +155,7 @@
             android:layout_toLeftOf="@+id/tv_money_unit_ap"
             android:layout_toRightOf="@+id/tv_money_ap"
             android:background="@android:color/transparent"
-            android:hint="最小交易额2000，需小于100k"
+            android:hint="最小交易额400，需小于100k"
             android:inputType="numberDecimal"
             android:textColor="@color/color_FFA3AAB9"
             android:textColorHint="@color/color_FF7F8592"

@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.activity_buy.*
 import org.greenrobot.eventbus.EventBus
 
 /**
- * 发布购买和出售委托单
+ * OTC购买和出售
  */
 class BuyActivity : NBaseActivity(), View.OnClickListener {
 

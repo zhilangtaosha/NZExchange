@@ -15,6 +15,8 @@ import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.extend.removeE
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.TextTool
 import com.nze.nzexchange.validation.EmptyValidation
@@ -24,6 +26,9 @@ import kotlinx.android.synthetic.main.activity_publish.*
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
 
+/**
+ * OTC发布购买和出售广告
+ */
 class PublishActivity : NBaseActivity(), View.OnClickListener {
 
 
@@ -37,7 +42,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
 
     override fun getRootView(): Int = R.layout.activity_publish
 
-    private var userBean:UserBean?= UserBean.loadFromApp()
+    private var userBean: UserBean? = UserBean.loadFromApp()
 
     override fun initView() {
         intent?.let {
@@ -68,7 +73,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         var value = ""
                         var num = et_num_value_ap.text
                         if (it.isNotEmpty() && num.isNotEmpty())
-                            value = DoubleMath.mul(it.toString().toDouble(), num.toString().toDouble()).toString()
+                            value = DoubleMath.mul(it.toString().toDouble(), num.toString().toDouble()).removeE()
                         et_money_value_ap.setText(value)
                     } else {
                         flag = true
@@ -82,7 +87,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         var value = ""
                         val price = et_price_value_ap.text.toString()
                         if (it.isNotEmpty() && price.isNotEmpty()) {
-                            value = DoubleMath.mul(it.toString().toDouble(), price.toString().toDouble()).toString()
+                            value = DoubleMath.mul(it.toString().toDouble(), price.toString().toDouble()).removeE()
                         }
                         et_money_value_ap.setText(value)
 
@@ -98,7 +103,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         var value = ""
                         val price = et_price_value_ap.text.toString()
                         if (it.isNotEmpty() && price.isNotEmpty()) {
-                            value = DoubleMath.div(it.toString().toDouble(), price.toDouble()).toString()
+                            value = DoubleMath.div(it.toString().toDouble(), price.toDouble()).removeE()
                         }
                         et_num_value_ap.setText(value)
                     } else {
@@ -110,6 +115,15 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe {
                     if (btn_ap.validate()) {
+                        val money = et_money_value_ap.getContent().toDouble()
+                        if (money < 400.0) {
+                            showToast("最小交易金额为400")
+                            return@subscribe
+                        } else if (money > 100000) {
+                            showToast("最大交易金额为10万")
+                            return@subscribe
+                        }
+
                         if (currentType == TYPE_SALE) {
                             submitNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
                                     .compose(netTfWithDialog())
@@ -170,16 +184,14 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
             topBar.setRightText("我要出售")
             tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#09A085\">6.75CNY</font>")
             et_num_value_ap.hint = "请输入购买数量"
-            et_message_ap.hint = "下单后极速付款，到账后请及时放币"
-
-
+            et_message_ap.hint = TextTool.fromHtml("1.订单有效期为15分钟，请及时付款并点击「我已支付」按钮<br/>" +
+                    "2.币由系统锁定托管，请安心下单")
         } else {
             topBar.setTitle("出售委托单")
             topBar.setRightText("我要购买")
             tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#FF4A5F\">6.75CNY</font>")
             et_num_value_ap.hint = "请输入购买数量"
-            et_message_ap.hint = TextTool.fromHtml("1.订单有效期为15分钟，请及时付款并点击「我已支付」按钮<br/>" +
-                    "2.币由系统锁定托管，请安心下单")
+            et_message_ap.hint = "下单后极速付款，到账后请及时放币"
         }
     }
 

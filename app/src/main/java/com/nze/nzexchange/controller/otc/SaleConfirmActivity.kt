@@ -16,9 +16,12 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.controller.common.ShowImagePaymethodActivity
 import com.nze.nzexchange.tools.TimeTool
+import com.nze.nzexchange.tools.ViewFactory
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
+import kotlinx.android.synthetic.main.activity_buy.*
 import kotlinx.android.synthetic.main.activity_buy_confirm.*
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
@@ -27,7 +30,7 @@ class SaleConfirmActivity : NBaseActivity() {
     var subOrderInfoBean: SubOrderInfoBean? = null
     var time: Long = 0
     var suborderId: String? = null
-    private var userBean:UserBean?= UserBean.loadFromApp()
+    private var userBean: UserBean? = UserBean.loadFromApp()
     override fun getRootView(): Int = R.layout.activity_buy_confirm
 
     override fun initView() {
@@ -121,6 +124,17 @@ class SaleConfirmActivity : NBaseActivity() {
         }?.run {
             tv_name_abc.text = trueName
             tv_phone_abc.text = phone
+            if (accmoneyWeixinurl != null && accmoneyWeixinurl.isNotEmpty()) {
+                val wechat = ViewFactory.createPayMehod(R.layout.tv_paymethod_wechat)
+                wechat.setOnClickListener {
+                    ShowImagePaymethodActivity.skip(this@SaleConfirmActivity)
+                }
+                layout_pay_abc.addView(wechat)
+            }
+            if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty())
+                layout_pay_abc.addView(ViewFactory.createPayMehod(R.layout.tv_paymethod_zhifubao))
+            if (accmoneyBankcard != null && accmoneyBankcard.isNotEmpty())
+                layout_pay_abc.addView(ViewFactory.createPayMehod(R.layout.tv_paymethod_bank))
         }
 
         if (time > 0)
@@ -218,13 +232,13 @@ class SaleConfirmActivity : NBaseActivity() {
 //                        cancel(it)
 //                    }, onError)
 //        } else {//本人是用户
-            NRetrofit.instance
-                    .buyService()
-                    .userCancelOrder(userBean?.userId!!, subOrderInfoBean.suborderId)
-                    .compose(netTf())
-                    .subscribe({
-                        cancel(it)
-                    }, onError)
+        NRetrofit.instance
+                .buyService()
+                .userCancelOrder(userBean?.userId!!, subOrderInfoBean.suborderId)
+                .compose(netTf())
+                .subscribe({
+                    cancel(it)
+                }, onError)
 //        }
     }
 

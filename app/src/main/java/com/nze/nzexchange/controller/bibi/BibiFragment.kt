@@ -10,45 +10,32 @@ import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.View
 import android.widget.*
-import com.google.gson.Gson
-import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.NzeApp
-
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.KLineParam
-import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
-import com.nze.nzexchange.controller.otc.OtcIndicatorAdapter
 import com.nze.nzexchange.extend.*
-import com.nze.nzexchange.http.NWebSocket
-import com.nze.nzexchange.tools.TimeTool
+import com.nze.nzexchange.tools.editjudge.EditTextEmptyWatcher
+import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.widget.LinearLayoutAsListView
-import com.nze.nzexchange.widget.chart.KLineEntity
-import com.warkiz.widget.IndicatorSeekBar
-import com.warkiz.widget.OnSeekChangeListener
-import com.warkiz.widget.SeekParams
+import com.nze.nzexchange.widget.indicatorseekbar.IndicatorSeekBar
+import com.nze.nzexchange.widget.indicatorseekbar.OnSeekChangeListener
+import com.nze.nzexchange.widget.indicatorseekbar.SeekParams
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_bibi.*
 import kotlinx.android.synthetic.main.fragment_bibi.view.*
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
-import okio.ByteString
-import org.greenrobot.eventbus.EventBus
 
 class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnListPopupItemClick, OnSeekChangeListener {
 
@@ -60,10 +47,24 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val buyTv: TextView by lazy { rootView.tv_buy_bibi }
     val saleTv: TextView by lazy { rootView.tv_sale_bibi }
     val limitTv: TextView by lazy { rootView.tv_limit_bibi }
-    val giveEt: EditText by lazy { rootView.et_give_bibi }
+    val giveEt: EditText by lazy {
+        rootView.et_give_bibi.apply {
+            setOnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    val content = this.getContent()
+                    if (content.isEmpty())
+                        this.setText("0.01")
+                }
+            }
+        }
+    }
     //    val giveUnitTv: TextView by lazy { rootView.tv_give_unit_bibi }
     val priceTv: TextView by lazy { rootView.tv_price_bibi }
-    val getEt: EditText by lazy { rootView.et_get_bibi }
+    val getEt: EditText by lazy {
+        rootView.et_get_bibi.apply {
+            addTextChangedListener(EditTextJudgeNumberWatcher(this))
+        }
+    }
     //    val getUnitTv: TextView by lazy { rootView.tv_get_unit_bibi }
     val availableTv: TextView by lazy { rootView.tv_available_bibi }
     val seekbarValueTv: TextView by lazy { rootView.tv_seekbar_value_bibi }
@@ -205,15 +206,33 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         RxTextView.textChanges(getEt)
                 .subscribe {
-                    if (restOrderBean!=null){
-                        
+                    if (it.isNotEmpty()) {
+                        val input = it.toString().toDouble()
+                        val price = giveEt.getContent().toDouble()
+                        val total = input * price
+                        if (restOrderBean != null && restOrderBean!!.mainCurrency != null && input != 0.0) {
+                            if (currentType == TYPE_BUY) {
+                                var rate = (total / restOrderBean!!.mainCurrency!!.available) * 100
+                                seekbarValueTv.text = "${rate.retain2()}%"
+                                buyIsb.setProgress(rate.toFloat())
+                            } else {
+                                var rate = (input / restOrderBean!!.currency!!.available) * 100
+                                seekbarValueTv.text = "${rate.retain2()}%"
+                                saleIsb.setProgress(rate.toFloat())
+                            }
+                            totalTransactionTv.text = "交易额 $total ${currentTransactionPair?.mainCurrency}"
+
+                        }
                     }
+
                 }
 
         getTransactionPair()
     }
 
-
+    /**
+     * 切换卖出和买入界面
+     */
     private fun switchType(type: Int) {
         currentType = type
         if (type == TYPE_BUY) {
@@ -226,17 +245,20 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_9d81_bg)!!)
             transactionBtn.text = "买入${currentTransactionPair!!.currency}"
             seekbarValueTv.text = "${buyIsb.progress}%"
+            saleIsb.setProgress(0F)
         } else {
             buyTv.isSelected = false
             saleTv.isSelected = true
-            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${restOrderBean?.mainCurrency?.available
-                    ?: "--"}${currentTransactionPair?.mainCurrency ?: "--"}</font>")
+            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${restOrderBean?.currency?.available
+                    ?: "--"}${currentTransactionPair?.currency ?: "--"}</font>")
             buyIsb.visibility = View.GONE
             saleIsb.visibility = View.VISIBLE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_4a5f_bg)!!)
             transactionBtn.text = "卖出${currentTransactionPair!!.currency}"
             seekbarValueTv.text = "${saleIsb.progress}%"
+            buyIsb.setProgress(0F)
         }
+        getEt.setText("")
         if (userBean == null)
             transactionBtn.text = "登录"
     }
@@ -408,12 +430,24 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     //----------------------seekbar监听-------------------------
     override fun onSeeking(seekParams: SeekParams?) {
-        seekbarValueTv.text = "${seekParams?.progress}%"
+        if (!getEt.hasFocus())
+            getEt.requestFocus()
+        val progress = seekParams?.progress
+        seekbarValueTv.text = "${progress}%"
+        val price = giveEt.getContent().toDouble()
         if (currentType == TYPE_BUY) {
-
+            if (restOrderBean != null && restOrderBean!!.mainCurrency != null) {
+                val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
+                val input = total / price
+                getEt.setText(input.retain4())
+            }
         } else {
-
+            if (restOrderBean != null && restOrderBean!!.currency != null) {
+                val total = restOrderBean!!.currency!!.available * progress!! / 100
+                getEt.setText(total.retain4())
+            }
         }
+
     }
 
     override fun onStartTrackingTouch(seekBar: IndicatorSeekBar?) {

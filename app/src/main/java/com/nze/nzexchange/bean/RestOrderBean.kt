@@ -11,6 +11,7 @@ import io.reactivex.Flowable
  */
 data class RestOrderBean(
         var mainCurrency: MainCurrency?,
+        var currency: Currency?,
         val rate: Double
 ) {
 
@@ -26,8 +27,17 @@ data class RestOrderBean(
 }
 
 data class MainCurrency(
-        var available: Double=0.0,
+        var available: Double = 0.0,
         val currency: String,
-        var freeze: Double=0.0,
+        var freeze: Double = 0.0,
         val remark: String
+)
+
+data class Currency(
+        val available: Double,
+        val currency: String,
+        val freeze: Double,
+        val remark: String,
+        val status: Int,
+        val userId: String
 )

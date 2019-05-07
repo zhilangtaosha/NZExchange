@@ -1,7 +1,9 @@
 package com.nze.nzexchange.extend
 
+import android.net.http.SslCertificate
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.text.NumberFormat
 
 /**
  * @author: zwy
@@ -16,12 +18,39 @@ fun Double.formatForCurrency(): String? {
     return df.format(this)
 }
 
+/**
+ * 保留2位小数
+ */
+fun Double.retain2(): String {
+    val df = DecimalFormat("0.##")
+    return df.format(this)
+}
+
+/**
+ * 保留4位小数
+ */
+fun Double.retain4(): String {
+    val df = DecimalFormat("0.####")
+    return df.format(this)
+}
+
+/**
+ * 取消科学计数法
+ */
+fun Double.removeE(): String {
+    val nf = NumberFormat.getInstance()
+    nf.isGroupingUsed = false
+    return nf.format(this)
+}
 
 fun String.getValue(): String {
     return this
 }
 
-fun Double.twoPlace():String{
+/**
+ * 保留两位小数，没有用0替代
+ */
+fun Double.twoPlace(): String {
     val df = DecimalFormat("0.00")
     return df.format(this)
 }
