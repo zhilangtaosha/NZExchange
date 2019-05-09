@@ -1,8 +1,11 @@
 package com.nze.nzexchange.extend
 
+import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.net.http.SslCertificate
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 
 /**
@@ -28,9 +31,11 @@ fun Double.retain2(): String {
 
 /**
  * 保留4位小数
+ * 不四舍五入
  */
 fun Double.retain4(): String {
     val df = DecimalFormat("0.####")
+    df.setRoundingMode(RoundingMode.FLOOR);
     return df.format(this)
 }
 

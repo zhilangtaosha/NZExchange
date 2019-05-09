@@ -114,19 +114,20 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btn_recharge_acca -> {
+            R.id.btn_recharge_acca -> {//去充值
                 startActivity(Intent(this@ConcreteCurrencyAssetActivity, RechargeCurrencyActivity::class.java)
                         .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
             }
-            R.id.btn_withdraw_acca -> {
+            R.id.btn_withdraw_acca -> {//去提币
                 startActivity(Intent(this@ConcreteCurrencyAssetActivity, WithdrawCurrencyActivity::class.java)
                         .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
             }
-            R.id.btn_transfer_acca -> {
+            R.id.btn_transfer_acca -> {//去划转
                 TransferActivity.skip(this, bundle!!)
             }
-            R.id.btn_trade_acca -> {
-                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT,3))
+            R.id.btn_trade_acca -> {//去OTC交易
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 3))
+                EventBus.getDefault().post(EventCenter<String>(EventCode.CODE_CHANGE_OTC_CURRENCY, userAssetBean?.tokenId))
                 skipActivity(MainActivity::class.java)
             }
         }

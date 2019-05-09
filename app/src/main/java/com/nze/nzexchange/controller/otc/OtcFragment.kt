@@ -70,6 +70,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     }
 
     private val sideData = mutableListOf<MainCurrencyBean>()
+    private var mCurrentTokenId: String? = null
 
     companion object {
         @JvmStatic
@@ -131,9 +132,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
                     val list = it.result
                     sideData.addAll(list)
                     sideAdapter.group = list
-                    mMainCurrencyBean = list.get(0)
-                    moreTv.setText(mMainCurrencyBean!!.tokenSymbol)
-                    changeAva(currentItem)
+                    selectCurrency()
                 }, onError)
     }
 
@@ -153,8 +152,34 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         if (eventCenter.eventCode == EventCode.CODE_NO_LOGIN)
             indicatorViewPager.setCurrentItem(currentItem, false)
+        if (eventCenter.eventCode == EventCode.CODE_CHANGE_OTC_CURRENCY) {
+            mCurrentTokenId = eventCenter.data as String
+            sideData.forEach {
+                if (mCurrentTokenId == it.tokenId) {
+                    mMainCurrencyBean = it
+                    return@forEach
+                }
+            }
+            moreTv.setText(mMainCurrencyBean!!.tokenSymbol)
+            changeAva(currentItem)
+        }
     }
 
+
+    fun selectCurrency() {
+        if (mCurrentTokenId != null) {//目前mCurrentTokenId获取有问题
+            sideData.forEach {
+                if (mCurrentTokenId == it.tokenId) {
+                    mMainCurrencyBean = it
+                    return@forEach
+                }
+            }
+        } else {
+            mMainCurrencyBean = sideData[0]
+        }
+        moreTv.setText(mMainCurrencyBean!!.tokenSymbol)
+        changeAva(currentItem)
+    }
 
     override fun isBindEventBusHere(): Boolean = true
 

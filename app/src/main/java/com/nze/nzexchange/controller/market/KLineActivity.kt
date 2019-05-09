@@ -360,12 +360,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         val len = marketList.size
         val i = index % len
         marketNameTv.text = marketList[i]
-//        if (nWebSocket != null && socket != null) {
-//            nWebSocket?.close()
-//            socket?.close(1000, "")
-//            socket = null
-//            nWebSocket = null
-//        }
         chartData.clear()
         initKSocket(marketParamList[i])
     }
@@ -465,11 +459,13 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 this@KLineActivity.finish()
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 2))
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 1))
+                EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, pairsBean))
             }
             R.id.btn_sale_kline -> {
                 this@KLineActivity.finish()
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 2))
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 0))
+                EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, pairsBean))
             }
             R.id.tv_transaction_name_kline -> {
                 finish()

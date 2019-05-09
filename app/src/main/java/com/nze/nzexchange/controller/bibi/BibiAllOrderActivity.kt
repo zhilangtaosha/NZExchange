@@ -15,6 +15,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.HandicapBean
 import com.nze.nzexchange.bean.OrderPendBean
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.CommonTopBar
@@ -84,14 +85,14 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         }
 
 
-        ptrLv.setPullLoadEnabled(true)
+        ptrLv.isPullLoadEnabled = false
         ptrLv.setOnRefreshListener(this)
         val listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
 
         listView.adapter = orderAdapter
-        orderTracking(null, null, userBean?.userId, null, null)
+        ptrLv.doPullRefreshing(true,200)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -115,22 +116,27 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     override fun getContainerTargetView(): View? = null
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType=RrefreshType.PULL_DOWN
+        orderTracking(null, null, userBean?.userId, null, null)
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        refreshType=RrefreshType.PULL_UP
     }
 
 
     fun orderTracking(currency: String?, mainCurrency: String?, userId: String?, status: Int?, transactionType: Int?) {
         OrderPendBean.orderTracking(currency, mainCurrency, userId, status, transactionType)
-                .compose(netTfWithDialog())
+                .compose(netTf())
                 .subscribe({
                     val list = it.result
                     if (list != null && list.size > 0) {
                         orderAdapter.group = list
                     }
-                }, onError)
+                    ptrLv.onPullDownRefreshComplete()
+                }, {
+                    ptrLv.onPullDownRefreshComplete()
+                })
     }
 
 }

@@ -2,12 +2,17 @@ package com.nze.nzexchange.controller.bibi
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.*
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxCheckedTextView
+import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.AllOrderFilterBean
@@ -15,8 +20,11 @@ import com.nze.nzexchange.bean.BibiFilterBean
 import com.nze.nzexchange.controller.base.BaseAda
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.dp2px
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.gv_bibi_popup_filter.view.*
 import kotlinx.android.synthetic.main.notification_template_lines_media.view.*
+import java.util.function.Consumer
 
 /**
  * @author: zwy
@@ -31,14 +39,16 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
     val buyCb: CheckBox = findViewById(R.id.cb_buy_pbf) as CheckBox
     val saleCb: CheckBox = findViewById(R.id.cb_sale_pbf) as CheckBox
     val completeCb: CheckBox = findViewById(R.id.cb_complete_pbf) as CheckBox
+    val noCompleteCb: CheckBox = findViewById(R.id.cb_no_complete_pbf) as CheckBox
     val cancelCb: CheckBox = findViewById(R.id.cb_cancel_pbf) as CheckBox
-    val cbs = listOf<CheckBox>(buyCb, saleCb, completeCb, cancelCb)
     val resetBtn: Button = findViewById(R.id.btn_reset_pbf) as Button
     val confirmBtn: Button = findViewById(R.id.btn_confirm_pbf) as Button
 
     val unitAdapter: UnitGvAdapter by lazy { UnitGvAdapter(context!!) }
 
     var onFilterClick: ((bean: AllOrderFilterBean) -> Unit)? = null
+    val statusList: Array<CheckBox> = arrayOf(completeCb, noCompleteCb, cancelCb)
+    val styleList: Array<CheckBox> = arrayOf(buyCb, saleCb)
 
     init {
         unitCurrencyTv.setOnClickListener {
@@ -65,6 +75,29 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
 
         resetBtn.setOnClickListener { reset() }
         confirmBtn.setOnClickListener { confirm() }
+        statusList.forEach { cb ->
+            RxCompoundButton.checkedChanges(cb)
+                    .subscribe { isCheck ->
+                        if (isCheck)
+                            statusList.filter { cb != it }
+                                    .forEach {
+                                        it.isChecked = false
+                                    }
+                    }
+
+        }
+
+        styleList.forEach { cb ->
+            RxCompoundButton.checkedChanges(cb)
+                    .subscribe { isCheck ->
+                        if (isCheck)
+                            styleList.filter { cb != it }
+                                    .forEach {
+                                        it.isChecked = false
+                                    }
+                    }
+
+        }
     }
 
     fun reset() {
@@ -74,7 +107,12 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
             it.isChoice = false
             it
         }.toMutableList()
-        cbs.forEach { it.isChecked = false }
+        Flowable.concat(Flowable.fromArray(styleList), Flowable.fromArray(statusList))
+                .subscribe {
+                    it.forEach {
+                        it.isChecked = false
+                    }
+                }
 
     }
 
@@ -86,19 +124,28 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
             bean.currency = currency
         if (mainCurrency.isNullOrEmpty())
             bean.mainCurrency = mainCurrency
-        if (!(buyCb.isChecked && saleCb.isChecked)) {
-            if (buyCb.isChecked)
-                bean.tradeType = 1
-            if (saleCb.isChecked)
-                bean.tradeType = 0
+
+        statusList.forEach {
+            if (it.isChecked) {
+                bean.orderStatus = when (it.text) {
+                    "已完成" -> 1003
+                    "未完成" -> 1002
+                    "已撤销" -> 1004
+                    else -> null
+                }
+                return@forEach
+            }
+        }
+        styleList.forEach {
+            if (it.isChecked) {
+                bean.tradeType = if (it.text == "买入") {
+                    1
+                } else {
+                    0
+                }
+            }
         }
 
-        if (!(completeCb.isChecked && cancelCb.isChecked)) {
-            if (completeCb.isChecked)
-                bean.orderStatus = 1003
-            if (cancelCb.isChecked)
-                bean.orderStatus = 1004
-        }
         onFilterClick?.invoke(bean)
     }
 

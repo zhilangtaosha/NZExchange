@@ -77,10 +77,10 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
                     vh.cancelTv.setBackgroundDrawable(ContextCompat.getDrawable(mContext,R.drawable.shape_radius_2536_bg2))
                 }
                 vh.cancelTv.isClickable=true
-                vh.cancelTv.setOnClickListener {
-                    cancelClick?.invoke(position, item)
-                }
             }
+        }
+        vh.cancelTv.setOnClickListener {
+            cancelClick?.invoke(position, item)
         }
 
 

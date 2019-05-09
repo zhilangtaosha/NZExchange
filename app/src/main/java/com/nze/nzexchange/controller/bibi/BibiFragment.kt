@@ -49,16 +49,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val buyTv: TextView by lazy { rootView.tv_buy_bibi }
     val saleTv: TextView by lazy { rootView.tv_sale_bibi }
     val limitTv: TextView by lazy { rootView.tv_limit_bibi }
+    val giveReduceTv: TextView by lazy { rootView.tv_give_reduce_bibi }
+    val giveAddTv: TextView by lazy { rootView.tv_give_add_bibi }
     val giveEt: EditText by lazy {
-        rootView.et_give_bibi.apply {
-            setOnFocusChangeListener { v, hasFocus ->
-                if (!hasFocus) {
-                    val content = this.getContent()
-                    if (content.isEmpty())
-                        this.setText("0.01")
-                }
-            }
-        }
+        rootView.et_give_bibi
     }
     //    val giveUnitTv: TextView by lazy { rootView.tv_give_unit_bibi }
     val priceTv: TextView by lazy { rootView.tv_price_bibi }
@@ -122,9 +116,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     private var preCurrentTransactionPair: TransactionPairsBean? = null
     private var restOrderBean: RestOrderBean? = null
 
-    val POPUP_LIMIT = 0
-    val POPUP_DEPTH = 1
-    var currentPopupType = POPUP_LIMIT
+    val POPUP_LIMIT = 0//限价和市价的popup
+    val POPUP_DEPTH = 1//深度popup
+    var currentPopupType = POPUP_LIMIT//弹出的popup类型
     private val itemLimit: MutableList<String> by lazy {
         mutableListOf<String>().apply {
             add("限价")
@@ -148,7 +142,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
     private final val TRANSACTIONTYPE_LIMIT = 0
     private final val TRANSACTIONTYPE_MARKET = 1
-    private var transactionType = TRANSACTIONTYPE_LIMIT
+    private var transactionType = TRANSACTIONTYPE_LIMIT//交易类型：限价和市价
 
     private var userBean: UserBean? = NzeApp.instance.userBean
 
@@ -173,7 +167,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     var binder: KLineService.KBinder? = null
     var isBinder = false
-
 
     companion object {
         @JvmStatic
@@ -361,6 +354,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         }
     }
 
+    /**
+     * 下单：买入和出售
+     */
     fun btnHandler(user: UserBean, number: Double, price: Double) {
         if (transactionType == TRANSACTIONTYPE_LIMIT) {//限价交易
             LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble())
@@ -419,13 +415,31 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 giveEt.isFocusable = true
                 giveEt.isFocusableInTouchMode = true
                 giveEt.hint = "价格(${currentTransactionPair?.mainCurrency})"
+                giveEt.setText(currentTransactionPair?.exchangeRate?.formatForCurrency())
+                giveReduceTv.visibility = View.VISIBLE
+                giveAddTv.visibility = View.VISIBLE
+                try {
+                    val price = giveEt.getContent().toDouble()
+                    val num = getEt.getContent().toDouble()
+                    val total = price * num
+                    totalTransactionTv.text = "交易额$total${currentTransactionPair?.mainCurrency}"
+                } catch (e: Exception) {
+                    totalTransactionTv.text = "交易额0${currentTransactionPair?.mainCurrency}"
+                }
                 TRANSACTIONTYPE_LIMIT
             } else {
                 giveEt.isFocusable = false
                 giveEt.setText("")
                 giveEt.hint = "以当前最优惠价格交易"
+                giveReduceTv.visibility = View.GONE
+                giveAddTv.visibility = View.GONE
+                totalTransactionTv.text = "交易额--${currentTransactionPair?.mainCurrency}"
                 TRANSACTIONTYPE_MARKET
             }
+            if (buyIsb.progress > 0)
+                buyIsb.setProgress(0f)
+            if (saleIsb.progress > 0)
+                saleIsb.setProgress(0f)
         } else {
             depthTv.text = "深度$item"
         }
@@ -433,27 +447,25 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     //----------------------seekbar监听-------------------------
     override fun onSeeking(seekParams: SeekParams?) {
-        if (transactionType == TRANSACTIONTYPE_LIMIT) {
-            if (!getEt.hasFocus())
-                getEt.requestFocus()
-            val progress = seekParams?.progress
-            seekbarValueTv.text = "${progress}%"
-            val price = giveEt.getContent().toDouble()
-            if (currentType == TYPE_BUY) {
-                if (restOrderBean != null && restOrderBean!!.mainCurrency != null) {
-                    val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
-                    val input = total / price
-                    val s = input.retain4()
-                    getEt.setText(s)
-                    getEt.setSelection(s.length)
-                }
-            } else {
-                if (restOrderBean != null && restOrderBean!!.currency != null) {
-                    val total = restOrderBean!!.currency!!.available * progress!! / 100
-                    val s = total.retain4()
-                    getEt.setText(s)
-                    getEt.setSelection(s.length)
-                }
+        val progress = seekParams?.progress
+        seekbarValueTv.text = "${progress}%"
+        if (!getEt.hasFocus())
+            getEt.requestFocus()
+        if (currentType == TYPE_BUY) {
+            if (transactionType == TRANSACTIONTYPE_LIMIT && restOrderBean != null && restOrderBean!!.mainCurrency != null) {
+                val price = giveEt.getContent().toDouble()
+                val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
+                val input = total / price
+                val s = input.retain4()
+                getEt.setText(s)
+                getEt.setSelection(s.length)
+            }
+        } else {
+            if (restOrderBean != null && restOrderBean!!.currency != null) {
+                val total = restOrderBean!!.currency!!.available * progress!! / 100
+                val s = total.retain4()
+                getEt.setText(s)
+                getEt.setSelection(s.length)
             }
         }
     }
