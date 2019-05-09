@@ -28,6 +28,7 @@ class SearchHistoryDaoImpl : SearchHistoryDao {
         cv.put("transactionPair", it.transactionPair)
         cv.put("gain", it.gain)
         cv.put("optional", it.optional)
+        cv.put("volume", it.volume)
         db.insert(DbHelper.TAB_SEARCH_HISTORY, null, cv)
         db.close()
     }
@@ -49,7 +50,8 @@ class SearchHistoryDaoImpl : SearchHistoryDao {
                     cursor.getInt(6),
                     cursor.getString(7),
                     cursor.getDouble(8),
-                    cursor.getInt(9)
+                    cursor.getInt(9),
+                    cursor.getDouble(10)
             )
             list.add(bean)
             cursor.moveToNext()

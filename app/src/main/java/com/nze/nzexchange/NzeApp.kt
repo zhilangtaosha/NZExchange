@@ -10,8 +10,12 @@ import com.nze.nzeframework.ui.BaseApplication
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.tools.AppFrontBackTool
+import com.nze.nzexchange.tools.download.CustomSqliteActor
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import org.greenrobot.eventbus.EventBus
+import zlc.season.rxdownload3.core.DownloadConfig
+import zlc.season.rxdownload3.extension.ApkInstallExtension
+import zlc.season.rxdownload3.extension.ApkOpenExtension
 import kotlin.properties.Delegates
 
 class NzeApp : BaseApplication() {
@@ -31,6 +35,17 @@ class NzeApp : BaseApplication() {
 
         ZXingLibrary.initDisplayOpinion(this)
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
+
+
+        val builder = DownloadConfig.Builder.create(this)
+                .setDebug(true)
+                .enableDb(false)
+                .setDbActor(CustomSqliteActor(this))
+                .enableNotification(true)
+                .addExtension(ApkInstallExtension::class.java)
+                .addExtension(ApkOpenExtension::class.java)
+
+        DownloadConfig.init(builder)
 
     }
 

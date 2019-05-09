@@ -83,8 +83,10 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         userBean?.let {
             if (!it.userPhone.isNullOrEmpty()) {
                 verifyKeyTv.text = "短信验证"
+                verifyValueEt.hint = "请输入手机短信验证码"
             } else {
                 verifyKeyTv.text = "邮箱验证"
+                verifyValueEt.hint = "请输入邮箱证码"
             }
         }
 
@@ -245,7 +247,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         }
         NRetrofit.instance
                 .bibiService()
-                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", "")
+                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null)
                 .compose(netTfWithDialog())
                 .subscribe({
                     showToast(it.message)

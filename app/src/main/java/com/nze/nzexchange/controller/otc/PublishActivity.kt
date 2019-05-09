@@ -14,7 +14,9 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.removeE
 import com.nze.nzexchange.tools.DoubleMath
@@ -39,6 +41,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     lateinit var tokenId: String
     lateinit var currency: String
     var flag: Boolean = true
+    var userAssetBean: UserAssetBean? = null
 
     override fun getRootView(): Int = R.layout.activity_publish
 
@@ -84,12 +87,23 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 .subscribe {
                     if (flag) {
                         flag = false
-                        var value = ""
+                        var total = ""
+                        var num = 0.0
                         val price = et_price_value_ap.text.toString()
-                        if (it.isNotEmpty() && price.isNotEmpty()) {
-                            value = DoubleMath.mul(it.toString().toDouble(), price.toString().toDouble()).removeE()
+                        if (it.isNotEmpty()) {
+                            num = it.toString().toDouble()
                         }
-                        et_money_value_ap.setText(value)
+                        if (currentType == TYPE_SALE && userAssetBean != null && num > userAssetBean!!.available) {
+                            num = userAssetBean!!.available
+                            val s = num.removeE()
+                            et_num_value_ap.setText(s)
+                            et_num_value_ap.setSelection(s.length)
+                            showToast("只有${num}${currency}资产")
+                        }
+                        if (it.isNotEmpty() && price.isNotEmpty()) {
+                            total = DoubleMath.mul(num, price.toDouble()).removeE()
+                            et_money_value_ap.setText(total)
+                        }
 
                     } else {
                         flag = true
@@ -149,6 +163,9 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         }
                     }
                 }
+
+        changLayout()
+        getBibiAsset()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -172,6 +189,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     override fun getContainerTargetView(): View? = null
 
     override fun onClick(v: View?) {
+
     }
 
     fun changLayout() {
@@ -190,7 +208,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
             topBar.setTitle("出售委托单")
             topBar.setRightText("我要购买")
             tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#FF4A5F\">6.75CNY</font>")
-            et_num_value_ap.hint = "请输入购买数量"
+            et_num_value_ap.hint = "请输入出售数量"
             et_message_ap.hint = "下单后极速付款，到账后请及时放币"
         }
     }
@@ -209,5 +227,20 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                     .sellService()
                     .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark)
         }
+    }
+
+    /**
+     * 获取发布币种的资产
+     */
+    fun getBibiAsset() {
+        UserAssetBean.assetInquiry(userBean?.userId!!, tokenName = currency)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        val list = it.result
+                        if (list.size > 0)
+                            userAssetBean = list[0]
+                    }
+                }, onError)
     }
 }

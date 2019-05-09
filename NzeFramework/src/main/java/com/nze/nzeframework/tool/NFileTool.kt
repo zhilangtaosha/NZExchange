@@ -74,6 +74,13 @@ class NFileTool {
             return getFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath, folderName).absolutePath
         }
 
+        /**
+         * 获取照片目录
+         */
+        fun getExternalPotoPath(folderName: String): String {
+            return getFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath, folderName).absolutePath
+        }
+
         fun getFolder(rootFolder: String, folderName: String): File {
             val file = File("$rootFolder/$folderName/")
             if (!file.exists())

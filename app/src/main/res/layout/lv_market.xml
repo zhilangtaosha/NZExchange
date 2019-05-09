@@ -42,7 +42,7 @@
         android:layout_below="@+id/tv_transaction"
         android:layout_alignLeft="@+id/tv_transaction"
         android:layout_marginTop="4dp"
-        android:text="24h量 21332" />
+        android:text="24h量 0" />
 
     <TextView
         android:id="@+id/tv_cost"

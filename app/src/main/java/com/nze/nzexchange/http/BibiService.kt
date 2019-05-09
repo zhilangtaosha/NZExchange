@@ -98,7 +98,9 @@ interface BibiService {
     //查询币币账户资产
     @GET("balance/assetInquiry")
     fun assetInquiry(
-            @Query("userId") userId: String
+            @Query("userId") userId: String,
+            @Query("tokenId") tokenId: String?,
+            @Query("tokenName") tokenName: String?
     ): Flowable<Result<MutableList<UserAssetBean>>>
 
     //提币
@@ -106,9 +108,9 @@ interface BibiService {
     @POST("assets/sendTransaction")
     fun sendTransaction(
             @Field("userId") userId: String,
-            @Field("currency") currency: String,
+            @Field("token") currency: String,
             @Field("to") to: String,
-            @Field("number") number: String,
+            @Field("amount") number: String,
             @Field("password") password: String,
             @Field("remark") remark: String?
     ): Flowable<Result<String>>

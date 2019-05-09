@@ -12,8 +12,7 @@ class CRetrofit private constructor() {
     //http://zhongyingying.qicp.io:18080
     val LIU_URL = "http://192.168.1.143:8082/"
     val SERVER_URL = "http://zhongyingying.qicp.io:8082"
-    //服务器地址
-    val SERVER_FILE = "http://zhongyingying.qicp.io:8083"
+
 
     var url: String = LIU_URL
     var retrofit: Retrofit
@@ -72,5 +71,12 @@ class CRetrofit private constructor() {
 
     companion object {
         val instance: CRetrofit by lazy { CRetrofit() }
+        //文件服务器地址
+        val SERVER_FILE = "http://zhongyingying.qicp.io:8083"
+
+        fun imageUrlJoin(url: String): String {
+            return "$SERVER_FILE$url"
+        }
     }
+
 }

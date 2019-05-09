@@ -18,6 +18,8 @@ import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
+import com.nze.nzexchange.bean.OrderPendBean.Companion.orderPending
+import com.nze.nzexchange.bean.RestOrderBean.Companion.getPendingOrderInfo
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.KLineParam
@@ -206,19 +208,20 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         RxTextView.textChanges(getEt)
                 .subscribe {
-                    if (it.isNotEmpty()) {
+                    if (it.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
                         val input = it.toString().toDouble()
                         val price = giveEt.getContent().toDouble()
                         val total = input * price
                         if (restOrderBean != null && restOrderBean!!.mainCurrency != null && input != 0.0) {
                             if (currentType == TYPE_BUY) {
-                                var rate = (total / restOrderBean!!.mainCurrency!!.available) * 100
-                                seekbarValueTv.text = "${rate.retain2()}%"
-                                buyIsb.setProgress(rate.toFloat())
+//                                var rate = (total / restOrderBean!!.mainCurrency!!.available) * 100
+//                                seekbarValueTv.text = "${rate.retain2()}%"
+//                                buyIsb.setProgress(rate.toFloat())
+
                             } else {
-                                var rate = (input / restOrderBean!!.currency!!.available) * 100
-                                seekbarValueTv.text = "${rate.retain2()}%"
-                                saleIsb.setProgress(rate.toFloat())
+//                                var rate = (input / restOrderBean!!.currency!!.available) * 100
+//                                seekbarValueTv.text = "${rate.retain2()}%"
+//                                saleIsb.setProgress(rate.toFloat())
                             }
                             totalTransactionTv.text = "交易额 $total ${currentTransactionPair?.mainCurrency}"
 
@@ -430,24 +433,29 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     //----------------------seekbar监听-------------------------
     override fun onSeeking(seekParams: SeekParams?) {
-        if (!getEt.hasFocus())
-            getEt.requestFocus()
-        val progress = seekParams?.progress
-        seekbarValueTv.text = "${progress}%"
-        val price = giveEt.getContent().toDouble()
-        if (currentType == TYPE_BUY) {
-            if (restOrderBean != null && restOrderBean!!.mainCurrency != null) {
-                val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
-                val input = total / price
-                getEt.setText(input.retain4())
-            }
-        } else {
-            if (restOrderBean != null && restOrderBean!!.currency != null) {
-                val total = restOrderBean!!.currency!!.available * progress!! / 100
-                getEt.setText(total.retain4())
+        if (transactionType == TRANSACTIONTYPE_LIMIT) {
+            if (!getEt.hasFocus())
+                getEt.requestFocus()
+            val progress = seekParams?.progress
+            seekbarValueTv.text = "${progress}%"
+            val price = giveEt.getContent().toDouble()
+            if (currentType == TYPE_BUY) {
+                if (restOrderBean != null && restOrderBean!!.mainCurrency != null) {
+                    val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
+                    val input = total / price
+                    val s = input.retain4()
+                    getEt.setText(s)
+                    getEt.setSelection(s.length)
+                }
+            } else {
+                if (restOrderBean != null && restOrderBean!!.currency != null) {
+                    val total = restOrderBean!!.currency!!.available * progress!! / 100
+                    val s = total.retain4()
+                    getEt.setText(s)
+                    getEt.setSelection(s.length)
+                }
             }
         }
-
     }
 
     override fun onStartTrackingTouch(seekBar: IndicatorSeekBar?) {

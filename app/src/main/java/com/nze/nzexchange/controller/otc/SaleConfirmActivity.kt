@@ -4,9 +4,7 @@ import android.view.View
 import com.jakewharton.rxbinding2.view.RxView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
-import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
-import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.SubOrderInfoBean
 import com.nze.nzexchange.config.CurrencyTool
@@ -16,12 +14,13 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserBean
-import com.nze.nzexchange.controller.common.ShowImagePaymethodActivity
+import com.nze.nzexchange.controller.common.ShowBankPayMethodActivity
+import com.nze.nzexchange.controller.common.ShowImagePayMethodActivity
+import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.ViewFactory
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
-import kotlinx.android.synthetic.main.activity_buy.*
 import kotlinx.android.synthetic.main.activity_buy_confirm.*
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
@@ -127,21 +126,30 @@ class SaleConfirmActivity : NBaseActivity() {
             if (accmoneyWeixinurl != null && accmoneyWeixinurl.isNotEmpty()) {
                 val wechat = ViewFactory.createPayMehod(R.layout.tv_paymethod_wechat)
                 wechat.setOnClickListener {
-                    ShowImagePaymethodActivity.skip(this@SaleConfirmActivity)
+                    ShowImagePayMethodActivity.skip(this@SaleConfirmActivity, CRetrofit.imageUrlJoin(accmoneyWeixinurl))
                 }
                 layout_pay_abc.addView(wechat)
             }
-            if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty())
-                layout_pay_abc.addView(ViewFactory.createPayMehod(R.layout.tv_paymethod_zhifubao))
-            if (accmoneyBankcard != null && accmoneyBankcard.isNotEmpty())
-                layout_pay_abc.addView(ViewFactory.createPayMehod(R.layout.tv_paymethod_bank))
+            if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty()) {
+                val zfb = ViewFactory.createPayMehod(R.layout.tv_paymethod_zhifubao)
+                layout_pay_abc.addView(zfb)
+                zfb.setOnClickListener {
+                    ShowImagePayMethodActivity.skip(this@SaleConfirmActivity, CRetrofit.imageUrlJoin(accmoneyZfburl))
+                }
+            }
+            if (accmoneyBankcard != null && accmoneyBankcard.isNotEmpty()) {
+                val bank = ViewFactory.createPayMehod(R.layout.tv_paymethod_bank)
+                layout_pay_abc.addView(bank)
+                bank.setOnClickListener {
+                    ShowBankPayMethodActivity.skip(this@SaleConfirmActivity, this)
+                }
+            }
         }
 
         if (time > 0)
             Flowable.intervalRange(0, time, 0, 1, TimeUnit.SECONDS)
                     .compose(netTf())
                     .subscribe({
-                        NLog.i(it.toString())
                         tv_tip_abc.text = "请在${TimeTool.formatTime(time - it)}内完成付款，并点击确认付款，超时将自动取消订单"
                     }, onError, {})
     }

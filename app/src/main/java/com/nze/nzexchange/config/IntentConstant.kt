@@ -23,6 +23,7 @@ class IntentConstant {
         const val PARAM_BIBI_ACCOUNT = "bibAccount"
         const val PARAM_BUNDLE = "bundle"
         const val INTENT_REAL_NAME_BEAN = "realName"
+        const val PARAM_URL = "url"
 
         //设置支付方式
         const val TYPE_ZHIFUBAO = 0x001//支付宝

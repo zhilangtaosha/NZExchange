@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.market
 
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -23,6 +24,8 @@ import kotlinx.android.synthetic.main.fragment_market_optional.view.*
 class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<ListView> {
 
     lateinit var ptrLv: PullToRefreshListView
+    lateinit var addLayout: LinearLayout
+    lateinit var addActionLayout: LinearLayout
     var mainCurrency: String? = null
     val lvAdapter: MarketLvAdapter by lazy {
         MarketLvAdapter(activity!!)
@@ -51,10 +54,18 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
     override fun getRootView(): Int = R.layout.fragment_market_optional
 
     override fun initView(rootView: View) {
+        addLayout = rootView.layout_add_fmo
+        addActionLayout = rootView.layout_add_action_fmo
+
         ptrLv = rootView.plv_fmo
         ptrLv.setOnRefreshListener(this)
         val listView: ListView = ptrLv.refreshableView
         listView.adapter = lvAdapter
+
+
+        addLayout.setOnClickListener {
+            skipActivity(PairSearchActivity::class.java)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -103,9 +114,22 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
-                        lvAdapter.group = it.result
-                        ptrLv.onPullDownRefreshComplete()
+                        val list = it.result
+                        if (list.size > 0) {
+                            ptrLv.visibility = View.VISIBLE
+                            addLayout.visibility = View.GONE
+                            lvAdapter.group = it.result
+                        } else {
+                            ptrLv.visibility = View.GONE
+                            addLayout.visibility = View.VISIBLE
+                        }
                     }
-                }, onError)
+                    ptrLv.onPullDownRefreshComplete()
+                }, {
+                    lvAdapter.clearGroup(true)
+                    ptrLv.onPullDownRefreshComplete()
+                    ptrLv.visibility = View.GONE
+                    addLayout.visibility = View.VISIBLE
+                })
     }
 }

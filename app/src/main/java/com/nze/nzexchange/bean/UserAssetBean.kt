@@ -39,11 +39,11 @@ data class UserAssetBean(
         /**
          * 币币账户
          */
-        fun assetInquiry(userId: String): Flowable<Result<MutableList<UserAssetBean>>> {
+        fun assetInquiry(userId: String, tokenId: String? = null, tokenName: String? = null): Flowable<Result<MutableList<UserAssetBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .assetInquiry(userId)
+                        .assetInquiry(userId, tokenId, tokenName)
             }
         }
     }

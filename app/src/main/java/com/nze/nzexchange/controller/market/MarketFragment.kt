@@ -9,6 +9,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.tools.dp2px
@@ -78,10 +79,13 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
 
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
+        if (eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
+            indicatorViewPager.setCurrentItem(1, false)
+        }
     }
 
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 

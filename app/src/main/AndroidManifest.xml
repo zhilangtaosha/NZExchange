@@ -160,7 +160,12 @@
         <activity android:name=".controller.my.asset.legal.WithdrawSuccessActivity" />
         <activity android:name=".controller.otc.OtcSettingActivity" />
         <activity android:name=".controller.my.asset.legal.WithdrawRejectActivity" />
-        <activity android:name=".controller.common.ShowImagePaymethodActivity"></activity>
+        <activity
+            android:name=".controller.common.ShowImagePayMethodActivity"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".controller.common.ShowBankPayMethodActivity"
+            android:theme="@style/DialogTheme"></activity>
     </application>
 
 </manifest>

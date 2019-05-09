@@ -24,7 +24,8 @@ data class TransactionPairsBean(
         val status: Int,
         val transactionPair: String,//交易对
         val gain: Double,
-        var optional: Int = 0
+        var optional: Int = 0,
+        val volume:Double
 ) : Parcelable {
     companion object {
         fun getAllTransactionPairs(): Flowable<Result<MutableList<TransactionPairsBean>>> {

@@ -33,7 +33,7 @@ class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, Market
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
             vh.changeTv.text = "${item.gain}%"
         }
-//        vh.total24Tv.text = item.total24.toString()
+        vh.total24Tv.text = "24h量 ${item.volume}"
 //        vh.costTv.text = item.cost.toString()
 
     }
