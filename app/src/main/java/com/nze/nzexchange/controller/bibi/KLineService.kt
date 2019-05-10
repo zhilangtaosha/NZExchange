@@ -94,7 +94,7 @@ class KLineService : Service() {
         /**
          * 切换交易对
          */
-        fun changePair(pairsBean: TransactionPairsBean){
+        fun changePair(pairsBean: TransactionPairsBean) {
             val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_CHANGE_PAIR, mutableListOf<String>())
             requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
             requestBean.params.add(KLineParam.TIME_ONE_MIN)
@@ -131,64 +131,68 @@ class KLineService : Service() {
             override fun onMessage(webSocket: WebSocket, text: String) {
                 NLog.i("text>>>$text")
                 Observable.create<Int> {
-                    var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
-                    val lineK = soketbean.lineK
-                    val handicap = soketbean.handicap
-                    val latestDeal = soketbean.latestDeal
-                    val quotes = soketbean.quotes
-                    val depth = soketbean.depth
-                    if (lineK != null) {//K线数据
-                        var kList = mutableListOf<KLineEntity>()
-                        lineK.result?.let {
-                            it.forEachIndexed { index, it ->
-                                val bean = KLineEntity()
-//                            bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
-                                bean.Date = it[0]
-                                bean.Open = it[1].toFloat()
-                                bean.Close = it[2].toFloat()
-                                bean.High = it[3].toFloat()
-                                bean.Low = it[4].toFloat()
-                                bean.Volume = it[5].toFloat()
-                                if (bean.High < bean.Open || bean.High < bean.Close || bean.High < bean.Low) {
-                                    NLog.i("最高值出错>>>index=$index")
+                    try {
+                        var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
+                        val lineK = soketbean.lineK
+                        val handicap = soketbean.handicap
+                        val latestDeal = soketbean.latestDeal
+                        val quotes = soketbean.quotes
+                        val depth = soketbean.depth
+                        if (lineK != null) {//K线数据
+                            var kList = mutableListOf<KLineEntity>()
+                            lineK.result?.let {
+                                it.forEachIndexed { index, it ->
+                                    val bean = KLineEntity()
+                                    //                            bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
+                                    bean.Date = it[0]
+                                    bean.Open = it[1].toFloat()
+                                    bean.Close = it[2].toFloat()
+                                    bean.High = it[3].toFloat()
+                                    bean.Low = it[4].toFloat()
+                                    bean.Volume = it[5].toFloat()
+                                    if (bean.High < bean.Open || bean.High < bean.Close || bean.High < bean.Low) {
+                                        NLog.i("最高值出错>>>index=$index")
+                                    }
+                                    if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
+                                        NLog.i("最小值出错>>>index=$index")
+                                    }
+                                    kList.add(bean)
                                 }
-                                if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
-                                    NLog.i("最小值出错>>>index=$index")
+
+                                kList.forEach {
+                                    it.Date = TimeTool.format(pattern, it.Date.toLong() * 1000)
                                 }
-                                kList.add(bean)
                             }
+                            when (lineK.type) {
+                                KLINE_TYPE_NOWLINEK -> {
+                                    chartData.addAll(0, kList)
+                                    it.onNext(DATA_NOW_LINEK)
+                                }
+                                KLINE_TYPE_NEWLINEK -> {
 
-                            kList.forEach {
-                                it.Date = TimeTool.format(pattern, it.Date.toLong() * 1000)
+                                    chartData.addAll(kList)
+                                    it.onNext(DATA_NEW_LINEK)
+                                }
+                                KLINE_TYPE_OLDLINEK -> {
+                                    chartData.addAll(0, kList)
+                                    it.onNext(DATA_OLD_LINEK)
+                                }
                             }
+                            DataHelper.calculate(chartData)
                         }
-                        when (lineK.type) {
-                            KLINE_TYPE_NOWLINEK -> {
-                                chartData.addAll(0, kList)
-                                it.onNext(DATA_NOW_LINEK)
-                            }
-                            KLINE_TYPE_NEWLINEK -> {
 
-                                chartData.addAll(kList)
-                                it.onNext(DATA_NEW_LINEK)
-                            }
-                            KLINE_TYPE_OLDLINEK -> {
-                                chartData.addAll(0, kList)
-                                it.onNext(DATA_OLD_LINEK)
-                            }
+                        if (handicap != null) {//盘口
+                            this.handicap = handicap
+                            it.onNext(DATA_HANDICAP)
                         }
-                        DataHelper.calculate(chartData)
-                    }
 
-                    if (handicap != null) {//盘口
-                        this.handicap = handicap
-                        it.onNext(DATA_HANDICAP)
-                    }
-
-                    if (latestDeal != null) {//最新成交
-                        newDealList.clear()
-                        newDealList.addAll(latestDeal)
-                        it.onNext(DATE_NEW_DEAL)
+                        if (latestDeal != null) {//最新成交
+                            newDealList.clear()
+                            newDealList.addAll(latestDeal)
+                            it.onNext(DATE_NEW_DEAL)
+                        }
+                    } catch (e: Exception) {
+                        
                     }
                 }.subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -226,7 +230,7 @@ class KLineService : Service() {
             }
         }
 
-        fun close(){
+        fun close() {
             nWebSocket?.close()
             socket?.cancel()
         }

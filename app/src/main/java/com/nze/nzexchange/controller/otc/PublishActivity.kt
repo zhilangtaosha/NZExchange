@@ -202,14 +202,14 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
             topBar.setRightText("我要出售")
             tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#09A085\">6.75CNY</font>")
             et_num_value_ap.hint = "请输入购买数量"
-            et_message_ap.hint = TextTool.fromHtml("1.订单有效期为15分钟，请及时付款并点击「我已支付」按钮<br/>" +
-                    "2.币由系统锁定托管，请安心下单")
+            et_message_ap.hint = "下单后极速付款，到账后请及时放币"
         } else {
             topBar.setTitle("出售委托单")
             topBar.setRightText("我要购买")
             tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#FF4A5F\">6.75CNY</font>")
             et_num_value_ap.hint = "请输入出售数量"
-            et_message_ap.hint = "下单后极速付款，到账后请及时放币"
+            et_message_ap.hint = TextTool.fromHtml("1.订单有效期为15分钟，请及时付款并点击「我已支付」按钮<br/>" +
+                    "2.币由系统锁定托管，请安心下单")
         }
     }
 

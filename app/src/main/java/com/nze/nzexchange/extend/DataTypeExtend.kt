@@ -11,7 +11,7 @@ import java.text.NumberFormat
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
- * @类 说 明:
+ * @类 说 明:https://blog.csdn.net/bailu666666/article/details/79829902
  * @创建时间：2018/12/10
  */
 fun Double.formatForCurrency(): String? {
@@ -33,9 +33,19 @@ fun Double.retain2(): String {
  * 保留4位小数
  * 不四舍五入
  */
-fun Double.retain4(): String {
+fun Double.retain4ByFloor(): String {
     val df = DecimalFormat("0.####")
     df.setRoundingMode(RoundingMode.FLOOR);
+    return df.format(this)
+}
+
+/**
+ * 保留8位小数
+ * 只要后一位非零，都加一
+ */
+fun Double.retain4ByUp(): String {
+    val df = DecimalFormat("0.########")
+    df.setRoundingMode(RoundingMode.UP);
     return df.format(this)
 }
 

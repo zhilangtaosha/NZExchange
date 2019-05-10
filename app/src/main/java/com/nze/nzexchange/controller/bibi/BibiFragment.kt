@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Handler
 import android.os.IBinder
 import android.support.v4.content.ContextCompat
 import android.util.Log
@@ -28,7 +29,6 @@ import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.*
-import com.nze.nzexchange.tools.editjudge.EditTextEmptyWatcher
 import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.nze.nzexchange.widget.indicatorseekbar.IndicatorSeekBar
@@ -43,6 +43,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
 
     lateinit var rootView: View
+    val tradeLayout: RelativeLayout by lazy { rootView.layout_trade_bibi }
     val svRoot: LinearLayout by lazy { rootView.root_sv_fb }
     val moreTv: TextView by lazy { rootView.more_bibi }
     val klineIv: ImageView by lazy { rootView.iv_kline_bibi }
@@ -96,7 +97,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val currentOrderAdapter by lazy {
         BibiCurentOrderAdapter(activity!!).apply {
             cancelClick = { position, item ->
-                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!)
+                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!, null)
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {
@@ -167,6 +168,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     var binder: KLineService.KBinder? = null
     var isBinder = false
+    val mHandler: Handler = Handler()
+    var isSeek = true
 
     companion object {
         @JvmStatic
@@ -205,20 +208,22 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val input = it.toString().toDouble()
                         val price = giveEt.getContent().toDouble()
                         val total = input * price
-                        if (restOrderBean != null && restOrderBean!!.mainCurrency != null && input != 0.0) {
-                            if (currentType == TYPE_BUY) {
+//                        if (restOrderBean != null && restOrderBean!!.mainCurrency != null && input != 0.0) {
+//                            if (currentType == TYPE_BUY) {
 //                                var rate = (total / restOrderBean!!.mainCurrency!!.available) * 100
 //                                seekbarValueTv.text = "${rate.retain2()}%"
 //                                buyIsb.setProgress(rate.toFloat())
-
-                            } else {
+//
+//                            } else {
 //                                var rate = (input / restOrderBean!!.currency!!.available) * 100
 //                                seekbarValueTv.text = "${rate.retain2()}%"
 //                                saleIsb.setProgress(rate.toFloat())
-                            }
-                            totalTransactionTv.text = "交易额 $total ${currentTransactionPair?.mainCurrency}"
-
-                        }
+//                            }
+//                        }
+                        totalTransactionTv.text = "交易额 ${total.retain4ByUp()} ${currentTransactionPair?.mainCurrency}"
+                    } else if (it.isNotEmpty() && transactionType == TRANSACTIONTYPE_MARKET) {
+                        val input = it.toString().toDouble()
+                        totalTransactionTv.text = "交易额 ${input.retain4ByUp()} ${currentTransactionPair?.mainCurrency}"
                     }
 
                 }
@@ -242,6 +247,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             transactionBtn.text = "买入${currentTransactionPair!!.currency}"
             seekbarValueTv.text = "${buyIsb.progress}%"
             saleIsb.setProgress(0F)
+            if (transactionType == TRANSACTIONTYPE_LIMIT) {
+                getEt.hint = "数量(${currentTransactionPair?.currency})"
+            } else {
+                getEt.hint = "数量(${currentTransactionPair?.mainCurrency})"
+            }
         } else {
             buyTv.isSelected = false
             saleTv.isSelected = true
@@ -253,6 +263,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             transactionBtn.text = "卖出${currentTransactionPair!!.currency}"
             seekbarValueTv.text = "${saleIsb.progress}%"
             buyIsb.setProgress(0F)
+            getEt.hint = "数量(${currentTransactionPair?.currency})"
         }
         getEt.setText("")
         if (userBean == null)
@@ -426,6 +437,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 } catch (e: Exception) {
                     totalTransactionTv.text = "交易额0${currentTransactionPair?.mainCurrency}"
                 }
+                if (currentType == TYPE_BUY) {
+                    getEt.hint = "数量(${currentTransactionPair?.currency})"
+                }
                 TRANSACTIONTYPE_LIMIT
             } else {
                 giveEt.isFocusable = false
@@ -433,13 +447,29 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 giveEt.hint = "以当前最优惠价格交易"
                 giveReduceTv.visibility = View.GONE
                 giveAddTv.visibility = View.GONE
+
                 totalTransactionTv.text = "交易额--${currentTransactionPair?.mainCurrency}"
+                if (currentType == TYPE_BUY) {
+                    getEt.hint = "数量(${currentTransactionPair?.mainCurrency})"
+                }
                 TRANSACTIONTYPE_MARKET
             }
-            if (buyIsb.progress > 0)
-                buyIsb.setProgress(0f)
-            if (saleIsb.progress > 0)
-                saleIsb.setProgress(0f)
+
+            if (currentType == TYPE_BUY) {
+                if (buyIsb.progress > 0) {
+                    buyIsb.setProgress(0f)
+                }
+            } else {
+                if (saleIsb.progress > 0) {
+                    saleIsb.setProgress(0f)
+                }
+            }
+            mHandler.postDelayed({
+                //                tradeLayout.invalidate()
+                tradeLayout.requestLayout()
+                limitTv.text = item
+            }, 100)
+
         } else {
             depthTv.text = "深度$item"
         }
@@ -456,18 +486,24 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 val price = giveEt.getContent().toDouble()
                 val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
                 val input = total / price
-                val s = input.retain4()
+                val s = input.retain4ByFloor()
+                getEt.setText(s)
+                getEt.setSelection(s.length)
+            } else if (transactionType == TRANSACTIONTYPE_MARKET && restOrderBean != null && restOrderBean!!.mainCurrency != null) {
+                val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
+                val s = total.retain4ByFloor()
                 getEt.setText(s)
                 getEt.setSelection(s.length)
             }
         } else {
             if (restOrderBean != null && restOrderBean!!.currency != null) {
                 val total = restOrderBean!!.currency!!.available * progress!! / 100
-                val s = total.retain4()
+                val s = total.retain4ByFloor()
                 getEt.setText(s)
                 getEt.setSelection(s.length)
             }
         }
+
     }
 
     override fun onStartTrackingTouch(seekBar: IndicatorSeekBar?) {

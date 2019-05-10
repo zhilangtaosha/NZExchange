@@ -26,24 +26,34 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
 
 
     val topBar: CommonTopBar by lazy { ctb_abao }
-    val filterPopup by lazy { BibiFilterPopup(this).apply {
-        onFilterClick={
-            orderTracking(it.currency,it.mainCurrency,userBean?.userId,it.orderStatus,it.tradeType)
-            this.dismiss()
+    var currency: String? = null
+    var mainCurrency: String? = null
+    var status: Int? = null
+    var transactionType: Int? = null
+    val filterPopup by lazy {
+        BibiFilterPopup(this).apply {
+            onFilterClick = {
+                currency = it.currency
+                mainCurrency = it.mainCurrency
+                status = it.orderStatus
+                transactionType = it.tradeType
+                orderTracking(it.currency, it.mainCurrency, userBean?.userId, it.orderStatus, it.tradeType)
+                this.dismiss()
+            }
         }
-    } }
+    }
     val ptrLv: PullToRefreshListView by lazy { ptrlv_abao }
     val orderAdapter: BibiCurentOrderAdapter by lazy {
         BibiCurentOrderAdapter(this).apply {
             cancelClick = { position, item ->
                 //撤销
-//                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!)
-//                        .compose(netTfWithDialog())
-//                        .subscribe({
-//                            if (it.success) {
-////                                orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
-//                            }
-//                        }, onError)
+                OrderPendBean.cancelOrder(item.id, item.userId, null, item.market)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                ptrLv.doPullRefreshing(true, 200)
+                            }
+                        }, onError)
             }
         }
     }
@@ -92,7 +102,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         listView.dividerHeight = 1
 
         listView.adapter = orderAdapter
-        ptrLv.doPullRefreshing(true,200)
+        ptrLv.doPullRefreshing(true, 200)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -115,13 +125,14 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
 
     override fun getContainerTargetView(): View? = null
 
+
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
-        refreshType=RrefreshType.PULL_DOWN
-        orderTracking(null, null, userBean?.userId, null, null)
+        refreshType = RrefreshType.PULL_DOWN
+        orderTracking(currency, mainCurrency, userBean?.userId, status, transactionType)
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
-        refreshType=RrefreshType.PULL_UP
+        refreshType = RrefreshType.PULL_UP
     }
 
 

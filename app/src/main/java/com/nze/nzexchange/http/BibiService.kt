@@ -87,7 +87,8 @@ interface BibiService {
     fun cancelOrder(
             @Field("orderId") orderId: String,
             @Field("userId") userId: String,
-            @Field("currencyId") currencyId: String
+            @Field("currencyId") currencyId: String?,
+            @Field("currencyName") currencyName: String?
     ): Flowable<Result<OrderPendBean>>
 
 

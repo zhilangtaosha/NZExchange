@@ -55,7 +55,7 @@ class PairSearchActivity : NBaseActivity() {
     override fun getRootView(): Int = R.layout.activity_pair_search
 
     override fun initView() {
-
+        setWindowStatusBarColor(R.color.color_title_bg)
         listView.adapter = searchAdapter
 
         cancelTv.setOnClickListener {

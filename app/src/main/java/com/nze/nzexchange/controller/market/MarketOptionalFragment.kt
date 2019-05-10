@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.market
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -61,6 +62,10 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
         ptrLv.setOnRefreshListener(this)
         val listView: ListView = ptrLv.refreshableView
         listView.adapter = lvAdapter
+        listView.setOnItemClickListener { parent, view, position, id ->
+            startActivity(Intent(activity, KLineActivity::class.java)
+                    .putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, lvAdapter.getItem(position)))
+        }
 
 
         addLayout.setOnClickListener {
