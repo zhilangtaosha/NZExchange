@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.nze.nzexchange.http.NRetrofit
 import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
+import retrofit2.http.Field
 
 /**
  * @author: zwy
@@ -69,11 +70,13 @@ data class SubOrderInfoBean(
         fun submitNet(poolId: String, userIdSell: String,
                       userIdBu: String,
                       suborderAmount: String,
-                      tokenId: String): Flowable<Result<SubOrderInfoBean>> {
+                      tokenId: String,
+                      tokenUserId: String,
+                      tokenUserKey: String): Flowable<Result<SubOrderInfoBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .buyService()
-                        .placeAnOrder(poolId, userIdSell, userIdBu, suborderAmount, tokenId)
+                        .placeAnOrder(poolId, userIdSell, userIdBu, suborderAmount, tokenId, tokenUserId, tokenUserKey)
             }
         }
 
@@ -81,38 +84,46 @@ data class SubOrderInfoBean(
         fun findSubOrderPoolNet(userId: String,
                                 pageNumber: Int,
                                 pageSize: Int,
-                                suborderStatus: Int?): Flowable<Result<MutableList<SubOrderInfoBean>>> {
+                                suborderStatus: Int?,
+                                tokenUserId: String,
+                                tokenUserKey: String): Flowable<Result<MutableList<SubOrderInfoBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .buyService()
-                        .findSubOrderPool(userId, pageNumber, pageSize, suborderStatus)
+                        .findSubOrderPool(userId, pageNumber, pageSize, suborderStatus, tokenUserId, tokenUserKey)
             }
         }
 
         //获取子订单详情
-        fun findSubOrderInfoNet(userId: String, subOrderId: String): Flowable<Result<SubOrderInfoBean>> {
+        fun findSubOrderInfoNet(
+                userId: String,
+                subOrderId: String,
+                tokenUserId: String,
+                tokenUserKey: String
+        ): Flowable<Result<SubOrderInfoBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .buyService()
-                        .findSubOrderInfo(userId, subOrderId)
+                        .findSubOrderInfo(userId, subOrderId, tokenUserId, tokenUserKey)
             }
         }
 
         //出售出单
         fun sellNet(poolId: String, userIdSell: String,
-                      userIdBu: String,
-                      suborderAmount: String,
-                      tokenId: String): Flowable<Result<SubOrderInfoBean>> {
+                    userIdBu: String,
+                    suborderAmount: String,
+                    tokenId: String,
+                    tokenUserId: String,
+                    tokenUserKey: String
+        ): Flowable<Result<SubOrderInfoBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .sellService()
-                        .placeAnOrder(poolId, userIdSell, userIdBu, suborderAmount, tokenId)
+                        .placeAnOrder(poolId, userIdSell, userIdBu, suborderAmount, tokenId, tokenUserId, tokenUserKey)
             }
         }
 
     }
-
-
 
 
 }

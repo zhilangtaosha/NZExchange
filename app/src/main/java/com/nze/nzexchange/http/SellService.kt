@@ -24,7 +24,9 @@ interface SellService {
                      @Field("tokenId") tokenId: String,
                      @Field("poolAllCount") poolAllCount: String,
                      @Field("poolPrice") poolPrice: String,
-                     @Field("remark") remark: String
+                     @Field("remark") remark: String,
+                     @Field("tokenUserId") tokenUserId: String,
+                     @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Boolean>>
 
 
@@ -35,7 +37,9 @@ interface SellService {
                      @Field("userIdSell") userIdSell: String,
                      @Field("userIdBu") userIdBu: String,
                      @Field("suborderNum") suborderNum: String,
-                     @Field("tokenId") tokenId: String
+                     @Field("tokenId") tokenId: String,
+                     @Field("tokenUserId") tokenUserId: String,
+                     @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<SubOrderInfoBean>>
 
     //出售列表
@@ -53,7 +57,9 @@ interface SellService {
     @FormUrlEncoded
     @POST("otc/sell/confirmReceipt")
     fun confirmReceipt(@Field("userIdSell") userIdSell: String,
-                       @Field("suborderId") suborderId: String
+                       @Field("suborderId") suborderId: String,
+                       @Field("tokenUserId") tokenUserId: String,
+                       @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Boolean>>
 
 
@@ -61,7 +67,9 @@ interface SellService {
     @FormUrlEncoded
     @POST("otc/sell/confirmPayment")
     fun confirmPayment(@Field("userIdBu") userIdSell: String,
-                       @Field("suborderId") suborderId: String
+                       @Field("suborderId") suborderId: String,
+                       @Field("tokenUserId") tokenUserId: String,
+                       @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Boolean>>
 
 
@@ -69,7 +77,9 @@ interface SellService {
     @FormUrlEncoded
     @POST("otc/sell/cancelOrder")
     fun userCancelOrder(@Field("userId") userId: String,
-                        @Field("subOrderId") subOrderId: String
+                        @Field("subOrderId") subOrderId: String,
+                        @Field("tokenUserId") tokenUserId: String,
+                        @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Boolean>>
 
     //k线页面数字货币信息

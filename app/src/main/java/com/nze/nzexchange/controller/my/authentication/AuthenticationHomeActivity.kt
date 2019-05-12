@@ -32,6 +32,7 @@ class AuthenticationHomeActivity : NBaseActivity(), View.OnClickListener {
     var realNameAuthenticationBean: RealNameAuthenticationBean? = null
     var userBean = UserBean.loadFromApp()
 
+
     companion object {
         val INTENT_REAL_NAME_BEAN = "realName"
     }
@@ -43,6 +44,14 @@ class AuthenticationHomeActivity : NBaseActivity(), View.OnClickListener {
         realNameAuthenticationBean?.let {
             userNameTv.text = it.membName
             certificateTv.text = it.membIdentitycard
+            when (it.mereallyStatus) {
+                990 -> {
+                    primaryStatusTv.text = "已认证"
+                }
+                100 -> {
+                    primaryStatusTv.text = "审核中"
+                }
+            }
         }
 
         if (!userBean?.userPhone.isNullOrEmpty()) {

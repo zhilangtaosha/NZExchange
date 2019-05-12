@@ -726,7 +726,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-
+                        switchLeftIv.visibility = View.VISIBLE
+                        switchRightIv.visibility = View.VISIBLE
                     } else {
                         marketList.removeAt(1)
                     }
@@ -737,7 +738,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
      * 设置涨跌幅
      */
     fun setPriceWave(start: Double, end: Double) {
-        var w = (end-start)/start
+        var w = (end - start) / start
         if (w > 0) {
             rangeTv.setTxtColor(R.color.color_up)
             costTv.setTxtColor(R.color.color_up)
@@ -745,6 +746,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             rangeTv.setTxtColor(R.color.color_down)
             costTv.setTxtColor(R.color.color_down)
         }
-        rangeTv.text = "${(w*100).twoPlace()}%"
+        rangeTv.text = "${(w * 100).twoPlace()}%"
     }
 }

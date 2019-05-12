@@ -35,6 +35,7 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="20dp"
                 android:paddingRight="10dp"
+                android:visibility="gone"
                 android:src="@mipmap/k_switch_left" />
 
             <LinearLayout
@@ -69,6 +70,7 @@
                 android:layout_toRightOf="@+id/layout_market_kline"
                 android:paddingLeft="10dp"
                 android:paddingRight="20dp"
+                android:visibility="gone"
                 android:src="@mipmap/k_switch_right" />
 
 

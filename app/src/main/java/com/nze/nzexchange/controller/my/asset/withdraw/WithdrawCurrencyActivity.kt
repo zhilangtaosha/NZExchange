@@ -247,7 +247,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         }
         NRetrofit.instance
                 .bibiService()
-                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null)
+                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null,userBean!!.tokenReqVo.tokenUserId,userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
                     showToast(it.message)

@@ -20,6 +20,7 @@ class TradeCommonDetailActivity : NBaseActivity() {
     var type: Int = TradeCommonFragment.TYPE_COMPLETED
     var suborderId: String? = null
     lateinit var subOrderInfoBean: SubOrderInfoBean
+    var userBean = UserBean.loadFromApp()
 
     override fun getRootView(): Int = R.layout.activity_trade_complete_detail
 
@@ -38,7 +39,7 @@ class TradeCommonDetailActivity : NBaseActivity() {
 
         }
 
-        SubOrderInfoBean.findSubOrderInfoNet(UserBean.loadFromApp()?.userId!!, suborderId!!)
+        SubOrderInfoBean.findSubOrderInfoNet(userBean!!.userId!!, suborderId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
                     this.subOrderInfoBean = it.result

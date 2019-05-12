@@ -113,7 +113,9 @@ interface BibiService {
             @Field("to") to: String,
             @Field("amount") number: String,
             @Field("password") password: String,
-            @Field("remark") remark: String?
+            @Field("remark") remark: String?,
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<String>>
 
 

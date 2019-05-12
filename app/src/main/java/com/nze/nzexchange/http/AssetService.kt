@@ -46,7 +46,9 @@ interface AssetService {
             @Field("from") from: String,
             @Field("to") to: String,
             @Field("amount") amount: Double,
-            @Field("remark") remark: String?
+            @Field("remark") remark: String?,
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Any>>
 
     //资产划转记录筛选

@@ -41,7 +41,7 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
 
     lateinit var ptrLv: PullToRefreshListView
     var type: Int = 0
-    var requestStatus:Int? = SubOrderInfoBean.REQUEST_NO_COMPLETE
+    var requestStatus: Int? = SubOrderInfoBean.REQUEST_NO_COMPLETE
 
     val commonAdapter: TradeCommonAdapter by lazy {
         TradeCommonAdapter(activity!!, type, this)
@@ -52,6 +52,7 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
     val list: MutableList<SubOrderInfoBean> by lazy {
         mutableListOf<SubOrderInfoBean>()
     }
+    var userBean = UserBean.loadFromApp()
 
     companion object {
         const val PARAM_TYPE: String = "type"
@@ -158,7 +159,7 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
     }
 
     override fun getDataFromNet() {
-        SubOrderInfoBean.findSubOrderPoolNet(UserBean.loadFromApp()?.userId!!, page, PAGE_SIZE, requestStatus)
+        SubOrderInfoBean.findSubOrderPoolNet(userBean!!.userId!!, page, PAGE_SIZE, requestStatus, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTf())
                 .subscribe({
                     var rList = it.result.map {

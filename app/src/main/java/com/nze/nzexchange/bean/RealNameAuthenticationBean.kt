@@ -28,7 +28,9 @@ data class RealNameAuthenticationBean(
         val mereallyCreateTimeStr: String?,
         val mereallyCreateUser: String?,
         val mereallyId: String?,
-        //实名第一步审核 中 101 //实名第二步审核 中 //实名第一步审核 不通过 1011 //实名第二步审核 不通过 1031 //实名审核通过 110
+        /**
+         * 实名认证 处理进度 简码 990通过 9901 作废 100处理中
+         */
         val mereallyStatus: Int?,
         val mereallyStatusStr: String?,
         val mereallyStep1Fileurl: String?,
@@ -47,12 +49,12 @@ data class RealNameAuthenticationBean(
         fun getReanNameAuthentication(
                 tokenUserId: String,
                 tokenUserKey: String?,
-                tokenSystreeId:String?
+                tokenSystreeId: String?
         ): Flowable<Result<RealNameAuthenticationBean>> {
             return Flowable.defer {
                 CRetrofit.instance
                         .userService()
-                        .getReanNameAuthentication(tokenUserId, tokenUserKey,tokenSystreeId)
+                        .getReanNameAuthentication(tokenUserId, tokenUserKey, tokenSystreeId)
             }
         }
     }

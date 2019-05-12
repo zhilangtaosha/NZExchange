@@ -22,6 +22,7 @@ import com.nze.nzexchange.controller.my.asset.legal.LegalWithdrawActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
 import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
 import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity
+import com.nze.nzexchange.controller.my.authentication.RealNameAuthenticationActivity
 import com.nze.nzexchange.controller.my.paymethod.SetPayMethodActivity
 import com.nze.nzexchange.controller.my.safecenter.SafeCenterActivity
 import com.nze.nzexchange.controller.my.setting.SettingActivity
@@ -135,6 +136,8 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
             R.id.tv_authentication_my -> {
                 if (realNameAuthenticationBean?.membName.isNullOrEmpty()) {
                     skipActivity(PrimaryAuthenticationActivity::class.java)
+                } else if (realNameAuthenticationBean?.mereallyStep1Fileurl.isNullOrEmpty()) {
+                    skipActivity(RealNameAuthenticationActivity::class.java)
                 } else {
                     val intent = Intent(activity, AuthenticationHomeActivity::class.java)
                     intent.putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean)
@@ -158,7 +161,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     }
 
     fun getReanNameAuthentication() {
-        RealNameAuthenticationBean.getReanNameAuthentication(userBean?.tokenReqVo?.tokenUserId!!, userBean?.tokenReqVo?.tokenUserKey!!,userBean?.tokenReqVo?.tokenSystreeId!!)
+        RealNameAuthenticationBean.getReanNameAuthentication(userBean?.tokenReqVo?.tokenUserId!!, userBean?.tokenReqVo?.tokenUserKey!!, userBean?.tokenReqVo?.tokenSystreeId!!)
                 .compose(netTfWithDialog())
                 .subscribe({
                     realNameAuthenticationBean = it.result

@@ -29,6 +29,7 @@ import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.activity_transfer.*
+import retrofit2.http.Field
 import java.util.function.BinaryOperator
 
 class TransferActivity : NBaseActivity(), View.OnClickListener {
@@ -82,7 +83,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             otcList = it.getParcelableArrayList(IntentConstant.PARAM_OTC_ACCOUNT)
             bibiList = it.getParcelableArrayList(IntentConstant.PARAM_BIBI_ACCOUNT)
         }
-        refreshLayout(userAssetBean!!,false)
+        refreshLayout(userAssetBean!!, false)
 
         transferBtn.initValidator()
                 .add(transferEt, EmptyValidation())
@@ -122,7 +123,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                         from = TRANSFER_OTC
                         to = TRANSFER_BIBI
                     }
-                    transferAssets(userBean!!.userId, userAssetBean!!.currency, from, to, amount.toDouble(), null)
+                    transferAssets(userBean!!.userId, userAssetBean!!.currency, from, to, amount.toDouble(), null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 }
             }
         }
@@ -136,7 +137,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             fromAccountTv.text = "OTC账户"
             toAccountTv.text = "币币账户"
         }
-        refreshLayout(userAssetBean!!,true)
+        refreshLayout(userAssetBean!!, true)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -201,10 +202,12 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                        from: String,
                        to: String,
                        amount: Double,
-                       remark: String?) {
+                       remark: String?,
+                       tokenUserId: String,
+                       tokenUserKey: String) {
         NRetrofit.instance
                 .assetService()
-                .transferAssets(userId, token, from, to, amount, remark)
+                .transferAssets(userId, token, from, to, amount, remark, tokenUserId, tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {

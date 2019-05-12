@@ -125,6 +125,16 @@ interface UserService {
             @Query("membCountry") membCountry: String
     ): Flowable<Result<String>>
 
+    //会员实名_实名认证提交材料
+    @FormUrlEncoded
+    @POST("/meRunBus/meMereally/saveOneEntity_meMereally_curToken.json")
+    fun saveOneEntity(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("mereallyStep1Fileurl") mereallyStep1Fileurl: String,
+            @Field("mereallyStep2Fileurl") mereallyStep2Fileurl: String?
+    ): Flowable<Result<RealAuthenticationBean>>
+
     //首页
     @FormUrlEncoded
     @POST("indexAppRunBus/indexAllData_t.json")

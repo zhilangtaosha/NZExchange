@@ -22,6 +22,7 @@ import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
+import retrofit2.http.Field
 
 
 /**
@@ -39,6 +40,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     }
     lateinit var ptrLv: PullToRefreshListView
     var mMainCurrencyBean: MainCurrencyBean? = null
+    var userBean = UserBean.loadFromApp()
 
     companion object {
         @JvmStatic
@@ -59,7 +61,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         listView.dividerHeight = 1
 
         adAdapter.onClick = { poolId, userId ->
-            cancelNet(poolId, userId)
+            cancelNet(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                     .compose(netTfWithDialog())
                     .subscribe({
                         showToast(it.message)
@@ -153,11 +155,15 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     }
 
 
-    fun cancelNet(poolId: String, userId: String): Flowable<Result<Boolean>> {
+    fun cancelNet(poolId: String,
+                  userId: String,
+                  tokenUserId: String,
+                  tokenUserKey: String
+    ): Flowable<Result<Boolean>> {
         return Flowable.defer {
             NRetrofit.instance
                     .buyService()
-                    .cancelOrder(poolId, userId)
+                    .cancelOrder(poolId, userId, tokenUserId, tokenUserKey)
         }
     }
 

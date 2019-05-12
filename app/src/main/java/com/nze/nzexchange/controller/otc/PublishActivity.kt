@@ -26,6 +26,7 @@ import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_publish.*
 import org.greenrobot.eventbus.EventBus
+import retrofit2.http.Field
 import java.util.concurrent.TimeUnit
 
 /**
@@ -42,6 +43,10 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     lateinit var currency: String
     var flag: Boolean = true
     var userAssetBean: UserAssetBean? = null
+    var priceTag = true
+    var numTag = true
+    var moneyTag = true
+
 
     override fun getRootView(): Int = R.layout.activity_publish
 
@@ -71,22 +76,21 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
 
         RxTextView.textChanges(et_price_value_ap)
                 .subscribe {
-                    if (flag) {
-                        flag = false
+                    if (priceTag) {
+                        moneyTag = false
                         var value = ""
                         var num = et_num_value_ap.text
                         if (it.isNotEmpty() && num.isNotEmpty())
                             value = DoubleMath.mul(it.toString().toDouble(), num.toString().toDouble()).removeE()
                         et_money_value_ap.setText(value)
                     } else {
-                        flag = true
+                        priceTag = true
                     }
                 }
 
         RxTextView.textChanges(et_num_value_ap)
                 .subscribe {
-                    if (flag) {
-                        flag = false
+                    if (numTag) {
                         var total = ""
                         var num = 0.0
                         val price = et_price_value_ap.text.toString()
@@ -101,19 +105,20 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                             showToast("只有${num}${currency}资产")
                         }
                         if (it.isNotEmpty() && price.isNotEmpty()) {
+                            moneyTag = false
                             total = DoubleMath.mul(num, price.toDouble()).removeE()
                             et_money_value_ap.setText(total)
                         }
 
                     } else {
-                        flag = true
+                        numTag = true
                     }
                 }
 
         RxTextView.textChanges(et_money_value_ap)
                 .subscribe {
-                    if (flag) {
-                        flag = false
+                    if (moneyTag) {
+                        numTag = false
                         var value = ""
                         val price = et_price_value_ap.text.toString()
                         if (it.isNotEmpty() && price.isNotEmpty()) {
@@ -121,7 +126,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         }
                         et_num_value_ap.setText(value)
                     } else {
-                        flag = true
+                        moneyTag = true
                     }
                 }
 
@@ -139,7 +144,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         }
 
                         if (currentType == TYPE_SALE) {
-                            submitNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+                            submitNet(tokenId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
                                     .compose(netTfWithDialog())
                                     .subscribe({
                                         Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
@@ -150,7 +155,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                                         }
                                     }, onError)
                         } else {
-                            sellNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+                            sellNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString(), userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                                     .compose(netTfWithDialog())
                                     .subscribe({
                                         Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
@@ -213,19 +218,26 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
         }
     }
 
-    fun submitNet(tokenId: String, userId: String, poolAllCount: String, poolPrice: String, remark: String): Flowable<Result<Boolean>> {
+    fun submitNet(tokenId: String, poolAllCount: String, poolPrice: String, remark: String): Flowable<Result<Boolean>> {
         return Flowable.defer {
             NRetrofit.instance
                     .buyService()
-                    .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark)
+                    .pendingOrder(userBean!!.userId, tokenId, poolAllCount, poolPrice, remark, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
         }
     }
 
-    fun sellNet(tokenId: String, userId: String, poolAllCount: String, poolPrice: String, remark: String): Flowable<Result<Boolean>> {
+    fun sellNet(tokenId: String,
+                userId: String,
+                poolAllCount: String,
+                poolPrice: String,
+                remark: String,
+                tokenUserId: String,
+                tokenUserKey: String
+    ): Flowable<Result<Boolean>> {
         return Flowable.defer {
             NRetrofit.instance
                     .sellService()
-                    .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark)
+                    .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark, tokenUserId, tokenUserKey)
         }
     }
 

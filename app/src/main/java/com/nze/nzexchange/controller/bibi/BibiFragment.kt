@@ -465,7 +465,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 }
             }
             mHandler.postDelayed({
-                //                tradeLayout.invalidate()
                 tradeLayout.requestLayout()
                 limitTv.text = item
             }, 100)
@@ -513,7 +512,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     override fun onFirstRequest() {
-
 
     }
 

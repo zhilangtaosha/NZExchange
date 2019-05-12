@@ -13,16 +13,24 @@ import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.home.carousel.CarouselAdapter
 import com.nze.nzexchange.controller.home.carousel.SimpleBulletinAdapter
+import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.widget.bulletin.BulletinView
 import com.nze.nzexchange.widget.recyclerview.Divider
 import com.zhuang.zbannerlibrary.ZBanner
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
 
-class HomeFragment : NBaseFragment() {
+class HomeFragment : NBaseFragment(), View.OnClickListener {
+
+
+    lateinit var rootView: View
     lateinit var mCarousel: ZBanner
     lateinit var bulletinView: BulletinView
     lateinit var mHotRView: RecyclerView
+    val myWallet by lazy { rootView.layout_my_wallet_home }
+    val legalTransactionLayout by lazy { rootView.layout_legal_transaction_home }
+    val helpCenterLayout by lazy { rootView.layout_help_center_home }
+
     lateinit var mHotAdapter: HotTransactionPairAdapter
     val imageUrls: MutableList<String> = mutableListOf()
     val bannerList: MutableList<IndexImgs> = mutableListOf()
@@ -55,6 +63,7 @@ class HomeFragment : NBaseFragment() {
     override fun getRootView(): Int = R.layout.fragment_home
 
     override fun initView(rootView: View) {
+        this.rootView = rootView
         mCarousel = rootView.carousel_home
 //        val carouselAdapter = CarouselAdapter(fragmentManager!!, imageUrls)
 
@@ -78,8 +87,25 @@ class HomeFragment : NBaseFragment() {
             rootView.lav_rank_home.adapter = mRandAdapter
         }, 3000)
 
+        myWallet.setOnClickListener(this)
+        legalTransactionLayout.setOnClickListener(this)
+        helpCenterLayout.setOnClickListener(this)
+
         initTopData()
         marketPopular()
+    }
+
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.layout_my_wallet_home -> {
+                if (UserBean.isLogin(activity!!))
+                    skipActivity(MyAssetActivity::class.java)
+            }
+            R.id.layout_legal_transaction_home -> {
+            }
+            R.id.layout_help_center_home -> {
+            }
+        }
     }
 
     fun initTopData() {
@@ -109,11 +135,11 @@ class HomeFragment : NBaseFragment() {
         MarketPopularBean.marketPopular()
                 .compose(netTf())
                 .subscribe({
-                    if (it.success){
+                    if (it.success) {
                         mHotAdapter = HotTransactionPairAdapter(activity!!, it.result)
                         mHotRView.adapter = mHotAdapter
                     }
-                },onError)
+                }, onError)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

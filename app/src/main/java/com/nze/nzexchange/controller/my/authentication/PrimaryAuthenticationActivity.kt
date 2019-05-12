@@ -94,7 +94,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
-                            this.finish()
+                            skipActivity(RealNameAuthenticationActivity::class.java)
                         }
                     }, onError)
         }

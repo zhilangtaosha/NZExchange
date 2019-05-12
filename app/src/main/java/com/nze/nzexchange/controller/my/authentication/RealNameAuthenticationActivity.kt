@@ -17,12 +17,20 @@ import com.nze.nzeframework.widget.takephoto.permission.InvokeListener
 import com.nze.nzeframework.widget.takephoto.permission.PermissionManager
 import com.nze.nzeframework.widget.takephoto.permission.TakePhotoInvocationHandler
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.RealAuthenticationBean
+import com.nze.nzexchange.bean.RealNameAuthenticationBean
+import com.nze.nzexchange.bean.UploadBean
+import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.tools.FileTool
 import com.nze.nzexchange.tools.TakePhotoTool
 import com.nze.nzexchange.widget.CommonButton
 import kotlinx.android.synthetic.main.activity_real_name_authentication.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
 
 class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, TakePhoto.TakeResultListener, InvokeListener {
@@ -68,6 +76,17 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
     val TYPE_HOLD = 2
     var currentType = TYPE_FRONT
 
+    lateinit var body: MultipartBody.Part
+    lateinit var requestFile: RequestBody
+    var userBean = UserBean.loadFromApp()
+    var busId: String? = null
+        get() {
+            return "${System.currentTimeMillis()}"
+        }
+    var frontUrl: String? = null
+    var backUrl: String? = null
+    var holdUrl: String? = null
+
 
     override fun getRootView(): Int = R.layout.activity_real_name_authentication
 
@@ -75,6 +94,7 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
         frontTv.setOnClickListener(this)
         backTv.setOnClickListener(this)
         holdTv.setOnClickListener(this)
+        submitBtn.setOnCommonClick(this)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -114,12 +134,33 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
                 selectPhonePopup.showPopupWindow()
             }
             R.id.btn_submit_arna -> {
+                if (frontUrl.isNullOrEmpty()) {
+                    showToast("请上传身份证正面照")
+                    return
+                }
+                if (backUrl.isNullOrEmpty()) {
+                    showToast("请上传身份证反面照")
+                    return
+                }
+                if (holdUrl.isNullOrEmpty()) {
+                    showToast("请上传手持身份证照")
+                    return
+                }
+                val fileUrl = "${frontUrl};${backUrl};${holdUrl}"
+                RealAuthenticationBean.saveOneEntity(userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, fileUrl, null)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                finish()
+                            }
+                        }, onError)
             }
         }
     }
 
     override fun takeSuccess(result: TResult?) {
         val imageFile = File(if (result?.image?.compressPath != null) result.image?.compressPath else result?.image?.originalPath)
+        uploadImage(imageFile)
         when (currentType) {
             TYPE_FRONT -> {
                 frontTv.visibility = View.GONE
@@ -172,5 +213,46 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
             this.invokeParam = invokeParam
         }
         return type
+    }
+
+    fun uploadImage(imageFile: File) {
+        requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile)
+        var fileName = "${System.currentTimeMillis()}.jpg"
+        body = MultipartBody.Part.createFormData("file", fileName, requestFile)
+        userBean?.run {
+            UploadBean.uploadFileNet(tokenReqVo.tokenUserId, tokenReqVo.tokenUserKey, tokenReqVo.tokenSystreeId, "membMereally", busId!!, true, body)
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        if (it.success) {
+                            val httpUrl = it.result.fileds[0].httpUrl
+                            when (currentType) {
+                                TYPE_FRONT -> {
+                                    frontUrl = httpUrl
+                                }
+                                TYPE_BACK -> {
+                                    backUrl = httpUrl
+                                }
+                                TYPE_HOLD -> {
+                                    holdUrl = httpUrl
+                                }
+                            }
+                        }
+                    }, {
+                        when (currentType) {
+                            TYPE_FRONT -> {
+                                frontTv.visibility = View.VISIBLE
+                                frontIv.visibility = View.GONE
+                            }
+                            TYPE_BACK -> {
+                                backTv.visibility = View.VISIBLE
+                                backIv.visibility = View.GONE
+                            }
+                            TYPE_HOLD -> {
+                                holdTv.visibility = View.VISIBLE
+                                holdIv.visibility = View.GONE
+                            }
+                        }
+                    })
+        }
     }
 }

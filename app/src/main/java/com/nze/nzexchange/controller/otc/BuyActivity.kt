@@ -132,7 +132,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                 if (type == OtcContentFragment.TYPE_BUY) {
 //                    skipActivity(BuyConfirmActivity::class.java)
                     orderPoolBean.run {
-                        submitNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId)
+                        submitNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                                 .compose(netTfWithDialog())
                                 .subscribe({
                                     showToast(it.message)
@@ -148,7 +148,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                     }
                 } else {
                     orderPoolBean.run {
-                        sellNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId)
+                        sellNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                                 .compose(netTfWithDialog())
                                 .subscribe({
                                     showToast(it.message)

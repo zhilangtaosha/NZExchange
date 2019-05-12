@@ -42,7 +42,7 @@ class SaleConfirmActivity : NBaseActivity() {
         if (subOrderInfoBean != null) {
             refreshLayout()
         } else {
-            SubOrderInfoBean.findSubOrderInfoNet(userBean?.userId!!, suborderId!!)
+            SubOrderInfoBean.findSubOrderInfoNet(userBean?.userId!!, suborderId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                     .compose(netTfWithDialog())
                     .subscribe({
                         this.subOrderInfoBean = it.result
@@ -182,7 +182,7 @@ class SaleConfirmActivity : NBaseActivity() {
                 //商家确认收款
                 NRetrofit.instance
                         .buyService()
-                        .confirmPayment(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId)
+                        .confirmPayment(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                         .compose(netTf())
                         .subscribe({
                             confirm(it)
@@ -191,7 +191,7 @@ class SaleConfirmActivity : NBaseActivity() {
                 //商家确认付款
                 NRetrofit.instance
                         .sellService()
-                        .confirmReceipt(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId)
+                        .confirmReceipt(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                         .compose(netTf())
                         .subscribe({
                             confirm(it)
@@ -202,7 +202,7 @@ class SaleConfirmActivity : NBaseActivity() {
                 //确认付款
                 NRetrofit.instance
                         .buyService()
-                        .confirmReceipt(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId)
+                        .confirmReceipt(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                         .compose(netTf())
                         .subscribe({
                             confirm(it)
@@ -211,7 +211,7 @@ class SaleConfirmActivity : NBaseActivity() {
                 //确认收款
                 NRetrofit.instance
                         .sellService()
-                        .confirmPayment(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId)
+                        .confirmPayment(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                         .compose(netTf())
                         .subscribe({
                             confirm(it)
@@ -242,7 +242,7 @@ class SaleConfirmActivity : NBaseActivity() {
 //        } else {//本人是用户
         NRetrofit.instance
                 .buyService()
-                .userCancelOrder(userBean?.userId!!, subOrderInfoBean.suborderId)
+                .userCancelOrder(userBean?.userId!!, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTf())
                 .subscribe({
                     cancel(it)
