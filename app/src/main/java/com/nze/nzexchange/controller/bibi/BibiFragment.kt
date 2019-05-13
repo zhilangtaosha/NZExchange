@@ -25,6 +25,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
@@ -36,8 +37,10 @@ import com.nze.nzexchange.widget.indicatorseekbar.OnSeekChangeListener
 import com.nze.nzexchange.widget.indicatorseekbar.SeekParams
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_bibi.view.*
+import java.util.concurrent.TimeUnit
 
 class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnListPopupItemClick, OnSeekChangeListener {
 
@@ -97,11 +100,19 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val currentOrderAdapter by lazy {
         BibiCurentOrderAdapter(activity!!).apply {
             cancelClick = { position, item ->
-                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!, null)
+                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!, null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {
                                 orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+                            } else {
+                                if (it.isCauseNotEmpty()) {
+                                    AuthorityDialog.getInstance(activity!!)
+                                            .show("取消当前委托需要完成以下设置，请检查"
+                                                    , it.cause) {
+
+                                            }
+                                }
                             }
                         }, onError)
             }
@@ -370,7 +381,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
      */
     fun btnHandler(user: UserBean, number: Double, price: Double) {
         if (transactionType == TRANSACTIONTYPE_LIMIT) {//限价交易
-            LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble())
+            LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble(), user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
@@ -378,11 +389,17 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             getPendingOrderInfo(currentTransactionPair?.id!!)
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
-                            showToast(it.message)
+                            if (it.isCauseNotEmpty()) {
+                                AuthorityDialog.getInstance(activity!!)
+                                        .show("进行币币交易需要完成以下设置，请检查"
+                                                , it.cause) {
+
+                                        }
+                            }
                         }
                     }, onError)
         } else {//市价交易
-            LimitTransactionBean.marketTransaction(currentType, user.userId, currentTransactionPair?.id!!, number)
+            LimitTransactionBean.marketTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
@@ -390,7 +407,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             getPendingOrderInfo(currentTransactionPair?.id!!)
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
-                            showToast(it.message)
+                            if (it.isCauseNotEmpty()) {
+                                AuthorityDialog.getInstance(activity!!)
+                                        .show("进行币币交易需要完成以下设置，请检查"
+                                                , it.cause) {
+
+                                        }
+                            }
                         }
                     }, onError)
         }
@@ -592,10 +615,17 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     }
 
+    var orderDisposable: Disposable? = null
     /**
      * 获取当前委托
      */
     private fun orderPending(currencyId: String, userId: String?) {
+//        if (orderDisposable != null && !orderDisposable!!.isDisposed) {
+//            orderDisposable?.dispose()
+//        }
+//        orderDisposable = Flowable.interval(3, TimeUnit.SECONDS)
+//                .compose(netTf())
+//                .subscribe {
         OrderPendBean.orderPending(currencyId, userId)
                 .compose(netTf())
                 .subscribe({
@@ -604,6 +634,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         currentOrderLv.adapter = currentOrderAdapter
                     }
                 }, onError)
+//                }
     }
 
     private fun getKData() {
@@ -611,9 +642,18 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
 
+    override fun onPause() {
+        super.onPause()
+        if (orderDisposable != null && !orderDisposable!!.isDisposed) {
+            orderDisposable?.dispose()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         activity!!.bindService(Intent(activity, KLineService::class.java), connection, Context.BIND_AUTO_CREATE)
+        if (currentTransactionPair != null && userBean != null)
+            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
     }
 
     override fun onDestroy() {

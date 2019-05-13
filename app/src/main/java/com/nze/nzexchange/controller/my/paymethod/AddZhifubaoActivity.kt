@@ -70,9 +70,11 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                 val file: File = File(FileTool.getImageCachePath(), FileTool.getTempName("jpg"))
                 val imageUri: Uri = Uri.fromFile(file)
                 if (position == 0) {
-                    takePhoto.onPickFromCaptureWithCrop(imageUri, TakePhotoTool.getCropOptions())
+//                    takePhoto.onPickFromCaptureWithCrop(imageUri, TakePhotoTool.getCropOptions())
+                    takePhoto.onPickFromCapture(imageUri)
                 } else {
-                    takePhoto.onPickFromGalleryWithCrop(imageUri, TakePhotoTool.getCropOptions())
+//                    takePhoto.onPickFromGalleryWithCrop(imageUri, TakePhotoTool.getCropOptions())
+                    takePhoto.onPickFromGallery()
                 }
             }
         }
@@ -89,7 +91,10 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
     lateinit var invokeParam: InvokeParam
     val userBean: UserBean? by lazy { NzeApp.instance.userBean }
     var path: String = "membAccmoney"
-    var busId = "83517FF817394A4B813E4777063536"
+    var busId: String? = null
+        get() {
+            return System.currentTimeMillis().toString()
+        }
     lateinit var body: MultipartBody.Part
     lateinit var requestFile: RequestBody
 
@@ -199,6 +204,8 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                             }
                             NzeApp.instance.userBean = userBean
                             this@AddZhifubaoActivity.finish()
+                        }else{
+                            showToast(it.message)
                         }
                     }, onError)
         }
@@ -257,7 +264,7 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
         var fileName = "${System.currentTimeMillis()}.jpg"
         body = MultipartBody.Part.createFormData("file", fileName, requestFile)
         userBean?.run {
-            UploadBean.uploadFileNet(tokenReqVo.tokenUserId, tokenReqVo.tokenUserKey, tokenReqVo.tokenSystreeId, path, busId, true, body)
+            UploadBean.uploadFileNet(tokenReqVo.tokenUserId, tokenReqVo.tokenUserKey, tokenReqVo.tokenSystreeId, path, busId!!, true, body)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {

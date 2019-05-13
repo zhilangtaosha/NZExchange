@@ -60,7 +60,9 @@ interface BibiService {
             @Field("userId") userId: String,
             @Field("currencyId") currencyId: String,
             @Field("number") number: Double,
-            @Field("price") price: Double
+            @Field("price") price: Double,
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<LimitTransactionBean>>
 
 
@@ -71,7 +73,9 @@ interface BibiService {
             @Field("transactionType") transactionType: Int,
             @Field("userId") userId: String,
             @Field("currencyId") currencyId: String,
-            @Field("number") number: Double
+            @Field("number") number: Double,
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<LimitTransactionBean>>
 
     //查询未执行订单列表
@@ -88,7 +92,9 @@ interface BibiService {
             @Field("orderId") orderId: String,
             @Field("userId") userId: String,
             @Field("currencyId") currencyId: String?,
-            @Field("currencyName") currencyName: String?
+            @Field("currencyName") currencyName: String?,
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<OrderPendBean>>
 
 

@@ -48,8 +48,11 @@ class AuthenticationHomeActivity : NBaseActivity(), View.OnClickListener {
                 990 -> {
                     primaryStatusTv.text = "已认证"
                 }
-                100 -> {
+                101 -> {
                     primaryStatusTv.text = "审核中"
+                }
+                100 -> {
+                    primaryStatusTv.text = "审核不通过"
                 }
             }
         }

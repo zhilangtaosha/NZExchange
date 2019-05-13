@@ -18,6 +18,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency
@@ -214,7 +215,12 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                         dialog.show(type)
                         getAsset()
                     } else {
-                        showToast(it.message)
+                        AuthorityDialog.getInstance(this)
+                                .show("资金划转需要完成以下设置，请检查",
+                                        it.cause
+                                ) {
+                                    this@TransferActivity.finish()
+                                }
                     }
                 }, onError)
     }

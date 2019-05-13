@@ -18,6 +18,7 @@ import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.getContent
@@ -247,12 +248,20 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         }
         NRetrofit.instance
                 .bibiService()
-                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null,userBean!!.tokenReqVo.tokenUserId,userBean!!.tokenReqVo.tokenUserKey)
+                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
-                    showToast(it.message)
                     if (it.success) {
                         finish()
+                    } else {
+                        if (it.cause != null && it.cause.size > 0) {
+                            AuthorityDialog.getInstance(this)
+                                    .show("提现需要完成以下设置，请检查"
+                                            , it.cause) {
+                                        this@WithdrawCurrencyActivity.finish()
+                                    }
+                        }
+
                     }
                 }, onError)
     }

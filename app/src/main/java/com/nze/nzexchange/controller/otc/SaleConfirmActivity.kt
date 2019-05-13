@@ -126,7 +126,7 @@ class SaleConfirmActivity : NBaseActivity() {
             if (accmoneyWeixinurl != null && accmoneyWeixinurl.isNotEmpty()) {
                 val wechat = ViewFactory.createPayMehod(R.layout.tv_paymethod_wechat)
                 wechat.setOnClickListener {
-                    ShowImagePayMethodActivity.skip(this@SaleConfirmActivity, CRetrofit.imageUrlJoin(accmoneyWeixinurl))
+                    ShowImagePayMethodActivity.skip(this@SaleConfirmActivity, accmoneyWeixinurl)
                 }
                 layout_pay_abc.addView(wechat)
             }
@@ -134,7 +134,7 @@ class SaleConfirmActivity : NBaseActivity() {
                 val zfb = ViewFactory.createPayMehod(R.layout.tv_paymethod_zhifubao)
                 layout_pay_abc.addView(zfb)
                 zfb.setOnClickListener {
-                    ShowImagePayMethodActivity.skip(this@SaleConfirmActivity, CRetrofit.imageUrlJoin(accmoneyZfburl))
+                    ShowImagePayMethodActivity.skip(this@SaleConfirmActivity, accmoneyZfburl)
                 }
             }
             if (accmoneyBankcard != null && accmoneyBankcard.isNotEmpty()) {

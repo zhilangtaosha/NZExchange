@@ -17,6 +17,7 @@ import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.removeE
 import com.nze.nzexchange.tools.DoubleMath
@@ -133,6 +134,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
         RxView.clicks(btn_ap)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe {
+                    //发布广告
                     if (btn_ap.validate()) {
                         val money = et_money_value_ap.getContent().toDouble()
                         if (money < 400.0) {
@@ -152,6 +154,14 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                                             this@PublishActivity.finish()
                                             EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
                                             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
+                                        } else {
+                                            if (it.isCauseNotEmpty()) {
+                                                AuthorityDialog.getInstance(this)
+                                                        .show("进行OTC交易需要完成以下设置，请检查",
+                                                                it.cause) {
+                                                            finish()
+                                                        }
+                                            }
                                         }
                                     }, onError)
                         } else {
@@ -163,6 +173,14 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                                             this@PublishActivity.finish()
                                             EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
                                             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
+                                        } else {
+                                            if (it.isCauseNotEmpty()) {
+                                                AuthorityDialog.getInstance(this)
+                                                        .show("进行OTC交易需要完成以下设置，请检查",
+                                                                it.cause) {
+                                                            finish()
+                                                        }
+                                            }
                                         }
                                     }, onError)
                         }

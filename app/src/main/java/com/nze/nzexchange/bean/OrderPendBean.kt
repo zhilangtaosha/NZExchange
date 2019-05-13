@@ -48,12 +48,14 @@ data class OrderPendBean(
                 orderId: String,
                 userId: String,
                 currencyId: String?,
-                currencyName:String?
+                currencyName:String?,
+                tokenUserId: String,
+                tokenUserKey: String
         ): Flowable<Result<OrderPendBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .cancelOrder(orderId, userId, currencyId,currencyName)
+                        .cancelOrder(orderId, userId, currencyId,currencyName,tokenUserId,tokenUserKey)
             }
         }
 

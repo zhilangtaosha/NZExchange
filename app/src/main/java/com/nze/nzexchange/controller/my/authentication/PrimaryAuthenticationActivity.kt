@@ -14,10 +14,14 @@ import com.nze.nzexchange.controller.login.SelectCountryActivity
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.validation.EmptyValidation
+import com.nze.nzexchange.validation.IDValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import kotlinx.android.synthetic.main.activity_primary_authentication.*
 
+/**
+ * 初级认证
+ */
 class PrimaryAuthenticationActivity : NBaseActivity() {
     val countryTv: TextView by lazy { tv_country_apa }
     val nameEt: ClearableEditText by lazy { et_name_apa }
@@ -26,7 +30,8 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
         btn_next_ap.apply {
             setOnCommonClick {
                 //                skipActivity(PrimaryAuthenticationCompleteActivity::class.java)
-                primaryAuthentication()
+                if (nextBtn.validate())
+                    primaryAuthentication()
             }
         }
     }
@@ -45,7 +50,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
 
         nextBtn.initValidator()
                 .add(nameEt, EmptyValidation())
-                .add(credentialsEt, EmptyValidation())
+                .add(credentialsEt, IDValidation())
                 .executeValidator()
 
         countryTv.setOnClickListener {
@@ -95,6 +100,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
                     .subscribe({
                         if (it.success) {
                             skipActivity(RealNameAuthenticationActivity::class.java)
+                            finish()
                         }
                     }, onError)
         }

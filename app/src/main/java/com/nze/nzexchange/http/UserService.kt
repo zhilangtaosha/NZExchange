@@ -184,4 +184,13 @@ interface UserService {
             @Field("tokenUserKey") tokenUserKey: String?,
             @Field("tokenSystreeId") tokenSystreeId: String?
     ): Flowable<Result<RealNameAuthenticationBean>>
+
+    //凭证业务权限_凭证是否能做某事【不包含入参判断】
+    @FormUrlEncoded
+    @POST("sysAllBus/busflow/token_busCheck.json")
+    fun busCheck(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("busflowTag") busflowTag: String
+    ): Flowable<Result<Any>>
 }

@@ -57,9 +57,11 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
                 val file: File = File(FileTool.getImageCachePath(), FileTool.getTempName("jpg"))
                 val imageUri: Uri = Uri.fromFile(file)
                 if (position == 0) {
-                    takePhoto.onPickFromCaptureWithCrop(imageUri, TakePhotoTool.getCropOptions())
+//                    takePhoto.onPickFromCaptureWithCrop(imageUri, TakePhotoTool.getCropOptions())
+                    takePhoto.onPickFromCapture(imageUri)
                 } else {
-                    takePhoto.onPickFromGalleryWithCrop(imageUri, TakePhotoTool.getCropOptions())
+//                    takePhoto.onPickFromGalleryWithCrop(imageUri, TakePhotoTool.getCropOptions())
+                    takePhoto.onPickFromGallery()
                 }
             }
         }

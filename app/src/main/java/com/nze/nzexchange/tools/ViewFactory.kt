@@ -35,5 +35,11 @@ class ViewFactory {
             return tv
         }
 
+        fun createAuthorityTv(content: String): TextView {
+            val tv: TextView = LayoutInflater.from(NzeApp.instance).inflate(R.layout.tv_authority, null) as TextView
+            tv.text = content
+            return tv
+        }
+
     }
 }

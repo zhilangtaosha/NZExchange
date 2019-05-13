@@ -17,6 +17,7 @@ import com.nze.nzexchange.bean.OrderPendBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_bibi_all_order.*
@@ -47,11 +48,19 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         BibiCurentOrderAdapter(this).apply {
             cancelClick = { position, item ->
                 //撤销
-                OrderPendBean.cancelOrder(item.id, item.userId, null, item.market)
+                OrderPendBean.cancelOrder(item.id, item.userId, null, item.market, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {
                                 ptrLv.doPullRefreshing(true, 200)
+                            } else {
+                                if (it.isCauseNotEmpty()) {
+                                    AuthorityDialog.getInstance(this@BibiAllOrderActivity)
+                                            .show("取消当前委托需要完成以下设置，请检查"
+                                                    , it.cause) {
+
+                                            }
+                                }
                             }
                         }, onError)
             }
