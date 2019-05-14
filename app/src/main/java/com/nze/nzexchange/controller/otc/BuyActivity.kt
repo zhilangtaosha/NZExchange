@@ -1,16 +1,12 @@
 package com.nze.nzexchange.controller.otc
 
 import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 import android.view.View
-import android.widget.Toast
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.ui.BaseActivity
-import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
-import com.nze.nzexchange.R.id.et_num_value_ab
 import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.sellNet
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.submitNet
@@ -19,6 +15,7 @@ import com.nze.nzexchange.config.CurrencyTool
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.otc.main.OtcContentFragment
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.DoubleMath
@@ -130,19 +127,26 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.btn_confirm_ab -> {
                 if (type == OtcContentFragment.TYPE_BUY) {
-//                    skipActivity(BuyConfirmActivity::class.java)
+//                    skipActivity(SaleConfirmActivity::class.java)
                     orderPoolBean.run {
                         submitNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                                 .compose(netTfWithDialog())
                                 .subscribe({
-                                    showToast(it.message)
                                     if (it.success) {
 //                                        EventBus.getDefault().post(EventCenter)
-                                        startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
+                                        startActivity(Intent(this@BuyActivity, OtcConfirmActivity::class.java)
                                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
                                                 .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
+                                    } else {
+                                        if (it.isCauseNotEmpty()) {
+                                            AuthorityDialog.getInstance(this@BuyActivity)
+                                                    .show("进行OTC交易需要完成以下设置，请检查",
+                                                            it.cause) {
+                                                        finish()
+                                                    }
+                                        }
                                     }
-                                }, onError, {
+                                }, {
                                     this@BuyActivity.finish()
                                 })
                     }
@@ -151,14 +155,21 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                         sellNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                                 .compose(netTfWithDialog())
                                 .subscribe({
-                                    showToast(it.message)
                                     if (it.success) {
                                         EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
-                                        startActivity(Intent(this@BuyActivity, SaleConfirmActivity::class.java)
+                                        startActivity(Intent(this@BuyActivity, OtcConfirmActivity::class.java)
                                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
                                                 .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
+                                    } else {
+                                        if (it.isCauseNotEmpty()) {
+                                            AuthorityDialog.getInstance(this@BuyActivity)
+                                                    .show("进行OTC交易需要完成以下设置，请检查",
+                                                            it.cause) {
+                                                        finish()
+                                                    }
+                                        }
                                     }
-                                }, onError, {
+                                }, {
                                     this@BuyActivity.finish()
                                 })
                     }

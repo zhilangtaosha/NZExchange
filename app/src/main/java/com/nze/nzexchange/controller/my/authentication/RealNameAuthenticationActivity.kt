@@ -88,11 +88,12 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
     var frontUrl: String? = null
     var backUrl: String? = null
     var holdUrl: String? = null
-
+    var realNameAuthenticationBean: RealNameAuthenticationBean? = null
 
     override fun getRootView(): Int = R.layout.activity_real_name_authentication
 
     override fun initView() {
+        realNameAuthenticationBean = intent.getParcelableExtra<RealNameAuthenticationBean>(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN)
         frontTv.setOnClickListener(this)
         backTv.setOnClickListener(this)
         holdTv.setOnClickListener(this)
@@ -153,6 +154,10 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {
+                                realNameAuthenticationBean?.mereallyStatus=101
+                                val intent = Intent(this, AuthenticationHomeActivity::class.java)
+                                intent.putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean)
+                                startActivity(intent)
                                 finish()
                             }
                         }, onError)

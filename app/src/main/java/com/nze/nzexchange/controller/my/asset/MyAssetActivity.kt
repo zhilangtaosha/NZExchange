@@ -10,6 +10,10 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.CheckBox
 import android.widget.ListView
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxCheckedTextView
+import com.jakewharton.rxbinding2.widget.RxCompoundButton
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.ui.BaseActivity
@@ -22,6 +26,7 @@ import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import com.zhuang.zbannerlibrary.ZBanner
 import com.zhuang.zbannerlibrary.ZBannerAdapter
@@ -73,8 +78,45 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                     type = AccountType.OTC
                 }
             }
+            searchEt.setText("")
+            showCb.isChecked = false
         }
+        RxTextView.textChanges(searchEt)
+                .subscribe {
+                    filter()
+                }
+        RxCompoundButton.checkedChanges(showCb)
+                .subscribe {
+                    filter()
+                }
+    }
 
+    fun filter() {
+        val currency = searchEt.getContent()
+        val checked = showCb.isChecked
+        val list = ArrayList<UserAssetBean>()
+        if (type == AccountType.BIBI) {
+            val l = bibiList.filter {
+                val b = if (checked) {
+                    it.available > 0
+                } else {
+                    true
+                }
+                (it.currency.contains(currency.toLowerCase()) || it.currency.contains(currency.toUpperCase())) && b
+            }
+            list.addAll(l)
+        } else {
+            val l = otcList.filter {
+                val b = if (checked) {
+                    it.available > 0
+                } else {
+                    true
+                }
+                (it.currency.contains(currency.toLowerCase()) || it.currency.contains(currency.toUpperCase())) && b
+            }
+            list.addAll(l)
+        }
+        assetAdapter.group = list
     }
 
     override fun onResume() {

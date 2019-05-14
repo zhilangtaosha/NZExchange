@@ -26,6 +26,7 @@ data class SubOrderInfoBean(
         var suborderOverTime: Long,
         val suborderPrice: Double,
         val suborderReleaseTime: Long,
+        //1001:待付款 / 1002待放币 / 1003已完成 / 1004主动取消 / 1005超时取消
         val suborderStatus: Int,
         val suborderUpdateTime: Long,
         val tokenId: String,

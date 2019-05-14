@@ -10,6 +10,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.RealNameAuthenticationBean
+import com.nze.nzexchange.bean.RealNameAuthenticationBean.Companion.getReanNameAuthentication
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
@@ -20,6 +21,7 @@ import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalRechargeActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalWithdrawActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
+import com.nze.nzexchange.controller.my.authentication.AuthenticationFailActivity
 import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
 import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity
 import com.nze.nzexchange.controller.my.authentication.RealNameAuthenticationActivity
@@ -123,25 +125,32 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
                 BibiAllOrderActivity.toAllOrderActivity(mBaseActivity, BibiAllOrderActivity.FROM_MY)
             }
             R.id.tv_pay_method_my -> {
-                if (!realNameAuthenticationBean?.membName.isNullOrEmpty()) {
-                    startActivity(Intent(activity, SetPayMethodActivity::class.java)
-                            .putExtra(IntentConstant.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
-                } else {
-                    showToast("请先实名认证")
-                }
+                startActivity(Intent(activity, SetPayMethodActivity::class.java)
+                        .putExtra(IntentConstant.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
             }
             R.id.tv_safe_center_my -> {
                 skipActivity(SafeCenterActivity::class.java)
             }
             R.id.tv_authentication_my -> {
-                if (realNameAuthenticationBean?.membName.isNullOrEmpty()) {
-                    skipActivity(PrimaryAuthenticationActivity::class.java)
-                } else if (realNameAuthenticationBean?.mereallyStep1Fileurl.isNullOrEmpty()) {
-                    skipActivity(RealNameAuthenticationActivity::class.java)
-                } else {
-                    val intent = Intent(activity, AuthenticationHomeActivity::class.java)
-                    intent.putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean)
-                    startActivity(intent)
+                when (realNameAuthenticationBean?.mereallyStatus) {
+                    100 -> {
+                        if (realNameAuthenticationBean?.membName.isNullOrEmpty()) {
+                            activity!!.startActivity(Intent(activity, PrimaryAuthenticationActivity::class.java)
+                                    .putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
+                        } else if (realNameAuthenticationBean?.mereallyStep1Fileurl.isNullOrEmpty()) {
+                            activity!!.startActivity(Intent(activity, RealNameAuthenticationActivity::class.java)
+                                    .putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
+                        }
+                    }
+                    101, 990 -> {
+                        val intent = Intent(activity, AuthenticationHomeActivity::class.java)
+                        intent.putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean)
+                        startActivity(intent)
+                    }
+                    1011 -> {
+                        activity!!.startActivity(Intent(activity, AuthenticationFailActivity::class.java)
+                                .putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
+                    }
                 }
             }
             R.id.tv_setting_my -> {

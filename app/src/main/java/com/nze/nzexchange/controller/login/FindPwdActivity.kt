@@ -105,6 +105,7 @@ class FindPwdActivity : NBaseActivity(), View.OnClickListener {
                             showToast(it.message)
                             if (it.success) {
                                 this@FindPwdActivity.finish()
+                                showToast("密码重置成功")
                             }
                         }, onError)
             }

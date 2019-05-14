@@ -93,7 +93,7 @@ class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
      * 没有权限，通知用户，并关闭当前页
      */
     fun busCheck() {
-        CommonRequest.busCheck(userBean!!, BusFlowTag.CURRENCY_RECHARGE)
+        CommonRequest.busCheck(userBean!!, BusFlowTag.SET_PAY_METHOD)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {

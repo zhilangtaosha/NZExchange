@@ -29,7 +29,8 @@
                 android:id="@+id/layout_money_type_set"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,9 +51,14 @@
                     android:text="人民币"
                     android:textColor="@color/color_FF6D87A8"
                     android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_line" />
             </RelativeLayout>
 
-            <include layout="@layout/common_line" />
 
             <TextView
                 android:id="@+id/tv_exchange_rate_set"
@@ -63,9 +69,12 @@
                 android:gravity="center_vertical"
                 android:text="汇率概览"
                 android:textColor="@color/color_FFA3AAB9"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:visibility="gone" />
 
-            <include layout="@layout/common_line" />
+            <include
+                layout="@layout/common_line"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_service_charge_set"
@@ -76,9 +85,12 @@
                 android:gravity="center_vertical"
                 android:text="费率详情"
                 android:textColor="@color/color_FFA3AAB9"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:visibility="gone" />
 
-            <include layout="@layout/common_line" />
+            <include
+                layout="@layout/common_line"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_about_us_set"
@@ -102,15 +114,19 @@
                 android:gravity="center_vertical"
                 android:text="夜间模式"
                 android:textColor="@color/color_FFA3AAB9"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:visibility="gone" />
 
-            <include layout="@layout/common_line" />
+            <include
+                layout="@layout/common_line"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/layout_color_mode_set"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -136,15 +152,20 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/tv_color_mode_set"
                     android:src="@mipmap/color_mode_set" />
-            </RelativeLayout>
 
-            <include layout="@layout/common_line" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_line" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/layout_style_mode_set"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -170,9 +191,13 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/tv_style_mode_set"
                     android:src="@mipmap/style_mode_set" />
-            </RelativeLayout>
 
-            <include layout="@layout/common_line" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_line" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/layout_edition_set"
@@ -199,6 +224,7 @@
                     android:text="v1.35"
                     android:textColor="@color/color_FF676C7A"
                     android:textSize="14sp" />
+
             </RelativeLayout>
 
             <com.nze.nzexchange.widget.CommonButton

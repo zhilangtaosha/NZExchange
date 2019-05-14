@@ -8,5 +8,5 @@ package com.nze.nzexchange.config
  */
 object BusFlowTag {
     val CURRENCY_RECHARGE = "biacc_fill"//充币
-    val SET_PAY_METHOD = "accmoney_all"//设置收款方式
+    val SET_PAY_METHOD = "me_accmoney"//设置收款方式
 }

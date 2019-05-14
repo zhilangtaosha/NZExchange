@@ -72,11 +72,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.otc.BuyActivity" />
-        <activity android:name=".controller.otc.BuyConfirmActivity" />
+        <activity android:name=".controller.otc.SaleConfirmActivity" />
         <activity android:name=".controller.otc.PublishActivity" />
         <activity android:name=".controller.otc.tradelist.TradeListActivity" />
         <activity android:name=".controller.otc.tradelist.TradeCommonDetailActivity" />
-        <activity android:name=".controller.otc.SaleConfirmActivity" />
+        <activity android:name=".controller.otc.OtcConfirmActivity" />
         <activity android:name=".controller.my.paymethod.SetPayMethodActivity" />
         <activity android:name=".controller.my.paymethod.AddBankActivity" />
         <activity android:name=".controller.my.paymethod.AddZhifubaoActivity" />
@@ -165,7 +165,8 @@
             android:theme="@style/DialogTheme" />
         <activity
             android:name=".controller.common.ShowBankPayMethodActivity"
-            android:theme="@style/DialogTheme"></activity>
+            android:theme="@style/DialogTheme" />
+        <activity android:name=".controller.my.authentication.AuthenticationFailActivity"></activity>
     </application>
 
 </manifest>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     android:orientation="vertical"
-    tools:context=".controller.otc.BuyConfirmActivity">
+    tools:context=".controller.otc.SaleConfirmActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
         android:id="@+id/topbar_abc"

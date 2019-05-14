@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
@@ -44,9 +45,12 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
         }
     var countryNumber = "+086"
     var userBean: UserBean? = UserBean.loadFromApp()
+    var realNameAuthenticationBean: RealNameAuthenticationBean? = null
+
     override fun getRootView(): Int = R.layout.activity_primary_authentication
 
     override fun initView() {
+        realNameAuthenticationBean = intent.getParcelableExtra<RealNameAuthenticationBean>(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN)
 
         nextBtn.initValidator()
                 .add(nameEt, EmptyValidation())
@@ -99,7 +103,11 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
-                            skipActivity(RealNameAuthenticationActivity::class.java)
+                            realNameAuthenticationBean?.membName = nameEt.getContent()
+                            realNameAuthenticationBean?.membIdentitycard = credentialsEt.getContent()
+                            startActivity(Intent(this, RealNameAuthenticationActivity::class.java)
+                                    .putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
+
                             finish()
                         }
                     }, onError)

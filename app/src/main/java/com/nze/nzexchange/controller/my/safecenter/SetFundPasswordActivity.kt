@@ -50,9 +50,11 @@ class SetFundPasswordActivity : NBaseActivity(), View.OnClickListener {
         userBean?.let {
             if (!it.userPhone.isNullOrEmpty()) {
                 verifyTv.text = "短信验证"
+                verifyTv.hint = "请输入短信验证码"
                 verifyAccount = it.userPhone
             } else {
                 verifyTv.text = "邮箱验证"
+                verifyTv.hint = "请输入邮箱验证码"
                 verifyAccount = it.userEmail
             }
         }

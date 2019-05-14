@@ -20,8 +20,8 @@ data class RealNameAuthenticationBean(
         val membCountry: String?,
         val membId: String?,
         //身份证
-        val membIdentitycard: String?,
-        val membName: String?,
+        var membIdentitycard: String?,
+        var membName: String?,
         val membSn: String?,
         val membTruename: String?,
         val mereallyCreateTime: Long?,
@@ -29,9 +29,12 @@ data class RealNameAuthenticationBean(
         val mereallyCreateUser: String?,
         val mereallyId: String?,
         /**
-         * 实名认证 处理进度 简码 990通过 9901 作废 100处理中
+         * 100  初始化  会员_上传身份证
+        101  审核中   运维_审核身份证
+        990  实名通过
+        1011 审核不通过  会员_重新上传身份证[审核失败]
          */
-        val mereallyStatus: Int?,
+        var mereallyStatus: Int?,
         val mereallyStatusStr: String?,
         val mereallyStep1Fileurl: String?,
         val mereallyStep1Name: String?,

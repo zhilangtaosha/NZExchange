@@ -63,9 +63,9 @@ class AuthenticationHomeActivity : NBaseActivity(), View.OnClickListener {
             accountTv.text = userBean?.userEmail
         }
 
-        primaryLayout.setOnClickListener(this)
-        realNameLayout.setOnClickListener(this)
-        vedioLayout.setOnClickListener(this)
+//        primaryLayout.setOnClickListener(this)
+//        realNameLayout.setOnClickListener(this)
+//        vedioLayout.setOnClickListener(this)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

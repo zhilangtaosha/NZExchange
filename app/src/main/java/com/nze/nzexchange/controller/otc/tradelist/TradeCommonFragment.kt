@@ -11,18 +11,14 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
-import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.Accmoney
-import com.nze.nzexchange.bean.OtcOrder
 import com.nze.nzexchange.bean.SubOrderInfoBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
-import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.controller.base.NBaseFragment
-import com.nze.nzexchange.controller.otc.SaleConfirmActivity
+import com.nze.nzexchange.controller.otc.OtcConfirmActivity
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import com.trello.rxlifecycle2.android.FragmentEvent
@@ -126,7 +122,7 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
         when (type) {
             TYPE_NO_COMPLETE -> {
                 val item = noCompleteAdapter.getItem(position)
-                startActivity(Intent(activity, SaleConfirmActivity::class.java)
+                startActivity(Intent(activity, OtcConfirmActivity::class.java)
                         .putExtra(IntentConstant.PARAM_SUBORDERID, item?.suborderId))
             }
             TYPE_COMPLETED, TYPE_CANCEL -> {
