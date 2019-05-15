@@ -18,8 +18,13 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.bibi.BibiSideContentFragment
+import com.nze.nzexchange.controller.login.selectcountry.SideBar.b
 import com.nze.nzexchange.database.dao.impl.PairDaoImpl
+import com.nze.nzexchange.http.HttpConfig
+import io.reactivex.Flowable
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_market_content.view.*
+import java.util.concurrent.TimeUnit
 
 class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<ListView> {
 
@@ -99,30 +104,46 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
     }
 
-
+    var disposable: Disposable? = null
+    /**
+     * 5秒刷新一下数据
+     */
     override fun getDataFromNet() {
-        TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
-                .map {
-                    if (it.success) {
-                        pairDao.addList(it.result)
-                    }
-                    it
-                }
+        if (disposable != null && !disposable?.isDisposed!!)
+            disposable!!.dispose()
+        var b = 1
+        if (HttpConfig.isLoop&&false) {
+            b = HttpConfig.LOOP_NUM
+        }
+        disposable = Flowable.interval(0,HttpConfig.LOOP_INTERVAL_TIME, TimeUnit.SECONDS)
+                .filter { b > 0 }
                 .compose(netTf())
-                .subscribe({
-                    if (it.success) {
-                        val list = it.result
-                        lvAdapter.group = list
-                        ptrLv.onPullDownRefreshComplete()
-                    }
-                }, {
-                    NLog.i("getTransactionPairs error....")
-                    ptrLv.onPullDownRefreshComplete()
-                })
+                .subscribe {
+                    TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
+                            .map {
+                                if (it.success) {
+                                    pairDao.addList(it.result)
+                                }
+                                it
+                            }
+                            .compose(netTf())
+                            .subscribe({
+                                if (it.success) {
+                                    val list = it.result
+                                    lvAdapter.group = list
+                                    ptrLv.onPullDownRefreshComplete()
+                                }
+                                b--
+                            }, {
+                                NLog.i("getTransactionPairs error....")
+                                ptrLv.onPullDownRefreshComplete()
+                            })
+                }
 
     }
 
     override fun onFirstRequest() {
         getDataFromNet()
     }
+    
 }

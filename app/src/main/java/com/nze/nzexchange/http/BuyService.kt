@@ -56,13 +56,22 @@ interface BuyService {
                      @Field("pageSize") pageSize: Int
     ): Flowable<Result<MutableList<FindSellBean>>>
 
-    //.商家取消订单
+    //商家出售取消
     @FormUrlEncoded
     @POST("otc/buy/cancelOrder")
-    fun cancelOrder(@Field("poolId") poolId: String,
-                    @Field("userId") userId: String,
-                    @Field("tokenUserId") tokenUserId: String,
-                    @Field("tokenUserKey") tokenUserKey: String
+    fun cancelSaleOrder(@Field("poolId") poolId: String,
+                        @Field("userId") userId: String,
+                        @Field("tokenUserId") tokenUserId: String,
+                        @Field("tokenUserKey") tokenUserKey: String
+    ): Flowable<Result<Boolean>>
+
+    //商家购买取消
+    @FormUrlEncoded
+    @POST("otc/sell/cancelOrder")
+    fun cancelBuyOrder(@Field("poolId") poolId: String,
+                       @Field("userId") userId: String,
+                       @Field("tokenUserId") tokenUserId: String,
+                       @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Boolean>>
 
     //获取用户子订单列表

@@ -18,6 +18,7 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.*
+import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.validation.PasswordValidation
@@ -117,15 +118,26 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
                     showToast("请输入邮箱号码")
                     return
                 }
-                VerifyBean.getVerifyCodeNet(email, VerifyBean.TYPE_REGISTER)
+                CRetrofit.instance
+                        .userService()
+                        .checkAccount(null, email)
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {
-                                verifyTv.startVerify()
-                                checkcodeId = it.result.checkcodeId
-                                showToast("验证码已经发送到${emailEt.getContent()}")
+                                VerifyBean.getVerifyCodeNet(email, VerifyBean.TYPE_REGISTER)
+                                        .compose(netTfWithDialog())
+                                        .subscribe({
+                                            if (it.success) {
+                                                verifyTv.startVerify()
+                                                checkcodeId = it.result.checkcodeId
+                                                showToast("验证码已经发送到${emailEt.getContent()}")
+                                            }
+                                        }, onError)
+                            } else {
+                                showToast(it.message)
                             }
                         }, onError)
+
             }
             R.id.btn_register_aer -> {
                 if (checkcodeId.isNullOrEmpty()) {

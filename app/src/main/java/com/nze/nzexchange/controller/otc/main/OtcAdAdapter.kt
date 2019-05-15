@@ -15,7 +15,7 @@ import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_ad_otc.view.*
 
 class OtcAdAdapter(mContext: Context) : NBaseAda<FindSellBean, OtcAdAdapter.ViewHolder>(mContext) {
-    var onClick: ((String, String) -> Unit)? = null
+    var onClick: ((String, String,Int) -> Unit)? = null
     override fun initView(vh: ViewHolder, item: FindSellBean, position: Int) {
         item.run {
             val tip = if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
@@ -34,7 +34,7 @@ class OtcAdAdapter(mContext: Context) : NBaseAda<FindSellBean, OtcAdAdapter.View
         }
 
         vh.cancelBtn.setOnClickListener {
-            onClick?.invoke(item.poolId, item.userId)
+            onClick?.invoke(item.poolId, item.userId,item.transactionType)
         }
     }
 

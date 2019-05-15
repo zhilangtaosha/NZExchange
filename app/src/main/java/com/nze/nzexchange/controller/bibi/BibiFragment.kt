@@ -30,6 +30,7 @@ import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.*
+import com.nze.nzexchange.http.HttpConfig
 import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.nze.nzexchange.widget.indicatorseekbar.IndicatorSeekBar
@@ -473,7 +474,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
                 totalTransactionTv.text = "交易额--${currentTransactionPair?.mainCurrency}"
                 if (currentType == TYPE_BUY) {
-                    getEt.hint = "数量(${currentTransactionPair?.mainCurrency})"
+                    getEt.hint = "交易额(${currentTransactionPair?.mainCurrency})"
                 }
                 TRANSACTIONTYPE_MARKET
             }
@@ -615,15 +616,19 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     }
 
-    var orderDisposable: Disposable? = null
+    var disposable: Disposable? = null
     /**
      * 获取当前委托
      */
     private fun orderPending(currencyId: String, userId: String?) {
-        if (orderDisposable != null && !orderDisposable!!.isDisposed) {
-            orderDisposable?.dispose()
+        if (disposable != null && !disposable?.isDisposed!!)
+            disposable!!.dispose()
+        var b = 1
+        if (HttpConfig.isLoop) {
+            b = HttpConfig.LOOP_NUM
         }
-        orderDisposable = Flowable.interval(3, TimeUnit.SECONDS)
+        disposable = Flowable.interval(0, HttpConfig.LOOP_INTERVAL_TIME, TimeUnit.SECONDS)
+                .filter { b > 0 }
                 .compose(netTf())
                 .subscribe {
                     OrderPendBean.orderPending(currencyId, userId)
@@ -633,8 +638,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                                     currentOrderAdapter.group = it.result
                                     currentOrderLv.adapter = currentOrderAdapter
                                 }
+                                b--
                             }, onError)
                 }
+
     }
 
     private fun getKData() {
@@ -644,16 +651,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun onPause() {
         super.onPause()
-        if (orderDisposable != null && !orderDisposable!!.isDisposed) {
-            orderDisposable?.dispose()
-        }
+
     }
 
     override fun onResume() {
         super.onResume()
         activity!!.bindService(Intent(activity, KLineService::class.java), connection, Context.BIND_AUTO_CREATE)
-        if (currentTransactionPair != null && userBean != null)
-            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+
     }
 
     override fun onDestroy() {

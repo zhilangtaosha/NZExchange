@@ -193,4 +193,12 @@ interface UserService {
             @Field("tokenUserKey") tokenUserKey: String,
             @Field("busflowTag") busflowTag: String
     ): Flowable<Result<Any>>
+
+    //会员注册_验证绑定的登录信息是否已经存在
+    @FormUrlEncoded
+    @POST("manaTokenAllBus/manaTokenUser_isExist.json")
+    fun checkAccount(
+            @Field("userPhone") userPhone: String?,
+            @Field("userEmail") userEmail: String?
+    ): Flowable<Result<Any>>
 }

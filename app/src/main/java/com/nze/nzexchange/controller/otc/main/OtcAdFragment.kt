@@ -17,6 +17,7 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.otc.PublishActivity
+import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
@@ -63,14 +64,25 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
 
-        adAdapter.onClick = { poolId, userId ->
-            cancelNet(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                    .compose(netTfWithDialog())
-                    .subscribe({
-                        showToast(it.message)
-                        if (it.success)
-                            ptrLv.doPullRefreshing(true, 200)
-                    }, onError)
+        adAdapter.onClick = { poolId, userId, transactionType ->
+            if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
+                cancelBuyOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            showToast(it.message)
+                            if (it.success)
+                                ptrLv.doPullRefreshing(true, 200)
+                        }, onError)
+            } else {
+                cancelSaleOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            showToast(it.message)
+                            if (it.success)
+                                ptrLv.doPullRefreshing(true, 200)
+                        }, onError)
+            }
+
         }
 
         rootView.iv_add_ad.setOnClickListener {
@@ -158,17 +170,29 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     }
 
 
-    fun cancelNet(poolId: String,
-                  userId: String,
-                  tokenUserId: String,
-                  tokenUserKey: String
+    fun cancelSaleOrder(poolId: String,
+                        userId: String,
+                        tokenUserId: String,
+                        tokenUserKey: String
     ): Flowable<Result<Boolean>> {
         return Flowable.defer {
             NRetrofit.instance
                     .buyService()
-                    .cancelOrder(poolId, userId, tokenUserId, tokenUserKey)
+                    .cancelSaleOrder(poolId, userId, tokenUserId, tokenUserKey)
         }
     }
 
+    fun cancelBuyOrder(
+            poolId: String,
+            userId: String,
+            tokenUserId: String,
+            tokenUserKey: String
+    ): Flowable<Result<Boolean>> {
+        return Flowable.defer {
+            NRetrofit.instance
+                    .buyService()
+                    .cancelBuyOrder(poolId, userId, tokenUserId, tokenUserKey)
+        }
+    }
 
 }
