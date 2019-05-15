@@ -5,6 +5,8 @@ import android.os.Parcelable
 import com.nze.nzexchange.http.NRetrofit
 import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
+import retrofit2.http.Field
+import retrofit2.http.Query
 
 /**
  * @author: zwy
@@ -28,22 +30,32 @@ data class UserAssetBean(
         /**
          * OTC账户
          */
-        fun getUserAssets(userId: String): Flowable<Result<MutableList<UserAssetBean>>> {
+        fun getUserAssets(
+                userId: String,
+                tokenUserId: String,
+                tokenUserKey: String
+        ): Flowable<Result<MutableList<UserAssetBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .getUserAssets(userId)
+                        .getUserAssets(userId, tokenUserId, tokenUserKey)
             }
         }
 
         /**
          * 币币账户
          */
-        fun assetInquiry(userId: String, tokenId: String? = null, tokenName: String? = null): Flowable<Result<MutableList<UserAssetBean>>> {
+        fun assetInquiry(
+                userId: String,
+                tokenId: String? = null,
+                tokenName: String? = null,
+                tokenUserId: String,
+                tokenUserKey: String
+        ): Flowable<Result<MutableList<UserAssetBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .assetInquiry(userId, tokenId, tokenName)
+                        .assetInquiry(userId, tokenId, tokenName, tokenUserId, tokenUserKey)
             }
         }
     }

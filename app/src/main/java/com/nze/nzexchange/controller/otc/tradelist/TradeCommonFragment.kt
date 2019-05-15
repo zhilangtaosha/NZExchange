@@ -127,10 +127,11 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
             }
             TYPE_COMPLETED, TYPE_CANCEL -> {
                 val item = commonAdapter.getItem(position)
-                startActivity(Intent(activity, TradeCommonDetailActivity::class.java)
-                        .putExtra(PARAM_TYPE, type)
+//                startActivity(Intent(activity, TradeCommonDetailActivity::class.java)
+//                        .putExtra(PARAM_TYPE, type)
+//                        .putExtra(IntentConstant.PARAM_SUBORDERID, item?.suborderId))
+                startActivity(Intent(activity, OtcConfirmActivity::class.java)
                         .putExtra(IntentConstant.PARAM_SUBORDERID, item?.suborderId))
-
             }
 
         }

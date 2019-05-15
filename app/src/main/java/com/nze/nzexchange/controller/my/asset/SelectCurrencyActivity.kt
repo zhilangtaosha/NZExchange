@@ -16,6 +16,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import kotlinx.android.synthetic.main.activity_select_currency.*
 
 /**
@@ -33,6 +34,7 @@ class SelectCurrencyActivity : NBaseActivity() {
     var userBean: UserBean? = UserBean.loadFromApp()
     val userAssetList: MutableList<UserAssetBean> by lazy { mutableListOf<UserAssetBean>() }
     var type: Int = AccountType.BIBI
+    val dialog = AuthorityDialog.getInstance(this)
 
     companion object {
         fun skipForResult(activity: FragmentActivity, type: Int) {
@@ -87,7 +89,7 @@ class SelectCurrencyActivity : NBaseActivity() {
     override fun getContainerTargetView(): View? = null
 
     fun getOtcAsset() {
-        UserAssetBean.getUserAssets(userBean?.userId!!)
+        UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
@@ -96,12 +98,20 @@ class SelectCurrencyActivity : NBaseActivity() {
                             currencyList.add(it.currency)
                             currencyAdapter.group = currencyList
                         }
+                    } else {
+                        if (!dialog.isShow() && it.isCauseNotEmpty()) {
+                            AuthorityDialog.getInstance(this)
+                                    .show("查询资产需要完成以下设置，请检查"
+                                            , it.cause) {
+                                        finish()
+                                    }
+                        }
                     }
                 }, onError)
     }
 
     fun getBibiAsset() {
-        UserAssetBean.assetInquiry(userBean?.userId!!)
+        UserAssetBean.assetInquiry(userBean?.userId!!, tokenUserId = userBean!!.tokenReqVo.tokenUserId, tokenUserKey = userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
@@ -109,6 +119,14 @@ class SelectCurrencyActivity : NBaseActivity() {
                         userAssetList.forEach {
                             currencyList.add(it.currency)
                             currencyAdapter.group = currencyList
+                        }
+                    } else {
+                        if (!dialog.isShow() && it.isCauseNotEmpty()) {
+                            AuthorityDialog.getInstance(this)
+                                    .show("查询资产需要完成以下设置，请检查"
+                                            , it.cause) {
+                                        finish()
+                                    }
                         }
                     }
                 }, onError)

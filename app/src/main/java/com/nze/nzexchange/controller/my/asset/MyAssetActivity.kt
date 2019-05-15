@@ -26,6 +26,7 @@ import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import com.zhuang.zbannerlibrary.ZBanner
@@ -50,6 +51,8 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     val otcList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
     val bibiList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
     var isFirst = true
+
+    val dialog = AuthorityDialog.getInstance(this)
 
     override fun getRootView(): Int = R.layout.activity_my_asset
 
@@ -169,7 +172,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
 
 
     fun getOtcAsset() {
-        UserAssetBean.getUserAssets(userBean?.userId!!)
+        UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
@@ -178,12 +181,20 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                         if (type == AccountType.OTC) {
                             assetAdapter.group = otcList
                         }
+                    }else{
+                        if (!dialog.isShow()&&it.isCauseNotEmpty()) {
+                            AuthorityDialog.getInstance(this)
+                                    .show("查询资产需要完成以下设置，请检查"
+                                            , it.cause) {
+                                        finish()
+                                    }
+                        }
                     }
                 }, onError)
     }
 
     fun getBibiAsset() {
-        UserAssetBean.assetInquiry(userBean?.userId!!)
+        UserAssetBean.assetInquiry(userBean?.userId!!, tokenUserId = userBean!!.tokenReqVo.tokenUserId, tokenUserKey = userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
@@ -191,6 +202,14 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                         bibiList.addAll(it.result)
                         if (type == AccountType.BIBI)
                             assetAdapter.group = bibiList
+                    }else{
+                        if (!dialog.isShow()&&it.isCauseNotEmpty()) {
+                            AuthorityDialog.getInstance(this)
+                                    .show("查询资产需要完成以下设置，请检查"
+                                            , it.cause) {
+                                        finish()
+                                    }
+                        }
                     }
                 }, onError)
     }

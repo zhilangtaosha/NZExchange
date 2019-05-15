@@ -137,6 +137,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                         startActivity(Intent(this@BuyActivity, OtcConfirmActivity::class.java)
                                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
                                                 .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
+                                        finish()
                                     } else {
                                         if (it.isCauseNotEmpty()) {
                                             AuthorityDialog.getInstance(this@BuyActivity)
@@ -160,6 +161,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                         startActivity(Intent(this@BuyActivity, OtcConfirmActivity::class.java)
                                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
                                                 .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
+                                        finish()
                                     } else {
                                         if (it.isCauseNotEmpty()) {
                                             AuthorityDialog.getInstance(this@BuyActivity)

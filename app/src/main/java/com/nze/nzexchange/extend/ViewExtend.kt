@@ -19,6 +19,9 @@ fun View.setBg(drawableId: Int) {
     }
 }
 
+fun View.setBgByColor(colorId: Int) {
+    setBackgroundColor(ContextCompat.getColor(context, colorId))
+}
 
 fun Button.setBgByDrawable(drawable: Drawable) {
     if (Build.VERSION.SDK_INT > 16) {

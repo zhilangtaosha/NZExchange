@@ -12,7 +12,6 @@
         android:id="@+id/topbar_abc"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        app:tb_right_text="交易说明"
         app:tb_title_text="买入UCC" />
 
     <RelativeLayout
@@ -21,7 +20,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/shape_radius_2536_bg"
+        android:background="@color/color_FF181F27"
         android:paddingLeft="9dp"
         android:paddingRight="9dp">
 
@@ -37,7 +36,7 @@
             android:textSize="12sp" />
 
         <ImageView
-            android:id="@+id/tv_order_num_abc"
+            android:id="@+id/iv_copy_abc"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/tv_order_no_abc"
@@ -68,19 +67,17 @@
         android:paddingBottom="8dp">
 
         <TextView
+            style="@style/tx15_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="真实姓名"
-            android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp" />
+            android:text="真实姓名" />
 
         <TextView
             android:id="@+id/tv_name_abc"
+            style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
+            android:layout_marginLeft="14dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -93,19 +90,17 @@
         android:paddingBottom="8dp">
 
         <TextView
+            style="@style/tx15_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="联系方式"
-            android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp" />
+            android:text="联系方式" />
 
         <TextView
             android:id="@+id/tv_phone_abc"
+            style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
+            android:layout_marginLeft="14dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -118,19 +113,17 @@
         android:paddingBottom="8dp">
 
         <TextView
+            style="@style/tx15_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="交易单价"
-            android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp" />
+            android:text="交易单价" />
 
         <TextView
             android:id="@+id/tv_price_abc"
+            style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
+            android:layout_marginLeft="14dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -143,22 +136,21 @@
         android:paddingBottom="8dp">
 
         <TextView
+            style="@style/tx15_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="交易数量"
-            android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp" />
+            android:text="交易数量" />
 
         <TextView
             android:id="@+id/tv_num_abc"
+            style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
+            android:layout_marginLeft="14dp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_money_abc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -168,22 +160,45 @@
         android:paddingBottom="8dp">
 
         <TextView
+            style="@style/tx15_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="交易金额"
-            android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp" />
+            android:text="交易金额" />
 
         <TextView
             android:id="@+id/tv_money_abc"
+            style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
+            android:layout_marginLeft="14dp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_time_abc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            style="@style/tx15_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="下单时间" />
+
+        <TextView
+            android:id="@+id/tv_time_abc"
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_pay_abc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -193,14 +208,13 @@
         android:paddingBottom="8dp">
 
         <TextView
+            style="@style/tx15_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="付款方式:"
-            android:textColor="@color/color_FFA3AAB9"
-            android:textSize="14sp" />
+            android:text="付款方式:" />
 
         <LinearLayout
-            android:id="@+id/layout_pay_abc"
+            android:id="@+id/layout_add_pay_abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -210,60 +224,111 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_message_abc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/shape_radius_line2536_bg"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <TextView
+            style="@style/tx15_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="交易备注:"
-            android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp" />
+            android:text="交易说明" />
 
         <TextView
             android:id="@+id/tv_message_abc"
+            style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="请及时打币"
-            android:textColor="@color/color_FF7F8592"
-            android:textSize="14sp" />
+            android:layout_marginLeft="5dp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_tip_abc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginRight="15dp"
-        android:text="请在0分0秒内完成付款，并点击确认付款，超时将自动取消订单"
-        android:textColor="@color/color_FF7F8592"
-        android:textSize="12sp" />
-
-    <com.nze.nzexchange.widget.CommonButton
-        android:id="@+id/btn_confirm_abc"
+    <LinearLayout
+        android:id="@+id/layout_btn_abc"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginRight="15dp"
-        android:text="确认付款" />
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
-    <TextView
-        android:id="@+id/btn_cancle_abc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:padding="15dp"
-        android:text="取消交易"
-        android:textColor="@color/color_FF6D87A8"
-        android:textSize="14sp" />
+        <Button
+            android:id="@+id/btn_cancle_abc"
+            style="@style/tx16_main"
+            android:layout_width="135dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_line2833"
+            android:text="取消订单"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/view1_abc"
+            android:layout_width="15dp"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/btn_confirm_abc"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/color_ff2b3e55"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/tx16_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="我已付款" />
+
+            <TextView
+                android:id="@+id/tv_clock_abc"
+                style="@style/tx14_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableLeft="@mipmap/clock_icon"
+                android:drawablePadding="5dp"
+                android:text="14:47" />
+
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/btn_complain_abc"
+            style="@style/tx16_hint"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_line2833"
+            android:gravity="center"
+            android:text="申诉"
+            android:textFontWeight="1" />
+
+        <View
+            android:id="@+id/view2_abc"
+            android:layout_width="15dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btn_release_abc"
+            style="@style/tx16_common"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/color_FF1F2833"
+            android:gravity="center"
+            android:text="放币" />
+    </LinearLayout>
+
+
 </LinearLayout>

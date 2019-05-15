@@ -19,7 +19,7 @@ data class SubOrderInfoBean(
         val accmoney: Accmoney?,
         val poolId: String,
         val suborderAmount: Double,
-        val suborderCreateTime: Long,
+        val suborderCreateTime: Long,//下单时间
         val suborderId: String,
         val suborderNum: Double,
         val suborderPayTime: Long,

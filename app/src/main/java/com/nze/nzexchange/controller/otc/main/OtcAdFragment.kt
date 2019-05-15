@@ -40,7 +40,10 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     }
     lateinit var ptrLv: PullToRefreshListView
     var mMainCurrencyBean: MainCurrencyBean? = null
-    var userBean = UserBean.loadFromApp()
+    var userBean: UserBean? = null
+        get() {
+            return UserBean.loadFromApp()
+        }
 
     companion object {
         @JvmStatic

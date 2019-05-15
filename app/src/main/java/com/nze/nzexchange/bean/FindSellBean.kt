@@ -25,7 +25,7 @@ data class FindSellBean(
         val tokenId: String,
         val transactionType: Int,
         val userId: String,
-        val poolSuccessamount: Double
+        val poolSuccessamount: Double//已成交数量
 ) {
     companion object {
         const val TRANSACTIONTYPE_BUY = 0

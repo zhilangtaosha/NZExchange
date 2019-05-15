@@ -261,7 +261,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             if (transactionType == TRANSACTIONTYPE_LIMIT) {
                 getEt.hint = "数量(${currentTransactionPair?.currency})"
             } else {
-                getEt.hint = "数量(${currentTransactionPair?.mainCurrency})"
+                getEt.hint = "交易额(${currentTransactionPair?.mainCurrency})"
             }
         } else {
             buyTv.isSelected = false
@@ -620,21 +620,21 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
      * 获取当前委托
      */
     private fun orderPending(currencyId: String, userId: String?) {
-//        if (orderDisposable != null && !orderDisposable!!.isDisposed) {
-//            orderDisposable?.dispose()
-//        }
-//        orderDisposable = Flowable.interval(3, TimeUnit.SECONDS)
-//                .compose(netTf())
-//                .subscribe {
-        OrderPendBean.orderPending(currencyId, userId)
+        if (orderDisposable != null && !orderDisposable!!.isDisposed) {
+            orderDisposable?.dispose()
+        }
+        orderDisposable = Flowable.interval(3, TimeUnit.SECONDS)
                 .compose(netTf())
-                .subscribe({
-                    if (it.success) {
-                        currentOrderAdapter.group = it.result
-                        currentOrderLv.adapter = currentOrderAdapter
-                    }
-                }, onError)
-//                }
+                .subscribe {
+                    OrderPendBean.orderPending(currencyId, userId)
+                            .compose(netTf())
+                            .subscribe({
+                                if (it.success) {
+                                    currentOrderAdapter.group = it.result
+                                    currentOrderLv.adapter = currentOrderAdapter
+                                }
+                            }, onError)
+                }
     }
 
     private fun getKData() {

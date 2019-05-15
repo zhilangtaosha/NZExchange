@@ -188,7 +188,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 }
 
         changLayout()
-        getBibiAsset()
+        getOtcAsset()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -260,16 +260,28 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 获取发布币种的资产
+     * 获取发布币种的OTC资产
      */
-    fun getBibiAsset() {
-        UserAssetBean.assetInquiry(userBean?.userId!!, tokenName = currency)
+    fun getOtcAsset() {
+        UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
                         val list = it.result
-                        if (list.size > 0)
-                            userAssetBean = list[0]
+                        val filter = list.filter {
+                            it.currency == currency
+                        }
+                        if (filter.size > 0) {
+                            userAssetBean = filter[0]
+                        }
+                    } else {
+                        if (it.isCauseNotEmpty()) {
+                            AuthorityDialog.getInstance(this)
+                                    .show("进行OTC交易需要完成以下设置，请检查"
+                                            , it.cause) {
+                                        finish()
+                                    }
+                        }
                     }
                 }, onError)
     }

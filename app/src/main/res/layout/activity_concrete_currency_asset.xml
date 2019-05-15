@@ -107,7 +107,7 @@
         android:layout_below="@+id/line_acca"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="18dp"
-        android:text="财务记录" />
+        android:text="最近财务记录" />
 
     <LinearLayout
         android:id="@+id/layout_btn_acca"

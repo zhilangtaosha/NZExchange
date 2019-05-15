@@ -87,7 +87,7 @@ interface UserService {
             @Field("userPhone") userPhone: String,
             @Field("userEmail") userEmail: String,
             @Field("userPassworUcode") userPassworUcode: String
-    ): Flowable<Result<FindPasswordBean>>
+    ): Flowable<Result<Any>>
 
 
     //修改密码

@@ -29,6 +29,10 @@ class AuthorityDialog(context: Context) {
         }
     }
 
+    fun isShow(): Boolean {
+        return dialog.isShowing
+    }
+
     fun show(name: String, error: List<ErrorBean>, onClick: (() -> Unit)) {
         dialog = AlertDialog.Builder(context).create()
         dialog.show()

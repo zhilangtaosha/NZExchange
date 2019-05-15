@@ -100,14 +100,20 @@ interface BibiService {
 
     //查询OTC账户资产
     @GET("otc/buy/getAssets")
-    fun getUserAssets(@Query("userId") userId: String): Flowable<Result<MutableList<UserAssetBean>>>
+    fun getUserAssets(
+            @Query("userId") userId: String,
+            @Query("tokenUserId") tokenUserId: String,
+            @Query("tokenUserKey") tokenUserKey: String
+    ): Flowable<Result<MutableList<UserAssetBean>>>
 
     //查询币币账户资产
     @GET("balance/assetInquiry")
     fun assetInquiry(
             @Query("userId") userId: String,
             @Query("tokenId") tokenId: String?,
-            @Query("tokenName") tokenName: String?
+            @Query("tokenName") tokenName: String?,
+            @Query("tokenUserId") tokenUserId: String,
+            @Query("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<MutableList<UserAssetBean>>>
 
     //提币

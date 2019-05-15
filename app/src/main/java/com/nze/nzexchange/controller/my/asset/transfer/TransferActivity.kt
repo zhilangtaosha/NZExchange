@@ -226,49 +226,25 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
     }
 
     fun getAsset() {
-        Flowable.zip(UserAssetBean.getUserAssets(userBean?.userId!!), UserAssetBean.assetInquiry(userBean?.userId!!), object : BiFunction<Result<MutableList<UserAssetBean>>, Result<MutableList<UserAssetBean>>, Boolean> {
-            override fun apply(t1: Result<MutableList<UserAssetBean>>, t2: Result<MutableList<UserAssetBean>>): Boolean {
-                if (t1.success) {
-                    otcList.clear()
-                    otcList.addAll(t1.result)
-                }
-                if (t2.success) {
-                    bibiList.clear()
-                    bibiList.addAll(t2.result)
-                }
-                return true
-            }
-        }).compose(netTfWithDialog())
-                .subscribe({
-
-                }, onError)
-    }
-
-    /**
-     * 获取OTC资产接口
-     */
-    fun getOtcAsset() {
-        UserAssetBean.getUserAssets(userBean?.userId!!)
-                .compose(netTfWithDialog())
-                .subscribe({
-                    if (it.success) {
-                        otcList.clear()
-                        otcList.addAll(it.result)
+        Flowable.zip(
+                UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey),
+                UserAssetBean.assetInquiry(userBean?.userId!!, tokenUserId = userBean!!.tokenReqVo.tokenUserId, tokenUserKey = userBean!!.tokenReqVo.tokenUserKey),
+                object : BiFunction<Result<MutableList<UserAssetBean>>, Result<MutableList<UserAssetBean>>, Boolean> {
+                    override fun apply(t1: Result<MutableList<UserAssetBean>>, t2: Result<MutableList<UserAssetBean>>): Boolean {
+                        if (t1.success) {
+                            otcList.clear()
+                            otcList.addAll(t1.result)
+                        }
+                        if (t2.success) {
+                            bibiList.clear()
+                            bibiList.addAll(t2.result)
+                        }
+                        return true
                     }
-                }, onError)
-    }
-
-    /**
-     * 获取币币资产接口
-     */
-    fun getBibiAsset() {
-        UserAssetBean.assetInquiry(userBean?.userId!!)
-                .compose(netTfWithDialog())
+                }).compose(netTfWithDialog())
                 .subscribe({
-                    if (it.success) {
-                        bibiList.clear()
-                        bibiList.addAll(it.result)
-                    }
+
                 }, onError)
     }
+    
 }

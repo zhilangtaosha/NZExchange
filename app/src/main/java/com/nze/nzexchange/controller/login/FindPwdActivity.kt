@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.login
 
 import android.view.View
+import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
@@ -11,6 +12,7 @@ import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.tools.RegularTool
 import com.nze.nzexchange.validation.EmptyValidation
+import com.nze.nzexchange.validation.PasswordValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
 import com.nze.nzexchange.widget.VerifyButton
@@ -20,13 +22,12 @@ import kotlinx.android.synthetic.main.activity_find_pwd.*
 class FindPwdActivity : NBaseActivity(), View.OnClickListener {
 
 
-    val topBar: CommonTopBar by lazy { ctb_afp }
     val accountEt: ClearableEditText by lazy { et_account_afp }
     val verifyEt: ClearableEditText by lazy { et_verify_afp }
     val verifyBtn: VerifyButton by lazy { tv_verify_afp }
     val pwdEt: ClearableEditText by lazy { et_pwd_afp }
-    val pwdAgainEt: ClearableEditText by lazy { et_pwd_again_afp }
     val confirmBtn: CommonButton by lazy { btn_confirm_afp }
+    val cancelTv: TextView by lazy { tv_cancel_afp }
 
     var checkcodeId: String = ""
 
@@ -34,18 +35,18 @@ class FindPwdActivity : NBaseActivity(), View.OnClickListener {
 
     override fun initView() {
         setWindowStatusBarColor(R.color.color_bg)
-        topBar.setRightClick {
-            this@FindPwdActivity.finish()
-        }
+
 
         confirmBtn.initValidator()
                 .add(accountEt, EmptyValidation())
                 .add(verifyEt, EmptyValidation())
-                .add(pwdEt, EmptyValidation())
-                .add(pwdAgainEt, EmptyValidation())
+                .add(pwdEt, PasswordValidation())
                 .executeValidator()
         verifyBtn.setVerifyClick(this)
         confirmBtn.setOnCommonClick(this)
+        cancelTv.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -82,32 +83,30 @@ class FindPwdActivity : NBaseActivity(), View.OnClickListener {
                         }, onError)
             }
             R.id.btn_confirm_afp -> {
-
-                if (pwdEt.getContent() != pwdAgainEt.getContent()) {
-                    showToast("两次密码不一致")
-                    return
+                if (confirmBtn.validate()) {
+                    val account = accountEt.getContent()
+                    var type = RegularTool.findAccountType(account)
+                    var userPhone = ""
+                    var userEmail = ""
+                    var userPassworUcode = MD5Tool.getMd5_32(pwdEt.getContent())
+                    if (type == RegularTool.ACCOUNT_TYPE_EMAIL) {
+                        userEmail = account
+                    } else {
+                        userPhone = account
+                    }
+                    CRetrofit.instance
+                            .userService()
+                            .findPassword(checkcodeId, verifyEt.getContent(), userPhone, userEmail, userPassworUcode)
+                            .compose(netTfWithDialog())
+                            .subscribe({
+                                if (it.success) {
+                                    showToast("密码重置成功")
+                                    this@FindPwdActivity.finish()
+                                } else {
+                                    showToast(it.message)
+                                }
+                            }, onError)
                 }
-                val account = accountEt.getContent()
-                var type = RegularTool.findAccountType(account)
-                var userPhone = ""
-                var userEmail = ""
-                var userPassworUcode = MD5Tool.getMd5_32(pwdEt.getContent())
-                if (type == RegularTool.ACCOUNT_TYPE_EMAIL) {
-                    userEmail = account
-                } else {
-                    userPhone = account
-                }
-                CRetrofit.instance
-                        .userService()
-                        .findPassword(checkcodeId, verifyEt.getContent(), userPhone, userEmail, userPassworUcode)
-                        .compose(netTfWithDialog())
-                        .subscribe({
-                            showToast(it.message)
-                            if (it.success) {
-                                this@FindPwdActivity.finish()
-                                showToast("密码重置成功")
-                            }
-                        }, onError)
             }
         }
     }

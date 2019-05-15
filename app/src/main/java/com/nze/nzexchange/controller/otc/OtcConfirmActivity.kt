@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.otc
 
 import android.view.View
+import android.widget.*
 import com.jakewharton.rxbinding2.view.RxView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -15,8 +16,12 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.ShowBankPayMethodActivity
 import com.nze.nzexchange.controller.common.ShowImagePayMethodActivity
+import com.nze.nzexchange.extend.setBg
+import com.nze.nzexchange.extend.setBgByColor
+import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.ViewFactory
 import com.nze.nzexchange.widget.CommonTopBar
@@ -33,6 +38,33 @@ import java.util.concurrent.TimeUnit
  * 交易成功
  */
 class OtcConfirmActivity : NBaseActivity() {
+
+
+    private val orderNo: TextView by lazy { tv_order_no_abc }//订单编号
+    private val copyIv: ImageView by lazy { iv_copy_abc }//复制按钮
+    private val statusTv: TextView by lazy { tv_status_abc }//订单状态
+    private val nameTv: TextView by lazy { tv_name_abc }//真实姓名
+    private val phoneTv: TextView by lazy { tv_phone_abc }//联系方式
+    private val priceTv: TextView by lazy { tv_price_abc }//交易单价
+    private val numTv: TextView by lazy { tv_num_abc }//交易数量
+    private val moneyLayout: LinearLayout by lazy { layout_money_abc }//交易金额
+    private val moneyTv: TextView by lazy { tv_money_abc }//交易金额
+    private val timeLayout: LinearLayout by lazy { layout_time_abc }//下单时间
+    private val timeTv: TextView by lazy { tv_time_abc }//下单时间
+    private val payLayout: LinearLayout by lazy { layout_pay_abc }//付款方式外围不加
+    private val addPayLayout: LinearLayout by lazy { layout_add_pay_abc }//付款方式
+    private val messageLayout: LinearLayout by lazy { layout_message_abc }//交易说明
+    private val messageTv: TextView by lazy { tv_message_abc }//交易说明
+    private val btnLayout: LinearLayout by lazy { layout_btn_abc }
+    private val cancelBtn: Button by lazy { btn_cancle_abc }//取消订单按钮
+    private val confirmBtn: RelativeLayout by lazy { btn_confirm_abc }//我已付款按钮
+    private val clockTv: TextView by lazy { tv_clock_abc }//倒计时
+    private val complainBtn: Button by lazy { btn_complain_abc }//申诉按钮
+    private val releaseBtn: Button by lazy { btn_release_abc }//放币按钮
+    private val view1: View by lazy { view1_abc }//放币按钮
+    private val view2: View by lazy { view2_abc }//放币按钮
+
+
     var subOrderInfoBean: SubOrderInfoBean? = null
     var time: Long = 0
     var suborderId: String? = null
@@ -46,9 +78,7 @@ class OtcConfirmActivity : NBaseActivity() {
         (topbar_abc as CommonTopBar).setRightClick {
 
         }
-//        if (subOrderInfoBean != null) {
-//            refreshLayout()
-//        } else {
+
         SubOrderInfoBean.findSubOrderInfoNet(userBean?.userId!!, suborderId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
@@ -56,37 +86,44 @@ class OtcConfirmActivity : NBaseActivity() {
                     refreshLayout()
 
                 }, onError)
-//        }
 
-        RxView.clicks(btn_confirm_abc)
+        RxView.clicks(confirmBtn)
                 .compose(this.bindToLifecycle())
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe {
-                    confirmPay(subOrderInfoBean!!)
+                    //我已付款
+                    pay()
                 }
 
-        RxView.clicks(btn_cancle_abc)
+        RxView.clicks(releaseBtn)
+                .compose(this.bindToLifecycle())
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe {
+                    //放币
+                    release()
+                }
+
+        RxView.clicks(cancelBtn)
                 .compose(this.bindToLifecycle())
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe {
                     cancelNet(subOrderInfoBean!!)
                 }
+
+        RxView.clicks(complainBtn)
+                .compose(this.bindToLifecycle())
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe {
+                }
+
+
     }
 
     fun refreshLayout() {
         subOrderInfoBean?.run {
-            tv_order_no_abc.text = "订单编号:$suborderId"
-            tv_status_abc.text = if (suborderStatus == SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY) {
-//                btn_confirm_abc.text = "确认付款"
-//                tv_message_abc.text = "请及时付款"
-                "待付款"
-            } else {
-
-                tv_tip_abc.visibility = View.INVISIBLE
-                tv_message_abc.text = "请及时放币"
-                "待放币"
-            }
-            var type = ""
+            orderNo.text = "订单编号:$suborderId"
+            var status = "待付款"
+            var message = ""
             var titleContent = ""
 //            if (userBean?.userId!! == userIdSell) {//商家
 //                type = if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//卖币
@@ -116,50 +153,202 @@ class OtcConfirmActivity : NBaseActivity() {
 //                }
 //            }
 
-            if (userBean!!.userId == userIdBu) {//购买
-                titleContent = "买入 ${CurrencyTool.getCurrency(tokenId)}"
-                when (suborderStatus) {
-                    SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY -> {//待付款
+            if (userBean!!.userId == userIdSell) {//商家
+                if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//卖币
+                    titleContent = "卖出${CurrencyTool.getCurrency(tokenId)}"
+                    when (suborderStatus) {
+                        SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY -> {//待付款
+                            status = "待付款"
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
 
+                            cancelBtn.visibility = View.GONE
+                            confirmBtn.visibility = View.GONE
+                            complainBtn.visibility = View.VISIBLE
+                            releaseBtn.visibility = View.VISIBLE
+                            view1.visibility = View.GONE
+                            view2.visibility = View.VISIBLE
+
+                            complainBtn.isClickable = false
+                            releaseBtn.isClickable = false
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_WAIT_RELEASE -> {//待放币
+                            status = "待放币"
+
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+
+                            cancelBtn.visibility = View.GONE
+                            confirmBtn.visibility = View.GONE
+                            complainBtn.visibility = View.VISIBLE
+                            releaseBtn.visibility = View.VISIBLE
+                            view1.visibility = View.GONE
+                            view2.visibility = View.VISIBLE
+
+                            complainBtn.setTxtColor(R.color.color_main)
+                            releaseBtn.setBgByColor(R.color.color_ff2b3e55)
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_COMPLETED -> {//已完成
+                            status = "已完成"
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+                            btnLayout.visibility = View.GONE
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_ACTIVE_CACEL, SubOrderInfoBean.SUBORDERSTATUS_OVERTIME_CACEL -> {//取消
+                            status = "已取消"
+                            moneyLayout.visibility = View.GONE
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+                            btnLayout.visibility = View.GONE
+                        }
                     }
-                    SubOrderInfoBean.SUBORDERSTATUS_WAIT_RELEASE -> {//待放币
+                } else {//买币
+                    titleContent = "买入 ${CurrencyTool.getCurrency(tokenId)}"
+                    when (suborderStatus) {
+                        SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY -> {//待付款
+                            status = "待付款"
+                            message = "下单后极速付款，到账后请及时放币"
+                            cancelBtn.visibility = View.VISIBLE
+                            confirmBtn.visibility = View.VISIBLE
+                            complainBtn.visibility = View.GONE
+                            releaseBtn.visibility = View.GONE
+                            view1.visibility = View.VISIBLE
+                            view2.visibility = View.GONE
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_WAIT_RELEASE -> {//待放币
+                            status = "待放币"
+                            message = "下单后极速付款，到账后请及时放币"
+                            cancelBtn.visibility = View.VISIBLE
+                            confirmBtn.visibility = View.GONE
+                            complainBtn.visibility = View.VISIBLE
+                            releaseBtn.visibility = View.GONE
+                            view1.visibility = View.VISIBLE
+                            view2.visibility = View.GONE
 
-                    }
-                    SubOrderInfoBean.SUBORDERSTATUS_COMPLETED -> {//已完成
+                            complainBtn.setBgByColor(R.color.color_ff2b3e55)
+                            complainBtn.setTxtColor(R.color.color_common)
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_COMPLETED -> {//已完成
+                            status = "已完成"
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+                            btnLayout.visibility = View.GONE
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_ACTIVE_CACEL, SubOrderInfoBean.SUBORDERSTATUS_OVERTIME_CACEL -> {//取消
+                            status = "已取消"
+                            moneyLayout.visibility = View.GONE
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+                            btnLayout.visibility = View.GONE
 
-                    }
-                    SubOrderInfoBean.SUBORDERSTATUS_ACTIVE_CACEL, SubOrderInfoBean.SUBORDERSTATUS_OVERTIME_CACEL -> {//取消
-
+                        }
                     }
                 }
-            } else {//出售
-                titleContent = "卖出${CurrencyTool.getCurrency(tokenId)}"
-                when (suborderStatus) {
-                    SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY -> {//待付款
 
+            } else {//普通用户
+                if (transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
+                    titleContent = "买入 ${CurrencyTool.getCurrency(tokenId)}"
+                    when (suborderStatus) {
+                        SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY -> {//待付款
+                            status = "待付款"
+                            message = "下单后极速付款，到账后请及时放币"
+                            cancelBtn.visibility = View.VISIBLE
+                            confirmBtn.visibility = View.VISIBLE
+                            complainBtn.visibility = View.GONE
+                            releaseBtn.visibility = View.GONE
+                            view1.visibility = View.VISIBLE
+                            view2.visibility = View.GONE
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_WAIT_RELEASE -> {//待放币
+                            status = "待放币"
+                            message = "下单后极速付款，到账后请及时放币"
+                            cancelBtn.visibility = View.VISIBLE
+                            confirmBtn.visibility = View.GONE
+                            complainBtn.visibility = View.VISIBLE
+                            releaseBtn.visibility = View.GONE
+                            view1.visibility = View.VISIBLE
+                            view2.visibility = View.GONE
+
+                            complainBtn.setBgByColor(R.color.color_ff2b3e55)
+                            complainBtn.setTxtColor(R.color.color_common)
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_COMPLETED -> {//已完成
+                            status = "已完成"
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+                            btnLayout.visibility = View.GONE
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_ACTIVE_CACEL, SubOrderInfoBean.SUBORDERSTATUS_OVERTIME_CACEL -> {//取消
+                            status = "已取消"
+                            moneyLayout.visibility = View.GONE
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+                            btnLayout.visibility = View.GONE
+
+                        }
                     }
-                    SubOrderInfoBean.SUBORDERSTATUS_WAIT_RELEASE -> {//待放币
+                } else {//卖币
+                    titleContent = "卖出${CurrencyTool.getCurrency(tokenId)}"
+                    when (suborderStatus) {
+                        SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY -> {//待付款
+                            status = "待付款"
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
 
-                    }
-                    SubOrderInfoBean.SUBORDERSTATUS_COMPLETED -> {//已完成
+                            cancelBtn.visibility = View.GONE
+                            confirmBtn.visibility = View.GONE
+                            complainBtn.visibility = View.VISIBLE
+                            releaseBtn.visibility = View.VISIBLE
+                            view1.visibility = View.GONE
+                            view2.visibility = View.VISIBLE
 
-                    }
-                    SubOrderInfoBean.SUBORDERSTATUS_ACTIVE_CACEL, SubOrderInfoBean.SUBORDERSTATUS_OVERTIME_CACEL -> {//取消
+                            complainBtn.isClickable = false
+                            releaseBtn.isClickable = false
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_WAIT_RELEASE -> {//待放币
+                            status = "待放币"
 
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+
+                            cancelBtn.visibility = View.GONE
+                            confirmBtn.visibility = View.GONE
+                            complainBtn.visibility = View.VISIBLE
+                            releaseBtn.visibility = View.VISIBLE
+                            view1.visibility = View.GONE
+                            view2.visibility = View.VISIBLE
+
+                            complainBtn.setTxtColor(R.color.color_main)
+                            releaseBtn.setBgByColor(R.color.color_ff2b3e55)
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_COMPLETED -> {//已完成
+                            status = "已完成"
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+                            btnLayout.visibility = View.GONE
+                        }
+                        SubOrderInfoBean.SUBORDERSTATUS_ACTIVE_CACEL, SubOrderInfoBean.SUBORDERSTATUS_OVERTIME_CACEL -> {//取消
+                            status = "已取消"
+                            moneyLayout.visibility = View.GONE
+                            payLayout.visibility = View.GONE
+                            messageLayout.visibility = View.GONE
+                            btnLayout.visibility = View.GONE
+                        }
                     }
                 }
             }
 
 
 
-            btn_confirm_abc.text = type
             topbar_abc.setTitle(titleContent)
 
-
+            statusTv.text = status
             tv_price_abc.text = "${suborderPrice}CNY"
             tv_num_abc.text = "${suborderNum}${CurrencyTool.getCurrency(tokenId)}"
             tv_money_abc.text = "${suborderAmount}CNY"
             tv_message_abc.text = remark
+            timeTv.text = TimeTool.format(TimeTool.PATTERN_DEFAULT, suborderCreateTime)
+
             time = suborderOverTime
 
             accmoney
@@ -171,18 +360,18 @@ class OtcConfirmActivity : NBaseActivity() {
                 wechat.setOnClickListener {
                     ShowImagePayMethodActivity.skip(this@OtcConfirmActivity, accmoneyWeixinurl)
                 }
-                layout_pay_abc.addView(wechat)
+                addPayLayout.addView(wechat)
             }
             if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty()) {
                 val zfb = ViewFactory.createPayMehod(R.layout.tv_paymethod_zhifubao)
-                layout_pay_abc.addView(zfb)
+                addPayLayout.addView(zfb)
                 zfb.setOnClickListener {
                     ShowImagePayMethodActivity.skip(this@OtcConfirmActivity, accmoneyZfburl)
                 }
             }
             if (accmoneyBankcard != null && accmoneyBankcard.isNotEmpty()) {
                 val bank = ViewFactory.createPayMehod(R.layout.tv_paymethod_bank)
-                layout_pay_abc.addView(bank)
+                addPayLayout.addView(bank)
                 bank.setOnClickListener {
                     ShowBankPayMethodActivity.skip(this@OtcConfirmActivity, this)
                 }
@@ -193,8 +382,54 @@ class OtcConfirmActivity : NBaseActivity() {
             Flowable.intervalRange(0, time, 0, 1, TimeUnit.SECONDS)
                     .compose(netTf())
                     .subscribe({
-                        tv_tip_abc.text = "请在${TimeTool.formatTime(time - it)}内完成付款，并点击确认付款，超时将自动取消订单"
+                        clockTv.text = "${TimeTool.formatTime(time - it)}"
                     }, onError, {})
+    }
+
+    /**
+     * 付款
+     */
+    fun pay() {
+        if (userBean?.userId!! == subOrderInfoBean!!.userIdSell) {//本人是商家
+            NRetrofit.instance
+                    .sellService()
+                    .confirmReceipt(subOrderInfoBean!!.userIdSell, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .compose(netTf())
+                    .subscribe({
+                        confirm(it)
+                    }, onError)
+        } else {
+            NRetrofit.instance
+                    .buyService()
+                    .confirmReceipt(subOrderInfoBean!!.userIdBu, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .compose(netTf())
+                    .subscribe({
+                        confirm(it)
+                    }, onError)
+        }
+    }
+
+    /**
+     * 收款，放币
+     */
+    fun release() {
+        if (userBean?.userId!! == subOrderInfoBean!!.userIdSell) {//本人是商家
+            NRetrofit.instance
+                    .sellService()
+                    .confirmPayment(subOrderInfoBean!!.userIdBu, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .compose(netTf())
+                    .subscribe({
+                        confirm(it)
+                    }, onError)
+        } else {
+            NRetrofit.instance
+                    .buyService()
+                    .confirmPayment(subOrderInfoBean!!.userIdSell, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .compose(netTf())
+                    .subscribe({
+                        confirm(it)
+                    }, onError)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -264,11 +499,17 @@ class OtcConfirmActivity : NBaseActivity() {
     }
 
     fun confirm(rs: Result<Boolean>) {
-        showToast(rs.message)
         if (rs.success) {
             this@OtcConfirmActivity.finish()
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_CONFIRM_PAY))
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
+        }else{
+            if (rs.isCauseNotEmpty()) {
+                AuthorityDialog.getInstance(this)
+                        .show("OTC交易需要完成以下设置，请检查"
+                                , rs.cause) {
+                        }
+            }
         }
     }
 
