@@ -1,5 +1,7 @@
 package com.nze.nzexchange.controller.my.paymethod
 
+import android.content.Context
+import android.content.Intent
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -41,6 +43,13 @@ class AddBankActivity : NBaseActivity() {
         }
     }
 
+    companion object {
+        fun skip(context: Context, authenticationBean: RealNameAuthenticationBean) {
+            context.startActivity(Intent(context, AddBankActivity::class.java)
+                    .putExtra(IntentConstant.INTENT_REAL_NAME_BEAN, authenticationBean))
+        }
+    }
+
     override fun getRootView(): Int = R.layout.activity_add_card
 
     override fun initView() {
@@ -71,7 +80,7 @@ class AddBankActivity : NBaseActivity() {
                     cartNoValueEt.getContent(),
                     bankValueEt.getContent(),
                     null, null, null, null
-                    , pwd)
+                    , pwd, null, null, null, null, null)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {

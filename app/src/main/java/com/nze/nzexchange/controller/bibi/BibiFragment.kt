@@ -396,6 +396,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                                                 , it.cause) {
 
                                         }
+                            } else {
+                                showToast(it.message)
                             }
                         }
                     }, onError)
@@ -414,6 +416,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                                                 , it.cause) {
 
                                         }
+                            } else {
+                                showToast(it.message)
                             }
                         }
                     }, onError)
@@ -545,8 +549,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             moreTv.text = it.transactionPair
             giveEt.hint = "价格(${it.mainCurrency})"
             giveEt.setText(it.exchangeRate.formatForCurrency())
-            getEt.hint = "数量(${it.currency})"
-
+            if (transactionType == TRANSACTIONTYPE_LIMIT) {
+                getEt.hint = "数量(${currentTransactionPair?.currency})"
+            } else {
+                getEt.hint = "交易额(${currentTransactionPair?.mainCurrency})"
+            }
             currentOrderAdapter.mainCurrency = it.mainCurrency
             currentOrderAdapter.currency = it.currency
 
@@ -597,7 +604,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         }
                         //获取盘口
-                        getKData()
+//                        getKData()
                         //获取交易对的挂单信息
                         RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
                                 .subscribeOn(Schedulers.io())

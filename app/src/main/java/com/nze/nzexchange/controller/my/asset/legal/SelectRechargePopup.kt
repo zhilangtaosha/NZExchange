@@ -10,7 +10,9 @@ import android.widget.ListView
 import android.widget.TextView
 import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.bean2.RechargeModeBean
+import com.nze.nzexchange.controller.my.paymethod.BindRechargeActivity
 import com.nze.nzexchange.tools.dp2px
 
 /**
@@ -25,6 +27,7 @@ class SelectRechargePopup(context: Activity) : BasePopupWindow(context) {
     val addTv: TextView by lazy { findViewById(R.id.tv_add_dsr) as TextView }
 
     val rechargeAdapter: SelectRechargeAdapter by lazy { SelectRechargeAdapter(getContext()) }
+    var onItemClick: ((RechargeModeBean) -> Unit)? = null
 
     init {
         listView.adapter = rechargeAdapter
@@ -34,6 +37,12 @@ class SelectRechargePopup(context: Activity) : BasePopupWindow(context) {
 
         addTv.setOnClickListener {
             context.startActivity(Intent(context, BindRechargeActivity::class.java))
+            dismiss()
+        }
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            onItemClick?.invoke(rechargeAdapter.getItem(position)!!)
+            dismiss()
         }
     }
 

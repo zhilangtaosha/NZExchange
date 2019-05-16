@@ -151,7 +151,7 @@
         <activity android:name=".controller.my.asset.transfer.TransferActivity" />
         <activity android:name=".controller.my.asset.transfer.TransferHistoryActivity" />
         <activity android:name=".controller.my.asset.legal.LegalRechargeActivity" />
-        <activity android:name=".controller.my.asset.legal.BindRechargeActivity" />
+        <activity android:name=".controller.my.paymethod.BindRechargeActivity" />
         <activity android:name=".controller.my.asset.legal.RechargeConfirmActivity" />
         <activity android:name=".controller.my.asset.legal.LegalWithdrawActivity" />
         <activity android:name=".controller.market.OptionalEditActivity" />
@@ -166,7 +166,9 @@
         <activity
             android:name=".controller.common.ShowBankPayMethodActivity"
             android:theme="@style/DialogTheme" />
-        <activity android:name=".controller.my.authentication.AuthenticationFailActivity"></activity>
+        <activity android:name=".controller.my.authentication.AuthenticationFailActivity" />
+        <activity android:name=".controller.my.paymethod.AddBpayActivity" />
+        <activity android:name=".controller.my.paymethod.AddOskoActivity"></activity>
     </application>
 
 </manifest>

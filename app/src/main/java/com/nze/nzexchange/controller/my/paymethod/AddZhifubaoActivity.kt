@@ -190,7 +190,7 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                     accmoneyWeixinurl,
                     accmoneyWeixinacc,
                     accmoneyZfburl,
-                    accmoneyZfbacc, pwd)
+                    accmoneyZfbacc, pwd,null,null,null,null,null)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {

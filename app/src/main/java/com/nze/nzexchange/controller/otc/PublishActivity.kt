@@ -18,6 +18,8 @@ import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.controller.common.AuthorityDialog
+import com.nze.nzexchange.controller.common.CheckPermission
+import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.removeE
 import com.nze.nzexchange.tools.DoubleMath
@@ -47,7 +49,13 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     var priceTag = true
     var numTag = true
     var moneyTag = true
+    val fundPopup: FundPasswordPopup by lazy {
+        FundPasswordPopup(this).apply {
+            onPasswordClick = {
 
+            }
+        }
+    }
 
     override fun getRootView(): Int = R.layout.activity_publish
 
@@ -136,59 +144,63 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 .subscribe {
                     //发布广告
                     if (btn_ap.validate()) {
-                        val money = et_money_value_ap.getContent().toDouble()
-                        if (money < 400.0) {
-                            showToast("最小交易金额为400")
-                            return@subscribe
-                        } else if (money > 100000) {
-                            showToast("最大交易金额为10万")
-                            return@subscribe
-                        }
-
-                        if (currentType == TYPE_SALE) {
-                            submitNet(tokenId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
-                                    .compose(netTfWithDialog())
-                                    .subscribe({
-                                        Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
-                                        if (it.success) {
-                                            this@PublishActivity.finish()
-                                            EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
-                                            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
-                                        } else {
-                                            if (it.isCauseNotEmpty()) {
-                                                AuthorityDialog.getInstance(this)
-                                                        .show("进行OTC交易需要完成以下设置，请检查",
-                                                                it.cause) {
-                                                            finish()
-                                                        }
-                                            }
-                                        }
-                                    }, onError)
-                        } else {
-                            sellNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString(), userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                                    .compose(netTfWithDialog())
-                                    .subscribe({
-                                        Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
-                                        if (it.success) {
-                                            this@PublishActivity.finish()
-                                            EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
-                                            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
-                                        } else {
-                                            if (it.isCauseNotEmpty()) {
-                                                AuthorityDialog.getInstance(this)
-                                                        .show("进行OTC交易需要完成以下设置，请检查",
-                                                                it.cause) {
-                                                            finish()
-                                                        }
-                                            }
-                                        }
-                                    }, onError)
-                        }
+                        fundPopup.showPopupWindow()
                     }
                 }
 
         changLayout()
         getOtcAsset()
+    }
+
+    fun publish(){
+        val money = et_money_value_ap.getContent().toDouble()
+        if (money < 400.0) {
+            showToast("最小交易金额为400")
+            return
+        } else if (money > 100000) {
+            showToast("最大交易金额为10万")
+            return
+        }
+
+        if (currentType == TYPE_SALE) {
+            submitNet(tokenId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
+                        if (it.success) {
+                            this@PublishActivity.finish()
+                            EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
+                            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
+                        } else {
+                            if (it.isCauseNotEmpty()) {
+                                AuthorityDialog.getInstance(this)
+                                        .show("进行OTC交易需要完成以下设置，请检查",
+                                                it.cause) {
+                                            finish()
+                                        }
+                            }
+                        }
+                    }, onError)
+        } else {
+            sellNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString(), userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .compose(netTfWithDialog())
+                    .subscribe({
+                        Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
+                        if (it.success) {
+                            this@PublishActivity.finish()
+                            EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
+                            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
+                        } else {
+                            if (it.isCauseNotEmpty()) {
+                                AuthorityDialog.getInstance(this)
+                                        .show("进行OTC交易需要完成以下设置，请检查",
+                                                it.cause) {
+                                            finish()
+                                        }
+                            }
+                        }
+                    }, onError)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

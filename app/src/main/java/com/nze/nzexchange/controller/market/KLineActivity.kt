@@ -285,7 +285,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 //        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/${pairsBean?.currency?.toLowerCase()}${pairsBean?.mainCurrency?.toLowerCase()}/${userId}/${type}", wsListener)
         socket?.cancel()
         dataType = DATA_TYPE_INIT
-        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/$market", wsListener)
+//        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/$market", wsListener)
+        nWebSocket = NWebSocket.newInstance("ws://18.217.7.30:443/huobikline/exchange", wsListener)
         socket = nWebSocket?.open()
 
     }

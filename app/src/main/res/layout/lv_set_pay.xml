@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="58dp"
     android:paddingLeft="15dp"
-    android:paddingRight="15dp"
-    android:layout_height="58dp">
+    android:paddingRight="15dp">
 
     <ImageView
         android:id="@+id/iv_lsp"
@@ -14,25 +14,23 @@
 
     <TextView
         android:id="@+id/tv_name_lsp"
+        style="@style/tx15_common"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="6dp"
         android:layout_toRightOf="@+id/iv_lsp"
-        android:text="银行卡"
-        android:textColor="@color/color_FFA3AAB9"
-        android:textSize="15sp" />
+        android:text="银行卡" />
 
     <TextView
         android:id="@+id/tv_status_lsp"
+        style="@style/tx14_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:drawableRight="@mipmap/right_arrow"
         android:drawablePadding="8dp"
-        android:text="去设置"
-        android:textColor="@color/color_FF6D87A8"
-        android:textSize="14sp" />
+        android:text="去设置" />
 
 </RelativeLayout>

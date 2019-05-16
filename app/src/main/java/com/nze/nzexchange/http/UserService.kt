@@ -57,7 +57,12 @@ interface UserService {
             @Field("accmoneyWeixinacc") accmoneyWeixinacc: String?,
             @Field("accmoneyZfburl") accmoneyZfburl: String?,
             @Field("accmoneyZfbacc") accmoneyZfbacc: String?,
-            @Field("curBuspwUcode") curBuspwUcode: String?
+            @Field("curBuspwUcode") curBuspwUcode: String?,
+            @Field("accmoneyBpaySn") accmoneyBpaySn: String?,
+            @Field("accmoneyBpayAccount") accmoneyBpayAccount: String?,
+            @Field("accmoneyFrBank") accmoneyFrBank: String?,
+            @Field("accmoneyFrBankcard") accmoneyFrBankcard: String?,
+            @Field("accmoneyFrAccount") accmoneyFrAccount: String?
     ): Flowable<Result<SetPayMethodBean>>
 
     //获取当前用户的收款方式
@@ -201,4 +206,25 @@ interface UserService {
             @Field("userPhone") userPhone: String?,
             @Field("userEmail") userEmail: String?
     ): Flowable<Result<Any>>
+
+    //获取识别码，充值前调用
+    @FormUrlEncoded
+    @POST("sysAllBus/sysSeq/getSeq_withSeqTypeEnumCode_sim5.json")
+    fun getLegalCode(
+            @Field("type") type: String
+    ): Flowable<Result<String>>
+
+
+    fun legalRecharge(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("busicheckBusType") busicheckBusType: String,
+            @Field("checkpayAmt") checkpayAmt: String,
+            @Field("checkpayPlat") checkpayPlat: String,
+            @Field("checkpayDoTime") checkpayDoTime: String,
+            @Field("checkpayAccount") checkpayAccount: String,
+            @Field("checkpayBillno") checkpayBillno: String,
+            @Field("checkpayType") checkpayType: String,
+            @Field("checkpayCode") checkpayCode: String
+    )
 }

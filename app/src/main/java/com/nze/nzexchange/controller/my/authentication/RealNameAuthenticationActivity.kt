@@ -95,8 +95,11 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
     override fun initView() {
         realNameAuthenticationBean = intent.getParcelableExtra<RealNameAuthenticationBean>(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN)
         frontTv.setOnClickListener(this)
+        frontIv.setOnClickListener(this)
         backTv.setOnClickListener(this)
+        backIv.setOnClickListener(this)
         holdTv.setOnClickListener(this)
+        holdIv.setOnClickListener(this)
         submitBtn.setOnCommonClick(this)
     }
 
@@ -124,15 +127,15 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_front_arna -> {
+            R.id.tv_front_arna, R.id.iv_front_arna -> {
                 currentType = TYPE_FRONT
                 selectPhonePopup.showPopupWindow()
             }
-            R.id.tv_back_arna -> {
+            R.id.tv_back_arna, R.id.iv_back_arna -> {
                 currentType = TYPE_BACK
                 selectPhonePopup.showPopupWindow()
             }
-            R.id.tv_hold_arna -> {
+            R.id.tv_hold_arna, R.id.iv_hold_arna -> {
                 currentType = TYPE_HOLD
                 selectPhonePopup.showPopupWindow()
             }
@@ -154,7 +157,7 @@ class RealNameAuthenticationActivity : NBaseActivity(), View.OnClickListener, Ta
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {
-                                realNameAuthenticationBean?.mereallyStatus=101
+                                realNameAuthenticationBean?.mereallyStatus = 101
                                 val intent = Intent(this, AuthenticationHomeActivity::class.java)
                                 intent.putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean)
                                 startActivity(intent)

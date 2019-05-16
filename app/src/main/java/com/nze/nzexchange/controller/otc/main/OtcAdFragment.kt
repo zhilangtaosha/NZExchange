@@ -15,7 +15,9 @@ import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.otc.PublishActivity
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.http.NRetrofit
@@ -86,10 +88,12 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         }
 
         rootView.iv_add_ad.setOnClickListener {
-            startActivity(Intent(activity, PublishActivity::class.java)
-                    .putExtra(IntentConstant.PARAM_TOKENID, mMainCurrencyBean?.tokenId)
-                    .putExtra(IntentConstant.PARAM_CURRENCY, mMainCurrencyBean?.tokenSymbol))
-
+            CheckPermission.getInstance()
+                    .commonCheck(activity as NBaseActivity, CheckPermission.OTC_SEND_ADVERT, onPass = {
+                        startActivity(Intent(activity, PublishActivity::class.java)
+                                .putExtra(IntentConstant.PARAM_TOKENID, mMainCurrencyBean?.tokenId)
+                                .putExtra(IntentConstant.PARAM_CURRENCY, mMainCurrencyBean?.tokenSymbol))
+                    })
         }
 
     }

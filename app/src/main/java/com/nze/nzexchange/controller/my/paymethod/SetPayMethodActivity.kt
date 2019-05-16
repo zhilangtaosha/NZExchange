@@ -84,6 +84,12 @@ class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
                         .putExtra(IntentConstant.PARAM_PAY, IntentConstant.TYPE_WECHAT)
                         .putExtra(IntentConstant.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
             }
+            3 -> {
+                AddBpayActivity.skip(this, realNameAuthenticationBean!!)
+            }
+            4 -> {
+                AddOskoActivity.skip(this, realNameAuthenticationBean!!)
+            }
         }
     }
 
@@ -112,6 +118,10 @@ class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
                                                     list[1].status = "已设置"
                                                 if (!it.accmoneyWeixinurl.isNullOrEmpty())
                                                     list[2].status = "已设置"
+                                                if (!it.accmoneyBpaySn.isNullOrEmpty())
+                                                    list[3].status = "已设置"
+                                                if (!it.accmoneyFrBankcard.isNullOrEmpty())
+                                                    list[4].status = "已设置"
                                                 adapter.group = list
                                             }
                                         }

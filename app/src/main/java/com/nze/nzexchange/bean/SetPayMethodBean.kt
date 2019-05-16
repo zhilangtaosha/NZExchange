@@ -34,7 +34,13 @@ data class SetPayMethodBean(
         val membSn: String?,
         val treeauthCode: String?,
         val treeauthName: String?,
-        val userId: String?
+        val userId: String?,
+        var accmoneyBpaySn: String?,
+        var accmoneyBpayAccount: String?,
+        var accmoneyFrBank: String?,
+        var accmoneyFrBankcard: String?,
+        var accmoneyFrAccount: String?
+
 ) {
     companion object {
         fun setPayMethodNet(
@@ -47,7 +53,12 @@ data class SetPayMethodBean(
                 accmoneyWeixinacc: String?,
                 accmoneyZfburl: String?,
                 accmoneyZfbacc: String?,
-                curBuspwUcode:String?
+                curBuspwUcode: String?,
+                accmoneyBpaySn: String?,
+                accmoneyBpayAccount: String?,
+                accmoneyFrBank: String?,
+                accmoneyFrBankcard: String?,
+                accmoneyFrAccount: String?
         ): Flowable<Result<SetPayMethodBean>> {
             return Flowable.defer {
                 CRetrofit.instance
@@ -61,7 +72,12 @@ data class SetPayMethodBean(
                                 accmoneyWeixinacc,
                                 accmoneyZfburl,
                                 accmoneyZfbacc,
-                                curBuspwUcode)
+                                curBuspwUcode,
+                                accmoneyBpaySn,
+                                accmoneyBpayAccount,
+                                accmoneyFrBank,
+                                accmoneyFrBankcard,
+                                accmoneyFrAccount)
             }
         }
 

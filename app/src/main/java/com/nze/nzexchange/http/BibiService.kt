@@ -163,4 +163,21 @@ interface BibiService {
     //首页热门交易对
     @GET("market/marketPopular")
     fun marketPopular(): Flowable<Result<MutableList<MarketPopularBean>>>
+
+    //添加用户提币地址
+    @FormUrlEncoded
+    @POST("addCoinAddress")
+    fun addCurrencyWithdrawAddress(
+            @Field("userId") userId: String,
+            @Field("address") address: String,
+            @Field("tokenName") tokenName: String
+    ): Flowable<Result<Any>>
+
+    @FormUrlEncoded
+    @POST("getCoinAddress")
+    fun getCurrencyWithdrawAddress(
+            @Field("userId") userId: String,
+            @Field("token") token: String
+    ):Flowable<Result<MutableList<CurrenyWithdrawAddressBean>>>
+
 }

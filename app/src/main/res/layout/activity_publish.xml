@@ -211,7 +211,7 @@
             android:id="@+id/tv_bond_ap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="买单保证金:100USDT"
+            android:text="买单保证金:0"
             android:textColor="@color/color_FF676C7A"
             android:textSize="12sp" />
 
