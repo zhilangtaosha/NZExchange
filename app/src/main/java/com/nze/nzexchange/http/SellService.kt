@@ -26,7 +26,8 @@ interface SellService {
                      @Field("poolPrice") poolPrice: String,
                      @Field("remark") remark: String,
                      @Field("tokenUserId") tokenUserId: String,
-                     @Field("tokenUserKey") tokenUserKey: String
+                     @Field("tokenUserKey") tokenUserKey: String,
+                     @Field("curBuspwUcode") curBuspwUcode: String
     ): Flowable<Result<Boolean>>
 
 
@@ -39,7 +40,8 @@ interface SellService {
                      @Field("suborderNum") suborderNum: String,
                      @Field("tokenId") tokenId: String,
                      @Field("tokenUserId") tokenUserId: String,
-                     @Field("tokenUserKey") tokenUserKey: String
+                     @Field("tokenUserKey") tokenUserKey: String,
+                     @Field("curBuspwUcode") curBuspwUcode: String
     ): Flowable<Result<SubOrderInfoBean>>
 
     //出售列表

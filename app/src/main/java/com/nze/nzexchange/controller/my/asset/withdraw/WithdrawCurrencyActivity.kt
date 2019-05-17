@@ -16,9 +16,11 @@ import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
+import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.getContent
@@ -69,6 +71,16 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
     val VERIFY_PHONE = 0
     val VERIFY_EMAIL = 1
     var verifyType = VERIFY_PHONE
+    var verifyAccount: String? = null//发送验证码的账号
+    var checkcodeId: String? = null
+
+    val fundPopup: FundPasswordPopup by lazy {
+        FundPasswordPopup(this).apply {
+            onPasswordClick = {
+                sendTransaction(it)
+            }
+        }
+    }
 
     override fun getRootView(): Int = R.layout.activity_coin_withdraw
 
@@ -85,9 +97,11 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             if (!it.userPhone.isNullOrEmpty()) {
                 verifyKeyTv.text = "短信验证"
                 verifyValueEt.hint = "请输入手机短信验证码"
+                verifyAccount = it.userPhone
             } else {
                 verifyKeyTv.text = "邮箱验证"
                 verifyValueEt.hint = "请输入邮箱证码"
+                verifyAccount = it.userEmail
             }
         }
 
@@ -145,10 +159,18 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 amountEt.setText(userAssetBean?.available?.formatForCurrency())
             }
             R.id.btn_verify_acw -> {
-                verifyBtn.startVerify()
+                VerifyBean.getVerifyCodeNet(verifyAccount!!, VerifyBean.TYPE_COMMON)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                verifyBtn.startVerify()
+                                checkcodeId = it.result.checkcodeId
+                                showToast("验证码已经发送到$verifyAccount")
+                            }
+                        }, onError)
             }
             R.id.btn_withdraw_acw -> {
-                sendTransaction()
+                fundPopup.showPopupWindow()
             }
         }
     }
@@ -233,7 +255,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
     }
 
 
-    fun sendTransaction() {
+    fun sendTransaction(pwd: String) {
         val address = addressEt.getContent()
         val amount = amountEt.getContent()
         if (address.isNullOrEmpty()) {
@@ -246,9 +268,14 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             amountEt.requestFocus()
             return
         }
+        if (checkcodeId.isNullOrEmpty()) {
+            showToast("请获取验证码")
+            verifyValueEt.setText("")
+            return
+        }
         NRetrofit.instance
                 .bibiService()
-                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd, verifyValueEt.getContent())
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {

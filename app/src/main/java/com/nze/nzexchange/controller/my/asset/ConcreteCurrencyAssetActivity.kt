@@ -10,22 +10,20 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.FinancialRecordBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean2.ConcreteAssetBean
 import com.nze.nzexchange.config.AccountType
-import com.nze.nzexchange.config.BusFlowTag
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
-import com.nze.nzexchange.controller.common.AuthorityDialog
+import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.controller.my.asset.recharge.RechargeCurrencyActivity
 import com.nze.nzexchange.controller.my.asset.transfer.TransferActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency
-import com.nze.nzexchange.http.CRetrofit
-import com.nze.nzexchange.http.CommonRequest
 import kotlinx.android.synthetic.main.activity_concrete_currency_asset.*
 import org.greenrobot.eventbus.EventBus
 
@@ -89,13 +87,13 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
         }
 
         listView.adapter = concreteAdapter
-        concreteAdapter.group = ConcreteAssetBean.getList()
 
         rechargeBtn.setOnClickListener(this)
         withdrawBtn.setOnClickListener(this)
         transferBtn.setOnClickListener(this)
         tradeBtn.setOnClickListener(this)
         swithLayout(type)
+        getFinancialRecord()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -121,11 +119,18 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_recharge_acca -> {//去充值
-                busCheck()
+                CheckPermission.getInstance()
+                        .commonCheck(this, CheckPermission.CURRENCY_RECHARGE, "充币需要完成以下设置，请检查", onPass = {
+                            startActivity(Intent(this@ConcreteCurrencyAssetActivity, RechargeCurrencyActivity::class.java)
+                                    .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
+                        })
             }
             R.id.btn_withdraw_acca -> {//去提币
-                startActivity(Intent(this@ConcreteCurrencyAssetActivity, WithdrawCurrencyActivity::class.java)
-                        .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
+                CheckPermission.getInstance()
+                        .commonCheck(this, CheckPermission.BIACC_GET, "提币需要完成以下设置，请检查", onPass = {
+                            startActivity(Intent(this@ConcreteCurrencyAssetActivity, WithdrawCurrencyActivity::class.java)
+                                    .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
+                        })
             }
             R.id.btn_transfer_acca -> {//去划转
                 TransferActivity.skip(this, bundle!!)
@@ -171,22 +176,15 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
         return o && b
     }
 
-    //权限判断
-    fun busCheck() {
-        CommonRequest.busCheck(userBean!!, BusFlowTag.CURRENCY_RECHARGE)
+    //获取最近财务记录
+    fun getFinancialRecord() {
+        FinancialRecordBean.getFinancialRecord(userBean!!.userId, userAssetBean!!.currency)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-                        startActivity(Intent(this@ConcreteCurrencyAssetActivity, RechargeCurrencyActivity::class.java)
-                                .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
-                    } else {
-                        if (it.cause != null && it.cause.size > 0) {
-                            AuthorityDialog.getInstance(this)
-                                    .show("提币需要完成以下设置，请检查",
-                                            it.cause) {
-                                    }
-                        }
+                        concreteAdapter.group = it.result
                     }
                 }, onError)
     }
+
 }

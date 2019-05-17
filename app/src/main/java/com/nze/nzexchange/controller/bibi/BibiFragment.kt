@@ -24,11 +24,15 @@ import com.nze.nzexchange.bean.RestOrderBean.Companion.getPendingOrderInfo
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.KLineParam
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.AuthorityDialog
+import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.common.CommonListPopup
+import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
+import com.nze.nzexchange.controller.otc.PublishActivity
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.HttpConfig
 import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
@@ -181,7 +185,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     var binder: KLineService.KBinder? = null
     var isBinder = false
     val mHandler: Handler = Handler()
-    var isSeek = true
+
+    val fundPopup: FundPasswordPopup by lazy {
+        FundPasswordPopup(activity!!).apply {
+            onPasswordClick = {
+                btnHandler(userBean!!, getEt.getContent().toDouble(), giveEt.getContent().toDouble(), it)
+            }
+        }
+    }
 
     companion object {
         @JvmStatic
@@ -214,25 +225,29 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         currentOrderLv.adapter = currentOrderAdapter
 
 
+        RxTextView.textChanges(giveEt)
+                .subscribe {
+                    val get = getEt.getContent()
+                    if (it.isNotEmpty() && get.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
+                        val input = it.toString().toDouble()
+                        val price = get.toDouble()
+                        val total = input * price
+                        totalTransactionTv.text = "交易额 ${total.retain4ByUp()} ${currentTransactionPair?.mainCurrency}"
+                    } else if ((it.isNullOrEmpty() || get.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
+                        totalTransactionTv.text = "交易额 0 ${currentTransactionPair?.mainCurrency}"
+                    }
+                }
+
         RxTextView.textChanges(getEt)
                 .subscribe {
-                    if (it.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
+                    val give = giveEt.getContent()
+                    if (it.isNotEmpty() && give.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
                         val input = it.toString().toDouble()
-                        val price = giveEt.getContent().toDouble()
+                        val price = give.toDouble()
                         val total = input * price
-//                        if (restOrderBean != null && restOrderBean!!.mainCurrency != null && input != 0.0) {
-//                            if (currentType == TYPE_BUY) {
-//                                var rate = (total / restOrderBean!!.mainCurrency!!.available) * 100
-//                                seekbarValueTv.text = "${rate.retain2()}%"
-//                                buyIsb.setProgress(rate.toFloat())
-//
-//                            } else {
-//                                var rate = (input / restOrderBean!!.currency!!.available) * 100
-//                                seekbarValueTv.text = "${rate.retain2()}%"
-//                                saleIsb.setProgress(rate.toFloat())
-//                            }
-//                        }
                         totalTransactionTv.text = "交易额 ${total.retain4ByUp()} ${currentTransactionPair?.mainCurrency}"
+                    } else if ((it.isNullOrEmpty() || give.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
+                        totalTransactionTv.text = "交易额 0${currentTransactionPair?.mainCurrency}"
                     } else if (it.isNotEmpty() && transactionType == TRANSACTIONTYPE_MARKET) {
                         val input = it.toString().toDouble()
                         totalTransactionTv.text = "交易额 ${input.retain4ByUp()} ${currentTransactionPair?.mainCurrency}"
@@ -360,16 +375,19 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     skipActivity(LoginActivity::class.java)
                     return
                 }
-                var price = 0.0
                 if (transactionType == TRANSACTIONTYPE_LIMIT) {
                     if (!checkPrice()) return
-                    price = giveEt.getContent().toDouble()
                 }
                 if (!checkNum()) {
                     showToast("请填写交易数量")
                     return
                 }
-                btnHandler(userBean!!, getEt.getContent().toDouble(), price)
+                CheckPermission.getInstance()
+                        .commonCheck(activity as NBaseActivity, CheckPermission.BIBI_TRADE, "进行币币交易需要完成以下设置，请检查", onPass = {
+                            fundPopup.showPopupWindow()
+                        })
+
+
             }
             R.id.iv_kline_bibi -> {
                 startActivity(Intent(activity, KLineActivity::class.java).putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, currentTransactionPair))
@@ -380,9 +398,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     /**
      * 下单：买入和出售
      */
-    fun btnHandler(user: UserBean, number: Double, price: Double) {
+    fun btnHandler(user: UserBean, number: Double, price: Double, pwd: String) {
         if (transactionType == TRANSACTIONTYPE_LIMIT) {//限价交易
-            LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble(), user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey)
+            LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble(), user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey, pwd)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
@@ -390,19 +408,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             getPendingOrderInfo(currentTransactionPair?.id!!)
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
-                            if (it.isCauseNotEmpty()) {
-                                AuthorityDialog.getInstance(activity!!)
-                                        .show("进行币币交易需要完成以下设置，请检查"
-                                                , it.cause) {
-
-                                        }
-                            } else {
-                                showToast(it.message)
-                            }
+                            showToast(it.message)
                         }
                     }, onError)
         } else {//市价交易
-            LimitTransactionBean.marketTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey)
+            LimitTransactionBean.marketTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey, pwd)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
@@ -410,15 +420,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             getPendingOrderInfo(currentTransactionPair?.id!!)
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
-                            if (it.isCauseNotEmpty()) {
-                                AuthorityDialog.getInstance(activity!!)
-                                        .show("进行币币交易需要完成以下设置，请检查"
-                                                , it.cause) {
+                            showToast(it.message)
 
-                                        }
-                            } else {
-                                showToast(it.message)
-                            }
                         }
                     }, onError)
         }
@@ -427,7 +430,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     fun checkNum(): Boolean {
         val s = getEt.getContent()
-        if (s.isNullOrEmpty()) {
+        if (s.isNullOrEmpty() || (s.isNotEmpty() && s.toDouble() <= 0)) {
             getEt.requestFocus()
             return false
         }
@@ -438,6 +441,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         var s = giveEt.getContent()
         if (s.isNullOrEmpty()) {
             giveEt.requestFocus()
+            showToast("请输入价格")
             return false
         }
 
@@ -510,12 +514,20 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             getEt.requestFocus()
         if (currentType == TYPE_BUY) {
             if (transactionType == TRANSACTIONTYPE_LIMIT && restOrderBean != null && restOrderBean!!.mainCurrency != null) {
-                val price = giveEt.getContent().toDouble()
-                val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
-                val input = total / price
-                val s = input.retain4ByFloor()
-                getEt.setText(s)
-                getEt.setSelection(s.length)
+                val give = giveEt.getContent()
+                if (give.isNotEmpty()) {
+                    val price = give.toDouble()
+                    val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
+                    if (price > 0) {
+                        val input = total / price
+                        val s = input.retain4ByFloor()
+                        getEt.setText(s)
+                        getEt.setSelection(s.length)
+                    } else {
+                        getEt.setText("0")
+                        getEt.setSelection(1)
+                    }
+                }
             } else if (transactionType == TRANSACTIONTYPE_MARKET && restOrderBean != null && restOrderBean!!.mainCurrency != null) {
                 val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
                 val s = total.retain4ByFloor()

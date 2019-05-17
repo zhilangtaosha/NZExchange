@@ -1,5 +1,10 @@
 package com.nze.nzexchange.bean
 
+import com.nze.nzexchange.http.CRetrofit
+import com.nze.nzexchange.http.NRetrofit
+import io.reactivex.Flowable
+import retrofit2.http.Field
+
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
@@ -38,7 +43,37 @@ data class LegalRechargeBean(
         val userIdAudit: Any
 ) {
     companion object {
+        val TYPE_BPAY = "bpay转账"
+        val TYPE_BANK = "银行卡转账"
+        val TYPE_OSKO = "澳洲银行卡 osko 转账"
 
+
+        fun getLegalCode(): Flowable<Result<String>>{
+            return Flowable.defer {
+                CRetrofit.instance
+                        .userService()
+                        .getLegalCode(" PD")
+            }
+        }
+
+
+        fun legalRecharge(
+                userBean: UserBean,
+                checkpayAmt: String,
+                checkpayPlat: String?,
+                checkpayDoTime: String?,
+                checkpayAccount: String?,
+                checkpayBillno: String?,
+                checkpayType: String,
+                checkpayCode: String
+        ): Flowable<Result<LegalRechargeBean>> {
+            return Flowable.defer {
+                CRetrofit.instance
+                        .userService()
+                        .legalRecharge(userBean.tokenReqVo.tokenUserId, userBean.tokenReqVo.tokenUserKey, "accPay", checkpayAmt, checkpayPlat, checkpayDoTime, checkpayAccount, checkpayBillno, checkpayType, checkpayCode)
+
+            }
+        }
     }
 }
 

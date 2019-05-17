@@ -214,17 +214,25 @@ interface UserService {
             @Field("type") type: String
     ): Flowable<Result<String>>
 
-
+    //法币充值
+    @FormUrlEncoded
+    @POST("amtRunBus/amtCheckpay/saveOneDataVo_amtCheckpay_curToken.json")
     fun legalRecharge(
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String,
             @Field("busicheckBusType") busicheckBusType: String,
             @Field("checkpayAmt") checkpayAmt: String,
-            @Field("checkpayPlat") checkpayPlat: String,
-            @Field("checkpayDoTime") checkpayDoTime: String,
-            @Field("checkpayAccount") checkpayAccount: String,
-            @Field("checkpayBillno") checkpayBillno: String,
+            @Field("checkpayPlat") checkpayPlat: String?,
+            @Field("checkpayDoTime") checkpayDoTime: String?,
+            @Field("checkpayAccount") checkpayAccount: String?,
+            @Field("checkpayBillno") checkpayBillno: String?,
             @Field("checkpayType") checkpayType: String,
             @Field("checkpayCode") checkpayCode: String
-    )
+    ): Flowable<Result<LegalRechargeBean>>
+
+    //获取公司收款方式
+    @GET("tempRunBus/tempCont/listSimp_cont_byPositionCode_t.json")
+    fun getCompanyPaymethod(
+            @Query("parentPositionId") parentPositionId: String
+    ): Flowable<Result<MutableList<CompanyPaymentBean>>>
 }

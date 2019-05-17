@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.otc.main
 
 import android.content.Context
 import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -14,7 +15,9 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.BaseAda
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.otc.BuyActivity
+import com.nze.nzexchange.controller.otc.PublishActivity
 import com.nze.nzexchange.extend.setBg
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.ViewFactory
@@ -45,7 +48,7 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
         val item = getItem(position)
         vh.payLayout.removeAllViews()
         item?.let {
-            vh.nameTv.text = it.nick
+
             vh.orderNumTv.text = "${it.totalOrder}单"
             vh.limitTv.text = "限额：${it.poolMinamount}-${it.poolMaxamount}CNY"
             vh.priceTv.text = "¥${it.poolPrice}"
@@ -53,6 +56,7 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
 
             it.accmoney
         }?.run {
+            vh.nameTv.text = trueName
             if (accmoneyWeixinurl != null && accmoneyWeixinurl.isNotEmpty())
                 vh.payLayout.addView(ViewFactory.createLeftPayMethod(R.mipmap.wechat_icon))
             if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty())
@@ -64,9 +68,19 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
         vh.btn.setOnClickListener {
             if (UserBean.isLogin(mContext)) {
                 if (UserBean.loadFromApp()?.userId != item?.userId) {
-                    mContext.startActivity(Intent(mContext, BuyActivity::class.java)
-                            .putExtra(OtcContentFragment.PARAM_TYPE, type)
-                            .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
+                    if (type == OtcContentFragment.TYPE_BUY) {
+                        mContext.startActivity(Intent(mContext, BuyActivity::class.java)
+                                .putExtra(OtcContentFragment.PARAM_TYPE, type)
+                                .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
+                    } else {
+                        CheckPermission.getInstance()
+                                .commonCheck(mContext as NBaseActivity, CheckPermission.OTC_COMM_TRADE_BUY, "OTC购买需要完成以下设置，请检查", onPass = {
+                                    mContext.startActivity(Intent(mContext, BuyActivity::class.java)
+                                            .putExtra(OtcContentFragment.PARAM_TYPE, type)
+                                            .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
+                                })
+                    }
+
                 } else {
                     (mContext as NBaseActivity).showToast("不能与自己交易哦~")
                 }

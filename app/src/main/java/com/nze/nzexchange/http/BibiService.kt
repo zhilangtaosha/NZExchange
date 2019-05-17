@@ -62,7 +62,8 @@ interface BibiService {
             @Field("number") number: Double,
             @Field("price") price: Double,
             @Field("tokenUserId") tokenUserId: String,
-            @Field("tokenUserKey") tokenUserKey: String
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("curBuspwUcode") curBuspwUcode: String
     ): Flowable<Result<LimitTransactionBean>>
 
 
@@ -75,7 +76,8 @@ interface BibiService {
             @Field("currencyId") currencyId: String,
             @Field("number") number: Double,
             @Field("tokenUserId") tokenUserId: String,
-            @Field("tokenUserKey") tokenUserKey: String
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("curBuspwUcode") curBuspwUcode: String
     ): Flowable<Result<LimitTransactionBean>>
 
     //查询未执行订单列表
@@ -127,7 +129,9 @@ interface BibiService {
             @Field("password") password: String,
             @Field("remark") remark: String?,
             @Field("tokenUserId") tokenUserId: String,
-            @Field("tokenUserKey") tokenUserKey: String
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("curBuspwUcode") curBuspwUcode: String,
+            @Field("checkcodeVal") checkcodeVal: String
     ): Flowable<Result<String>>
 
 
@@ -178,6 +182,14 @@ interface BibiService {
     fun getCurrencyWithdrawAddress(
             @Field("userId") userId: String,
             @Field("token") token: String
-    ):Flowable<Result<MutableList<CurrenyWithdrawAddressBean>>>
+    ): Flowable<Result<MutableList<CurrenyWithdrawAddressBean>>>
 
+    //财务记录
+    @GET("assets/getFinancialRecord")
+    fun getFinancialRecord(
+            @Query("userId") userId: String,
+            @Query("token") token: String,
+            @Query("pageNumber") pageNumber: Int?,
+            @Query("pageSize") pageSize: Int?
+    ): Flowable<Result<MutableList<FinancialRecordBean>>>
 }

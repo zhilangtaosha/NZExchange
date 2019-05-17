@@ -61,7 +61,7 @@ class PayMethodPresenter(activity: NBaseActivity, mIView: PayMethodView) : BaseA
      */
     fun getAllPayMethod(userBean: UserBean, onSuccessRs: OnSuccessRs<SetPayMethodBean>, onError: OnErrorRs) {
         SetPayMethodBean.getPayMethodNet(userBean.tokenReqVo.tokenUserId, userBean.tokenReqVo.tokenUserKey, userBean.tokenReqVo.tokenSystreeId)
-                .compose(getAct().netTf())
+                .compose(getAct().netTfWithDialog())
                 .subscribe(onSuccessRs,onError)
     }
 }

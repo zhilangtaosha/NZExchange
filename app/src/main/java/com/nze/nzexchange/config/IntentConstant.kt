@@ -19,6 +19,8 @@ class IntentConstant {
         const val PARAM_IMAGE_PATH = "imagePath"
         const val PARAM_VIDEO_PATH = "videoPath"
         const val PARAM_TYPE = "type"
+        const val PARAM_AMOUNT = "amount"
+        const val PARAM_CODE = "code"
         const val PARAM_OTC_ACCOUNT = "otcAccount"
         const val PARAM_BIBI_ACCOUNT = "bibAccount"
         const val PARAM_BUNDLE = "bundle"

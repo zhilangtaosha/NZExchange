@@ -24,7 +24,8 @@ interface BuyService {
                      @Field("poolPrice") poolPrice: String,
                      @Field("remark") remark: String,
                      @Field("tokenUserId") tokenUserId: String,
-                     @Field("tokenUserKey") tokenUserKey: String
+                     @Field("tokenUserKey") tokenUserKey: String,
+                     @Field("curBuspwUcode") curBuspwUcode: String
     ): Flowable<Result<Boolean>>
 
     //OTC购买列表

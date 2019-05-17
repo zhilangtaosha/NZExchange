@@ -29,6 +29,7 @@ class FundPasswordPopup(context: Activity) : BasePopupWindow(context) {
 
     init {
         cancelTv.setOnClickListener {
+            passwordEt.setText("")
             dismiss()
         }
         confirmBtn.initValidator()
@@ -37,6 +38,7 @@ class FundPasswordPopup(context: Activity) : BasePopupWindow(context) {
         confirmBtn.setOnCommonClick {
             val pwd = MD5Tool.getMd5_32(passwordEt.getContent())
             onPasswordClick?.invoke(pwd)
+            passwordEt.setText("")
             dismiss()
         }
     }

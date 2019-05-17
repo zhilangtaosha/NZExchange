@@ -201,7 +201,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:hint="请输入手机短信验证码"
-                    android:inputType="text" />
+                    android:inputType="number" />
 
                 <com.nze.nzexchange.widget.VerifyButton
                     android:id="@+id/btn_verify_acw"

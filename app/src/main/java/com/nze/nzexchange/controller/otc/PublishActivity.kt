@@ -52,7 +52,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     val fundPopup: FundPasswordPopup by lazy {
         FundPasswordPopup(this).apply {
             onPasswordClick = {
-
+                publish(it)
             }
         }
     }
@@ -152,7 +152,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
         getOtcAsset()
     }
 
-    fun publish(){
+    fun publish(pwd: String) {
         val money = et_money_value_ap.getContent().toDouble()
         if (money < 400.0) {
             showToast("最小交易金额为400")
@@ -163,7 +163,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
         }
 
         if (currentType == TYPE_SALE) {
-            submitNet(tokenId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString())
+            submitNet(tokenId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString(), pwd)
                     .compose(netTfWithDialog())
                     .subscribe({
                         Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
@@ -172,17 +172,11 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                             EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
                             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
                         } else {
-                            if (it.isCauseNotEmpty()) {
-                                AuthorityDialog.getInstance(this)
-                                        .show("进行OTC交易需要完成以下设置，请检查",
-                                                it.cause) {
-                                            finish()
-                                        }
-                            }
+                            showToast(it.message)
                         }
                     }, onError)
         } else {
-            sellNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString(), userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+            sellNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString(), userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd)
                     .compose(netTfWithDialog())
                     .subscribe({
                         Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
@@ -191,13 +185,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                             EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_PULISH, true))
                             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
                         } else {
-                            if (it.isCauseNotEmpty()) {
-                                AuthorityDialog.getInstance(this)
-                                        .show("进行OTC交易需要完成以下设置，请检查",
-                                                it.cause) {
-                                            finish()
-                                        }
-                            }
+                            showToast(it.message)
                         }
                     }, onError)
         }
@@ -248,11 +236,11 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
         }
     }
 
-    fun submitNet(tokenId: String, poolAllCount: String, poolPrice: String, remark: String): Flowable<Result<Boolean>> {
+    fun submitNet(tokenId: String, poolAllCount: String, poolPrice: String, remark: String, curBuspwUcode: String): Flowable<Result<Boolean>> {
         return Flowable.defer {
             NRetrofit.instance
                     .buyService()
-                    .pendingOrder(userBean!!.userId, tokenId, poolAllCount, poolPrice, remark, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .pendingOrder(userBean!!.userId, tokenId, poolAllCount, poolPrice, remark, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, curBuspwUcode)
         }
     }
 
@@ -262,12 +250,13 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                 poolPrice: String,
                 remark: String,
                 tokenUserId: String,
-                tokenUserKey: String
+                tokenUserKey: String,
+                curBuspwUcode: String
     ): Flowable<Result<Boolean>> {
         return Flowable.defer {
             NRetrofit.instance
                     .sellService()
-                    .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark, tokenUserId, tokenUserKey)
+                    .pendingOrder(userId, tokenId, poolAllCount, poolPrice, remark, tokenUserId, tokenUserKey, curBuspwUcode)
         }
     }
 

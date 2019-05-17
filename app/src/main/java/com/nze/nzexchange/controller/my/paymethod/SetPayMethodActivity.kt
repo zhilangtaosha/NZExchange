@@ -11,13 +11,10 @@ import com.nze.nzexchange.bean.PayMethodBean
 import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.bean.UserBean
-import com.nze.nzexchange.config.BusFlowTag
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
-import com.nze.nzexchange.controller.common.AuthorityDialog
-import com.nze.nzexchange.controller.my.asset.recharge.RechargeCurrencyActivity
+import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
-import com.nze.nzexchange.http.CommonRequest
 import kotlinx.android.synthetic.main.activity_set_pay_method.*
 
 /**
@@ -99,43 +96,34 @@ class SetPayMethodActivity : NBaseActivity(), AdapterView.OnItemClickListener {
      * 没有权限，通知用户，并关闭当前页
      */
     fun busCheck() {
-        CommonRequest.busCheck(userBean!!, BusFlowTag.SET_PAY_METHOD)
-                .compose(netTfWithDialog())
-                .subscribe({
-                    if (it.success) {
-                        userBean = userBean?.apply {
-                            SetPayMethodBean.getPayMethodNet(tokenReqVo.tokenUserId, tokenReqVo.tokenUserKey, tokenReqVo.tokenSystreeId)
-                                    .compose(netTfWithDialog())
-                                    .subscribe({
-                                        if (it.success) {
-                                            val methodBean: SetPayMethodBean = it.result
-                                            this.payMethod = methodBean
-                                            NzeApp.instance.userBean = this
-                                            methodBean?.let {
-                                                if (!it.accmoneyBankcard.isNullOrEmpty())
-                                                    list[0].status = "已设置"
-                                                if (!it.accmoneyZfburl.isNullOrEmpty())
-                                                    list[1].status = "已设置"
-                                                if (!it.accmoneyWeixinurl.isNullOrEmpty())
-                                                    list[2].status = "已设置"
-                                                if (!it.accmoneyBpaySn.isNullOrEmpty())
-                                                    list[3].status = "已设置"
-                                                if (!it.accmoneyFrBankcard.isNullOrEmpty())
-                                                    list[4].status = "已设置"
-                                                adapter.group = list
-                                            }
+        CheckPermission.getInstance()
+                .commonCheck(this, CheckPermission.SET_PAY_METHOD, "设置收款方式需要完成以下设置，请检查", onPass = {
+                    userBean = userBean?.apply {
+                        SetPayMethodBean.getPayMethodNet(tokenReqVo.tokenUserId, tokenReqVo.tokenUserKey, tokenReqVo.tokenSystreeId)
+                                .compose(netTfWithDialog())
+                                .subscribe({
+                                    if (it.success) {
+                                        val methodBean: SetPayMethodBean = it.result
+                                        this.payMethod = methodBean
+                                        NzeApp.instance.userBean = this
+                                        methodBean?.let {
+                                            if (!it.accmoneyBankcard.isNullOrEmpty())
+                                                list[0].status = "已设置"
+                                            if (!it.accmoneyZfburl.isNullOrEmpty())
+                                                list[1].status = "已设置"
+                                            if (!it.accmoneyWeixinurl.isNullOrEmpty())
+                                                list[2].status = "已设置"
+                                            if (!it.accmoneyBpaySn.isNullOrEmpty())
+                                                list[3].status = "已设置"
+                                            if (!it.accmoneyFrBankcard.isNullOrEmpty())
+                                                list[4].status = "已设置"
+                                            adapter.group = list
                                         }
-                                    }, onError)
-                        }
-                    } else {
-                        if (it.cause != null && it.cause.size > 0) {
-                            AuthorityDialog.getInstance(this)
-                                    .show("设置收款方式需要完成以下设置，请检查",
-                                            it.cause) {
-                                        finish()
                                     }
-                        }
+                                }, onError)
                     }
-                }, onError)
+                }, onReject = {
+                    finish()
+                })
     }
 }

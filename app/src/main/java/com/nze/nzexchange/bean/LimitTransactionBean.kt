@@ -37,12 +37,13 @@ data class LimitTransactionBean(
                 number: Double,
                 price: Double,
                 tokenUserId: String,
-                tokenUserKey: String
+                tokenUserKey: String,
+                curBuspwUcode:String
         ): Flowable<Result<LimitTransactionBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .limitTransaction(transactionType, userId, currencyId, number, price, tokenUserId, tokenUserKey)
+                        .limitTransaction(transactionType, userId, currencyId, number, price, tokenUserId, tokenUserKey,curBuspwUcode)
             }
         }
 
@@ -53,12 +54,13 @@ data class LimitTransactionBean(
                 currencyId: String,
                 number: Double,
                 tokenUserId: String,
-                tokenUserKey: String
+                tokenUserKey: String,
+                curBuspwUcode:String
         ): Flowable<Result<LimitTransactionBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .marketTransaction(transactionType, userId, currencyId, number, tokenUserId, tokenUserKey)
+                        .marketTransaction(transactionType, userId, currencyId, number, tokenUserId, tokenUserKey,curBuspwUcode)
             }
         }
     }

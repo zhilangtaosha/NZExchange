@@ -24,8 +24,9 @@
         android:textSize="24sp" />
 
     <LinearLayout
+        android:id="@+id/layout_bank_name_arc"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="25dp"
@@ -48,7 +49,31 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp">
+
+        <TextView
+            android:id="@+id/tv_account_key_arc"
+            style="@style/tx15_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="银行账号" />
+
+        <TextView
+            android:id="@+id/tv_account_value_arc"
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="35432512436456" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="25dp"
@@ -65,8 +90,31 @@
             style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:text="澳洲银行" />
+            android:layout_marginLeft="31dp"
+            android:text="众盈盈" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp">
+
+        <TextView
+            style="@style/tx15_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="识别码" />
+
+        <TextView
+            android:id="@+id/tv_code_arc"
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="31dp"
+            android:text="3543" />
     </LinearLayout>
 
     <View
@@ -93,6 +141,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_cancel_arc"
             style="@style/tx15_common"
             android:layout_width="120dp"
             android:layout_height="match_parent"
@@ -105,6 +154,7 @@
             android:layout_height="match_parent" />
 
         <TextView
+            android:id="@+id/tv_confirm_arc"
             style="@style/tx15_main"
             android:layout_width="0dp"
             android:layout_height="match_parent"

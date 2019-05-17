@@ -16,6 +16,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
+import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.otc.main.OtcContentFragment
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.DoubleMath
@@ -34,6 +35,36 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
     private var price: Double = 0.0
     private var flag: Boolean = true
     private var userBean: UserBean? = UserBean.loadFromApp()
+    val fundPopup: FundPasswordPopup by lazy {
+        FundPasswordPopup(this).apply {
+            onPasswordClick = {
+                orderPoolBean.run {
+                    sellNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, it)
+                            .compose(netTfWithDialog())
+                            .subscribe({
+                                if (it.success) {
+                                    EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
+                                    startActivity(Intent(this@BuyActivity, OtcConfirmActivity::class.java)
+                                            .putExtra(OtcContentFragment.PARAM_TYPE, type)
+                                            .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
+                                    finish()
+                                } else {
+                                    if (it.isCauseNotEmpty()) {
+                                        AuthorityDialog.getInstance(this@BuyActivity)
+                                                .show("进行OTC交易需要完成以下设置，请检查",
+                                                        it.cause) {
+                                                    finish()
+                                                }
+                                    }
+                                }
+                            }, {
+                                this@BuyActivity.finish()
+                            })
+                }
+            }
+        }
+    }
+
 
     override fun getRootView(): Int = R.layout.activity_buy
 
@@ -44,8 +75,10 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         }
         if (type == OtcContentFragment.TYPE_BUY) {
             ctb_ab.setTitle("买入${CurrencyTool.getCurrency(orderPoolBean.tokenId)}")
+            tv_all_ab.text = "全部买入"
         } else {
             ctb_ab.setTitle("卖出${CurrencyTool.getCurrency(orderPoolBean.tokenId)}")
+            tv_all_ab.text = "全部卖出"
         }
 
         orderPoolBean.run {
@@ -151,30 +184,9 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                     this@BuyActivity.finish()
                                 })
                     }
-                } else {
-                    orderPoolBean.run {
-                        sellNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                                .compose(netTfWithDialog())
-                                .subscribe({
-                                    if (it.success) {
-                                        EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
-                                        startActivity(Intent(this@BuyActivity, OtcConfirmActivity::class.java)
-                                                .putExtra(OtcContentFragment.PARAM_TYPE, type)
-                                                .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
-                                        finish()
-                                    } else {
-                                        if (it.isCauseNotEmpty()) {
-                                            AuthorityDialog.getInstance(this@BuyActivity)
-                                                    .show("进行OTC交易需要完成以下设置，请检查",
-                                                            it.cause) {
-                                                        finish()
-                                                    }
-                                        }
-                                    }
-                                }, {
-                                    this@BuyActivity.finish()
-                                })
-                    }
+                } else {//卖
+                    fundPopup.showPopupWindow()
+
                 }
             }
             R.id.tv_all_ab -> {

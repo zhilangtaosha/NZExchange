@@ -115,12 +115,13 @@ data class SubOrderInfoBean(
                     suborderAmount: String,
                     tokenId: String,
                     tokenUserId: String,
-                    tokenUserKey: String
+                    tokenUserKey: String,
+                    curBuspwUcode:String
         ): Flowable<Result<SubOrderInfoBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .sellService()
-                        .placeAnOrder(poolId, userIdSell, userIdBu, suborderAmount, tokenId, tokenUserId, tokenUserKey)
+                        .placeAnOrder(poolId, userIdSell, userIdBu, suborderAmount, tokenId, tokenUserId, tokenUserKey,curBuspwUcode)
             }
         }
 

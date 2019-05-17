@@ -1,10 +1,10 @@
 package com.nze.nzexchange.controller.common
 
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserBean
-import com.nze.nzexchange.config.BusFlowTag
 import com.nze.nzexchange.controller.base.NBaseActivity
-import com.nze.nzexchange.controller.base.NBaseFragment
-import com.nze.nzexchange.http.CommonRequest
+import com.nze.nzexchange.http.CRetrofit
+import io.reactivex.Flowable
 
 /**
  * @author: zwy
@@ -36,8 +36,8 @@ class CheckPermission {
     }
 
 
-    fun commonCheck(act: NBaseActivity, busTag: String, onPass: (() -> Unit)? = null, onReject: (() -> Unit)? = null) {
-        CommonRequest.busCheck(UserBean.loadFromApp()!!, BusFlowTag.SET_PAY_METHOD)
+    fun commonCheck(act: NBaseActivity, busTag: String, acion: String, onPass: (() -> Unit)? = null, onReject: (() -> Unit)? = null) {
+        busCheck(UserBean.loadFromApp()!!, busTag)
                 .compose(act.netTfWithDialog())
                 .subscribe({
                     if (it.success) {
@@ -45,12 +45,23 @@ class CheckPermission {
                     } else {
                         if (it.isCauseNotEmpty())
                             AuthorityDialog.getInstance(act)
-                                    .show("设置收款方式需要完成以下设置，请检查",
+                                    .show(acion,
                                             it.cause) {
+                                        onReject?.invoke()
                                     }
-                        onReject?.invoke()
                     }
                 }, {})
+    }
+
+    fun busCheck(
+            userBean: UserBean,
+            busflowTag: String
+    ): Flowable<Result<Any>> {
+        return Flowable.defer {
+            CRetrofit.instance
+                    .userService()
+                    .busCheck(userBean.tokenReqVo.tokenUserId, userBean.tokenReqVo.tokenUserKey, busflowTag)
+        }
     }
 
 }

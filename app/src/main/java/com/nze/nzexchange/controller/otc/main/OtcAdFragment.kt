@@ -89,7 +89,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
 
         rootView.iv_add_ad.setOnClickListener {
             CheckPermission.getInstance()
-                    .commonCheck(activity as NBaseActivity, CheckPermission.OTC_SEND_ADVERT, onPass = {
+                    .commonCheck(activity as NBaseActivity, CheckPermission.OTC_SEND_ADVERT,"发布广告需要完成以下设置，请检查", onPass = {
                         startActivity(Intent(activity, PublishActivity::class.java)
                                 .putExtra(IntentConstant.PARAM_TOKENID, mMainCurrencyBean?.tokenId)
                                 .putExtra(IntentConstant.PARAM_CURRENCY, mMainCurrencyBean?.tokenSymbol))
