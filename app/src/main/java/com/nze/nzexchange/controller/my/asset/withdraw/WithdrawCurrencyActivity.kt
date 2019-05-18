@@ -14,6 +14,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.CurrencyWithdrawInfoBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean.VerifyBean
@@ -81,6 +82,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             }
         }
     }
+    var feeRate: Double = 0.0//提币手续费
 
     override fun getRootView(): Int = R.layout.activity_coin_withdraw
 
@@ -115,7 +117,13 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
 
         RxTextView.textChanges(amountEt)
                 .subscribe {
-                    actualAmountTv.text = "${it} ${userAssetBean?.currency}"
+                    if (!it.isNullOrEmpty()) {
+                        val amount = it.toString().toDouble()
+                        actualAmountTv.text = "${amount - feeRate} ${userAssetBean?.currency}"
+
+                    } else {
+                        actualAmountTv.text = "0 ${userAssetBean?.currency}"
+                    }
                 }
 
         refreshLayout()
@@ -170,6 +178,11 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                         }, onError)
             }
             R.id.btn_withdraw_acw -> {
+                val amount = amountEt.getContent()
+                if (amount.isNotEmpty() && amount.toDouble() > userAssetBean?.available!!) {
+                    showToast("最多可提现${userAssetBean?.available!!}${userAssetBean?.currency}")
+                    return
+                }
                 fundPopup.showPopupWindow()
             }
         }
@@ -241,6 +254,16 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             availableTv.text = "可提数量：${it.available} ${it.currency}"
             amountEt.hint = "最小提现数量为200 ${it.currency}"
             serviceChargeTv.text = "0.0${it.currency}"
+
+            CurrencyWithdrawInfoBean.getCurrencyWithdrawInfo(it.currency)
+                    .compose(netTfWithDialog())
+                    .subscribe({ rs ->
+                        if (rs.success) {
+                            feeRate = rs.result.feeRate
+                            serviceChargeTv.text = "$feeRate${it.currency}"
+                        }
+                    }, onError)
+
             switchLayout(it)
         }
 
@@ -275,20 +298,14 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         }
         NRetrofit.instance
                 .bibiService()
-                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd, verifyValueEt.getContent())
+                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd, checkcodeId!!, verifyValueEt.getContent())
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
                         finish()
+                        showToast("提币成功")
                     } else {
-                        if (it.cause != null && it.cause.size > 0) {
-                            AuthorityDialog.getInstance(this)
-                                    .show("提现需要完成以下设置，请检查"
-                                            , it.cause) {
-                                        this@WithdrawCurrencyActivity.finish()
-                                    }
-                        }
-
+                        showToast(it.message)
                     }
                 }, onError)
     }

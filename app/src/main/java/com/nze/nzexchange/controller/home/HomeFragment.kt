@@ -14,6 +14,7 @@ import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.home.carousel.CarouselAdapter
 import com.nze.nzexchange.controller.home.carousel.SimpleBulletinAdapter
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
+import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.widget.bulletin.BulletinView
 import com.nze.nzexchange.widget.recyclerview.Divider
 import com.zhuang.zbannerlibrary.ZBanner
@@ -40,6 +41,9 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
             " 农业新“格局”  国外媒体高度评价  会场艺术珍品  专题 ")
     val hotDatas = mutableListOf<TransactionPairBean>()
     val carouselAdapter: CarouselAdapter by lazy { CarouselAdapter(fragmentManager!!, imageUrls) }
+
+    //涨幅榜
+    val mRandAdapter by lazy { RankListAdapter(activity!!) }
 
     init {
 //        imageUrls.add("http://bpic.588ku.com/back_pic/17/03/16/14391cb76638d75a22f35625dff40eee.jpg")
@@ -79,13 +83,10 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
         mHotRView.addItemDecoration(divider)
 
 
-        val mRandAdapter = RankListAdapter(activity!!)
-
-
-        Handler().postDelayed({
-            mRandAdapter.group = hotDatas
-            rootView.lav_rank_home.adapter = mRandAdapter
-        }, 3000)
+//        Handler().postDelayed({
+//            mRandAdapter.group = hotDatas
+//            rootView.lav_rank_home.adapter = mRandAdapter
+//        }, 3000)
 
         myWallet.setOnClickListener(this)
         legalTransactionLayout.setOnClickListener(this)
@@ -93,6 +94,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
         initTopData()
         marketPopular()
+        getRisingList()
     }
 
     override fun onClick(v: View?) {
@@ -138,6 +140,22 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                     if (it.success) {
                         mHotAdapter = HotTransactionPairAdapter(activity!!, it.result)
                         mHotRView.adapter = mHotAdapter
+                    }
+                }, onError)
+    }
+
+    /**
+     * 涨幅榜
+     */
+    fun getRisingList() {
+        NRetrofit.instance
+                .bibiService()
+                .getRisingList()
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        mRandAdapter.group = it.result
+                        rootView.lav_rank_home.adapter = mRandAdapter
                     }
                 }, onError)
     }

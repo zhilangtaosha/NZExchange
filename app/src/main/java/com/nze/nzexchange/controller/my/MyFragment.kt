@@ -14,8 +14,10 @@ import com.nze.nzexchange.bean.RealNameAuthenticationBean.Companion.getReanNameA
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.bibi.BibiAllOrderActivity
+import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalRechargeActivity
@@ -113,10 +115,15 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
 
             }
             R.id.tv_recharge_my -> {
+              
                 skipActivity(LegalRechargeActivity::class.java)
             }
             R.id.tv_withdraw_my -> {
-                skipActivity(LegalWithdrawActivity::class.java)
+                CheckPermission.getInstance()
+                        .commonCheck(activity as NBaseActivity, CheckPermission.ACC_PICKFUND, "法币提现需要完成以下设置，请检查", onPass = {
+                            skipActivity(LegalWithdrawActivity::class.java)
+                        })
+
             }
             R.id.tv_asset_my -> {
                 skipActivity(MyAssetActivity::class.java)

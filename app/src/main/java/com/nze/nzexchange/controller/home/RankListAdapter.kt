@@ -5,12 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.MarketPopularBean
 import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.controller.base.BaseAda
+import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.setTxtColor
+import kotlinx.android.synthetic.main.abc_alert_dialog_material.view.*
 import kotlinx.android.synthetic.main.lv_rank_home.view.*
 
-class RankListAdapter(mContext: Context) : BaseAda<TransactionPairBean>(mContext) {
+class RankListAdapter(mContext: Context) : BaseAda<MarketPopularBean>(mContext) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var vh: ViewHolder? = null
         var cView: View? = null
@@ -74,8 +77,18 @@ class RankListAdapter(mContext: Context) : BaseAda<TransactionPairBean>(mContext
                 vh.orderNumTv.setTxtColor(R.color.color_head)
             }
         }
-        vh.orderNumTv.text = (position+1).toString()
-
+        vh.orderNumTv.text = (position + 1).toString()
+        val bean = getItem(position)!!
+        vh.transactionPairTv.text = bean.transactionPair
+        vh.exchangeTv.text = bean.exchangeRate.formatForCurrency()
+        vh.total24Tv.text = "24h量 ${bean.volume}"
+        if (bean.gain >= 0) {
+            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
+            vh.changeTv.text = "+${bean.gain}%"
+        } else {
+            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
+            vh.changeTv.text = "${bean.gain}%"
+        }
         return cView!!
     }
 
@@ -85,5 +98,6 @@ class RankListAdapter(mContext: Context) : BaseAda<TransactionPairBean>(mContext
         val exchangeTv = view.tv_exchange
         val total24Tv = view.tv_total24
         val costTv = view.tv_cost
+        val changeTv = view.tv_change
     }
 }

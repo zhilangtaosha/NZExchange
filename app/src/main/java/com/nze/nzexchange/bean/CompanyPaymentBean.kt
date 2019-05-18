@@ -28,11 +28,13 @@ data class CompanyPaymentBean(
         val positionName: String
 ) {
 
-    fun getCompanyPaymethod(parentPositionId: String = "mod_inidata_position_20190421_01"): Flowable<Result<MutableList<CompanyPaymentBean>>> {
-        return Flowable.defer {
-            CRetrofit.instance
-                    .userService()
-                    .getCompanyPaymethod(parentPositionId)
+    companion object {
+        fun getCompanyPaymethod(parentPositionId: String = "mod_inidata_position_20190421_01"): Flowable<Result<MutableList<CompanyPaymentBean>>> {
+            return Flowable.defer {
+                CRetrofit.instance
+                        .userService()
+                        .getCompanyPaymethod(parentPositionId)
+            }
         }
     }
 }

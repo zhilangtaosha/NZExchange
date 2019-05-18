@@ -174,7 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="UCC"
+            android:text="CNY"
             android:textColor="@color/color_FFA3AAB9"
             android:textSize="14sp" />
 

@@ -235,4 +235,6 @@ interface UserService {
     fun getCompanyPaymethod(
             @Query("parentPositionId") parentPositionId: String
     ): Flowable<Result<MutableList<CompanyPaymentBean>>>
+
+    
 }

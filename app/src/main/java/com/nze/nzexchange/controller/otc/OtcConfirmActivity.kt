@@ -415,20 +415,21 @@ class OtcConfirmActivity : NBaseActivity() {
     fun release() {
         if (userBean?.userId!! == subOrderInfoBean!!.userIdSell) {//本人是商家
             NRetrofit.instance
-                    .sellService()
-                    .confirmPayment(subOrderInfoBean!!.userIdBu, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                    .compose(netTf())
-                    .subscribe({
-                        confirm(it)
-                    }, onError)
-        } else {
-            NRetrofit.instance
                     .buyService()
                     .confirmPayment(subOrderInfoBean!!.userIdSell, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                     .compose(netTf())
                     .subscribe({
                         confirm(it)
                     }, onError)
+        } else {
+            NRetrofit.instance
+                    .sellService()
+                    .confirmPayment(subOrderInfoBean!!.userIdBu, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .compose(netTf())
+                    .subscribe({
+                        confirm(it)
+                    }, onError)
+          
         }
     }
 
@@ -503,7 +504,7 @@ class OtcConfirmActivity : NBaseActivity() {
             this@OtcConfirmActivity.finish()
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_CONFIRM_PAY))
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
-        }else{
+        } else {
             if (rs.isCauseNotEmpty()) {
                 AuthorityDialog.getInstance(this)
                         .show("OTC交易需要完成以下设置，请检查"

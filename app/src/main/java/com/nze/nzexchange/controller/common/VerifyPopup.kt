@@ -6,14 +6,21 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.MD5Tool
+import com.nze.nzexchange.tools.RegularTool
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
+import com.nze.nzexchange.widget.VerifyButton
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * @author: zwy
@@ -21,15 +28,28 @@ import com.nze.nzexchange.widget.CommonButton
  * @类 说 明:
  * @创建时间：2019/4/23
  */
-class PhoneVerifyPopup(context: Activity) : BasePopupWindow(context) {
+class VerifyPopup(context: Activity) : BasePopupWindow(context) {
     val cancelTv: TextView by lazy { findViewById(R.id.tv_cancel_ppv) as TextView }
-    val phoneTv: TextView by lazy { findViewById(R.id.tv_phone_ppv) as TextView }
-    val verifydEt: EditText by lazy { findViewById(R.id.et_password_ppv) as EditText }
-    val sendTv: TextView by lazy { findViewById(R.id.tv_send_ppv) as TextView }
+    val titleTv: TextView by lazy { findViewById(R.id.tv_title_ppv) as TextView }
+    val verifydEt: EditText by lazy { findViewById(R.id.et_verify_ppv) as EditText }
+    val sendBtn: VerifyButton by lazy { findViewById(R.id.tv_send_ppv) as VerifyButton }
     val confirmBtn: CommonButton by lazy { findViewById(R.id.btn_confirm_ppv) as CommonButton }
 
     var onConfirmClick: ((code: String) -> Unit)? = null
     var userBean = UserBean.loadFromApp()
+    var account: String? = null
+        set(value) {
+            field = value
+            if (RegularTool.isEmail(value!!)) {
+                titleTv.text = "邮箱验证"
+                verifydEt.hint = "请输入邮箱验证码"
+            } else {
+                titleTv.text = "$value"
+                verifydEt.hint = "请输入手机验证码"
+            }
+        }
+    var checkcodeId: String? = null
+
 
     init {
         cancelTv.setOnClickListener {
@@ -42,7 +62,22 @@ class PhoneVerifyPopup(context: Activity) : BasePopupWindow(context) {
             onConfirmClick?.invoke(verifydEt.getContent())
             dismiss()
         }
-        phoneTv.text = userBean?.userPhone
+
+        sendBtn.setOnClickListener {
+            VerifyBean.getVerifyCodeNet(account!!, VerifyBean.TYPE_COMMON)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        if (it.success) {
+                            sendBtn.startVerify()
+                            checkcodeId = it.result.checkcodeId
+                            Toast.makeText(context, "验证码已经发送到${account}", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "验证码已经发送失败", Toast.LENGTH_SHORT).show()
+                        }
+                    }, {})
+        }
+
     }
 
     override fun initShowAnimation(): Animation = TranslateAnimation(0f, 0f, dp2px(350F, context).toFloat(), 0f).apply {

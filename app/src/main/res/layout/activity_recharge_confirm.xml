@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="30dp"
-        android:text="¥1000.00"
         android:textColor="@color/color_main"
         android:textSize="24sp" />
 
@@ -43,8 +42,7 @@
             style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:text="澳洲银行" />
+            android:layout_marginLeft="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -67,8 +65,17 @@
             style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:text="35432512436456" />
+            android:layout_marginLeft="15dp" />
+
+        <ImageView
+            android:id="@+id/iv_copy_arc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:src="@mipmap/copy_icon" />
     </LinearLayout>
 
     <LinearLayout
@@ -90,8 +97,7 @@
             style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="31dp"
-            android:text="众盈盈" />
+            android:layout_marginLeft="31dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -113,8 +119,7 @@
             style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="31dp"
-            android:text="3543" />
+            android:layout_marginLeft="31dp" />
     </LinearLayout>
 
     <View

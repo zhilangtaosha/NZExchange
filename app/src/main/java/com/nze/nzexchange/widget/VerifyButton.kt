@@ -1,6 +1,7 @@
 package com.nze.nzexchange.widget
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
@@ -23,22 +24,40 @@ import java.util.concurrent.TimeUnit
  */
 class VerifyButton : AppCompatTextView {
     private var mDisposable: Disposable? = null
+    private var mTextColor: Int = -1
+    private var mTextSize = 24F
 
     constructor(context: Context) : super(context) {
         initView(context)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        initAttrs(context, attrs)
         initView(context)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        initAttrs(context, attrs)
         initView(context)
     }
 
+    fun initAttrs(context: Context, attrs: AttributeSet?) {
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.VerifyButton)
+        ta?.let {
+            mTextColor = ta.getColor(R.styleable.VerifyButton_nz_textcolor, ContextCompat.getColor(context, R.color.color_FFE05760))
+            mTextSize = ta.getDimension(R.styleable.VerifyButton_nz_textSize, -1f)
+        }
+        ta.recycle()
+    }
+
     private fun initView(context: Context) {
-        setTextColor(ContextCompat.getColor(getContext(), R.color.color_FFE05760))
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+
+        setTextColor(mTextColor)
+        if (mTextSize > 0) {
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize)
+        } else {
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+        }
 
         gravity = Gravity.CENTER
     }

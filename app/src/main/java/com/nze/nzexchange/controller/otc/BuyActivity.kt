@@ -49,13 +49,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                             .putExtra(IntentConstant.PARAM_SUBORDERID, it.result.suborderId))
                                     finish()
                                 } else {
-                                    if (it.isCauseNotEmpty()) {
-                                        AuthorityDialog.getInstance(this@BuyActivity)
-                                                .show("进行OTC交易需要完成以下设置，请检查",
-                                                        it.cause) {
-                                                    finish()
-                                                }
-                                    }
+                                    showToast(it.message)
                                 }
                             }, {
                                 this@BuyActivity.finish()
@@ -86,7 +80,6 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
             tv_order_num_abc.text = "${totalOrder}单"
             tv_price_value_ab.text = poolPrice.toString()
             tv_num_unit_ab.text = CurrencyTool.getCurrency(tokenId)
-            tv_money_unit_ab.text = CurrencyTool.getCurrency(tokenId)
 
             price = poolPrice
             accmoney
@@ -111,8 +104,12 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                     if (flag) {
                         flag = false
                         var value = ""
-                        if (it.isNotEmpty() && price > 0.0)
-                            value = DoubleMath.mul(it.toString().toDouble(), price).toString()
+                        if (it.isNotEmpty() && price > 0.0) {
+                            val amount = it.toString().toDouble()
+                            value = DoubleMath.mul(amount, price).toString()
+                            if (amount > orderPoolBean.poolLeftamount)
+                                showToast("交易数量超过委托数量")
+                        }
                         et_money_value_ab.setText(value)
                     } else {
                         flag = true

@@ -239,7 +239,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="0.56USDT"
                     android:textColor="@color/color_FF7F8592"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -264,7 +263,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="0.56USDT"
                     android:textColor="@color/color_FF6D87A8"
                     android:textSize="14sp" />
             </RelativeLayout>

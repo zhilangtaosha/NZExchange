@@ -131,6 +131,7 @@ interface BibiService {
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String,
             @Field("curBuspwUcode") curBuspwUcode: String,
+            @Field("checkcodeId") checkcodeId: String,
             @Field("checkcodeVal") checkcodeVal: String
     ): Flowable<Result<String>>
 
@@ -177,6 +178,8 @@ interface BibiService {
             @Field("tokenName") tokenName: String
     ): Flowable<Result<Any>>
 
+
+    //提币地址列表
     @FormUrlEncoded
     @POST("getCoinAddress")
     fun getCurrencyWithdrawAddress(
@@ -192,4 +195,16 @@ interface BibiService {
             @Query("pageNumber") pageNumber: Int?,
             @Query("pageSize") pageSize: Int?
     ): Flowable<Result<MutableList<FinancialRecordBean>>>
+
+
+    //首页涨幅榜
+    @GET("market/risingList")
+    fun getRisingList(): Flowable<Result<MutableList<MarketPopularBean>>>
+
+    //获取充提币信息
+    @FormUrlEncoded
+    @POST("otc/token/getTokenDetails")
+    fun getCurrencyWithdrawInfo(
+            @Field("tokenName") tokenName: String
+    ): Flowable<Result<CurrencyWithdrawInfoBean>>
 }

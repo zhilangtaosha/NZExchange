@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_black_tran">
@@ -43,31 +44,34 @@
             android:background="@color/color_line" />
 
         <TextView
-            android:id="@+id/tv_phone_ppv"
+            android:id="@+id/tv_title_ppv"
             style="@style/tx14_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal">
+
             <EditText
-                android:id="@+id/et_password_ppv"
+                android:id="@+id/et_verify_ppv"
                 style="@style/et15"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:hint="请输入短信验证码"
                 android:paddingLeft="0dp" />
 
-            <TextView
+            <com.nze.nzexchange.widget.VerifyButton
                 android:id="@+id/tv_send_ppv"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:gravity="center|right"
                 android:text="发送"
-                style="@style/tx15_main"/>
+                app:nz_textSize="14sp"
+                app:nz_textcolor="@color/color_main" />
         </LinearLayout>
 
         <com.nze.nzexchange.widget.CommonButton

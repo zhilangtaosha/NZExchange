@@ -62,7 +62,14 @@ class PayMethodPresenter(activity: NBaseActivity, mIView: PayMethodView) : BaseA
     fun getAllPayMethod(userBean: UserBean, onSuccessRs: OnSuccessRs<SetPayMethodBean>, onError: OnErrorRs) {
         SetPayMethodBean.getPayMethodNet(userBean.tokenReqVo.tokenUserId, userBean.tokenReqVo.tokenUserKey, userBean.tokenReqVo.tokenSystreeId)
                 .compose(getAct().netTfWithDialog())
-                .subscribe(onSuccessRs,onError)
+                .subscribe(onSuccessRs, onError)
+    }
+
+    fun isAddBank(payBean: SetPayMethodBean): Boolean {
+        if (!payBean.accmoneyBankcard.isNullOrEmpty()) {
+            return true
+        }
+        return false
     }
 }
 

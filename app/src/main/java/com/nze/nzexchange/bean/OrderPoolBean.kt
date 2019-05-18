@@ -23,7 +23,7 @@ data class OrderPoolBean(
         val poolMinamount: Double,
         val poolNo: String,
         val poolPrice: Double,
-        val remark: String,
+        val remark: String?,
         val tokenId: String,
         val totalOrder: Int,
         val transactionType: String,

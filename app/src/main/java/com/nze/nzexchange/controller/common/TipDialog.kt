@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.common
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.TextView
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
@@ -17,17 +18,22 @@ import org.greenrobot.eventbus.EventBus
  * @类 说 明: 完善交易资料Dialog
  * @创建时间：2019/4/26
  */
-class PerfectInfoDialog(context: Context) {
+class TipDialog(context: Context) {
     lateinit var dialog: AlertDialog
     lateinit var contentTv: TextView
     lateinit var toTv: TextView
     lateinit var cancelTv: TextView
     val context = context
-    var content: String? = null
-    var clickText: String? = null
+    var clickText: String? = "确定"
 
+    companion object {
+        fun getInstance(context: Context): TipDialog {
+            return TipDialog(context)
+        }
+    }
 
-    fun show(onClick: (() -> Unit)) {
+    fun show(content: String, isShowCancel: Boolean, onClick: (() -> Unit), clickText: String? = "确定") {
+        this.clickText = clickText
         dialog = AlertDialog.Builder(context).create()
         dialog.show()
         val window = dialog.window
@@ -38,6 +44,10 @@ class PerfectInfoDialog(context: Context) {
 
         contentTv.text = content
         toTv.text = clickText
+
+        if (!isShowCancel) {
+            cancelTv.visibility = View.GONE
+        }
 
         cancelTv.setOnClickListener {
             dialog.dismiss()

@@ -39,7 +39,7 @@
             android:drawableLeft="@mipmap/bank_icon"
             android:drawableRight="@mipmap/right_arrow2"
             android:drawablePadding="10dp"
-            android:text="银行卡(0413)" />
+            android:text="银行卡" />
     </LinearLayout>
 
     <TextView

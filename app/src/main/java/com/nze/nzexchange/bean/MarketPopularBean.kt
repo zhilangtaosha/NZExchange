@@ -19,7 +19,9 @@ data class MarketPopularBean(
         val popular: Int,//热门交易对状态
         val remark: String,//备注信息
         val status: Int,//状态
-        val transactionPair: String//交易对名称
+        val transactionPair: String,//交易对名称
+        val deal: Int,
+        val volume: Double
 ) {
     companion object {
 

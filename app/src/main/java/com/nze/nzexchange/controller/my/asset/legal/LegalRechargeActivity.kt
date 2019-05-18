@@ -98,7 +98,8 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
-                            skipActivity(RechargeConfirmActivity::class.java)
+                            RechargeConfirmActivity.skip(this, rechargeType, checkpayCode!!, amount)
+                            finish()
                         }
                     }, onError)
         }
