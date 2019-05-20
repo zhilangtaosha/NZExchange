@@ -115,13 +115,13 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
 
             }
             R.id.tv_recharge_my -> {
-              
+
                 skipActivity(LegalRechargeActivity::class.java)
             }
             R.id.tv_withdraw_my -> {
                 CheckPermission.getInstance()
                         .commonCheck(activity as NBaseActivity, CheckPermission.ACC_PICKFUND, "法币提现需要完成以下设置，请检查", onPass = {
-                            skipActivity(LegalWithdrawActivity::class.java)
+                            LegalWithdrawActivity.skip(activity!!, realNameAuthenticationBean!!)
                         })
 
             }

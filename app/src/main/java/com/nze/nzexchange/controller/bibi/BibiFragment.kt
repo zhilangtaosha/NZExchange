@@ -616,7 +616,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         }
                         //获取盘口
-//                        getKData()
+                        getKData()
                         //获取交易对的挂单信息
                         RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
                                 .subscribeOn(Schedulers.io())
@@ -676,7 +676,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun onResume() {
         super.onResume()
         activity!!.bindService(Intent(activity, KLineService::class.java), connection, Context.BIND_AUTO_CREATE)
-
     }
 
     override fun onDestroy() {

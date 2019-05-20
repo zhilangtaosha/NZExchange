@@ -1,5 +1,6 @@
 package com.nze.nzexchange.bean
 
+import com.google.android.gms.common.internal.AccountType
 import com.nze.nzexchange.http.NRetrofit
 import io.reactivex.Flowable
 import retrofit2.http.Query
@@ -30,6 +31,57 @@ data class FinancialRecordBean(
         val userId: String,
         val txid: String
 ) {
+
+    fun getType(currentType: String): String {
+        var s = ""
+        if (type == 0) {//划转
+            return if (from == currentType) {
+                "转到${
+                when (to) {
+                    ACCOUNT_LEGAL -> "法币账户"
+                    ACCOUNT_OUTSIDE -> "OTC账户"
+                    ACCOUNT_COIN -> "币币账户"
+                    else -> ""
+                }
+                }"
+            } else {
+                "${
+                when (from) {
+                    ACCOUNT_LEGAL -> "法币账户"
+                    ACCOUNT_OUTSIDE -> "OTC账户"
+                    ACCOUNT_COIN -> "币币账户"
+                    else -> ""
+                }
+                }转入"
+            }
+        } else {//提币和充币
+            return when (status) {
+                1001, 1002, 1003 -> {
+                    "提币"
+                }
+                2001, 2002, 2004 -> {
+                    "充币"
+                }
+                else -> ""
+            }
+        }
+    }
+
+    fun getStatus(): String {
+        return if (type == 0) {
+            "已完成"
+        } else {
+            when (status) {
+                1001, 1002, 3001 -> "审核中"
+                1003 -> "已完成"
+                2001 -> "待处理"
+                2002 -> "已完成"
+                2004 -> "已取消"
+                else -> "出错"
+            }
+        }
+    }
+
     companion object {
         //账户类型
         val ACCOUNT_LEGAL = "legalCurrency"
@@ -40,13 +92,14 @@ data class FinancialRecordBean(
         fun getFinancialRecord(
                 userId: String,
                 token: String,
+                from: String,
                 pageNumber: Int? = null,
                 pageSize: Int? = null
         ): Flowable<Result<MutableList<FinancialRecordBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .getFinancialRecord(userId, token, pageNumber, pageSize)
+                        .getFinancialRecord(userId, token, from, pageNumber, pageSize)
             }
         }
     }

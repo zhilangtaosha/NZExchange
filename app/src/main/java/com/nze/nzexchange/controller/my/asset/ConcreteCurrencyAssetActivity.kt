@@ -46,13 +46,14 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
     val view3: View by lazy { view3_acca }
 
     val listView: ListView by lazy { listView_acca }
-    val concreteAdapter: ConcreteAssetAdapter by lazy { ConcreteAssetAdapter(this) }
+    lateinit var concreteAdapter: ConcreteAssetAdapter
     var userAssetBean: UserAssetBean? = null
     var type: Int = AccountType.BIBI
     var bundle: Bundle? = null
     lateinit var otcList: ArrayList<UserAssetBean>
     lateinit var bibiList: ArrayList<UserAssetBean>
     var userBean = UserBean.loadFromApp()
+    lateinit var from: String
 
     companion object {
         fun skip(context: Context, type: Int, userAssetBean: UserAssetBean, otcList: ArrayList<UserAssetBean>, bibiList: ArrayList<UserAssetBean>) {
@@ -86,6 +87,12 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
 
         }
 
+        if (type == AccountType.BIBI) {
+            from = FinancialRecordBean.ACCOUNT_COIN
+        } else {
+            from = FinancialRecordBean.ACCOUNT_OUTSIDE
+        }
+        concreteAdapter = ConcreteAssetAdapter(this, from)
         listView.adapter = concreteAdapter
 
         rechargeBtn.setOnClickListener(this)
@@ -178,7 +185,7 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
 
     //获取最近财务记录
     fun getFinancialRecord() {
-        FinancialRecordBean.getFinancialRecord(userBean!!.userId, userAssetBean!!.currency)
+        FinancialRecordBean.getFinancialRecord(userBean!!.userId, userAssetBean!!.currency, from)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {

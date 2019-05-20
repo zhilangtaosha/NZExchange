@@ -236,5 +236,45 @@ interface UserService {
             @Query("parentPositionId") parentPositionId: String
     ): Flowable<Result<MutableList<CompanyPaymentBean>>>
 
+    //法币提现
+    @FormUrlEncoded
+    @POST("amtRunBus/amtPickfund/saveOneDataVo_amtPickfund_curToken.json")
+    fun legalWithdraw(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("pickfundApplyamt") pickfundApplyamt: String,
+            @Field("pickfundToinfo1") pickfundToinfo1: String,
+            @Field("pickfundToinfo2") pickfundToinfo2: String,
+            @Field("pickfundToinfo3") pickfundToinfo3: String,
+            @Field("pickfundMemo") pickfundMemo: String,
+            @Field("curBuspwUcode") curBuspwUcode: String,
+            @Field("checkcodeId") checkcodeId: String,
+            @Field("checkcodeVal") checkcodeVal: String
+    ): Flowable<Result<Any>>
+
+    //获取法币提现费率
+    @GET("financeRunBus/financeFee/findDataVos_financeFee_parentFeeId_pickFund.json")
+    fun getLegalFee(): Flowable<Result<MutableList<LegalFeeBean>>>
+
+    //获取法币充值记录
+    @FormUrlEncoded
+    @POST("amtRunBus/amtCheckpay/page_amtCheckpay_token_t.json")
+    fun getLegalRechargeHistory(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("page") page: Int,
+            @Field("rows") pageSize: Int
+    ): Flowable<Result<MutableList<LegalRechargeHistoryBean>>>
+
+
+    //获取法币提现记录
+    @FormUrlEncoded
+    @POST("amtRunBus/amtPickfund/page_amtPickfund_token_t.json")
+    fun getLegalWithdrawHistory(
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String,
+            @Field("page") page: Int,
+            @Field("rows") pageSize: Int
+    ): Flowable<Result<MutableList<LegalWithdrawHistoryBean>>>
     
 }

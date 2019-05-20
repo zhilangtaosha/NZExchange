@@ -35,7 +35,7 @@ class VerifyPopup(context: Activity) : BasePopupWindow(context) {
     val sendBtn: VerifyButton by lazy { findViewById(R.id.tv_send_ppv) as VerifyButton }
     val confirmBtn: CommonButton by lazy { findViewById(R.id.btn_confirm_ppv) as CommonButton }
 
-    var onConfirmClick: ((code: String) -> Unit)? = null
+    var onConfirmClick: ((code: String, checkcodeId: String) -> Unit)? = null
     var userBean = UserBean.loadFromApp()
     var account: String? = null
         set(value) {
@@ -59,7 +59,11 @@ class VerifyPopup(context: Activity) : BasePopupWindow(context) {
                 .add(verifydEt, EmptyValidation())
                 .executeValidator()
         confirmBtn.setOnCommonClick {
-            onConfirmClick?.invoke(verifydEt.getContent())
+            if (checkcodeId.isNullOrEmpty()) {
+                Toast.makeText(context, "请获取验证码", Toast.LENGTH_SHORT).show()
+                return@setOnCommonClick
+            }
+            onConfirmClick?.invoke(verifydEt.getContent(), checkcodeId!!)
             dismiss()
         }
 

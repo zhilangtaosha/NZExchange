@@ -13,20 +13,27 @@ import com.nze.nzexchange.controller.my.asset.legal.presenter.LegalP
 import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_legal_withdraw_history.*
 
-class LegalWithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListener<ListView> {
+/**
+ * 法币充值记录
+ */
+class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListener<ListView> {
     val topBar: CommonTopBar by lazy { ctb_alwh }
     val legalP: LegalP by lazy { LegalP(this) }
 
     val ptrLv: PullToRefreshListView by lazy { ptrlv_alwh }
     lateinit var listView: ListView
-    val historyAdapter by lazy { LegalWithdrawHistoryAdapter(this) }
+    val historyAdapter by lazy { LegalRechargeHistoryAdapter(this) }
+
     var userBean = UserBean.loadFromApp()
+
     override fun getRootView(): Int = R.layout.activity_legal_withdraw_history
     override fun initView() {
+        topBar.setTitle("充值记录")
         ptrLv.setPullLoadEnabled(false)
         ptrLv.setOnRefreshListener(this)
         listView = ptrLv.refreshableView
         listView.adapter = historyAdapter
+
         ptrLv.doPullRefreshing(true, 200)
     }
 
@@ -61,7 +68,7 @@ class LegalWithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
     }
 
     fun getHistory() {
-        legalP.getWithdrawHistory(userBean!!, page, PAGE_SIZE, {
+        legalP.getRechargeHistory(userBean!!, page, PAGE_SIZE, {
             if (it.success) {
                 historyAdapter.group = it.result
             } else {

@@ -9,6 +9,7 @@
     tools:context=".controller.my.asset.legal.LegalWithdrawHistoryActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_alwh"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="@color/color_title_bg"

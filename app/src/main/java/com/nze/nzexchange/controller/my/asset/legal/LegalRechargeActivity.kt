@@ -71,7 +71,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
 
     override fun initView() {
         topBar.setRightClick {
-            skipActivity(LegalWithdrawHistoryActivity::class.java)
+            skipActivity(LegalRechargeHistoryActivity::class.java)
         }
         rechargeMode.setOnClickListener {
             selectPopup.showPopupWindow()

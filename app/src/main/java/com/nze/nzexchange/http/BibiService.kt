@@ -192,6 +192,7 @@ interface BibiService {
     fun getFinancialRecord(
             @Query("userId") userId: String,
             @Query("token") token: String,
+            @Query("from") from: String,
             @Query("pageNumber") pageNumber: Int?,
             @Query("pageSize") pageSize: Int?
     ): Flowable<Result<MutableList<FinancialRecordBean>>>

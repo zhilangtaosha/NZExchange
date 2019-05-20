@@ -156,6 +156,11 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_confirm_ab -> {
+                val amount = et_num_value_ab.toString().toDouble()
+                if (amount > orderPoolBean.poolLeftamount) {
+                    showToast("交易数量超过委托数量")
+                    return
+                }
                 if (type == OtcContentFragment.TYPE_BUY) {
 //                    skipActivity(SaleConfirmActivity::class.java)
                     orderPoolBean.run {

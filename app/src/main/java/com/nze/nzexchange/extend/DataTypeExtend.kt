@@ -17,7 +17,7 @@ import java.text.NumberFormat
 fun Double.formatForCurrency(): String? {
 //    var b: BigDecimal = BigDecimal(this)
 //    return b.setScale(10,BigDecimal.ROUND_HALF_DOWN).toString()
-    val df = DecimalFormat("0.#############")
+    val df = DecimalFormat("0.########")
     return df.format(this)
 }
 

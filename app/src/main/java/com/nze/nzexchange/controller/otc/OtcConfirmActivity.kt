@@ -429,7 +429,7 @@ class OtcConfirmActivity : NBaseActivity() {
                     .subscribe({
                         confirm(it)
                     }, onError)
-          
+
         }
     }
 
@@ -505,11 +505,15 @@ class OtcConfirmActivity : NBaseActivity() {
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_CONFIRM_PAY))
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
         } else {
-            if (rs.isCauseNotEmpty()) {
-                AuthorityDialog.getInstance(this)
-                        .show("OTC交易需要完成以下设置，请检查"
-                                , rs.cause) {
-                        }
+            try {
+                if (rs.isCauseNotEmpty()) {
+                    AuthorityDialog.getInstance(this)
+                            .show("OTC交易需要完成以下设置，请检查"
+                                    , rs.cause) {
+                            }
+                }
+            } catch (e: Exception) {
+                showToast("放币功能异常，请联系客服")
             }
         }
     }

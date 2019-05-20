@@ -89,7 +89,7 @@ class VerifyButton : AppCompatTextView {
                 }, {
                     isEnabled = true
                     setTextColor(ContextCompat.getColor(context, R.color.color_FFE05760))
-                    text = "获取验证码"
+                    text = "重新发送"
                     NLog.i("onComplete")
                 }, {
                     mDisposable = it
