@@ -35,8 +35,8 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="20dp"
                 android:paddingRight="10dp"
-                android:visibility="gone"
-                android:src="@mipmap/k_switch_left" />
+                android:src="@mipmap/k_switch_left"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/layout_market_kline"
@@ -70,8 +70,8 @@
                 android:layout_toRightOf="@+id/layout_market_kline"
                 android:paddingLeft="10dp"
                 android:paddingRight="20dp"
-                android:visibility="gone"
-                android:src="@mipmap/k_switch_right" />
+                android:src="@mipmap/k_switch_right"
+                android:visibility="gone"/>
 
 
         </RelativeLayout>
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
-                android:text="15.1545666"
+                android:text="0"
                 android:textColor="@color/color_up"
                 android:textSize="30sp" />
 

@@ -1,13 +1,13 @@
 package com.nze.nzexchange.controller.my.asset.legal.presenter
 
 import com.nze.nzeframework.ui.BaseActivityP
-import com.nze.nzeframework.ui.OnErrorRs
-import com.nze.nzeframework.ui.OnSuccessRs
+import com.nze.nzexchange.bean.LegalAccountBean
 import com.nze.nzexchange.bean.LegalRechargeHistoryBean
 import com.nze.nzexchange.bean.LegalWithdrawHistoryBean
-import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.extend.OnErrorRs
+import com.nze.nzexchange.extend.OnSuccessRs
 import com.nze.nzexchange.http.CRetrofit
 
 /**
@@ -44,6 +44,15 @@ class LegalP(activity: NBaseActivity) : BaseActivityP(activity) {
                 .userService()
                 .getLegalWithdrawHistory(userBean.tokenReqVo.tokenUserId, userBean.tokenReqVo.tokenUserKey, page, pageSize)
                 .compose(activity.netTf())
+                .subscribe(onSuccess, onError)
+    }
+
+    //获取法币账户信息
+    fun getLegalAccountInfo(userBean: UserBean, onSuccess: OnSuccessRs<LegalAccountBean>, onError: OnErrorRs) {
+        CRetrofit.instance
+                .userService()
+                .getLegalAccountInfo(userBean.tokenReqVo.tokenUserId, userBean.tokenReqVo.tokenUserKey)
+                .compose(activity.netTfWithDialog())
                 .subscribe(onSuccess, onError)
     }
 }

@@ -14,6 +14,7 @@ import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.chart.DataHelper
 import com.nze.nzexchange.widget.chart.KLineEntity
+import com.nze.nzexchange.widget.depth.DepthDataBean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -57,6 +58,7 @@ class KLineService : Service() {
         private val buyList: MutableList<ShenDubean> by lazy { mutableListOf<ShenDubean>() }
         private val sellList: MutableList<ShenDubean> by lazy { mutableListOf<ShenDubean>() }
         private val newDealList: MutableList<NewDealBean> by lazy { mutableListOf<NewDealBean>() }
+        private var mDepth: Depth? = null
         var pattern: String = TimeTool.PATTERN5
         val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
         var nWebSocket: NWebSocket? = null
@@ -71,7 +73,7 @@ class KLineService : Service() {
         fun initKSocket(market: String, kDataCallBack: ((lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth?) -> Unit)) {
             this.kDataCallBack = kDataCallBack
             socket?.cancel()
-            nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/$market", wsListener)
+            nWebSocket = NWebSocket.newInstance("$market", wsListener)
             socket = nWebSocket?.open()
 
         }
@@ -82,7 +84,7 @@ class KLineService : Service() {
          */
         fun getKDataRequest(pairsBean: TransactionPairsBean) {
             val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
-            requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
+            requestBean.params.add("${pairsBean.currency.toUpperCase()}${pairsBean.mainCurrency.toUpperCase()}")
             requestBean.params.add(KLineParam.TIME_ONE_MIN)
             requestBean.params.add(socketRequestId)
             val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
@@ -96,7 +98,7 @@ class KLineService : Service() {
          */
         fun changePair(pairsBean: TransactionPairsBean) {
             val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_CHANGE_PAIR, mutableListOf<String>())
-            requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
+            requestBean.params.add("${pairsBean.currency.toUpperCase()}${pairsBean.mainCurrency.toUpperCase()}")
             requestBean.params.add(KLineParam.TIME_ONE_MIN)
             val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
             NLog.i("changePair>>$param")
@@ -191,8 +193,13 @@ class KLineService : Service() {
                             newDealList.addAll(latestDeal)
                             it.onNext(DATE_NEW_DEAL)
                         }
+
+                        if (depth != null) {//深度图
+                            mDepth = depth
+                            it.onNext(DATA_DEPTH)
+                        }
                     } catch (e: Exception) {
-                        
+
                     }
                 }.subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -211,6 +218,10 @@ class KLineService : Service() {
                                     kDataCallBack?.invoke(null, handicap, null, null, null)
                                 }
                                 DATE_NEW_DEAL -> {//最新成交数据
+
+                                }
+                                DATA_DEPTH -> {//深度
+                                    kDataCallBack?.invoke(null, null, null, null, mDepth)
 
                                 }
                             }

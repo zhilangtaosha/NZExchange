@@ -37,7 +37,9 @@ data class LegalWithdrawHistoryBean(
         val treeauthName: String,
         val userId: String,
         val userIdApply: Any,
-        val userIdAudit: Any
+        val userIdAudit: Any,
+        val pickfundAbleamount: Double,
+        val pickfundFronzenamount: Double
 ) {
     fun getStatus(): String =
             when (pickfundStatus) {

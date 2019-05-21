@@ -2,6 +2,7 @@ package com.nze.nzexchange.extend
 
 import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.net.http.SslCertificate
+import com.nze.nzexchange.bean.Result
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -14,12 +15,27 @@ import java.text.NumberFormat
  * @类 说 明:https://blog.csdn.net/bailu666666/article/details/79829902
  * @创建时间：2018/12/10
  */
-fun Double.formatForCurrency(): String? {
+
+/**
+ * 数字货币保留8位小数
+ */
+fun Double.formatForCurrency(): String {
 //    var b: BigDecimal = BigDecimal(this)
 //    return b.setScale(10,BigDecimal.ROUND_HALF_DOWN).toString()
     val df = DecimalFormat("0.########")
     return df.format(this)
 }
+
+fun Double.formatForLegal(): String {
+    val df = DecimalFormat("0.##")
+    return df.format(this)
+}
+
+fun Double.formatForLegal2(): Double {
+    val df = DecimalFormat("0.##")
+    return (df.format(this)).toDouble()
+}
+
 
 /**
  * 保留2位小数
@@ -69,3 +85,15 @@ fun Double.twoPlace(): String {
     val df = DecimalFormat("0.00")
     return df.format(this)
 }
+
+fun Double.formatToken() {
+
+}
+
+
+
+
+
+typealias OnSuccessRs<T> = (Result<T>) -> Unit
+typealias OnErrorRs = (Throwable) -> Unit
+typealias NString = String?

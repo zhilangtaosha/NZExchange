@@ -39,7 +39,7 @@
     </RelativeLayout>
 
 
-    <com.nze.nzexchange.widget.ReboundScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -404,5 +404,5 @@
             </RelativeLayout>
 
         </LinearLayout>
-    </com.nze.nzexchange.widget.ReboundScrollView>
+    </ScrollView>
 </LinearLayout>

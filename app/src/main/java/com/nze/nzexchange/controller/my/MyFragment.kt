@@ -9,6 +9,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.LegalAccountBean
 import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.RealNameAuthenticationBean.Companion.getReanNameAuthentication
 import com.nze.nzexchange.bean.UserBean
@@ -22,6 +23,7 @@ import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalRechargeActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalWithdrawActivity
+import com.nze.nzexchange.controller.my.asset.legal.presenter.LegalP
 import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
 import com.nze.nzexchange.controller.my.authentication.AuthenticationFailActivity
 import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
@@ -34,6 +36,7 @@ import kotlinx.android.synthetic.main.fragment_my.view.*
 
 
 class MyFragment : NBaseFragment(), View.OnClickListener {
+    val legalP: LegalP by lazy { LegalP(activity as NBaseActivity) }
     lateinit var rootView: View
     private val userNameTV: TextView by lazy { rootView.tv_user_name_my }
     private val moneyTv: TextView by lazy { rootView.tv_money_my }
@@ -50,6 +53,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
 
     var userBean: UserBean? = NzeApp.instance.userBean
     var realNameAuthenticationBean: RealNameAuthenticationBean? = null
+    lateinit var accountBean: LegalAccountBean
 
     companion object {
         @JvmStatic
@@ -86,8 +90,15 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        if (userBean != null)
+        if (userBean != null) {
             getReanNameAuthentication()
+            legalP.getLegalAccountInfo(userBean!!, {
+                if (it.success) {
+                    accountBean = it.result
+                    moneyTv.text = "${accountBean.accAbleAmount}"
+                }
+            }, onError)
+        }
     }
 
     override fun isBindEventBusHere(): Boolean = true
@@ -121,7 +132,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
             R.id.tv_withdraw_my -> {
                 CheckPermission.getInstance()
                         .commonCheck(activity as NBaseActivity, CheckPermission.ACC_PICKFUND, "法币提现需要完成以下设置，请检查", onPass = {
-                            LegalWithdrawActivity.skip(activity!!, realNameAuthenticationBean!!)
+                            LegalWithdrawActivity.skip(activity!!, realNameAuthenticationBean!!, accountBean)
                         })
 
             }

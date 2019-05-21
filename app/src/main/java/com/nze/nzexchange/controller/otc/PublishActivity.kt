@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.otc
 
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -11,7 +12,6 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
-import com.nze.nzexchange.extend.setTextFromHtml
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserAssetBean
@@ -20,10 +20,11 @@ import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.common.FundPasswordPopup
-import com.nze.nzexchange.extend.getContent
-import com.nze.nzexchange.extend.removeE
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.TextTool
+import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
+import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
@@ -36,7 +37,9 @@ import java.util.concurrent.TimeUnit
  * OTC发布购买和出售广告
  */
 class PublishActivity : NBaseActivity(), View.OnClickListener {
-
+    val priceEt: EditText by lazy { et_price_value_ap }
+    val numEt: EditText by lazy { et_num_value_ap }
+    val moneyEt: EditText by lazy { et_money_value_ap }
 
     val TYPE_BUY: Int = 0
     val TYPE_SALE: Int = 1
@@ -75,48 +78,51 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
             }
             changLayout()
         }
+        priceEt.addTextChangedListener(EditLegalWatcher(priceEt))
+        numEt.addTextChangedListener(EditCurrencyWatcher(numEt))
+        moneyEt.addTextChangedListener(EditLegalWatcher(moneyEt))
         tv_num_unit_ap.text = currency
 
         btn_ap.initValidator()
-                .add(et_price_value_ap, EmptyValidation())
-                .add(et_num_value_ap, EmptyValidation())
-                .add(et_money_value_ap, EmptyValidation())
+                .add(priceEt, EmptyValidation())
+                .add(numEt, EmptyValidation())
+                .add(moneyEt, EmptyValidation())
                 .executeValidator()
 
-        RxTextView.textChanges(et_price_value_ap)
+        RxTextView.textChanges(priceEt)
                 .subscribe {
                     if (priceTag) {
                         moneyTag = false
                         var value = ""
-                        var num = et_num_value_ap.text
+                        var num = numEt.text
                         if (it.isNotEmpty() && num.isNotEmpty())
-                            value = DoubleMath.mul(it.toString().toDouble(), num.toString().toDouble()).removeE()
-                        et_money_value_ap.setText(value)
+                            value = DoubleMath.mul(it.toString().toDouble(), num.toString().toDouble()).formatForLegal()
+                        moneyEt.setText(value)
                     } else {
                         priceTag = true
                     }
                 }
 
-        RxTextView.textChanges(et_num_value_ap)
+        RxTextView.textChanges(numEt)
                 .subscribe {
                     if (numTag) {
                         var total = ""
                         var num = 0.0
-                        val price = et_price_value_ap.text.toString()
+                        val price = priceEt.text.toString()
                         if (it.isNotEmpty()) {
                             num = it.toString().toDouble()
                         }
                         if (currentType == TYPE_SALE && userAssetBean != null && num > userAssetBean!!.available) {
                             num = userAssetBean!!.available
-                            val s = num.removeE()
-                            et_num_value_ap.setText(s)
-                            et_num_value_ap.setSelection(s.length)
+                            val s = num.formatForCurrency()
+                            numEt.setText(s)
+                            numEt.setSelection(s.length)
                             showToast("只有${num}${currency}资产")
                         }
                         if (it.isNotEmpty() && price.isNotEmpty()) {
                             moneyTag = false
-                            total = DoubleMath.mul(num, price.toDouble()).removeE()
-                            et_money_value_ap.setText(total)
+                            total = DoubleMath.mul(num, price.toDouble()).formatForLegal()
+                            moneyEt.setText(total)
                         }
 
                     } else {
@@ -124,16 +130,16 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                     }
                 }
 
-        RxTextView.textChanges(et_money_value_ap)
+        RxTextView.textChanges(moneyEt)
                 .subscribe {
                     if (moneyTag) {
                         numTag = false
                         var value = ""
-                        val price = et_price_value_ap.text.toString()
+                        val price = priceEt.text.toString()
                         if (it.isNotEmpty() && price.isNotEmpty()) {
-                            value = DoubleMath.div(it.toString().toDouble(), price.toDouble()).removeE()
+                            value = DoubleMath.div(it.toString().toDouble(), price.toDouble()).formatForCurrency()
                         }
-                        et_num_value_ap.setText(value)
+                        numEt.setText(value)
                     } else {
                         moneyTag = true
                     }
@@ -153,7 +159,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     }
 
     fun publish(pwd: String) {
-        val money = et_money_value_ap.getContent().toDouble()
+        val money = moneyEt.getContent().toDouble()
         if (money < 400.0) {
             showToast("最小交易金额为400")
             return
@@ -163,7 +169,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
         }
 
         if (currentType == TYPE_SALE) {
-            submitNet(tokenId, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString(), pwd)
+            submitNet(tokenId, numEt.text.toString(), priceEt.text.toString(), et_message_ap.text.toString(), pwd)
                     .compose(netTfWithDialog())
                     .subscribe({
                         Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
@@ -176,7 +182,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         }
                     }, onError)
         } else {
-            sellNet(tokenId, userBean?.userId!!, et_num_value_ap.text.toString(), et_price_value_ap.text.toString(), et_message_ap.text.toString(), userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd)
+            sellNet(tokenId, userBean?.userId!!, numEt.text.toString(), priceEt.text.toString(), et_message_ap.text.toString(), userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd)
                     .compose(netTfWithDialog())
                     .subscribe({
                         Toast.makeText(this@PublishActivity, it.message, Toast.LENGTH_SHORT).show()
@@ -216,21 +222,21 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     }
 
     fun changLayout() {
-        et_price_value_ap.text.clear()
-        et_num_value_ap.text.clear()
-        et_money_value_ap.text.clear()
+        priceEt.text.clear()
+        numEt.text.clear()
+        moneyEt.text.clear()
         et_message_ap.text.clear()
         if (currentType == TYPE_BUY) {
             topBar.setTitle("购买委托单")
             topBar.setRightText("我要出售")
             tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#09A085\">6.75CNY</font>")
-            et_num_value_ap.hint = "请输入购买数量"
+            numEt.hint = "请输入购买数量"
             et_message_ap.hint = "下单后极速付款，到账后请及时放币"
         } else {
             topBar.setTitle("出售委托单")
             topBar.setRightText("我要购买")
             tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#FF4A5F\">6.75CNY</font>")
-            et_num_value_ap.hint = "请输入出售数量"
+            numEt.hint = "请输入出售数量"
             et_message_ap.hint = TextTool.fromHtml("1.订单有效期为15分钟，请及时付款并点击「我已支付」按钮<br/>" +
                     "2.币由系统锁定托管，请安心下单")
         }

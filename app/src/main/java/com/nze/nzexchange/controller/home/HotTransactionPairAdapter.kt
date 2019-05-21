@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.recyclerview_hot_transaction_pair.view.*
 class HotTransactionPairAdapter(var context: Context, var datas: MutableList<MarketPopularBean>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     init {
-        datas.add(0, MarketPopularBean(1, "", 1.0, 1.0, "", "", 1, "", 1, "", 0, 0.0))
+        datas.add(0, MarketPopularBean(1, "", 1.0, 1.0, "", "", 1, "", 1, "", 0.0, 0.0))
     }
 
     override fun getItemViewType(position: Int): Int {

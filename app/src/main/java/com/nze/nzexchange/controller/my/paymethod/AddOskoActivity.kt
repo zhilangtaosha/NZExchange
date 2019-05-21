@@ -18,6 +18,7 @@ import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodPresenter
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodView
 import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.extend.getValue
 import kotlinx.android.synthetic.main.activity_add_osko.*
 
 class AddOskoActivity : NBaseActivity(), PayMethodView {
@@ -34,7 +35,7 @@ class AddOskoActivity : NBaseActivity(), PayMethodView {
                         {
                             if (it.success) {
                                 val payMethodBean = it.result
-                                userBean?.payMethod?.accmoneyBpaySn = payMethodBean.accmoneyBpaySn
+                                userBean?.payMethod?.accmoneyFrBankcard = payMethodBean.accmoneyFrBankcard
 
                                 NzeApp.instance.userBean = userBean
                                 this@AddOskoActivity.finish()
@@ -62,6 +63,9 @@ class AddOskoActivity : NBaseActivity(), PayMethodView {
             nameTv.text = it.membName
         }
 
+        userBean?.payMethod?.let {
+            accountEt.setText(it.accmoneyFrBankcard?.getValue() ?: "")
+        }
         saveBtn.setOnClickListener {
             fundPopup.showPopupWindow()
         }

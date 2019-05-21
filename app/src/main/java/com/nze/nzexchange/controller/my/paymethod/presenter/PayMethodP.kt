@@ -1,11 +1,11 @@
 package com.nze.nzexchange.controller.my.paymethod.presenter
 
 import com.nze.nzeframework.ui.BaseActivityPresenter
-import com.nze.nzeframework.ui.OnErrorRs
-import com.nze.nzeframework.ui.OnSuccessRs
 import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.extend.OnErrorRs
+import com.nze.nzexchange.extend.OnSuccessRs
 
 /**
  * @author: zwy

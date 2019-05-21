@@ -5,8 +5,7 @@ import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import java.lang.ref.WeakReference
 
-typealias OnSuccessRs<T> = (Result<T>) -> Unit
-typealias OnErrorRs = (Throwable) -> Unit
+
 
 abstract class BaseActivityPresenter<T>(var activity: NBaseActivity, mIView: T) {
     private val wActivity: WeakReference<NBaseActivity> = WeakReference<NBaseActivity>(activity)

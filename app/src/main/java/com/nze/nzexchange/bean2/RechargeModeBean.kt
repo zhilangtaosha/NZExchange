@@ -28,7 +28,7 @@ data class RechargeModeBean(
         fun getPayList(methodBean: SetPayMethodBean): MutableList<RechargeModeBean> {
             val list = mutableListOf<RechargeModeBean>()
             if (!methodBean.accmoneyBankcard.isNullOrEmpty()) {
-                list.add(RechargeModeBean("中国工商银行卡", BANK))
+                list.add(RechargeModeBean("银行卡", BANK))
             }
             if (!methodBean.accmoneyFrBankcard.isNullOrEmpty()) {
                 list.add(RechargeModeBean("OSKO", OSKO))

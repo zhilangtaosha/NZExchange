@@ -9,8 +9,8 @@ package com.nze.nzexchange.config
 class KLineParam {
 
     companion object {
-        const val MARKET_MYSELF = "kline/exchange"
-        const val MARKET_HUOBI = "huobikline/exchange"
+        const val MARKET_MYSELF = "ws://192.168.1.130:443/ws"
+        const val MARKET_HUOBI = "ws://18.224.228.208:443/huobi"
 
 
         const val TIME_ONE_MIN = "1min"
@@ -22,10 +22,11 @@ class KLineParam {
         const val TIME_ONE_WEEK = "1week"
         const val TIME_ONE_MON = "1mon"
 
-        const val METHOD_GET_K="openKLine"
-        const val METHOD_CHANGE_PAIR="updateMarket"
-        const val METHOD_CHANGE_TIME="updateInterval"
-        const val METHOD_HISTORY="historicalData"
+        const val METHOD_GET_K = "openKLine"//获取k线初始数据
+        const val METHOD_CHANGE_PAIR = "updateMarket"//切换交易对
+        const val METHOD_CHANGE_TIME = "updateInterval"//切换k线时间间隔
+        const val METHOD_HISTORY = "historicalData"
+        const val METHOD_QUERYDATASOURCE = "queryDataSource"//获取平台数据
 
     }
 }

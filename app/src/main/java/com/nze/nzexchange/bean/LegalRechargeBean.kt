@@ -15,7 +15,7 @@ data class LegalRechargeBean(
         val amtBusicheckEntity: AmtBusicheckEntity,
         val auditAuditdataDataVo: Any,
         val checkpayAccount: String,
-        val checkpayAmt: Int,
+        val checkpayAmt: Double,
         val checkpayAuditUsetag: Any,
         val checkpayBillno: String,
         val checkpayCode: String,

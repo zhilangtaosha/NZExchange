@@ -18,6 +18,7 @@ import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodPresenter
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodView
 import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.extend.getValue
 import kotlinx.android.synthetic.main.activity_add_bpay.*
 
 class AddBpayActivity : NBaseActivity(), PayMethodView {
@@ -59,6 +60,10 @@ class AddBpayActivity : NBaseActivity(), PayMethodView {
         authenticationBean = intent.getParcelableExtra<RealNameAuthenticationBean>(IntentConstant.INTENT_REAL_NAME_BEAN)
         authenticationBean?.let {
             nameTv.text = it.membName
+        }
+
+        userBean?.payMethod?.let {
+            accountEt.setText(it.accmoneyBpaySn?.getValue()?:"")
         }
 
         saveBtn.setOnClickListener {

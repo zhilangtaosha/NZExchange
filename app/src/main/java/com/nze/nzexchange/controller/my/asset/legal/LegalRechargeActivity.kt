@@ -17,6 +17,7 @@ import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodPresenter
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodView
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.setDrawables
+import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_legal_recharge.*
@@ -24,7 +25,9 @@ import kotlinx.android.synthetic.main.activity_legal_recharge.*
 class LegalRechargeActivity : NBaseActivity(), PayMethodView {
     val topBar: CommonTopBar by lazy { ctb_alr }
     val rechargeMode: TextView by lazy { tv_recharge_mode_alr }
-    val amountEt: EditText by lazy { et_amount_alr }
+    val amountEt: EditText by lazy {
+        et_amount_alr
+    }
     val nextBtn: CommonButton by lazy { btn_next_alr }
     val selectPopup: SelectRechargePopup by lazy {
         SelectRechargePopup(this).apply {
@@ -73,6 +76,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
         topBar.setRightClick {
             skipActivity(LegalRechargeHistoryActivity::class.java)
         }
+        amountEt.addTextChangedListener(EditLegalWatcher(amountEt))
         rechargeMode.setOnClickListener {
             selectPopup.showPopupWindow()
         }
@@ -90,7 +94,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
                 return@setOnCommonClick
             }
             val amount = amountEt.getContent()
-            if (amount.isNullOrEmpty()) {
+            if (amount.isNullOrEmpty() || amount.toDouble() == 0.0) {
                 showToast("请输入充值金额")
                 return@setOnCommonClick
             }

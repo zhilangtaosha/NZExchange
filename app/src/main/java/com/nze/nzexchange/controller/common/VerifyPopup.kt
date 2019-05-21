@@ -84,6 +84,11 @@ class VerifyPopup(context: Activity) : BasePopupWindow(context) {
 
     }
 
+    override fun dismiss() {
+        super.dismiss()
+        sendBtn.stopVerify()
+    }
+
     override fun initShowAnimation(): Animation = TranslateAnimation(0f, 0f, dp2px(350F, context).toFloat(), 0f).apply {
         duration = 200
     }

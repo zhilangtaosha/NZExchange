@@ -217,13 +217,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         buyIsb.onSeekChangeListener = this
         saleIsb.onSeekChangeListener = this
 
-//        handicapSaleAdapter.group = HandicapBean.getList()
-//        handicapBuyAdapter.group = HandicapBean.getList()
-//        handicapSaleLv.adapter = handicapSaleAdapter
-//        handicapBuyLv.adapter = handicapBuyAdapter
 
         currentOrderLv.adapter = currentOrderAdapter
-
 
         RxTextView.textChanges(giveEt)
                 .subscribe {
@@ -496,10 +491,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     saleIsb.setProgress(0f)
                 }
             }
-            mHandler.postDelayed({
-                tradeLayout.requestLayout()
-                limitTv.text = item
-            }, 100)
+//            mHandler.postDelayed({
+//                tradeLayout.requestLayout()
+//                limitTv.text = item
+//            }, 100)
 
         } else {
             depthTv.text = "深度$item"
@@ -703,18 +698,18 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             binder = service as KLineService.KBinder?
             isBinder = true
             binder?.initKSocket(KLineParam.MARKET_MYSELF) { lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth? ->
-                if (handicap != null) {
+                if (depth != null) {
                     val buyList = mutableListOf<HandicapBean>()
                     val saleList = mutableListOf<HandicapBean>()
-                    handicap?.asks?.forEachIndexed { index, strings ->
-                        saleList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
+                    depth.asks.forEachIndexed { index, strings ->
+                        saleList.add(HandicapBean(index + 1, strings[0].toString(), strings[1].toString(), ""))
                     }
-                    handicap?.bids?.forEachIndexed { index, strings ->
-                        buyList.add(HandicapBean(index + 1, strings[0], strings[1], ""))
+                    depth.bids.forEachIndexed { index, strings ->
+                        buyList.add(HandicapBean(index + 1, strings[0].toString(), strings[1].toString(), ""))
                     }
                     handicapBuyAdapter.group = buyList.take(5).toMutableList()
                     handicapBuyLv.adapter = handicapBuyAdapter
-                    handicapSaleAdapter.group = saleList.take(5).toMutableList()
+                    handicapSaleAdapter.group = saleList.take(5).toMutableList().asReversed()
                     handicapSaleLv.adapter = handicapSaleAdapter
                 }
             }

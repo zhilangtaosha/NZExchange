@@ -10,10 +10,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.LegalFeeBean
-import com.nze.nzexchange.bean.RealNameAuthenticationBean
-import com.nze.nzexchange.bean.SetPayMethodBean
-import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.FundPasswordPopup
@@ -21,8 +18,11 @@ import com.nze.nzexchange.controller.common.TipDialog
 import com.nze.nzexchange.controller.common.VerifyPopup
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodPresenter
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodView
+import com.nze.nzexchange.extend.formatForLegal
+import com.nze.nzexchange.extend.formatForLegal2
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.CRetrofit
+import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
@@ -32,7 +32,11 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
     val topBar: CommonTopBar by lazy { ctb_alw }
     val bankCardTv: TextView by lazy { tv_bank_card_alw }
     val limitTv: TextView by lazy { tv_limit_alw }
-    val moneyEt: EditText by lazy { et_money_alw }
+    val moneyEt: EditText by lazy {
+        et_money_alw.apply {
+            addTextChangedListener(EditLegalWatcher(this))
+        }
+    }
     val availableTv: TextView by lazy { tv_available_alw }
     val feeTv: TextView by lazy { tv_fee_alw }
     val nextBtn: CommonButton by lazy { btn_next }
@@ -65,11 +69,14 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
     lateinit var feeBean: LegalFeeBean
     lateinit var setPayMethodBean: SetPayMethodBean
     var realNameAuthenticationBean: RealNameAuthenticationBean? = null
+    lateinit var accountBean: LegalAccountBean
 
     companion object {
-        fun skip(context: Context, realNameAuthenticationBean: RealNameAuthenticationBean) {
+        fun skip(context: Context, realNameAuthenticationBean: RealNameAuthenticationBean, accountBean: LegalAccountBean) {
             context.startActivity(Intent(context, LegalWithdrawActivity::class.java)
-                    .putExtra(IntentConstant.PARAM_AUTHENTICATION, realNameAuthenticationBean))
+                    .putExtra(IntentConstant.PARAM_AUTHENTICATION, realNameAuthenticationBean)
+                    .putExtra(IntentConstant.PARAM_ACCOUNT, accountBean)
+            )
         }
     }
 
@@ -78,6 +85,7 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
     override fun initView() {
         intent?.let {
             realNameAuthenticationBean = it.getParcelableExtra(IntentConstant.PARAM_AUTHENTICATION)
+            accountBean = it.getParcelableExtra(IntentConstant.PARAM_ACCOUNT)
         }
         topBar.setRightClick {
             skipActivity(LegalWithdrawHistoryActivity::class.java)
@@ -90,6 +98,14 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
             val money = moneyEt.getContent()
             if (!money.isNullOrEmpty()) {
                 val m = money.toDouble()
+                if (m > accountBean.accAbleAmount) {
+                    showToast("当前账号可提现额为${accountBean.accAbleAmount}CNY")
+                    return@setOnCommonClick
+                }
+                if (m > feeBean.feeAmthigh) {
+                    showToast("单日交易限额 ¥${feeBean.feeAmthigh}")
+                    return@setOnCommonClick
+                }
                 if (m > 0) {
                     verifyPopup.showPopupWindow()
                 } else {
@@ -104,9 +120,9 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
                 .subscribe {
                     if (!it.isNullOrEmpty()) {
                         var m = it.toString().toDouble()
-                        if (m > feeBean.feeAmthigh) {
-                            showToast("单日交易限额 ¥${feeBean.feeAmthigh}")
-                        }
+//                        if (m > feeBean.feeAmthigh) {
+//                            showToast("单日交易限额 ¥${feeBean.feeAmthigh}")
+//                        }
                         var rate = 0.0
                         for (fee in feeList) {
                             if (m >= fee.feeAmtlow && m <= fee.feeAmthigh) {
@@ -114,7 +130,7 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
                                 break
                             }
                         }
-                        val rateMoney = m * rate
+                        val rateMoney = (m * rate).formatForLegal2()
                         feeTv.text = "手续费 ${rateMoney}CNY"
                         availableTv.text = "可转金额${m - rateMoney}CNY"
                     } else {

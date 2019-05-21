@@ -189,7 +189,7 @@
             android:layout_toRightOf="@+id/tv_money_ab"
             android:background="@android:color/transparent"
             android:hint="请输入交易金额"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textColor="@color/color_FFA3AAB9"
             android:textColorHint="@color/color_FF7F8592"
             android:textSize="14sp" />

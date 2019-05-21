@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.otc
 
 import android.content.Intent
 import android.view.View
+import android.widget.EditText
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -18,9 +19,14 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.otc.main.OtcContentFragment
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
+import com.nze.nzexchange.extend.formatForLegal2
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.ViewFactory
+import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
+import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import kotlinx.android.synthetic.main.activity_buy.*
 import org.greenrobot.eventbus.EventBus
@@ -29,7 +35,16 @@ import org.greenrobot.eventbus.EventBus
  * OTC购买和出售
  */
 class BuyActivity : NBaseActivity(), View.OnClickListener {
-
+    val numEt: EditText by lazy {
+        et_num_value_ab.apply {
+            addTextChangedListener(EditCurrencyWatcher(this))
+        }
+    }
+    val moneyEt: EditText by lazy {
+        et_money_value_ab.apply {
+            addTextChangedListener(EditLegalWatcher(this))
+        }
+    }
     var type = OtcContentFragment.TYPE_BUY
     lateinit var orderPoolBean: OrderPoolBean
     private var price: Double = 0.0
@@ -39,7 +54,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         FundPasswordPopup(this).apply {
             onPasswordClick = {
                 orderPoolBean.run {
-                    sellNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, it)
+                    sellNet(poolId, userId, userBean?.userId!!, numEt.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, it)
                             .compose(netTfWithDialog())
                             .subscribe({
                                 if (it.success) {
@@ -94,36 +109,40 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
 
 
         btn_confirm_ab.initValidator()
-                .add(et_num_value_ab, EmptyValidation())
-                .add(et_money_value_ab, EmptyValidation())
+                .add(numEt, EmptyValidation())
+                .add(moneyEt, EmptyValidation())
                 .executeValidator()
                 .setOnClickListener(this)
 
-        RxTextView.textChanges(et_num_value_ab)
+        RxTextView.textChanges(numEt)
                 .subscribe {
                     if (flag) {
                         flag = false
-                        var value = ""
+                        var value = 0.0
                         if (it.isNotEmpty() && price > 0.0) {
                             val amount = it.toString().toDouble()
-                            value = DoubleMath.mul(amount, price).toString()
-                            if (amount > orderPoolBean.poolLeftamount)
-                                showToast("交易数量超过委托数量")
+                            value = DoubleMath.mul(amount, price)
+//                            if (amount > orderPoolBean.poolLeftamount)
+//                                showToast("交易数量超过委托数量")
+
+//                            if (value <= 0.0)
+//                                showToast("交易金额不能为0")
+
                         }
-                        et_money_value_ab.setText(value)
+                        moneyEt.setText(value.formatForLegal())
                     } else {
                         flag = true
                     }
                 }
 
-        RxTextView.textChanges(et_money_value_ab)
+        RxTextView.textChanges(moneyEt)
                 .subscribe {
                     if (flag) {
                         flag = false
-                        var value = ""
+                        var value = 0.0
                         if (it.isNotEmpty() && price > 0.0)
-                            value = DoubleMath.div(it.toString().toDouble(), price).toString()
-                        et_num_value_ab.setText(value)
+                            value = DoubleMath.div(it.toString().toDouble(), price)
+                        numEt.setText(value.formatForCurrency())
                     } else {
                         flag = true
                     }
@@ -156,15 +175,21 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_confirm_ab -> {
-                val amount = et_num_value_ab.toString().toDouble()
+                val amount = numEt.getContent().toDouble()
                 if (amount > orderPoolBean.poolLeftamount) {
                     showToast("交易数量超过委托数量")
                     return
                 }
+                val value = DoubleMath.mul(amount, price).formatForLegal2()
+                if (value < 400 ) {
+                    showToast("最小交易金额为400")
+                    return
+                }
+
                 if (type == OtcContentFragment.TYPE_BUY) {
 //                    skipActivity(SaleConfirmActivity::class.java)
                     orderPoolBean.run {
-                        submitNet(poolId, userId, userBean?.userId!!, et_num_value_ab.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                        submitNet(poolId, userId, userBean?.userId!!, numEt.getContent(), tokenId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                                 .compose(netTfWithDialog())
                                 .subscribe({
                                     if (it.success) {
@@ -192,7 +217,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                 }
             }
             R.id.tv_all_ab -> {
-                et_num_value_ab.setText(orderPoolBean.poolLeftamount.toString())
+                numEt.setText(orderPoolBean.poolLeftamount.formatForCurrency())
             }
             R.id.btn_cancle_ab -> this@BuyActivity.finish()
             else -> {

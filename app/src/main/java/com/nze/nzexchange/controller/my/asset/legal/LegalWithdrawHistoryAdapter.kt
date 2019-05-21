@@ -25,7 +25,7 @@ class LegalWithdrawHistoryAdapter(mContext: Context) : NBaseAda<LegalWithdrawHis
         vh.statusTv.text = item.getStatus()
         vh.timeValueTv.text = TimeTool.format(TimeTool.PATTERN2, item.pickfundCreateTime)
         vh.amountValueTv.text = "-${item.pickfundApplyamt}"
-//        vh.balanceValueTv.text = "${item.checkpayFronzenamount + item.checkpayAbleamount}"
+        vh.balanceValueTv.text = "${item.pickfundAbleamount + item.pickfundFronzenamount}"
     }
 
 

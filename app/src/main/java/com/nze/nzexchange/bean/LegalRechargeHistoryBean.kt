@@ -11,7 +11,7 @@ data class LegalRechargeHistoryBean(
         val auditAuditdataDataVo: AuditAuditdataDataVo,
         val checkpayAbleamount: Int,
         val checkpayAccount: Any,
-        val checkpayAmt: Int,
+        val checkpayAmt: Double,
         val checkpayAuditUsetag: Any,
         val checkpayBillno: Any,
         val checkpayCode: String,
