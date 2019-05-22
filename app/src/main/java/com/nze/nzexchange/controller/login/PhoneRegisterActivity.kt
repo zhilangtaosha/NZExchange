@@ -43,6 +43,7 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
     val pwdEt: ClearableEditText by lazy { et_pwd_apr }
     val pwdCb: CheckBox by lazy { cb_pwd_apr }
     val agreeCb: CheckBox by lazy { cb_agree_apr }
+    val agreeTv:TextView by lazy { tv_agree_apr }
     val registerBtn: CommonButton by lazy { btn_register_apr }
     val appPreferences: AppPreferences by lazy { AppPreferences(this) }
 
@@ -76,6 +77,7 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
 
         verifyButton.setVerifyClick(this)
         registerBtn.setOnCommonClick(this)
+        agreeTv.setOnClickListener(this)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -179,6 +181,9 @@ class PhoneRegisterActivity : NBaseActivity(), View.OnClickListener {
                             })
 
                 }
+            }
+            R.id.tv_agree_apr->{
+                skipActivity(RegisterAgreementActivity::class.java)
             }
         }
     }

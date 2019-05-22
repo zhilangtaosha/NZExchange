@@ -215,12 +215,16 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                         dialog.show(type)
                         getAsset()
                     } else {
-                        AuthorityDialog.getInstance(this)
-                                .show("资金划转需要完成以下设置，请检查",
-                                        it.cause
-                                ) {
-                                    this@TransferActivity.finish()
-                                }
+                        if (it.isCauseNotEmpty()) {
+                            AuthorityDialog.getInstance(this)
+                                    .show("资金划转需要完成以下设置，请检查",
+                                            it.cause
+                                    ) {
+                                        this@TransferActivity.finish()
+                                    }
+                        } else {
+                            showToast(it.message)
+                        }
                     }
                 }, onError)
     }
@@ -246,5 +250,5 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
 
                 }, onError)
     }
-    
+
 }

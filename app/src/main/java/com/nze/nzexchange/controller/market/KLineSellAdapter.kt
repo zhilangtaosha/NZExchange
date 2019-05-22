@@ -6,6 +6,7 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.widget.depth.DepthDataBean
 import kotlinx.android.synthetic.main.lv_buy_kline.view.*
 
 /**
@@ -14,14 +15,14 @@ import kotlinx.android.synthetic.main.lv_buy_kline.view.*
  * @类 说 明:
  * @创建时间：2019/1/24
  */
-class KLineSellAdapter(mContext: Context) : NBaseAda<ShenDubean, KLineSellAdapter.ViewHolder>(mContext) {
+class KLineSellAdapter(mContext: Context) : NBaseAda<DepthDataBean, KLineSellAdapter.ViewHolder>(mContext) {
     override fun setLayout(): Int = R.layout.lv_sell_kline
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: ShenDubean, position: Int) {
-        vh.amountTv.text = item.amount
-        vh.priceTv.text = item.price
+    override fun initView(vh: ViewHolder, item: DepthDataBean, position: Int) {
+        vh.amountTv.text = item.volume.toString()
+        vh.priceTv.text = item.price.toString()
     }
 
 

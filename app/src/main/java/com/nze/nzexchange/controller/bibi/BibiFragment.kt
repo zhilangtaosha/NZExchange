@@ -35,6 +35,7 @@ import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.controller.otc.PublishActivity
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.HttpConfig
+import com.nze.nzexchange.tools.editjudge.EditCurrencyPriceWatcher
 import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.nze.nzexchange.widget.indicatorseekbar.IndicatorSeekBar
@@ -189,7 +190,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val fundPopup: FundPasswordPopup by lazy {
         FundPasswordPopup(activity!!).apply {
             onPasswordClick = {
-                btnHandler(userBean!!, getEt.getContent().toDouble(), giveEt.getContent().toDouble(), it)
+                btnHandler(userBean!!, getEt.getContent().toDouble(), if (!giveEt.getContent().isNullOrEmpty()) {
+                    giveEt.getContent().toDouble()
+                } else {
+                    0.0
+                }, it)
             }
         }
     }
@@ -216,7 +221,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         buyIsb.onSeekChangeListener = this
         saleIsb.onSeekChangeListener = this
-
+        giveEt.addTextChangedListener(EditCurrencyPriceWatcher(giveEt))
 
         currentOrderLv.adapter = currentOrderAdapter
 
@@ -227,7 +232,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val input = it.toString().toDouble()
                         val price = get.toDouble()
                         val total = input * price
-                        totalTransactionTv.text = "交易额 ${total.retain4ByUp()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "交易额 ${total.retain8ByFloor()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || get.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
                         totalTransactionTv.text = "交易额 0 ${currentTransactionPair?.mainCurrency}"
                     }
@@ -240,12 +245,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val input = it.toString().toDouble()
                         val price = give.toDouble()
                         val total = input * price
-                        totalTransactionTv.text = "交易额 ${total.retain4ByUp()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "交易额 ${total.retain8ByFloor()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || give.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
                         totalTransactionTv.text = "交易额 0${currentTransactionPair?.mainCurrency}"
                     } else if (it.isNotEmpty() && transactionType == TRANSACTIONTYPE_MARKET) {
                         val input = it.toString().toDouble()
-                        totalTransactionTv.text = "交易额 ${input.retain4ByUp()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "交易额 ${input.retain8ByFloor()} ${currentTransactionPair?.mainCurrency}"
                     }
 
                 }

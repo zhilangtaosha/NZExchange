@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".controller.otc.OtcAppealActivity">
+
+        <com.nze.nzexchange.widget.CommonTopBar
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            app:tb_title_text="申诉" />
+
+        <TextView
+            android:id="@+id/tv_cause_aoa"
+            style="@style/tx15_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_line2a32_bg1f27"
+            android:drawableRight="@mipmap/right_arrow2"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:text="请选择申诉原因" />
+
+        <TextView
+            style="@style/tx15_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:text="申诉理由" />
+
+        <EditText
+            android:id="@+id/et_reason_aoa"
+            style="@style/et15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@drawable/shape_line2a32_bg1f27"
+            android:gravity="top|left"
+            android:hint="请输入申诉理由"
+            android:lines="5"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_line2a32_bg1f27"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <TextView
+                style="@style/tx15_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/tip_icon"
+                android:drawablePadding="10dp"
+                android:text="警告" />
+
+            <TextView
+                style="@style/tx15_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="提起申诉后，资产将会被冻结，申诉专员将会介入本次交易，直至申诉结束。恶意申诉属于扰乱平台正常运营秩序行为。情节严重将冻结账户。" />
+        </LinearLayout>
+
+        <com.nze.nzexchange.widget.CommonButton
+            android:id="@+id/btn_submit_aoa"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:text="提交申诉" />
+
+    </LinearLayout>
+</ScrollView>

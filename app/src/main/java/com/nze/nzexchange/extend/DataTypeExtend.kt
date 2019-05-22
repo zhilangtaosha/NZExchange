@@ -48,6 +48,7 @@ fun Double.retain2(): String {
 /**
  * 保留4位小数
  * 不四舍五入
+ * 直接舍弃O
  */
 fun Double.retain4ByFloor(): String {
     val df = DecimalFormat("0.####")
@@ -64,6 +65,17 @@ fun Double.retain4ByUp(): String {
     df.setRoundingMode(RoundingMode.UP);
     return df.format(this)
 }
+
+/**
+ * 保留8位小数
+ * 超过直接舍弃
+ */
+fun Double.retain8ByFloor(): String {
+    val df = DecimalFormat("0.########")
+    df.setRoundingMode(RoundingMode.FLOOR);
+    return df.format(this)
+}
+
 
 /**
  * 取消科学计数法

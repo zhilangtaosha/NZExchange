@@ -50,10 +50,10 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
         vh.costValueTv.text = item.price
 
         vh.amountKeyTv.text = "数量(${currency})"
-        vh.amountValueTv.text = item.deal_stock
+        vh.amountValueTv.text = item.amount
 
         vh.realAmountKeyTv.text = "实际成交(${currency})"
-        vh.realAmountValueTv.text = item.deal_money
+        vh.realAmountValueTv.text = item.deal_stock
 
         when (item.status) {
             OrderStatus.COMPLETED -> {

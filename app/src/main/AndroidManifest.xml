@@ -168,8 +168,13 @@
             android:theme="@style/DialogTheme" />
         <activity android:name=".controller.my.authentication.AuthenticationFailActivity" />
         <activity android:name=".controller.my.paymethod.AddBpayActivity" />
-        <activity android:name=".controller.my.paymethod.AddOskoActivity"></activity>
+        <activity android:name=".controller.my.paymethod.AddOskoActivity" />
         <activity android:name=".controller.my.asset.legal.LegalRechargeHistoryActivity" />
+        <activity
+            android:name=".controller.otc.OtcAppealActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity android:name=".controller.login.RegisterAgreementActivity"></activity>
     </application>
 
 </manifest>

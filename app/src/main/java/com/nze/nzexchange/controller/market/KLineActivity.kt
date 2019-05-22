@@ -54,7 +54,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val switchRightIv: ImageView by lazy { iv_switch_right_kline }
     val marketNameTv: TextView by lazy { tv_market_name_kline }//市场名称
     val pairNameTv: TextView by lazy { tv_pair_name_kline }//交易对名称
-    val backMySelf: ImageView by lazy { iv_back_kline }//回到公司交易平台
+    val backMySelf: ImageView by lazy {
+        iv_back_kline.apply {
+            setOnClickListener {
+                marketIndex = 0
+                changMarket(marketIndex)
+            }
+        }
+    }//回到公司交易平台
 
     val switchIv: ImageView by lazy { iv_switch_kline }//切换全屏按钮
     val selfSelectIv: ImageView by lazy { iv_self_select_kline }//自选按钮
@@ -265,16 +272,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 //        checkMarket()
     }
 
-    private fun test() {
-
-        getKlineData()
-
-        buyAdapter.group = ShenDubean.getList()
-        buyLv.adapter = buyAdapter
-
-        sellAdapter.group = ShenDubean.getList()
-        sellLv.adapter = sellAdapter
-    }
 
     private fun initKSocket(market: String) {
         socket?.cancel()
@@ -634,7 +631,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     }
 
                     if (latestDeal != null) {
-                        newDealList.clear()
                         newDealList.addAll(latestDeal)
                         it.onNext(DATE_NEW_DEAL)
                     }
@@ -685,22 +681,26 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                                 chartAdapter.notifyDataSetChanged()
                             }
                             DATA_HANDICAP -> {//盘口数据
-                                buyAdapter.group = buyList
-                                buyLv.adapter = buyAdapter
 
-                                sellAdapter.group = sellList
-                                sellLv.adapter = sellAdapter
                             }
                             DATE_NEW_DEAL -> {//最新成交数据
-                                newDealAdapter.group = newDealList
+                                newDealAdapter.group = newDealList.take(20).toMutableList()
                                 newDealLv.adapter = newDealAdapter
                             }
                             DATA_DEPTH -> {
                                 depthView.setData(depthSellList, depthBuyList)
+
+                                depthBuyList.sortByDescending { it.price }
+                                buyAdapter.group = depthBuyList
+                                buyLv.adapter = buyAdapter
+
+                                sellAdapter.group = depthSellList
+                                sellLv.adapter = sellAdapter
                             }
                             DATA_DATASOURCE -> {
                                 switchLeftIv.visibility = View.VISIBLE
                                 switchRightIv.visibility = View.VISIBLE
+                                backMySelf.visibility = View.VISIBLE
                             }
                         }
                     }, {

@@ -40,6 +40,7 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
     private val pwdEt: ClearableEditText by lazy { et_pwd_aer }
     private val pwdCb: CheckBox by lazy { cb_pwd_aer }
     private val agreeCb: CheckBox by lazy { cb_agree_aer }
+    private val agreeTv: TextView by lazy { tv_agree_aer }
     private val registerBtn: CommonButton by lazy { btn_register_aer }
     val REQUEST_CODE = 0x112
     var countryName = "中国"
@@ -72,7 +73,7 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
                 .add(verifyEt, EmptyValidation())
                 .add(pwdEt, PasswordValidation())
                 .executeValidator()
-
+        agreeTv.setOnClickListener(this)
 
     }
 
@@ -178,6 +179,9 @@ class EmailRegisterActivity : NBaseActivity(), View.OnClickListener {
 
 
                 }
+            }
+            R.id.tv_agree_aer -> {
+                skipActivity(RegisterAgreementActivity::class.java)
             }
         }
     }

@@ -4,9 +4,12 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import com.leiyun.fingerprint.FingerprintDialog
@@ -33,7 +36,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
 
     val mFragmentManager: FragmentManager by lazy { supportFragmentManager }
     var mCurrentTab = 0
-    var mLastTab = -1
+    var mLastTab = 0
     var mLastFragment: NBaseFragment? = null
     //指纹解锁
     val mDialog: FingerprintDialog by lazy {
@@ -44,6 +47,34 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
     //share preferences
     val appPreferences: AppPreferences by lazy { AppPreferences(this) }
 
+    /**
+     * 是否退出应用
+     */
+    private var isExit: Boolean = false
+    private val mHandler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            isExit = false
+        }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (mCurrentTab != 0) {
+            mLastTab = mCurrentTab
+            mCurrentTab = 0
+            selectTab(mCurrentTab)
+            return true
+        }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!isExit) {
+                showToast("再按一次退出应用")
+                isExit = true
+                mHandler.sendEmptyMessageDelayed(0, 1000)
+                return true
+            }
+        }
+
+        return super.onKeyDown(keyCode, event)
+    }
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -60,7 +91,9 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         if (eventCenter.eventCode == EventCode.CODE_REFRESH_MAIN_ACT) {
             val i = eventCenter.data as Int
-            selectTab(i)
+            mLastTab = mCurrentTab
+            mCurrentTab = i
+            selectTab(mCurrentTab)
         }
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
             selectTab(mCurrentTab)
@@ -75,7 +108,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
                 }
             }
         }
-        if (eventCenter.eventCode == EventCode.CODE_LOGIN_FAIL){
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_FAIL) {
             skipActivity(MainActivity::class.java)
             skipActivity(LoginActivity::class.java)
         }
@@ -99,12 +132,13 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         tab_bibi_main.setOnClickListener(this)
         tab_otc_main.setOnClickListener(this)
         tab_my_main.setOnClickListener(this)
-        selectTab(0)
+        selectTab(mCurrentTab)
 
         FingerprintHelper.init(this)//指纹解锁
     }
 
     override fun onClick(v: View?) {
+        mLastTab = mCurrentTab
         when (v?.id) {
             R.id.tab_home_main -> mCurrentTab = 0
             R.id.tab_market_main -> mCurrentTab = 1
@@ -126,8 +160,8 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
     }
 
     private fun selectTab(position: Int) {
-        mLastTab = position
-        mCurrentTab = mLastTab
+//        mLastTab = position
+//        mCurrentTab = mLastTab
         val childCount = layout_tab_main.getChildCount()
         for (i in 0 until childCount) {
             if (position != i) {

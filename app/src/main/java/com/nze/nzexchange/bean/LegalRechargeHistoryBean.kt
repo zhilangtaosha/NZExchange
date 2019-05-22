@@ -9,7 +9,7 @@ package com.nze.nzexchange.bean
 data class LegalRechargeHistoryBean(
         val amtBusicheckEntity: AmtBusicheckEntity,
         val auditAuditdataDataVo: AuditAuditdataDataVo,
-        val checkpayAbleamount: Int,
+        val checkpayAbleamount: Double,
         val checkpayAccount: Any,
         val checkpayAmt: Double,
         val checkpayAuditUsetag: Any,
@@ -19,7 +19,7 @@ data class LegalRechargeHistoryBean(
         val checkpayCreateTimeStr: String,
         val checkpayCreateUser: String,
         val checkpayDoTime: Long,
-        val checkpayFronzenamount: Int,
+        val checkpayFronzenamount: Double,
         val checkpayId: String,
         val checkpayMemo: Any,
         val checkpayName: String,

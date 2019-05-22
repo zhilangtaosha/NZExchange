@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.bibi
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
+import android.os.Handler
 import android.os.IBinder
 import com.google.gson.Gson
 import com.nze.nzeframework.tool.NLog
@@ -30,6 +31,7 @@ import okio.ByteString
 class KLineService : Service() {
 
     val binder: KBinder = KBinder()
+
     override fun onCreate() {
         super.onCreate()
     }
@@ -68,10 +70,14 @@ class KLineService : Service() {
             get() {
                 return System.currentTimeMillis().toString()
             }
+        lateinit var market: String
+        lateinit var pairsBean: TransactionPairsBean
+        var mHandler: Handler = Handler()
 
-        var kDataCallBack: ((lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth?) -> Unit)? = null
+        lateinit var kDataCallBack: ((lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth?) -> Unit)
         fun initKSocket(market: String, kDataCallBack: ((lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth?) -> Unit)) {
             this.kDataCallBack = kDataCallBack
+            this.market = market
             socket?.cancel()
             nWebSocket = NWebSocket.newInstance("$market", wsListener)
             socket = nWebSocket?.open()
@@ -83,6 +89,7 @@ class KLineService : Service() {
          * 初始参数是1分钟
          */
         fun getKDataRequest(pairsBean: TransactionPairsBean) {
+            this.pairsBean = pairsBean
             val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
             requestBean.params.add("${pairsBean.currency.toUpperCase()}${pairsBean.mainCurrency.toUpperCase()}")
             requestBean.params.add(KLineParam.TIME_ONE_MIN)
@@ -97,6 +104,7 @@ class KLineService : Service() {
          * 切换交易对
          */
         fun changePair(pairsBean: TransactionPairsBean) {
+            this.pairsBean = pairsBean
             val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_CHANGE_PAIR, mutableListOf<String>())
             requestBean.params.add("${pairsBean.currency.toUpperCase()}${pairsBean.mainCurrency.toUpperCase()}")
             requestBean.params.add(KLineParam.TIME_ONE_MIN)
@@ -114,6 +122,10 @@ class KLineService : Service() {
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 super.onFailure(webSocket, t, response)
                 NLog.i("onFailure")
+                mHandler.postDelayed({
+                    initKSocket(market, kDataCallBack)
+                    getKDataRequest(pairsBean)
+                }, 5000)
             }
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -131,7 +143,7 @@ class KLineService : Service() {
             val DATA_DEPTH = 7
             var handicap: Handicap? = null
             override fun onMessage(webSocket: WebSocket, text: String) {
-                NLog.i("text>>>$text")
+//                NLog.i("service text>>>$text")
                 Observable.create<Int> {
                     try {
                         var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
