@@ -25,12 +25,6 @@ data class MarketPopularBean(
 ) {
     companion object {
 
-        fun marketPopular(): Flowable<Result<MutableList<MarketPopularBean>>> {
-            return Flowable.defer {
-                NRetrofit.instance
-                        .bibiService()
-                        .marketPopular()
-            }
-        }
+
     }
 }

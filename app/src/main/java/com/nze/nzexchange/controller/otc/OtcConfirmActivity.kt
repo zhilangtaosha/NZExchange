@@ -6,6 +6,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.ui.BaseActivity
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.R.id.*
 import com.nze.nzexchange.bean.SubOrderInfoBean
@@ -504,7 +505,7 @@ class OtcConfirmActivity : NBaseActivity() {
     fun confirm(rs: Result<Boolean>) {
         if (rs.success) {
             this@OtcConfirmActivity.finish()
-            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_CONFIRM_PAY))
+            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_OTC_ORDER))
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_ASSET))
         } else {
             try {
@@ -522,28 +523,31 @@ class OtcConfirmActivity : NBaseActivity() {
 
 
     fun cancelNet(subOrderInfoBean: SubOrderInfoBean) {
-//        if (NzeApp.instance.userId == subOrderInfoBean.userIdSell) {//本人是商家
-//            NRetrofit.instance
-//                    .sellService()
-//                    .userCancelOrder(NzeApp.instance.userId, subOrderInfoBean.suborderId)
-//                    .compose(netTf())
-//                    .subscribe({
-//                        cancel(it)
-//                    }, onError)
-//        } else {//本人是用户
-        NRetrofit.instance
-                .buyService()
-                .userCancelOrder(userBean?.userId!!, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                .compose(netTf())
-                .subscribe({
-                    cancel(it)
-                }, onError)
-//        }
+        if (userBean!!.userId == subOrderInfoBean.userIdSell) {//本人是商家
+            NRetrofit.instance
+                    .sellService()
+                    .userCancelOrder(userBean!!.userId, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .compose(netTf())
+                    .subscribe({
+                        cancel(it)
+                    }, onError)
+        } else {//本人是用户
+            NRetrofit.instance
+                    .buyService()
+                    .userCancelOrder(userBean?.userId!!, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .compose(netTf())
+                    .subscribe({
+                        cancel(it)
+                    }, onError)
+        }
     }
 
     fun cancel(rs: Result<Boolean>) {
         showToast(rs.message)
-        if (rs.success)
+        if (rs.success){
+            EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_OTC_ORDER))
             this@OtcConfirmActivity.finish()
+
+        }
     }
 }

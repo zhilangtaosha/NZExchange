@@ -18,6 +18,9 @@ import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.config.KLineRequestBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.market.presenter.KLineP
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.retainInt
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.extend.twoPlace
 import com.nze.nzexchange.http.HRetrofit
@@ -48,7 +51,7 @@ import kotlin.math.cos
  * http://www.blue-zero.com/WebSocket/
  */
 class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFragmentInteractionListener {
-
+    val kLineP: KLineP by lazy { KLineP(this) }
     val transactionNameTv: TextView by lazy { tv_transaction_name_kline }//交易对名称
     val switchLeftIv: ImageView by lazy { iv_switch_left_kline }//左切换按钮
     val switchRightIv: ImageView by lazy { iv_switch_right_kline }
@@ -64,7 +67,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     }//回到公司交易平台
 
     val switchIv: ImageView by lazy { iv_switch_kline }//切换全屏按钮
-    val selfSelectIv: ImageView by lazy { iv_self_select_kline }//自选按钮
+    val selfSelectTv: TextView by lazy { iv_self_select_kline }//自选按钮
     val costTv: TextView by lazy { tv_cost_kline }//兑换价格
     val hightCostTv: TextView by lazy { tv_hight_cost_kline }//24小时最高价
     val lowCostTv: TextView by lazy { tv_low_cost_kline }//24h最低价
@@ -240,6 +243,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         transactionNameTv.setOnClickListener(this)
         switchLeftIv.setOnClickListener(this)
         switchRightIv.setOnClickListener(this)
+        selfSelectTv.setOnClickListener(this)
 
         pairNameTv.text = pairsBean?.transactionPair
 
@@ -260,6 +264,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         selectKline(kType)
         select(currentSelect)
 
+
+
 //        getDepthData()
 
         //测试数据
@@ -270,8 +276,12 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         getTokenInfo()
 
 //        checkMarket()
+        refreshLayout()
     }
 
+    fun refreshLayout(){
+        selfSelectTv.isSelected = pairsBean!!.optional == 1
+    }
 
     private fun initKSocket(market: String) {
         socket?.cancel()
@@ -464,6 +474,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             R.id.tv_transaction_name_kline -> {
                 finish()
             }
+            R.id.iv_self_select_kline->{
+//                if (UserBean.isLogin(this))
+//                kLineP.optionalHandler(userBean,pairsBean,)
+            }
         }
     }
 
@@ -650,7 +664,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                             DATA_QUOTES -> {
                                 hightCostTv.text = quote?.get(2)
                                 lowCostTv.text = quote?.get(3)
-                                volumeTv.text = quote?.get(4)
+
+                                volumeTv.text = quote?.get(4)!!.toDouble().retainInt()
                                 try {
                                     costTv.text = quote?.get(6)
                                     setPriceWave(quote?.get(0)!!.toDouble(), quote?.get(6)!!.toDouble())
@@ -690,11 +705,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                             DATA_DEPTH -> {
                                 depthView.setData(depthSellList, depthBuyList)
 
-                                depthBuyList.sortByDescending { it.price }
-                                buyAdapter.group = depthBuyList
+                                depthSellList.sortByDescending { it.price }
+                                buyAdapter.group = depthSellList
                                 buyLv.adapter = buyAdapter
 
-                                sellAdapter.group = depthSellList
+                                sellAdapter.group = depthBuyList
                                 sellLv.adapter = sellAdapter
                             }
                             DATA_DATASOURCE -> {

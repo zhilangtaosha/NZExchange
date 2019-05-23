@@ -83,6 +83,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         }
     }
     var feeRate: Double = 0.0//提币手续费
+    var feeLimitlowGet: Double = 0.0//最小提现数量
 
     override fun getRootView(): Int = R.layout.activity_coin_withdraw
 
@@ -259,8 +260,9 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                     .compose(netTfWithDialog())
                     .subscribe({ rs ->
                         if (rs.success) {
+                            feeLimitlowGet = rs.result.feeLimitlowGet
                             feeRate = rs.result.feeRate
-                            serviceChargeTv.text = "$feeRate${it.currency}"
+                            serviceChargeTv.text = "${feeRate.formatForCurrency()}${it.currency}"
                         }
                     }, onError)
 
@@ -289,6 +291,10 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         if (amount.isNullOrEmpty()) {
             showToast("请输入提现数量")
             amountEt.requestFocus()
+            return
+        }
+        if (amount.toDouble() < feeLimitlowGet) {
+            showToast("提现最小数量为${feeLimitlowGet}")
             return
         }
         if (checkcodeId.isNullOrEmpty()) {

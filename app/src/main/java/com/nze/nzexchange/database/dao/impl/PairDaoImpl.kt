@@ -29,6 +29,8 @@ class PairDaoImpl : PairDao {
         cv.put("gain", it.gain)
         cv.put("optional", it.optional)
         cv.put("volume",it.volume)
+        cv.put("popular",it.popular)
+        cv.put("deal",it.deal)
         db.update(DbHelper.TAB_TRANSACTION_PAIR, cv, "tid=?", arrayOf("${it.id}"))
         db.close()
     }
@@ -80,6 +82,8 @@ class PairDaoImpl : PairDao {
         cv.put("gain", it.gain)
         cv.put("optional", it.optional)
         cv.put("volume",it.volume)
+        cv.put("popular",it.popular)
+        cv.put("deal",it.deal)
         db.update(DbHelper.TAB_TRANSACTION_PAIR, cv, "tid=?", arrayOf("${it.id}"))
     }
 
@@ -95,6 +99,8 @@ class PairDaoImpl : PairDao {
         cv.put("gain", it.gain)
         cv.put("optional", it.optional)
         cv.put("volume",it.volume)
+        cv.put("popular",it.popular)
+        cv.put("deal",it.deal)
         db.insert(DbHelper.TAB_TRANSACTION_PAIR, null, cv)
     }
 
@@ -117,7 +123,9 @@ class PairDaoImpl : PairDao {
                     cursor.getString(7),
                     cursor.getDouble(8),
                     cursor.getInt(9),
-                    cursor.getDouble(10)
+                    cursor.getDouble(10),
+                    cursor.getInt(11),
+                    cursor.getDouble(12)
             )
             list.add(bean)
             cursor.moveToNext()

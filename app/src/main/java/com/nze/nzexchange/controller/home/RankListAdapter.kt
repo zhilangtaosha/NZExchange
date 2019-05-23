@@ -7,13 +7,15 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.MarketPopularBean
 import com.nze.nzexchange.bean.TransactionPairBean
+import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.controller.base.BaseAda
+import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.setTxtColor
 import kotlinx.android.synthetic.main.abc_alert_dialog_material.view.*
 import kotlinx.android.synthetic.main.lv_rank_home.view.*
 
-class RankListAdapter(mContext: Context) : BaseAda<MarketPopularBean>(mContext) {
+class RankListAdapter(mContext: Context) : BaseAda<TransactionPairsBean>(mContext) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var vh: ViewHolder? = null
         var cView: View? = null
@@ -88,6 +90,9 @@ class RankListAdapter(mContext: Context) : BaseAda<MarketPopularBean>(mContext) 
         } else {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
             vh.changeTv.text = "${bean.gain}%"
+        }
+        cView!!.setOnClickListener {
+            KLineActivity.skip(mContext,bean)
         }
         return cView!!
     }

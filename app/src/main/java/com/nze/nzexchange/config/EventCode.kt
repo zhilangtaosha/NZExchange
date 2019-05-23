@@ -9,7 +9,7 @@ package com.nze.nzexchange.config
 class EventCode {
     companion object {
         const val CODE_PULISH = 0x001//OTC发布广告通知
-        const val CODE_CONFIRM_PAY = 0x002
+        const val CODE_CONFIRM_PAY = 0x002//OTC确定付款
         const val CODE_REFRESH_ASSET = 0x003
         const val CODE_GET_MAIN_CURRENCY = 0x004
         const val CODE_SELECT_TRANSACTIONPAIR = 0x005
@@ -24,5 +24,6 @@ class EventCode {
         const val CODE_OTC_TRADE_SUCCESS = 0x014//OTC交易成功
         const val CODE_LOGIN_FAIL = 0x015//登录失效
         const val CODE_CHANGE_OTC_CURRENCY = 0x016//切换OTC交易交易币种
+        const val CODE_REFRESH_OTC_ORDER = 0x017//刷新OTC订单列表
     }
 }

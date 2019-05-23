@@ -14,13 +14,13 @@
 
         <TextView
             android:id="@+id/tv_account_home"
+            style="@style/tx15_common"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:background="@color/color_FF181F27"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
-            android:text="AUSCoin Exchange"
-            style="@style/tx15_common"/>
+            android:text="AUSCoin Exchange" />
 
         <com.zhuang.zbannerlibrary.ZBanner
             android:id="@+id/carousel_home"
@@ -83,7 +83,7 @@
                     android:layout_centerInParent="true"
                     android:drawableLeft="@mipmap/legal_transaction"
                     android:drawablePadding="4dp"
-                    android:text="法币交易"
+                    android:text="法币充值"
                     android:textColor="@color/color_FF337AE5"
                     android:textSize="14sp" />
             </RelativeLayout>

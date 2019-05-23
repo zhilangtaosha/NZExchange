@@ -19,8 +19,6 @@ import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
-import com.nze.nzexchange.bean.OrderPendBean.Companion.orderPending
-import com.nze.nzexchange.bean.RestOrderBean.Companion.getPendingOrderInfo
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.KLineParam
@@ -32,7 +30,6 @@ import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
-import com.nze.nzexchange.controller.otc.PublishActivity
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.HttpConfig
 import com.nze.nzexchange.tools.editjudge.EditCurrencyPriceWatcher
@@ -304,7 +301,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             currentTransactionPair = eventCenter.data as TransactionPairsBean
             refreshLayout()
             getPendingOrderInfo(currentTransactionPair?.id!!)
-            orderPending(currentTransactionPair?.id!!, userBean?.userId)
+            if (userBean != null)
+                orderPending(currentTransactionPair?.id!!, userBean?.userId)
             //切换交易对，切换盘口
             if (preCurrentTransactionPair == null || preCurrentTransactionPair?.id != currentTransactionPair?.id)
                 changePair()
@@ -338,7 +336,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun onNetworkDisConnected() {
     }
 
-    override fun getContainerTargetView(): View? = null
+    override fun getContainerTargetView(): View? = currentOrderLv
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -614,6 +612,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         if (userBean != null) {
                             //获取订单
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+                        } else {
+                            showNODataView("当前没有登录")
                         }
                         //获取盘口
                         getKData()
@@ -653,12 +653,18 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     OrderPendBean.orderPending(currencyId, userId)
                             .compose(netTf())
                             .subscribe({
-                                if (it.success) {
+                                val list = it.result
+                                if (it.success && list != null && list.size > 0) {
+                                    stopAllView()
                                     currentOrderAdapter.group = it.result
                                     currentOrderLv.adapter = currentOrderAdapter
+                                } else {
+                                    showNODataView("当前没有委托")
                                 }
                                 b--
-                            }, onError)
+                            }, {
+                                showNODataView("当前没有委托")
+                            })
                 }
 
     }
@@ -716,6 +722,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     handicapBuyLv.adapter = handicapBuyAdapter
                     handicapSaleAdapter.group = saleList.take(5).toMutableList().asReversed()
                     handicapSaleLv.adapter = handicapSaleAdapter
+                }
+                if (quotes != null) {
+                    try {
+                        lastCostTv.text = quotes.get(6)
+                    } catch (e: Exception) {
+                        lastCostTv.text = quotes.get(1)
+                    }
                 }
             }
         }

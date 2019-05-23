@@ -93,17 +93,18 @@
                 android:paddingBottom="10dp"
                 android:src="@mipmap/k_back_aus" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/iv_self_select_kline"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_checkbox_choice"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="10dp"
-                android:src="@mipmap/start_norml"
-                android:visibility="gone"/>
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/iv_switch_kline"
@@ -282,7 +283,8 @@
                     android:drawableLeft="@drawable/selector_checkbox_asset_show_small"
                     android:drawablePadding="5dp"
                     android:gravity="center"
-                    android:text="隐藏其它数据" />
+                    android:text="隐藏其它数据"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <com.nze.nzexchange.widget.chart.KLineChartView

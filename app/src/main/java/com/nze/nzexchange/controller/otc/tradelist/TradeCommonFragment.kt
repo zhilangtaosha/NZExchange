@@ -100,7 +100,7 @@ class TradeCommonFragment : NBaseFragment(), AdapterView.OnItemClickListener, Pu
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (type == TYPE_NO_COMPLETE && eventCenter.eventCode == EventCode.CODE_CONFIRM_PAY)
+        if (type == TYPE_NO_COMPLETE && eventCenter.eventCode == EventCode.CODE_REFRESH_OTC_ORDER)
             ptrLv.doPullRefreshing(true, 200)
     }
 

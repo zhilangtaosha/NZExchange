@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="20dp"
         android:src="@mipmap/ic_no_data" />
 
     <TextView
@@ -23,7 +23,8 @@
         android:layout_marginTop="15dp"
         android:gravity="center"
         android:text="暂时没有询价记录！"
-        android:textColor="#808080"
-        android:textSize="11sp" />
+        android:textColor="#FF6D87A8"
+        android:textSize="15sp"
+        android:layout_marginBottom="30dp"/>
 
 </LinearLayout>

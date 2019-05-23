@@ -77,7 +77,7 @@ interface SellService {
 
     //商家取消子订单
     @FormUrlEncoded
-    @POST("otc/sell/cancelOrder")
+    @POST("otc/sell/userCancelOrder")
     fun userCancelOrder(@Field("userId") userId: String,
                         @Field("subOrderId") subOrderId: String,
                         @Field("tokenUserId") tokenUserId: String,

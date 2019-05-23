@@ -76,6 +76,14 @@ fun Double.retain8ByFloor(): String {
     return df.format(this)
 }
 
+/**
+ * 只保留整数
+ */
+fun Double.retainInt(): String {
+    val df = DecimalFormat("0")
+    df.setRoundingMode(RoundingMode.FLOOR);
+    return df.format(this)
+}
 
 /**
  * 取消科学计数法

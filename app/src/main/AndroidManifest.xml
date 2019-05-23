@@ -105,7 +105,6 @@
         <activity android:name=".controller.my.setting.MoneyTypeSetActivity" />
         <activity android:name=".controller.my.setting.ColorModeSetActivity" />
         <activity android:name=".controller.my.setting.StyleModeSetActivity" />
-        <activity android:name=".controller.my.setting.SafeCenterSetActivity" />
         <activity android:name=".controller.my.setting.NightModeSetActivity" />
         <activity android:name=".controller.my.setting.ExchangeRateSetActivity" />
         <activity android:name=".controller.my.setting.ServiceChargeSetActivity" />
@@ -174,7 +173,7 @@
             android:name=".controller.otc.OtcAppealActivity"
             android:configChanges="orientation|keyboardHidden"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity android:name=".controller.login.RegisterAgreementActivity"></activity>
+        <activity android:name=".controller.login.RegisterAgreementActivity" />
     </application>
 
 </manifest>

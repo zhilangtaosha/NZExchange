@@ -63,6 +63,7 @@ class KLineService : Service() {
         private var mDepth: Depth? = null
         var pattern: String = TimeTool.PATTERN5
         val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
+        var quote: Array<String>? = null
         var nWebSocket: NWebSocket? = null
         var socket: WebSocket? = null
         val gson: Gson by lazy { Gson() }
@@ -210,6 +211,10 @@ class KLineService : Service() {
                             mDepth = depth
                             it.onNext(DATA_DEPTH)
                         }
+                        if (quotes != null) {
+                            quote = quotes
+                            it.onNext(DATA_QUOTES)
+                        }
                     } catch (e: Exception) {
 
                     }
@@ -235,6 +240,9 @@ class KLineService : Service() {
                                 DATA_DEPTH -> {//深度
                                     kDataCallBack?.invoke(null, null, null, null, mDepth)
 
+                                }
+                                DATA_QUOTES -> {
+                                    kDataCallBack?.invoke(null, null, null, quote, null)
                                 }
                             }
                         }

@@ -1,12 +1,10 @@
 package com.nze.nzexchange.controller.home
 
-import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
-import com.nze.nzeframework.tool.NLog
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
@@ -14,6 +12,7 @@ import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.home.carousel.CarouselAdapter
 import com.nze.nzexchange.controller.home.carousel.SimpleBulletinAdapter
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
+import com.nze.nzexchange.controller.my.asset.legal.LegalRechargeActivity
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.widget.bulletin.BulletinView
 import com.nze.nzexchange.widget.recyclerview.Divider
@@ -104,6 +103,8 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                     skipActivity(MyAssetActivity::class.java)
             }
             R.id.layout_legal_transaction_home -> {
+                if (UserBean.isLogin(activity!!))
+                    skipActivity(LegalRechargeActivity::class.java)
             }
             R.id.layout_help_center_home -> {
             }
@@ -134,12 +135,13 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
      * 获取热门交易对数据
      */
     fun marketPopular() {
-        MarketPopularBean.marketPopular()
+        TransactionPairsBean.marketPopular()
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
                         mHotAdapter = HotTransactionPairAdapter(activity!!, it.result)
                         mHotRView.adapter = mHotAdapter
+
                     }
                 }, onError)
     }

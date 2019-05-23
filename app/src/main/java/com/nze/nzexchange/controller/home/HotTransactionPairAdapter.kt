@@ -2,15 +2,16 @@ package com.nze.nzexchange.controller.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.MarketPopularBean
-import com.nze.nzexchange.bean.TransactionPairBean
+import com.nze.nzexchange.bean.TransactionPairsBean
+import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.widget.recyclerview.ViewType
 import kotlinx.android.synthetic.main.recyclerview_hot_transaction_pair.view.*
@@ -18,10 +19,10 @@ import kotlinx.android.synthetic.main.recyclerview_hot_transaction_pair.view.*
 /**
  * 热门交易对adapter
  */
-class HotTransactionPairAdapter(var context: Context, var datas: MutableList<MarketPopularBean>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HotTransactionPairAdapter(var context: Context, var datas: MutableList<TransactionPairsBean>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     init {
-        datas.add(0, MarketPopularBean(1, "", 1.0, 1.0, "", "", 1, "", 1, "", 0.0, 0.0))
+        datas.add(0, TransactionPairsBean())
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -50,6 +51,9 @@ class HotTransactionPairAdapter(var context: Context, var datas: MutableList<Mar
             holder.tvName.text = pairBean.transactionPair
             holder.tvExchange.text = pairBean.exchangeRate.toString()
             holder.tvCost.text = (pairBean.exchangeRate * 500).toString()
+            holder.rootLayout.setOnClickListener {
+                KLineActivity.skip(context,pairBean)
+            }
         }
     }
 
@@ -66,17 +70,12 @@ class HotTransactionPairAdapter(var context: Context, var datas: MutableList<Mar
 
 
     class HTPViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvChange: TextView
-        var tvName: TextView
-        var tvExchange: TextView
-        var tvCost: TextView
+        var rootLayout: LinearLayout = itemView.layout_root_rhtp
+        var tvChange: TextView = itemView.tv_change_rhtp
+        var tvName: TextView = itemView.tv_name_rhtp
+        var tvExchange: TextView = itemView.tv_exchange_rhtp
+        var tvCost: TextView = itemView.tv_cost_rhtp
 
-        init {
-            tvChange = itemView.tv_change_rhtp
-            tvName = itemView.tv_name_rhtp
-            tvExchange = itemView.tv_exchange_rhtp
-            tvCost = itemView.tv_cost_rhtp
-        }
     }
 
     class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

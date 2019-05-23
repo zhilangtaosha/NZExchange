@@ -25,8 +25,13 @@ data class TransactionPairsBean(
         val transactionPair: String,//交易对
         val gain: Double,
         var optional: Int = 0,
-        val volume:Double
+        val volume: Double,
+        val popular: Int,//热门交易对状态
+        val deal: Double
 ) : Parcelable {
+
+    constructor() : this(0, "", 0.0, "", "", "", 0, "", 0.0, 0, 0.0, 0, 0.0) {}
+
     companion object {
         fun getAllTransactionPairs(): Flowable<Result<MutableList<TransactionPairsBean>>> {
             return Flowable.defer {
@@ -58,6 +63,14 @@ data class TransactionPairsBean(
                 NRetrofit.instance
                         .bibiService()
                         .findTransactionPairs(currency)
+            }
+        }
+
+        fun marketPopular(): Flowable<Result<MutableList<TransactionPairsBean>>> {
+            return Flowable.defer {
+                NRetrofit.instance
+                        .bibiService()
+                        .marketPopular()
             }
         }
     }
