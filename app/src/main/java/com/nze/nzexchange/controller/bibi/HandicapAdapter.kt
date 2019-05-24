@@ -24,13 +24,13 @@ class HandicapAdapter(mContext: Context, var type: Int) : NBaseAda<HandicapBean,
 
     override fun initView(vh: ViewHolder, item: HandicapBean, position: Int) {
 
-//        if (type == SALE) {
-//            vh.costTv.setTxtColor(R.color.color_FFFF4A5F)
+        if (type == SALE) {
+            vh.costTv.setTxtColor(R.color.color_FFFF4A5F)
 //            vh.handicapTv.text = "卖${item.index}"
-//        } else {
-//            vh.costTv.setTxtColor(R.color.color_FF019D81)
+        } else {
+            vh.costTv.setTxtColor(R.color.color_FF019D81)
 //            vh.handicapTv.text = "买${item.index}"
-//        }
+        }
 
         vh.costTv.text = item.cost
         vh.amountTv.text = item.amount

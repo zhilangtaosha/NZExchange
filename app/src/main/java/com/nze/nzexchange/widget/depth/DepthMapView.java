@@ -15,6 +15,8 @@ import android.view.View;
 
 import com.nze.nzexchange.R;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,8 +43,8 @@ public class DepthMapView extends View {
     private boolean mIsLongPress;
 
     //最大的委托量
-    private float mMaxVolume;
-    private float mMultiple;
+    private double mMaxVolume;
+    private double mMultiple;
     private int mLastPosition;
     private int mDrawWidth = 0;
     private int mDrawHeight;
@@ -71,12 +73,12 @@ public class DepthMapView extends View {
     private List<DepthDataBean> mSellData;
 
     //    价格显示精度限制
-    public int mPriceLimit = 4;
+    public int mPriceLimit = 12;
 //    private int mVolumeLimit = 5;
 
     private HashMap<Integer, DepthDataBean> mMapX;
     private HashMap<Integer, Float> mMapY;
-    private Float[] mBottomPrice;
+    private Double[] mBottomPrice;
     private GestureDetector mGestureDetector;
 
     public DepthMapView(Context context) {
@@ -97,7 +99,7 @@ public class DepthMapView extends View {
         mBottomPriceHeight = 40;
         mMapX = new HashMap<>();
         mMapY = new HashMap<>();
-        mBottomPrice = new Float[4];
+        mBottomPrice = new Double[4];
         mBuyData = new ArrayList<>();
         mSellData = new ArrayList<>();
         mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -245,14 +247,14 @@ public class DepthMapView extends View {
         float y;
         for (int i = 0; i < mBuyData.size(); i++) {
             if (i == 0) {
-                mBuyPath.moveTo(0, getY(mBuyData.get(0).getVolume()));
+                mBuyPath.moveTo(0, getY((float) mBuyData.get(0).getVolume()));
             }
-            y = getY(mBuyData.get(i).getVolume());
+            y = getY((float) mBuyData.get(i).getVolume());
             if (i >= 1) {
-                canvas.drawLine(mGridWidth * (i - 1), getY(mBuyData.get(i - 1).getVolume()), mGridWidth * i, y, mBuyLinePaint);
+                canvas.drawLine(mGridWidth * (i - 1), getY((float) mBuyData.get(i - 1).getVolume()), mGridWidth * i, y, mBuyLinePaint);
             }
             if (i != mBuyData.size() - 1) {
-                mBuyPath.quadTo(mGridWidth * i, y, mGridWidth * (i + 1), getY(mBuyData.get(i + 1).getVolume()));
+                mBuyPath.quadTo(mGridWidth * i, y, mGridWidth * (i + 1), getY((float) mBuyData.get(i + 1).getVolume()));
             }
 
             x = mGridWidth * i;
@@ -274,16 +276,16 @@ public class DepthMapView extends View {
         float y;
         for (int i = 0; i < mSellData.size(); i++) {
             if (i == 0) {
-                mSellPath.moveTo(mDrawWidth, getY(mSellData.get(0).getVolume()));
+                mSellPath.moveTo(mDrawWidth, getY((float) mSellData.get(0).getVolume()));
             }
-            y = getY(mSellData.get(i).getVolume());
+            y = getY((float) mSellData.get(i).getVolume());
             if (i >= 1) {
-                canvas.drawLine((mGridWidth * (i - 1)) + mDrawWidth, getY(mSellData.get(i - 1).getVolume()),
+                canvas.drawLine((mGridWidth * (i - 1)) + mDrawWidth, getY((float) mSellData.get(i - 1).getVolume()),
                         (mGridWidth * i) + mDrawWidth, y, mSellLinePaint);
             }
             if (i != mSellData.size() - 1) {
                 mSellPath.quadTo((mGridWidth * i) + mDrawWidth, y,
-                        (mGridWidth * (i + 1)) + mDrawWidth, getY(mSellData.get(i + 1).getVolume()));
+                        (mGridWidth * (i + 1)) + mDrawWidth, getY((float) mSellData.get(i + 1).getVolume()));
             }
             x = (mGridWidth * i) + mDrawWidth;
             mMapX.put((int) x, mSellData.get(i));
@@ -301,8 +303,8 @@ public class DepthMapView extends View {
         float value;
         String str;
         for (int j = 0; j < mLineCount; j++) {
-            value = mMaxVolume - mMultiple * j;
-            str = getVolumeValue(value);
+            value = (float) (mMaxVolume - mMultiple * j);
+            str = getVolumeValue((double) value);
             canvas.drawText(str, mWidth, mDrawHeight / mLineCount * j + 30, mTextPaint);
         }
         int size = mBottomPrice.length;
@@ -364,24 +366,27 @@ public class DepthMapView extends View {
     public class comparePrice implements Comparator<DepthDataBean> {
         @Override
         public int compare(DepthDataBean o1, DepthDataBean o2) {
-            float str1 = o1.getPrice();
-            float str2 = o2.getPrice();
-            return Float.compare(str1, str2);
+            double str1 = o1.getPrice();
+            double str2 = o2.getPrice();
+            return Double.compare(str1, str2);
         }
     }
 
     private float getY(float volume) {
-        return mDrawHeight - (mDrawHeight) * volume / mMaxVolume;
+        return (float) (mDrawHeight - (mDrawHeight) * volume / mMaxVolume);
     }
 
-    private String getValue(float value) {
+    private String getValue(Double value) {
 //        String value = new BigDecimal(data).toPlainString();
 //        return subZeroAndDot(value);
-        return String.format("%." + mPriceLimit + "f", value);
+        DecimalFormat df =new DecimalFormat("0.############");
+        df.setRoundingMode(RoundingMode.FLOOR);
+        return df.format(value);
+//        return String.format("%." + mPriceLimit + "f", value);
     }
 
     @SuppressLint("DefaultLocale")
-    private String getVolumeValue(float value) {
+    private String getVolumeValue(Double value) {
         return String.format("%.4f", value);
     }
 

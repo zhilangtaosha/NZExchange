@@ -14,6 +14,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.R.id.tv_min_amount_acw
 import com.nze.nzexchange.bean.CurrencyWithdrawInfoBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
@@ -56,9 +57,9 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
     val serviceChargeTv: TextView by lazy { tv_service_charge_acw }
     val actualAmountTv: TextView by lazy { tv_actual_amount_acw }
     val withdrawBtn: CommonButton by lazy { btn_withdraw_acw }
-    val attentionTv: TextView by lazy { tv_attention_acw }
     val labelLayout: RelativeLayout by lazy { layout_label_acw }
     val labelEt: ClearableEditText by lazy { et_label_acw }
+    val tipTv: TextView by lazy { tv_tip_acw }
 
     val REQUEST_CODE_QCODE = 1
     val REQUEST_CODE_CURRENCY = 2
@@ -254,15 +255,19 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             currencyTv.text = it.currency
             availableTv.text = "可提数量：${it.available} ${it.currency}"
             amountEt.hint = "最小提现数量为200 ${it.currency}"
-            serviceChargeTv.text = "0.0${it.currency}"
+            serviceChargeTv.text = "--${it.currency}"
+            actualAmountTv.text = "0 ${it.currency}"
+
 
             CurrencyWithdrawInfoBean.getCurrencyWithdrawInfo(it.currency)
                     .compose(netTfWithDialog())
                     .subscribe({ rs ->
                         if (rs.success) {
-                            feeLimitlowGet = rs.result.feeLimitlowGet
-                            feeRate = rs.result.feeRate
+                            val withdrawInfoBean = rs.result
+                            feeLimitlowGet = withdrawInfoBean.feeLimitlowGet
+                            feeRate = withdrawInfoBean.feeRate
                             serviceChargeTv.text = "${feeRate.formatForCurrency()}${it.currency}"
+                            tipTv.text = withdrawInfoBean.feeGetbiText
                         }
                     }, onError)
 

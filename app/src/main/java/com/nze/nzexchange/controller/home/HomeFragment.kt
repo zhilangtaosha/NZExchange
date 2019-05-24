@@ -108,6 +108,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                     skipActivity(LegalRechargeActivity::class.java)
             }
             R.id.layout_help_center_home -> {
+                skipActivity(HelpCenterActivity::class.java)
             }
         }
     }

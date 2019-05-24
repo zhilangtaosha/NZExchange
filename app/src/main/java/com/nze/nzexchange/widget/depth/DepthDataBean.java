@@ -2,22 +2,22 @@ package com.nze.nzexchange.widget.depth;
 
 public class DepthDataBean {
 
-    private float mPrice;
-    private float mVolume;
+    private double mPrice;
+    private double mVolume;
 
-    public float getVolume() {
+    public double getVolume() {
         return mVolume;
     }
 
-    public void setVolume(float volume) {
+    public void setVolume(double volume) {
         this.mVolume = volume;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return mPrice;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.mPrice = price;
     }
 }

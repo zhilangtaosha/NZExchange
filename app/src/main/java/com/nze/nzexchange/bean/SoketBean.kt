@@ -52,8 +52,8 @@ data class NewDealBean(
 )
 
 data class Depth(
-        val asks: Array<Array<Float>>,//买入
-        val bids: Array<Array<Float>>//卖出
+        val asks: Array<Array<Double>>,//买入
+        val bids: Array<Array<Double>>//卖出
 )
 
 data class DataSource(

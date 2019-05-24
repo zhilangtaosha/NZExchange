@@ -1,292 +1,301 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/color_bg"
-    android:orientation="vertical"
-    tools:context=".controller.my.asset.withdraw.WithdrawCurrencyActivity">
+    android:layout_height="match_parent">
 
-    <com.nze.nzexchange.widget.CommonTopBar
-        android:id="@+id/ctb_acw"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        app:tb_right_text="提现记录"
-        app:tb_title_text="USDT提现" />
+        android:layout_height="wrap_content"
+        android:background="@color/color_bg"
+        android:orientation="vertical"
+        tools:context=".controller.my.asset.withdraw.WithdrawCurrencyActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        <com.nze.nzexchange.widget.CommonTopBar
+            android:id="@+id/ctb_acw"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:orientation="vertical"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:layout_height="44dp"
+            app:tb_right_text="提现记录"
+            app:tb_title_text="USDT提现" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/tx15_aab9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="选择币种" />
-
-                <TextView
-                    android:id="@+id/tv_currency_acw"
-                    style="@style/tx14_87a8"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:text="USDT" />
-
-                <ImageView
-                    android:id="@+id/iv_select_currency_acw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="20dp"
-                    android:src="@mipmap/right_arrow" />
-            </LinearLayout>
-
-            <include layout="@layout/common_line" />
-
-            <RelativeLayout
-                android:id="@+id/layout_label_acw"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_label_acw"
-                    style="@style/tx15_aab9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="标签" />
-
-                <com.nze.nzexchange.widget.clearedit.ClearableEditText
-                    android:id="@+id/et_label_acw"
-                    style="@style/et14"
-                    android:layout_marginLeft="73dp"
-                    android:hint="输入或长按粘贴标签" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/color_line" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/tx15_aab9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="提现地址" />
-
-                <com.nze.nzexchange.widget.clearedit.ClearableEditText
-                    android:id="@+id/et_address_acw"
-                    style="@style/et14"
-                    android:layout_width="0dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:drawablePadding="5dp"
-                    android:hint="输入或长按粘贴地址"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-                <ImageView
-                    android:id="@+id/iv_qcode_acw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="15dp"
-                    android:src="@mipmap/scan_icon" />
-
-                <ImageView
-                    android:id="@+id/iv_address_acw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="15dp"
-                    android:src="@mipmap/asset_select_address" />
-            </LinearLayout>
-
-            <include layout="@layout/common_line" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/tx15_aab9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="提现数量" />
-
-                <com.nze.nzexchange.widget.clearedit.ClearableEditText
-                    android:id="@+id/et_amount_acw"
-                    style="@style/et14"
-                    android:layout_marginLeft="15dp"
-                    android:hint="最小提现数量为200USDT"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <include layout="@layout/common_line" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_available_acw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="可提数量：0 USDT"
-                    android:textColor="@color/color_FF7F8592"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tv_all_acw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="全部"
-                    android:textColor="@color/color_FF6D87A8"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_verify_key_acw"
-                    style="@style/tx15_aab9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="短信验证" />
-
-                <com.nze.nzexchange.widget.clearedit.ClearableEditText
-                    android:id="@+id/et_verify_value_acw"
-                    style="@style/et14"
-                    android:layout_width="0dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:hint="请输入手机短信验证码"
-                    android:inputType="number" />
-
-                <com.nze.nzexchange.widget.VerifyButton
-                    android:id="@+id/btn_verify_acw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="15dp"
-                    android:text="获取验证码" />
-            </LinearLayout>
-
-            <include layout="@layout/common_line" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="平台只支持“充值提现账户”的提现功能，如需提现其它账户金额，请先转账至“充值提现账户”"
-                android:textColor="@color/color_FF676C7A"
-                android:textSize="12sp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/tx15_aab9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="手续费" />
-
-                <TextView
-                    android:id="@+id/tv_service_charge_acw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@color/color_FF7F8592"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <include layout="@layout/common_line" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/tx15_aab9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="实际到账" />
-
-                <TextView
-                    android:id="@+id/tv_actual_amount_acw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@color/color_FF6D87A8"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <include layout="@layout/common_line" />
-
-            <com.nze.nzexchange.widget.CommonButton
-                android:id="@+id/btn_withdraw_acw"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:text="提现" />
-
-            <TextView
-                android:id="@+id/tv_attention_acw"
-                style="@style/tx14_87a8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="10dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
                 android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="15dp"
-                android:text="提现注意事项" />
-        </LinearLayout>
-    </ScrollView>
+                android:paddingRight="15dp">
 
-</LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/tx15_common"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="选择币种" />
+
+                    <TextView
+                        android:id="@+id/tv_currency_acw"
+                        style="@style/tx14_87a8"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:text="USDT" />
+
+                    <ImageView
+                        android:id="@+id/iv_select_currency_acw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="20dp"
+                        android:src="@mipmap/right_arrow" />
+                </LinearLayout>
+
+                <include layout="@layout/common_line" />
+
+                <RelativeLayout
+                    android:id="@+id/layout_label_acw"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_label_acw"
+                        style="@style/tx15_common"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="标签" />
+
+                    <com.nze.nzexchange.widget.clearedit.ClearableEditText
+                        android:id="@+id/et_label_acw"
+                        style="@style/et14"
+                        android:layout_marginLeft="73dp"
+                        android:hint="输入或长按粘贴标签" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/color_line" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/tx15_common"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="提现地址" />
+
+                    <com.nze.nzexchange.widget.clearedit.ClearableEditText
+                        android:id="@+id/et_address_acw"
+                        style="@style/et14"
+                        android:layout_width="0dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:drawablePadding="5dp"
+                        android:hint="输入或长按粘贴地址"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                    <ImageView
+                        android:id="@+id/iv_qcode_acw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="15dp"
+                        android:src="@mipmap/scan_icon" />
+
+                    <ImageView
+                        android:id="@+id/iv_address_acw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="15dp"
+                        android:src="@mipmap/asset_select_address" />
+                </LinearLayout>
+
+                <include layout="@layout/common_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/tx15_common"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="提现数量" />
+
+                    <com.nze.nzexchange.widget.clearedit.ClearableEditText
+                        android:id="@+id/et_amount_acw"
+                        style="@style/et14"
+                        android:layout_marginLeft="15dp"
+                        android:hint="最小提现数量为200USDT"
+                        android:inputType="numberDecimal" />
+                </LinearLayout>
+
+                <include layout="@layout/common_line" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_available_acw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="可提数量：0 USDT"
+                        android:textColor="@color/color_FF7F8592"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_all_acw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="全部"
+                        android:textColor="@color/color_FF6D87A8"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_verify_key_acw"
+                        style="@style/tx15_common"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="短信验证" />
+
+                    <com.nze.nzexchange.widget.clearedit.ClearableEditText
+                        android:id="@+id/et_verify_value_acw"
+                        style="@style/et14"
+                        android:layout_width="0dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:hint="请输入手机短信验证码"
+                        android:inputType="number" />
+
+                    <com.nze.nzexchange.widget.VerifyButton
+                        android:id="@+id/btn_verify_acw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="15dp"
+                        android:text="获取验证码" />
+                </LinearLayout>
+
+                <include layout="@layout/common_line" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="平台只支持“充值提现账户”的提现功能，如需提现其它账户金额，请先转账至“充值提现账户”"
+                    android:textColor="@color/color_FF676C7A"
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/tx15_common"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="手续费" />
+
+                    <TextView
+                        android:id="@+id/tv_service_charge_acw"
+                        style="@style/tx15_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true" />
+                </RelativeLayout>
+
+                <include layout="@layout/common_line" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/tx15_common"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="实际到账" />
+
+                    <TextView
+                        android:id="@+id/tv_actual_amount_acw"
+                        style="@style/tx15_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true" />
+                </RelativeLayout>
+
+                <include layout="@layout/common_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/shape_line2a32_bg1f27"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_tip_acw"
+                        style="@style/tx14_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="为保障资金安全，当您账户密码修改，我们会对提币进行人工审核，请耐心等待工作人员电话或邮件联系请务必确认电脑及浏览器安全，防止信息被篡改。" />
+                </LinearLayout>
+
+                <com.nze.nzexchange.widget.CommonButton
+                    android:id="@+id/btn_withdraw_acw"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:text="提现" />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+</ScrollView>

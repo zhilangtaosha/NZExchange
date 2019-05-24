@@ -388,16 +388,16 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             obj = DepthDataBean()
             price = arrBids.getString(i).replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
             volume = arrBids.getString(i).replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-            obj.volume = java.lang.Float.valueOf(volume)
-            obj.price = java.lang.Float.valueOf(price)
+            obj.volume = volume.toDouble()
+            obj.price = price.toDouble()
             listDepthBuy.add(obj)
         }
         for (i in 0 until arrAsks.length()) {
             obj = DepthDataBean()
             price = arrAsks.getString(i).replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
             volume = arrAsks.getString(i).replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-            obj.volume = java.lang.Float.valueOf(volume)
-            obj.price = java.lang.Float.valueOf(price)
+            obj.volume = volume.toDouble()
+            obj.price = price.toDouble()
             listDepthSell.add(obj)
         }
         depthView.setData(listDepthBuy, listDepthSell)

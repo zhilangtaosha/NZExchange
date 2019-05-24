@@ -17,6 +17,7 @@ import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
+import com.nze.nzexchange.controller.my.presenter.AssetPresenter
 import com.nze.nzexchange.widget.CommonTopBar
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_recharge_coin.*
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_recharge_coin.*
  * 充值页面
  */
 class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
-
+    val assetP: AssetPresenter by lazy { AssetPresenter(this) }
     val topBar: CommonTopBar by lazy {
         ctb_arc.apply {
 
@@ -74,6 +75,9 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
         copyAddressTv.setOnClickListener(this)
         eosCopyIv.setOnClickListener(this)
         labelCopyIv.setOnClickListener(this)
+
+
+
         refreshLayout()
     }
 
@@ -131,6 +135,12 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
             coinAddressIv.setImageBitmap(codeBitmap)
             coinAddressTv.text = it.address
             eosAddressTv.text = it.address
+
+            assetP.currencyWithdrawAndRechargeInfo(it.currency, {
+                if (it.success) {
+                    tipTv.text = it.result.frrFillbiText
+                }
+            }, onError)
             switchLayout(it)
         }
     }

@@ -175,6 +175,7 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity android:name=".controller.login.RegisterAgreementActivity" />
         <activity android:name=".controller.common.webview.WebActivity" />
+        <activity android:name=".controller.home.HelpCenterActivity"></activity>
     </application>
 
 </manifest>
