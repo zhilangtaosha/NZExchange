@@ -89,14 +89,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val handicapSaleAdapter by lazy {
         HandicapAdapter(activity!!, HandicapAdapter.SALE).apply {
             onHandicapItemClick = {
-                giveEt.setText(it.cost.toString())
+                giveEt.setText(it.cost)
             }
         }
     }
     val handicapBuyAdapter by lazy {
         HandicapAdapter(activity!!, HandicapAdapter.BUY).apply {
             onHandicapItemClick = {
-                giveEt.setText(it.cost.toString())
+                giveEt.setText(it.cost)
             }
         }
     }
@@ -713,10 +713,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     val buyList = mutableListOf<HandicapBean>()
                     val saleList = mutableListOf<HandicapBean>()
                     depth.asks.forEachIndexed { index, strings ->
-                        saleList.add(HandicapBean(index + 1, strings[0].toString(), strings[1].toString(), ""))
+                        saleList.add(HandicapBean(index + 1, strings[0].formatForPrice(), strings[1].toString(), ""))
                     }
                     depth.bids.forEachIndexed { index, strings ->
-                        buyList.add(HandicapBean(index + 1, strings[0].toString(), strings[1].toString(), ""))
+                        buyList.add(HandicapBean(index + 1, strings[0].formatForPrice(), strings[1].toString(), ""))
                     }
                     handicapBuyAdapter.group = buyList.take(5).toMutableList()
                     handicapBuyLv.adapter = handicapBuyAdapter

@@ -1,5 +1,6 @@
 package com.nze.nzexchange
 
+import com.nze.nzexchange.extend.formatForPrice
 import com.nze.nzexchange.tools.TimeTool
 import org.junit.Test
 
@@ -13,8 +14,6 @@ class TimeToolTest {
 
     @Test
     fun format(){
-        val t = "1555541760"
-        val s = TimeTool.format3(t.toLong())
-        println(s)
+
     }
 }

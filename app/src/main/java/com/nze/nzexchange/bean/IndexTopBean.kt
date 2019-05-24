@@ -32,9 +32,13 @@ class IndexTopBean(
 }
 
 data class IndexNotices(
+        val noticeBetimeStr: String,
         val noticeContent: String,
+        val noticeCreateTimeStr: String,
+        val noticeEndtimeStr: String,
         val noticeId: String,
-        val noticeTitle: String
+        val noticeTitle: String,
+        val noticeUrl: String
 )
 
 data class IndexImgs(

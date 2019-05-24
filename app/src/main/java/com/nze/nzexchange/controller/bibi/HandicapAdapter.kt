@@ -24,13 +24,13 @@ class HandicapAdapter(mContext: Context, var type: Int) : NBaseAda<HandicapBean,
 
     override fun initView(vh: ViewHolder, item: HandicapBean, position: Int) {
 
-        if (type == SALE) {
-            vh.costTv.setTxtColor(R.color.color_FFFF4A5F)
-            vh.handicapTv.text = "卖${item.index}"
-        } else {
-            vh.costTv.setTxtColor(R.color.color_FF019D81)
-            vh.handicapTv.text = "买${item.index}"
-        }
+//        if (type == SALE) {
+//            vh.costTv.setTxtColor(R.color.color_FFFF4A5F)
+//            vh.handicapTv.text = "卖${item.index}"
+//        } else {
+//            vh.costTv.setTxtColor(R.color.color_FF019D81)
+//            vh.handicapTv.text = "买${item.index}"
+//        }
 
         vh.costTv.text = item.cost
         vh.amountTv.text = item.amount
@@ -41,7 +41,7 @@ class HandicapAdapter(mContext: Context, var type: Int) : NBaseAda<HandicapBean,
     }
 
     class ViewHolder(var view: View) {
-        val handicapTv: TextView = view.tv_handicap_lbh
+//        val handicapTv: TextView = view.tv_handicap_lbh
         val costTv: TextView = view.tv_cost_lbh
         val amountTv: TextView = view.tv_amount_lbh
     }

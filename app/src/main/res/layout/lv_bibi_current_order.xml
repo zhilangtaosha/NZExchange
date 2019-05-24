@@ -20,7 +20,6 @@
         android:layout_alignBottom="@+id/tv_status_lbco"
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/tv_status_lbco"
-        android:text="10/23 16:12"
         android:textColor="@color/color_FF7F8592"
         android:textSize="12sp" />
 

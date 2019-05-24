@@ -36,6 +36,12 @@ fun Double.formatForLegal2(): Double {
     return (df.format(this)).toDouble()
 }
 
+fun Double.formatForPrice(): String {
+    val df = DecimalFormat("0.############")
+    df.setRoundingMode(RoundingMode.FLOOR);
+    return df.format(this)
+}
+
 
 /**
  * 保留2位小数
@@ -104,10 +110,6 @@ fun String.getValue(): String {
 fun Double.twoPlace(): String {
     val df = DecimalFormat("0.00")
     return df.format(this)
-}
-
-fun Double.formatToken() {
-
 }
 
 

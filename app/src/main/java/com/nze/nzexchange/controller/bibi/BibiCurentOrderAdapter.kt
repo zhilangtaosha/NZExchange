@@ -44,7 +44,7 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
         val split = item.market.split("/")
         val currency = split[0]
         val mainCurrency = split[1]
-        vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, (item.ftime * 1000).toLong())
+        vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, (item.ctime * 1000).toLong())
 
         vh.costKeyTv.text = "价格(${mainCurrency})"
         vh.costValueTv.text = item.price

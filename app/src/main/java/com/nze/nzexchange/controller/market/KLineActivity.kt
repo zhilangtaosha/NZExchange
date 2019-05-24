@@ -265,7 +265,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         select(currentSelect)
 
 
-
 //        getDepthData()
 
         //测试数据
@@ -279,7 +278,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         refreshLayout()
     }
 
-    fun refreshLayout(){
+    fun refreshLayout() {
         selfSelectTv.isSelected = pairsBean!!.optional == 1
     }
 
@@ -474,7 +473,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             R.id.tv_transaction_name_kline -> {
                 finish()
             }
-            R.id.iv_self_select_kline->{
+            R.id.iv_self_select_kline -> {
 //                if (UserBean.isLogin(this))
 //                kLineP.optionalHandler(userBean,pairsBean,)
             }
@@ -703,14 +702,21 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                                 newDealLv.adapter = newDealAdapter
                             }
                             DATA_DEPTH -> {
-                                depthView.setData(depthSellList, depthBuyList)
 
-                                depthSellList.sortByDescending { it.price }
-                                buyAdapter.group = depthSellList
+                                val sellList = mutableListOf<DepthDataBean>()
+                                sellList.addAll(depthSellList)
+                                val buyList = mutableListOf<DepthDataBean>()
+                                buyList.addAll(depthBuyList)
+
+                                sellList.sortByDescending { it.price }
+                                buyAdapter.group = sellList
                                 buyLv.adapter = buyAdapter
 
-                                sellAdapter.group = depthBuyList
+                                sellAdapter.group = buyList
                                 sellLv.adapter = sellAdapter
+
+                                depthView.setData(depthSellList, depthBuyList)
+
                             }
                             DATA_DATASOURCE -> {
                                 switchLeftIv.visibility = View.VISIBLE

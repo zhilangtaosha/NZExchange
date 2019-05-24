@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.vst.uiframework.widget.CommonTopBar
+        android:id="@+id/ctb_web"
+        android:layout_width="match_parent"
+        android:layout_height="44dp" />
+
+    <RelativeLayout
+        android:id="@+id/webView_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white">
+
+        <com.vst.vstob.control.common.web.CustomWebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:indeterminateOnly="false"
+            android:max="100"
+            android:progress="10"
+            android:progressDrawable="@drawable/web_progressbar_bg" />
+
+        <!-- <include layout="@layout/loading" /> -->
+    </RelativeLayout>
+
+</LinearLayout>

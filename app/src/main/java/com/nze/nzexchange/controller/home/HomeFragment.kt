@@ -9,6 +9,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.webview.WebActivity
 import com.nze.nzexchange.controller.home.carousel.CarouselAdapter
 import com.nze.nzexchange.controller.home.carousel.SimpleBulletinAdapter
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
@@ -127,6 +128,9 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
                     val bulletinAdapter = SimpleBulletinAdapter(activity!!, noticeList)
                     bulletinView.setAdapter(bulletinAdapter)
+                    bulletinView.setOnBulletinItemClickListener {
+                        WebActivity.skip(activity, noticeList[it].noticeUrl, "公告")
+                    }
 
                 }, onError)
     }
