@@ -13,7 +13,6 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.FinancialRecordBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
-import com.nze.nzexchange.bean2.ConcreteAssetBean
 import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
@@ -30,7 +29,7 @@ import org.greenrobot.eventbus.EventBus
 /**
  * 具体某种币的资产页面
  */
-class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
+class CurrencyAssetDetailActivity : NBaseActivity(), View.OnClickListener {
 
 
     val currencyNameTv: TextView by lazy { tv_currency_name_acca }
@@ -57,7 +56,7 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
 
     companion object {
         fun skip(context: Context, type: Int, userAssetBean: UserAssetBean, otcList: ArrayList<UserAssetBean>, bibiList: ArrayList<UserAssetBean>) {
-            val intent = Intent(context, ConcreteCurrencyAssetActivity::class.java)
+            val intent = Intent(context, CurrencyAssetDetailActivity::class.java)
             val bundle = Bundle()
             bundle.putInt(IntentConstant.PARAM_TYPE, type)
             bundle.putParcelable(IntentConstant.PARAM_ASSET, userAssetBean)
@@ -128,14 +127,14 @@ class ConcreteCurrencyAssetActivity : NBaseActivity(), View.OnClickListener {
             R.id.btn_recharge_acca -> {//去充值
                 CheckPermission.getInstance()
                         .commonCheck(this, CheckPermission.CURRENCY_RECHARGE, "充币需要完成以下设置，请检查", onPass = {
-                            startActivity(Intent(this@ConcreteCurrencyAssetActivity, RechargeCurrencyActivity::class.java)
+                            startActivity(Intent(this@CurrencyAssetDetailActivity, RechargeCurrencyActivity::class.java)
                                     .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
                         })
             }
             R.id.btn_withdraw_acca -> {//去提币
                 CheckPermission.getInstance()
                         .commonCheck(this, CheckPermission.BIACC_GET, "提币需要完成以下设置，请检查", onPass = {
-                            startActivity(Intent(this@ConcreteCurrencyAssetActivity, WithdrawCurrencyActivity::class.java)
+                            startActivity(Intent(this@CurrencyAssetDetailActivity, WithdrawCurrencyActivity::class.java)
                                     .putExtra(IntentConstant.PARAM_ASSET, userAssetBean))
                         })
             }

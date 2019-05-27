@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.vst.uiframework.widget.CommonTopBar
+    <com.nze.nzexchange.widget.CommonTopBar
         android:id="@+id/ctb_web"
         android:layout_width="match_parent"
         android:layout_height="44dp" />
@@ -15,7 +15,7 @@
         android:layout_weight="1"
         android:background="@android:color/white">
 
-        <com.vst.vstob.control.common.web.CustomWebView
+        <com.nze.nzexchange.controller.common.webview.CustomWebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

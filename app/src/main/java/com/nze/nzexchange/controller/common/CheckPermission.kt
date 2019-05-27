@@ -28,6 +28,8 @@ class CheckPermission {
         val BIACC_GET = "biacc_get"//提币
         val BIBI_TRADE = "bibi_trade"//币币交易
         val ACC_PICKFUND = "acc_pickFund"//法币提现
+        val ACC_FILL = "acc_fill"//法币充值
+        val ACC_MOVE = "acc_move"//法币划转
 
 
         fun getInstance(): CheckPermission {

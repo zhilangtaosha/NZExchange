@@ -1,6 +1,5 @@
-package com.nze.nzexchange.controller.my.asset.transfer
+package com.nze.nzexchange.controller.my.asset.legal
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -12,17 +11,23 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.LegalAccountBean
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
+import com.nze.nzexchange.config.AccountType.Companion.LEGAL
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
-import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
+import com.nze.nzexchange.controller.my.asset.legal.presenter.LegalP
+import com.nze.nzexchange.controller.my.asset.transfer.TransferHistoryActivity
+import com.nze.nzexchange.controller.my.asset.transfer.TransferSuccessDialog
 import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
@@ -30,11 +35,10 @@ import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.activity_transfer.*
-import retrofit2.http.Field
-import java.util.function.BinaryOperator
 
-class TransferActivity : NBaseActivity(), View.OnClickListener {
-
+class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
+    val legalP: LegalP by lazy { LegalP(this) }
+    private val LEGAL_CURRENCY = "DSH"
     val topBar: CommonTopBar by lazy { ctb_at }
     val currencyTv: TextView by lazy { tv_currency_at }
     val selectCurrency: TextView by lazy { tv_select_currency_at }
@@ -48,22 +52,22 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
     val transferBtn: CommonButton by lazy { btn_transfer_at }
 
     var userAssetBean: UserAssetBean? = null
-    var type: Int = AccountType.BIBI
+    var type: Int = AccountType.LEGAL
     var userBean = UserBean.loadFromApp()
 
-    val TRANSFER_OTC = "outside"
+    val TRANSFER_LEGALCURRENCY = "legalCurrency "
     val TRANSFER_BIBI = "coin"
 
 
-    var bundle: Bundle? = null
-    lateinit var otcList: ArrayList<UserAssetBean>
     lateinit var bibiList: ArrayList<UserAssetBean>
     val dialog: TransferSuccessDialog  by lazy { TransferSuccessDialog(this) }
 
+    var accountBean: LegalAccountBean? = null
+
     companion object {
-        fun skip(context: Context, bundle: Bundle) {
-            val intent = Intent(context, TransferActivity::class.java)
-            intent.putExtra(IntentConstant.PARAM_BUNDLE, bundle)
+        fun skip(context: Context, accountBean: LegalAccountBean) {
+            val intent = Intent(context, LegalTransferActivity::class.java)
+            intent.putExtra(IntentConstant.PARAM_LEGAL_ACCOUNT, accountBean)
             context.startActivity(intent)
         }
     }
@@ -75,16 +79,11 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             skipActivity(TransferHistoryActivity::class.java)
         }
         intent?.let {
-            bundle = it.getBundleExtra(IntentConstant.PARAM_BUNDLE)
+            accountBean = it.getParcelableExtra(IntentConstant.PARAM_LEGAL_ACCOUNT)
 
         }
-        bundle?.let {
-            type = it.getInt(IntentConstant.PARAM_TYPE)
-            userAssetBean = it.getParcelable(IntentConstant.PARAM_ASSET)
-            otcList = it.getParcelableArrayList(IntentConstant.PARAM_OTC_ACCOUNT)
-            bibiList = it.getParcelableArrayList(IntentConstant.PARAM_BIBI_ACCOUNT)
-        }
-        refreshLayout(userAssetBean!!, false)
+        currencyTv.text = LEGAL_CURRENCY
+        refreshLayout(false)
 
         transferBtn.initValidator()
                 .add(transferEt, EmptyValidation())
@@ -102,11 +101,10 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_select_currency_at -> {
-                SelectCurrencyActivity.skipForResult(this, AccountType.OTC)
             }
             R.id.iv_swap_at -> {
                 if (type == AccountType.BIBI) {
-                    type = AccountType.OTC
+                    type = AccountType.LEGAL
                 } else {
                     type = AccountType.BIBI
                 }
@@ -119,9 +117,9 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                 if (transferBtn.validate()) {
                     val amount = transferEt.getContent()
                     var from = TRANSFER_BIBI
-                    var to = TRANSFER_OTC
+                    var to = TRANSFER_LEGALCURRENCY
                     if (type == AccountType.OTC) {
-                        from = TRANSFER_OTC
+                        from = TRANSFER_LEGALCURRENCY
                         to = TRANSFER_BIBI
                     }
                     transferAssets(userBean!!.userId, userAssetBean!!.currency, from, to, amount.toDouble(), null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
@@ -134,7 +132,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
         when (type) {
             AccountType.BIBI -> {
                 fromAccountTv.text = "币币账户"
-                toAccountTv.text = "OTC账户"
+                toAccountTv.text = "法币账户"
             }
             AccountType.OTC -> {
                 fromAccountTv.text = "OTC账户"
@@ -142,11 +140,11 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             }
             AccountType.LEGAL -> {
                 fromAccountTv.text = "法币账户"
-                toAccountTv.text = "选择账户"
+                toAccountTv.text = "BIBI账户"
             }
         }
 
-        refreshLayout(userAssetBean!!, true)
+        refreshLayout(true)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -171,35 +169,25 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            val bean = data?.extras?.getParcelable<UserAssetBean>(IntentConstant.PARAM_ASSET)
-
-            refreshLayout(bean!!, true)
-        }
-    }
-
-    fun refreshLayout(bean: UserAssetBean, isRefreshData: Boolean) {
+    fun refreshLayout(isRefreshData: Boolean) {
         if (isRefreshData && type == AccountType.BIBI) {
             for (b in bibiList) {
-                if (bean.currency == b.currency) {
+                if (LEGAL_CURRENCY == b.currency) {
                     userAssetBean = b
                     break
                 }
             }
-        } else if (isRefreshData) {
-            for (b in otcList) {
-                if (bean.currency == b.currency) {
-                    userAssetBean = b
-                    break
-                }
+            userAssetBean?.let {
+
+                availableTv.text = "可用${it.available.formatForCurrency()}${LEGAL_CURRENCY}"
+                unitTv.text = it.currency
+            }
+        } else {
+            accountBean?.let {
+                availableTv.text = "可用${it.accAbleAmount.formatForCurrency()}${LEGAL_CURRENCY}"
             }
         }
-        userAssetBean?.let {
-            currencyTv.text = it.currency
-            availableTv.text = "可用${it.available.formatForCurrency()}${it.currency}"
-            unitTv.text = it.currency
-        }
+
     }
 
     /**
@@ -228,7 +216,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                                     .show("资金划转需要完成以下设置，请检查",
                                             it.cause
                                     ) {
-                                        this@TransferActivity.finish()
+                                        this@LegalTransferActivity.finish()
                                     }
                         } else {
                             showToast(it.message)
@@ -238,25 +226,20 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
     }
 
     fun getAsset() {
-        Flowable.zip(
-                UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey),
-                UserAssetBean.assetInquiry(userBean?.userId!!, tokenUserId = userBean!!.tokenReqVo.tokenUserId, tokenUserKey = userBean!!.tokenReqVo.tokenUserKey),
-                object : BiFunction<Result<MutableList<UserAssetBean>>, Result<MutableList<UserAssetBean>>, Boolean> {
-                    override fun apply(t1: Result<MutableList<UserAssetBean>>, t2: Result<MutableList<UserAssetBean>>): Boolean {
-                        if (t1.success) {
-                            otcList.clear()
-                            otcList.addAll(t1.result)
-                        }
-                        if (t2.success) {
-                            bibiList.clear()
-                            bibiList.addAll(t2.result)
-                        }
-                        return true
-                    }
-                }).compose(netTfWithDialog())
+        legalP.getLegalAccountInfo(userBean!!, {
+            if (it.success) {
+                accountBean = it.result
+            }
+        }, onError)
+        UserAssetBean.assetInquiry(userBean?.userId!!, tokenUserId = userBean!!.tokenReqVo.tokenUserId, tokenUserKey = userBean!!.tokenReqVo.tokenUserKey)
+                .compose(netTf())
                 .subscribe({
-
+                    if (it.success) {
+                        bibiList.clear()
+                        bibiList.addAll(it.result)
+                    }
                 }, onError)
+
     }
 
 }

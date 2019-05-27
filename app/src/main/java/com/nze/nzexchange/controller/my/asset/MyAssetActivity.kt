@@ -1,29 +1,21 @@
 package com.nze.nzexchange.controller.my.asset
 
-import android.content.Intent
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.View
 import android.widget.AdapterView
 import android.widget.CheckBox
 import android.widget.ListView
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxCheckedTextView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.BibiAssetBean
 import com.nze.nzexchange.bean.UserAssetBean
-import com.nze.nzexchange.bean.UserAssetBean.Companion.assetInquiry
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
-import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.AuthorityDialog
@@ -154,7 +146,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        ConcreteCurrencyAssetActivity.skip(this, type, assetAdapter.getItem(position)!!, otcList, bibiList)
+        CurrencyAssetDetailActivity.skip(this, type, assetAdapter.getItem(position)!!, otcList, bibiList)
     }
 
 

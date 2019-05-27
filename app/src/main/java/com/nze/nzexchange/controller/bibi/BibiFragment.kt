@@ -32,6 +32,7 @@ import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.HttpConfig
+import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.editjudge.EditCurrencyPriceWatcher
 import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.widget.LinearLayoutAsListView
@@ -228,7 +229,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     if (it.isNotEmpty() && get.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
                         val input = it.toString().toDouble()
                         val price = get.toDouble()
-                        val total = input * price
+                        val total = DoubleMath.mul(input, price)
                         totalTransactionTv.text = "交易额 ${total.retain8ByFloor()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || get.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
                         totalTransactionTv.text = "交易额 0 ${currentTransactionPair?.mainCurrency}"
@@ -241,7 +242,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     if (it.isNotEmpty() && give.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
                         val input = it.toString().toDouble()
                         val price = give.toDouble()
-                        val total = input * price
+                        val total = DoubleMath.mul(input, price)
                         totalTransactionTv.text = "交易额 ${total.retain8ByFloor()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || give.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
                         totalTransactionTv.text = "交易额 0${currentTransactionPair?.mainCurrency}"
@@ -263,7 +264,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (type == TYPE_BUY) {
             buyTv.isSelected = true
             saleTv.isSelected = false
-            availableTv.setTextFromHtml("可用<font color=\"#0DA287\">${restOrderBean?.mainCurrency?.available
+            availableTv.setTextFromHtml("可用<font color=\"#0DA287\">${restOrderBean?.mainCurrency?.available?.removeE()
                     ?: "--"}${currentTransactionPair?.mainCurrency ?: "--"}</font>")
             buyIsb.visibility = View.VISIBLE
             saleIsb.visibility = View.GONE
@@ -279,7 +280,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         } else {
             buyTv.isSelected = false
             saleTv.isSelected = true
-            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${restOrderBean?.currency?.available
+            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${restOrderBean?.currency?.available?.removeE()
                     ?: "--"}${currentTransactionPair?.currency ?: "--"}</font>")
             buyIsb.visibility = View.GONE
             saleIsb.visibility = View.VISIBLE
@@ -462,7 +463,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 try {
                     val price = giveEt.getContent().toDouble()
                     val num = getEt.getContent().toDouble()
-                    val total = price * num
+                    val total = price.mul(num)
                     totalTransactionTv.text = "交易额$total${currentTransactionPair?.mainCurrency}"
                 } catch (e: Exception) {
                     totalTransactionTv.text = "交易额0${currentTransactionPair?.mainCurrency}"
@@ -515,27 +516,29 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 val give = giveEt.getContent()
                 if (give.isNotEmpty()) {
                     val price = give.toDouble()
-                    val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
+//                    val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
+                    val total = restOrderBean!!.mainCurrency!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), 8)
                     if (price > 0) {
-                        val input = total / price
-                        val s = input.retain4ByFloor()
-                        getEt.setText(s)
-                        getEt.setSelection(s.length)
+                        val input = DoubleMath.divByFloor(total, price, 4).toString()
+                        getEt.setText(input)
+                        getEt.setSelection(input.length)
                     } else {
                         getEt.setText("0")
                         getEt.setSelection(1)
                     }
                 }
             } else if (transactionType == TRANSACTIONTYPE_MARKET && restOrderBean != null && restOrderBean!!.mainCurrency != null) {
-                val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
-                val s = total.retain4ByFloor()
+//                val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
+//                val s = total.retain4ByFloor()
+                val s = restOrderBean!!.mainCurrency!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), 4).toString()
                 getEt.setText(s)
                 getEt.setSelection(s.length)
             }
         } else {
             if (restOrderBean != null && restOrderBean!!.currency != null) {
-                val total = restOrderBean!!.currency!!.available * progress!! / 100
-                val s = total.retain4ByFloor()
+//                val total = restOrderBean!!.currency!!.available * progress!! / 100
+//                val s = total.retain4ByFloor()
+                val s = restOrderBean!!.currency!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), 4).toString()
                 getEt.setText(s)
                 getEt.setSelection(s.length)
             }

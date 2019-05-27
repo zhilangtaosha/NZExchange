@@ -49,6 +49,10 @@ class CommonListPopup(context: Activity?, var type: Int = 0) : BasePopupWindow(c
         mutableListOf<String>()
     }
 
+    fun clear() {
+        comAdapter.clearGroup(false)
+    }
+
     fun addItem(item: String) {
         comAdapter.addItem(item)
     }

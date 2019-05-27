@@ -359,6 +359,19 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
      * 切换市场
      */
     fun changMarket(index: Int) {
+        //切换前清空数据
+        costTv.text = "0"
+        hightCostTv.text = "0"
+        lowCostTv.text = "0"
+        volumeTv.text = "0"
+        rangeTv.text = "0%"
+        chartAdapter.clearData()
+        depthView.setData(depthSellList.apply { clear() }, depthBuyList.apply { clear() })
+        buyAdapter.clearGroup(true)
+        sellAdapter.clearGroup(true)
+        newDealAdapter.clearGroup(true)
+
+        //切换市场
         val len = marketList.size
         val i = index % len
         marketNameTv.text = marketList[i].name

@@ -62,14 +62,14 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
             mLastTab = mCurrentTab
             mCurrentTab = 0
             selectTab(mCurrentTab)
-            return true
+            return false
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (!isExit) {
                 showToast("再按一次退出应用")
                 isExit = true
                 mHandler.sendEmptyMessageDelayed(0, 1000)
-                return true
+                return false
             }
         }
 

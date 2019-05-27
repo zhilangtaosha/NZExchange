@@ -18,6 +18,9 @@ import com.nze.nzexchange.http.CRetrofit
  */
 class LegalP(activity: NBaseActivity) : BaseActivityP(activity) {
 
+    /**
+     * 法币充值记录
+     */
     fun getRechargeHistory(
             userBean: UserBean,
             page: Int,
@@ -32,7 +35,9 @@ class LegalP(activity: NBaseActivity) : BaseActivityP(activity) {
                 .subscribe(onSuccess, onError)
     }
 
-
+    /**
+     * 法币提现记录
+     */
     fun getWithdrawHistory(
             userBean: UserBean,
             page: Int,
@@ -55,4 +60,5 @@ class LegalP(activity: NBaseActivity) : BaseActivityP(activity) {
                 .compose(activity.netTfWithDialog())
                 .subscribe(onSuccess, onError)
     }
+
 }

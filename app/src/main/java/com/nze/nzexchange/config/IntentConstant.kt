@@ -23,6 +23,7 @@ class IntentConstant {
         const val PARAM_CODE = "code"
         const val PARAM_OTC_ACCOUNT = "otcAccount"
         const val PARAM_BIBI_ACCOUNT = "bibAccount"
+        const val PARAM_LEGAL_ACCOUNT = "legalAccount"
         const val PARAM_BUNDLE = "bundle"
         const val INTENT_REAL_NAME_BEAN = "realName"
         const val PARAM_URL = "url"

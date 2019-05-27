@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_bg"
-    tools:context=".controller.my.asset.ConcreteCurrencyAssetActivity">
+    tools:context=".controller.my.asset.CurrencyAssetDetailActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
         android:id="@+id/ctb_acca"

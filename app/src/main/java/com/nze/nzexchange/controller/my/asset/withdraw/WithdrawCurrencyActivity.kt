@@ -14,14 +14,12 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
-import com.nze.nzexchange.R.id.tv_min_amount_acw
 import com.nze.nzexchange.bean.CurrencyWithdrawInfoBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
-import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency

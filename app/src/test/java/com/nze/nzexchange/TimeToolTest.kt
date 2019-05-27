@@ -1,6 +1,8 @@
 package com.nze.nzexchange
 
+import com.nze.nzexchange.extend.add
 import com.nze.nzexchange.extend.formatForPrice
+import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.TimeTool
 import org.junit.Test
 
@@ -14,6 +16,11 @@ class TimeToolTest {
 
     @Test
     fun format(){
-
+//        val p:Double = 3.851
+//        val d=2.0
+//        println("add>>${DoubleMath.add(p,d)}")
+//        println("sub>>${DoubleMath.sub(p,d)}")
+//        println("mul>>${DoubleMath.mul(p,d)}")
+//        println("div>>${DoubleMath.divByFloor(p,d,2)}")
     }
 }

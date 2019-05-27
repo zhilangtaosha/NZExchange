@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.my.asset.legal.LegalAssetDetailActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_alad"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="法币账户" />
+
+    <TextView
+        style="@style/tx15_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_title_bg"
+        android:paddingLeft="15dp"
+        android:paddingTop="20dp"
+        android:paddingRight="15dp"
+        android:text="账户余额 (AUS)" />
+
+    <TextView
+        android:id="@+id/tv_total_amount_alad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_title_bg"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="20dp"
+        android:text="0.0"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <TextView
+        style="@style/tx15_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FF151A20"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"
+        android:text="注:  澳元与AUS价格1:1兑换" />
+
+    <TextView
+        style="@style/tx16_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:text="最近财务记录" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/layout_btn_alad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_recharge_alad"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_line2a32_bg1f27"
+                android:drawableLeft="@mipmap/asset_recharge"
+                android:drawablePadding="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="充币"
+                android:textColor="@color/color_FF6D87A8"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/view1_alad"
+                android:layout_width="10dp"
+                android:layout_height="1dp" />
+
+            <Button
+                android:id="@+id/btn_withdraw_alad"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:background="@drawable/shape_line2a32_bg1f27"
+                android:drawableLeft="@mipmap/asset_withdraw"
+                android:drawablePadding="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="提币"
+                android:textColor="@color/color_FF6D87A8"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/view2_alad"
+                android:layout_width="10dp"
+                android:layout_height="1dp" />
+
+            <Button
+                android:id="@+id/btn_transfer_alad"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:background="@drawable/shape_line2a32_bg1f27"
+                android:drawableLeft="@mipmap/transfer_icon"
+                android:drawablePadding="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="划转"
+                android:textColor="@color/color_FF6D87A8"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listView_alad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/layout_btn_alad"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:divider="@color/color_line"
+            android:dividerHeight="1px" />
+    </RelativeLayout>
+</LinearLayout>

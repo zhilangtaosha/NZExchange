@@ -121,7 +121,7 @@
         <activity android:name=".controller.my.asset.withdraw.CurrencyAddressSetListActivity" />
         <activity android:name=".controller.my.asset.withdraw.SelectCurrencyAddressListActivity" />
         <activity android:name=".controller.my.asset.withdraw.AddAddressActivity" />
-        <activity android:name=".controller.my.asset.ConcreteCurrencyAssetActivity" />
+        <activity android:name=".controller.my.asset.CurrencyAssetDetailActivity" />
         <activity android:name=".controller.my.asset.withdraw.WithdrawHistoryActivity" />
         <activity android:name=".controller.my.asset.recharge.RechargeHistoryActivity" />
         <activity android:name=".controller.my.asset.recharge.RechargeDetailActivity" />
@@ -175,7 +175,9 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity android:name=".controller.login.RegisterAgreementActivity" />
         <activity android:name=".controller.common.webview.WebActivity" />
-        <activity android:name=".controller.home.HelpCenterActivity"></activity>
+        <activity android:name=".controller.home.HelpCenterActivity" />
+        <activity android:name=".controller.my.asset.legal.LegalDetailActivity" />
+        <activity android:name=".controller.my.asset.legal.LegalAssetDetailActivity"></activity>
     </application>
 
 </manifest>
