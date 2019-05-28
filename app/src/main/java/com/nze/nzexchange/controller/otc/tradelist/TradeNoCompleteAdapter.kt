@@ -14,6 +14,8 @@ import com.nze.nzexchange.controller.base.BaseAda
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.tools.TimeTool
 import com.trello.rxlifecycle2.android.FragmentEvent
 import io.reactivex.Flowable
@@ -42,8 +44,8 @@ class TradeNoCompleteAdapter(mContext: Context, var fragment: NBaseFragment) : N
             vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, suborderCreateTime)
             vh.statusTv.text = SubOrderInfoBean.getStatus(suborderStatus)
             vh.priceTv.text = suborderPrice.toString()
-            vh.numTv.text = "数量: $suborderNum"
-            vh.moneyTv.text = "总额: $suborderAmount"
+            vh.numTv.text = "数量: ${suborderNum.formatForCurrency()}"
+            vh.moneyTv.text = "总额: ${suborderAmount.formatForLegal()}"
 
             if (suborderStatus == SubOrderInfoBean.SUBORDERSTATUS_WAIT_PAY) {
                 val time = (System.currentTimeMillis() - phoneTime) / 1000

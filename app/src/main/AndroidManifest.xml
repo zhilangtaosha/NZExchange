@@ -176,7 +176,7 @@
         <activity android:name=".controller.login.RegisterAgreementActivity" />
         <activity android:name=".controller.common.webview.WebActivity" />
         <activity android:name=".controller.home.HelpCenterActivity" />
-        <activity android:name=".controller.my.asset.legal.LegalDetailActivity" />
+        <activity android:name=".controller.my.asset.legal.LegalTransferActivity" />
         <activity android:name=".controller.my.asset.legal.LegalAssetDetailActivity"></activity>
     </application>
 

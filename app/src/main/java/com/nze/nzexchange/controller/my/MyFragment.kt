@@ -4,6 +4,7 @@ package com.nze.nzexchange.controller.my
 import android.content.Intent
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -40,6 +41,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     val legalP: LegalP by lazy { LegalP(activity as NBaseActivity) }
     lateinit var rootView: View
     private val userNameTV: TextView by lazy { rootView.tv_user_name_my }
+    private val legalAccountLayout: RelativeLayout by lazy { rootView.layout_legal_account_my }
     private val moneyTv: TextView by lazy { rootView.tv_money_my }
     private val unitTv: TextView by lazy { rootView.tv_unit_my }
     private val moneyLayout: LinearLayout by lazy { rootView.layout_money_my }
@@ -75,6 +77,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
         safeCenterTv.setOnClickListener(this)
         authenticationTv.setOnClickListener(this)
         settingTv.setOnClickListener(this)
+        legalAccountLayout.setOnClickListener(this)
 
         changeForLogin()
 
@@ -123,7 +126,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
             R.id.tv_user_name_my -> {
                 skipActivity(LoginActivity::class.java)
             }
-            R.id.layout_money_my -> {
+            R.id.layout_legal_account_my -> {
                 LegalAssetDetailActivity.skip(activity!!, realNameAuthenticationBean)
             }
             R.id.tv_recharge_my -> {

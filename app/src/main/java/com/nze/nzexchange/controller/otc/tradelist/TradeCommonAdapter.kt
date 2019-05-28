@@ -11,6 +11,8 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.CurrencyTool
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_trade_common.view.*
 
@@ -19,7 +21,7 @@ class TradeCommonAdapter(mContext: Context, var type: Int, var fragment: NBaseFr
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: SubOrderInfoBean,position: Int) {
+    override fun initView(vh: ViewHolder, item: SubOrderInfoBean, position: Int) {
         item.run {
             var type = ""
             if (UserBean.loadFromApp()?.userId == item.userIdSell) {
@@ -32,8 +34,8 @@ class TradeCommonAdapter(mContext: Context, var type: Int, var fragment: NBaseFr
             vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, suborderCreateTime)
             vh.statusTv.text = SubOrderInfoBean.getStatus(suborderStatus)
             vh.priceTv.text = suborderPrice.toString()
-            vh.numTv.text = "数量: $suborderNum"
-            vh.moneyTv.text = "总额: $suborderAmount"
+            vh.numTv.text = "数量: ${suborderNum.formatForCurrency()}"
+            vh.moneyTv.text = "总额: ${suborderAmount.formatForLegal()}"
         }
 
     }

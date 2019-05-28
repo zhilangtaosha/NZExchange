@@ -230,7 +230,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val input = it.toString().toDouble()
                         val price = get.toDouble()
                         val total = DoubleMath.mul(input, price)
-                        totalTransactionTv.text = "交易额 ${total.retain8ByFloor()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "交易额 ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || get.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
                         totalTransactionTv.text = "交易额 0 ${currentTransactionPair?.mainCurrency}"
                     }
@@ -243,12 +243,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val input = it.toString().toDouble()
                         val price = give.toDouble()
                         val total = DoubleMath.mul(input, price)
-                        totalTransactionTv.text = "交易额 ${total.retain8ByFloor()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "交易额 ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || give.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
                         totalTransactionTv.text = "交易额 0${currentTransactionPair?.mainCurrency}"
                     } else if (it.isNotEmpty() && transactionType == TRANSACTIONTYPE_MARKET) {
                         val input = it.toString().toDouble()
-                        totalTransactionTv.text = "交易额 ${input.retain8ByFloor()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "交易额 ${input.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     }
 
                 }
@@ -464,7 +464,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     val price = giveEt.getContent().toDouble()
                     val num = getEt.getContent().toDouble()
                     val total = price.mul(num)
-                    totalTransactionTv.text = "交易额$total${currentTransactionPair?.mainCurrency}"
+                    totalTransactionTv.text = "交易额${total.formatForCurrency()}${currentTransactionPair?.mainCurrency}"
                 } catch (e: Exception) {
                     totalTransactionTv.text = "交易额0${currentTransactionPair?.mainCurrency}"
                 }
@@ -560,8 +560,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         currentTransactionPair?.let {
             //            switchType(currentType)
             moreTv.text = it.transactionPair
-            giveEt.hint = "价格(${it.mainCurrency})"
-            giveEt.setText(it.exchangeRate.formatForCurrency())
+            if (transactionType == TRANSACTIONTYPE_LIMIT) {
+                giveEt.hint = "价格(${it.mainCurrency})"
+                giveEt.setText(it.exchangeRate.formatForCurrency())
+            }
             if (transactionType == TRANSACTIONTYPE_LIMIT) {
                 getEt.hint = "数量(${currentTransactionPair?.currency})"
             } else {

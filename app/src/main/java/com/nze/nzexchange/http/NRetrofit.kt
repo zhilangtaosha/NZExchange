@@ -14,7 +14,7 @@ class NRetrofit private constructor() {
     val SERVER_URL = "http://zhongyingying.qicp.io:18080/zyy-otc/"
 
 
-    var url: String = LIU_URL
+    var url: String = SERVER_URL
     var retrofit: Retrofit
 
     init {

@@ -9,7 +9,7 @@ package com.nze.nzexchange.config
 class KLineParam {
 
     companion object {
-        const val MARKET_MYSELF = "ws://192.168.1.130:443/ws"
+        const val MARKET_MYSELF = "ws://3.15.16.7:443/ws"
         const val MARKET_HUOBI = "ws://18.224.228.208:443/huobi"
 
 

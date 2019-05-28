@@ -18,6 +18,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.AccountType.Companion.LEGAL
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.LegalConfig
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
@@ -38,7 +39,6 @@ import kotlinx.android.synthetic.main.activity_transfer.*
 
 class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
     val legalP: LegalP by lazy { LegalP(this) }
-    private val LEGAL_CURRENCY = "DSH"
     val topBar: CommonTopBar by lazy { ctb_at }
     val currencyTv: TextView by lazy { tv_currency_at }
     val selectCurrency: TextView by lazy { tv_select_currency_at }
@@ -59,7 +59,7 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
     val TRANSFER_BIBI = "coin"
 
 
-    lateinit var bibiList: ArrayList<UserAssetBean>
+    val bibiList: MutableList<UserAssetBean> by lazy { mutableListOf<UserAssetBean>() }
     val dialog: TransferSuccessDialog  by lazy { TransferSuccessDialog(this) }
 
     var accountBean: LegalAccountBean? = null
@@ -80,9 +80,10 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
         }
         intent?.let {
             accountBean = it.getParcelableExtra(IntentConstant.PARAM_LEGAL_ACCOUNT)
-
         }
-        currencyTv.text = LEGAL_CURRENCY
+        selectCurrency.visibility = View.GONE
+        currencyTv.text = LegalConfig.NAME
+        unitTv.text = LegalConfig.NAME
         refreshLayout(false)
 
         transferBtn.initValidator()
@@ -95,7 +96,7 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
         transferBtn.setOnCommonClick(this)
         swapAccount(type)
 
-
+        getAsset()
     }
 
     override fun onClick(v: View?) {
@@ -140,7 +141,7 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
             }
             AccountType.LEGAL -> {
                 fromAccountTv.text = "法币账户"
-                toAccountTv.text = "BIBI账户"
+                toAccountTv.text = "币币账户"
             }
         }
 
@@ -172,19 +173,18 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
     fun refreshLayout(isRefreshData: Boolean) {
         if (isRefreshData && type == AccountType.BIBI) {
             for (b in bibiList) {
-                if (LEGAL_CURRENCY == b.currency) {
+                if (LegalConfig.NAME == b.currency) {
                     userAssetBean = b
                     break
                 }
             }
             userAssetBean?.let {
-
-                availableTv.text = "可用${it.available.formatForCurrency()}${LEGAL_CURRENCY}"
+                availableTv.text = "可用${it.available.formatForCurrency()}${LegalConfig.NAME}"
                 unitTv.text = it.currency
             }
         } else {
             accountBean?.let {
-                availableTv.text = "可用${it.accAbleAmount.formatForCurrency()}${LEGAL_CURRENCY}"
+                availableTv.text = "可用${it.accAbleAmount.formatForCurrency()}${LegalConfig.NAME}"
             }
         }
 

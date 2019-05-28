@@ -20,10 +20,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.ShowBankPayMethodActivity
 import com.nze.nzexchange.controller.common.ShowImagePayMethodActivity
-import com.nze.nzexchange.extend.formatForLegal
-import com.nze.nzexchange.extend.setBg
-import com.nze.nzexchange.extend.setBgByColor
-import com.nze.nzexchange.extend.setTxtColor
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.ViewFactory
 import com.nze.nzexchange.widget.CommonTopBar
@@ -347,7 +344,7 @@ class OtcConfirmActivity : NBaseActivity() {
 
             statusTv.text = status
             priceTv.text = "${suborderPrice.formatForLegal()}CNY"
-            tv_num_abc.text = "${suborderNum}${CurrencyTool.getCurrency(tokenId)}"
+            tv_num_abc.text = "${suborderNum.formatForCurrency()}${CurrencyTool.getCurrency(tokenId)}"
             moneyTv.text = "${suborderAmount.formatForLegal()}CNY"
             tv_message_abc.text = remark
             timeTv.text = TimeTool.format(TimeTool.PATTERN_DEFAULT, suborderCreateTime)

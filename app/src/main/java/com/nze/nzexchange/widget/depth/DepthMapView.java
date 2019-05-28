@@ -157,6 +157,14 @@ public class DepthMapView extends View {
         mDrawHeight = h - mBottomPriceHeight;
     }
 
+    public void clearData(){
+        mMaxVolume = 0.0;
+        mBottomPrice = new Double[4];
+        mBuyData.clear();
+        mSellData.clear();
+        invalidate();
+    }
+
     public void setData(List<DepthDataBean> buyData, List<DepthDataBean> sellData) {
         float vol = 0;
         if (buyData.size() > 0) {

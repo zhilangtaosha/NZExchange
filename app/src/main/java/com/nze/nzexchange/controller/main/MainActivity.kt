@@ -17,7 +17,9 @@ import com.leiyun.fingerprint.FingerprintHelper
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.ActivityManager
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
+import com.nze.nzexchange.R.id.*
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.Preferences
@@ -57,23 +59,20 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+    override fun onBackPressed() {
         if (mCurrentTab != 0) {
             mLastTab = mCurrentTab
             mCurrentTab = 0
             selectTab(mCurrentTab)
-            return false
+            return
         }
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (!isExit) {
-                showToast("再按一次退出应用")
-                isExit = true
-                mHandler.sendEmptyMessageDelayed(0, 1000)
-                return false
-            }
+        if (!isExit) {
+            showToast("再按一次退出应用")
+            isExit = true
+            mHandler.sendEmptyMessageDelayed(0, 1000)
+            return
         }
-
-        return super.onKeyDown(keyCode, event)
+        super.onBackPressed()
     }
 
     override fun isBindNetworkListener(): Boolean = false
@@ -114,7 +113,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         }
     }
 
-    override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.RIGHT
+    override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = TransitionMode.RIGHT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

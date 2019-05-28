@@ -1,6 +1,8 @@
 package com.nze.nzexchange.tools
 
 import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 
 /**
  * @author: zwy
@@ -24,7 +26,7 @@ class DoubleMath {
         }
 
         //乘
-        fun mul(a: Double, b: Double): Double {
+        fun mul(a: Double, b: Double, len: Int = 8): Double {
             return (a.toBigDecimal().multiply(b.toBigDecimal())).toDouble()
 //            return (a.toBigDecimal() * b.toBigDecimal()).toDouble()
         }

@@ -44,9 +44,9 @@ data class Handicap(
  * k线实时成交
  */
 data class NewDealBean(
-        val amount: String,
+        val amount: Double,
         val id: String,
-        val price: String,
+        val price: Double,
         val time: Double,
         val type: Int//0购买，1出售
 )

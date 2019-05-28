@@ -38,7 +38,7 @@ fun Double.formatForLegal2(): Double {
 
 fun Double.formatForPrice(): String {
     val df = DecimalFormat("0.############")
-    df.roundingMode = RoundingMode.FLOOR;
+//    df.roundingMode = RoundingMode.FLOOR;
     return df.format(this)
 }
 

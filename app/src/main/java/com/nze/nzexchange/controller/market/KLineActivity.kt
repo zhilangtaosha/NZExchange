@@ -366,10 +366,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         volumeTv.text = "0"
         rangeTv.text = "0%"
         chartAdapter.clearData()
-        depthView.setData(depthSellList.apply { clear() }, depthBuyList.apply { clear() })
+        depthView.clearData()
         buyAdapter.clearGroup(true)
+        buyLv.adapter = buyAdapter
         sellAdapter.clearGroup(true)
+        sellLv.adapter = sellAdapter
+        newDealList.clear()
         newDealAdapter.clearGroup(true)
+        newDealLv.adapter = newDealAdapter
 
         //切换市场
         val len = marketList.size
@@ -667,6 +671,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                         it.onNext(DATA_DATASOURCE)
                     }
                 } catch (e: Exception) {
+                    NLog.i("")
 //                    it.onError(Throwable("不存在该条交易对的K线信息"))
                 }
             }.subscribeOn(Schedulers.computation())

@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.common
 
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
@@ -52,7 +53,9 @@ class CheckPermission {
                                         onReject?.invoke()
                                     }
                     }
-                }, {})
+                }, {
+                    NLog.i(it.message)
+                })
     }
 
     fun busCheck(
