@@ -8,6 +8,8 @@ import java.math.RoundingMode
  * @author: zwy
  * @email: zhouweiyong55@163.com
  * @类 说 明:
+ * 跟数字货币有关的直接舍弃
+ * 跟金钱有关的四舍五入
  * @创建时间：2018/11/21
  */
 class DoubleMath {

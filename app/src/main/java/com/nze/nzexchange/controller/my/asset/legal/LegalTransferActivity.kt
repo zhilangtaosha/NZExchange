@@ -119,11 +119,11 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
                     val amount = transferEt.getContent()
                     var from = TRANSFER_BIBI
                     var to = TRANSFER_LEGALCURRENCY
-                    if (type == AccountType.OTC) {
+                    if (type == AccountType.LEGAL) {
                         from = TRANSFER_LEGALCURRENCY
                         to = TRANSFER_BIBI
                     }
-                    transferAssets(userBean!!.userId, userAssetBean!!.currency, from, to, amount.toDouble(), null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    transferAssets(userBean!!.userId, LegalConfig.NAME, from, to, amount.toDouble(), null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 }
             }
         }
@@ -219,7 +219,7 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
                                         this@LegalTransferActivity.finish()
                                     }
                         } else {
-                            showToast(it.message)
+                            showToast("划转失败")
                         }
                     }
                 }, onError)

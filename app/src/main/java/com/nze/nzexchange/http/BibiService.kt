@@ -178,6 +178,14 @@ interface BibiService {
             @Field("tokenName") tokenName: String
     ): Flowable<Result<Any>>
 
+    //删除用户提币地址
+    @FormUrlEncoded
+    @POST("deleteCoinAddress")
+    fun deleteCurrencyWithdrawAddress(
+            @Field("userId") userId: String,
+            @Field("address") address: String
+    ): Flowable<Result<Any>>
+
 
     //提币地址列表
     @FormUrlEncoded

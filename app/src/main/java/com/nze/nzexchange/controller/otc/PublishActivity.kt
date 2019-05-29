@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.otc
 
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -20,6 +21,7 @@ import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.common.FundPasswordPopup
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.TextTool
@@ -40,6 +42,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
     val priceEt: EditText by lazy { et_price_value_ap }
     val numEt: EditText by lazy { et_num_value_ap }
     val moneyEt: EditText by lazy { et_money_value_ap }
+    val legalTv: TextView by lazy { tv_legal_ap }
 
     val TYPE_BUY: Int = 0
     val TYPE_SALE: Int = 1
@@ -137,7 +140,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         var value = ""
                         val price = priceEt.text.toString()
                         if (it.isNotEmpty() && price.isNotEmpty()) {
-                            value = DoubleMath.div(it.toString().toDouble(), price.toDouble()).formatForCurrency()
+                            value = DoubleMath.divByUp(it.toString().toDouble(), price.toDouble(), 8).toString()
                         }
                         numEt.setText(value)
                     } else {
@@ -153,6 +156,17 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         fundPopup.showPopupWindow()
                     }
                 }
+
+        CommonBibiP.getInstance(this)
+                .currencyToLegal(currency, 1.0, {
+                    if (it.success) {
+                        legalTv.text = "${it.result.formatForLegal()}CNY"
+                    } else {
+                        legalTv.text = "0CNY"
+                    }
+                }, {
+                    legalTv.text = "0CNY"
+                })
 
         changLayout()
         getOtcAsset()
@@ -229,16 +243,18 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
         if (currentType == TYPE_BUY) {
             topBar.setTitle("购买委托单")
             topBar.setRightText("我要出售")
-            tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#09A085\">6.75CNY</font>")
+//            tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#09A085\">6.75CNY</font>")
             numEt.hint = "请输入购买数量"
             et_message_ap.hint = "下单后极速付款，到账后请及时放币"
+            legalTv.setTxtColor(R.color.color_up)
         } else {
             topBar.setTitle("出售委托单")
             topBar.setRightText("我要购买")
-            tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#FF4A5F\">6.75CNY</font>")
+//            tv_handicap_ap.setTextFromHtml("当前盘口价格 <font color=\"#FF4A5F\">6.75CNY</font>")
             numEt.hint = "请输入出售数量"
             et_message_ap.hint = TextTool.fromHtml("1.订单有效期为15分钟，请及时付款并点击「我已支付」按钮<br/>" +
                     "2.币由系统锁定托管，请安心下单")
+            legalTv.setTxtColor(R.color.color_down)
         }
     }
 

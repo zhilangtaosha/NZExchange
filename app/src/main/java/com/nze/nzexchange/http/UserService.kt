@@ -284,6 +284,14 @@ interface UserService {
     fun getLegalAccountInfo(
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String
-    ):Flowable<Result<LegalAccountBean>>
-    
+    ): Flowable<Result<LegalAccountBean>>
+
+
+    //数字币转法币价格
+    @FormUrlEncoded
+    @POST("accOtoBus/otoTransaction/transactionCurreryToRmb.json")
+    fun currencyToLegal(
+            @Field("currery") currery: String,
+            @Field("amt") amt: Double
+    ): Flowable<Result<Double>>
 }

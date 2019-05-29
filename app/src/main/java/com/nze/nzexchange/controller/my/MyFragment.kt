@@ -16,6 +16,7 @@ import com.nze.nzexchange.bean.RealNameAuthenticationBean.Companion.getReanNameA
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.LegalConfig
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.bibi.BibiAllOrderActivity
@@ -79,6 +80,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
         settingTv.setOnClickListener(this)
         legalAccountLayout.setOnClickListener(this)
 
+        unitTv.text = "${LegalConfig.NAME}"
         changeForLogin()
 
     }

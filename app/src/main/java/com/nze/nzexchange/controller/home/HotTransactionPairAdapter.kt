@@ -11,7 +11,10 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.MarketPopularBean
 import com.nze.nzexchange.bean.TransactionPairsBean
+import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.controller.market.KLineActivity
+import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.widget.recyclerview.ViewType
 import kotlinx.android.synthetic.main.recyclerview_hot_transaction_pair.view.*
@@ -41,18 +44,31 @@ class HotTransactionPairAdapter(var context: Context, var datas: MutableList<Tra
         } else {
             holder as HTPViewHolder
             val pairBean = datas[position]
-            holder.tvChange.text = "${pairBean.gain}%"
             if (pairBean.gain > 0) {
                 holder.tvChange.setTxtColor(R.color.color_up)
+                holder.tvChange.text = "+${pairBean.gain}%"
             } else {
                 holder.tvChange.setTxtColor(R.color.color_down)
+                holder.tvChange.text = "-${pairBean.gain}%"
             }
 
             holder.tvName.text = pairBean.transactionPair
             holder.tvExchange.text = pairBean.exchangeRate.toString()
             holder.tvCost.text = (pairBean.exchangeRate * 500).toString()
+            holder.tvCost.tag = pairBean.currency
+            CommonBibiP.getInstance(context as NBaseActivity)
+                    .currencyToLegal(pairBean.currency, 1.0, {
+                        if (it.success) {
+                            holder.tvCost.text = "≈${it.result.formatForLegal()} CNY"
+                        }else{
+                            holder.tvCost.text = "≈0 CNY"
+                        }
+                    }, {
+                        holder.tvCost.text = "≈0 CNY"
+                    })
+
             holder.rootLayout.setOnClickListener {
-                KLineActivity.skip(context,pairBean)
+                KLineActivity.skip(context, pairBean)
             }
         }
     }

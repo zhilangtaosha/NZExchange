@@ -24,14 +24,12 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
-import com.nze.nzexchange.controller.common.AuthorityDialog
-import com.nze.nzexchange.controller.common.CheckPermission
-import com.nze.nzexchange.controller.common.CommonListPopup
-import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.*
-import com.nze.nzexchange.http.HttpConfig
+import com.nze.nzexchange.config.HttpConfig
+import com.nze.nzexchange.controller.common.*
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.editjudge.EditCurrencyPriceWatcher
 import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
@@ -578,6 +576,19 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     //获取挂单信息
     private fun getPendingOrderInfo(currencyId: String) {
+        CommonBibiP.getInstance(activity as NBaseActivity)
+                .currencyToLegal(currentTransactionPair?.currency!!, 1.0, {
+                    if (it.success) {
+                        priceTv.text = "≈${it.result}CNY"
+                        lastPriceTv.text = "≈${it.result}CNY"
+                    } else {
+                        priceTv.text = "≈0CNY"
+                        lastPriceTv.text = "≈0CNY"
+                    }
+                }, {
+                    priceTv.text = "≈0CNY"
+                    lastPriceTv.text = "≈0CNY"
+                })
         RestOrderBean.getPendingOrderInfo(currencyId, userBean?.userId)
                 .compose(netTfWithDialog())
                 .subscribe({
@@ -640,21 +651,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     }
 
-    var disposable: Disposable? = null
+
     /**
      * 获取当前委托
      */
     private fun orderPending(currencyId: String, userId: String?) {
-        if (disposable != null && !disposable?.isDisposed!!)
-            disposable!!.dispose()
-        var b = 1
-        if (HttpConfig.isLoop) {
-            b = HttpConfig.LOOP_NUM
-        }
-        disposable = Flowable.interval(0, HttpConfig.LOOP_INTERVAL_TIME, TimeUnit.SECONDS)
-                .filter { b > 0 }
-                .compose(netTf())
-                .subscribe {
+        NLoopAction.getInstance((activity as NBaseActivity?)!!)
+                .loop {
                     OrderPendBean.orderPending(currencyId, userId)
                             .compose(netTf())
                             .subscribe({
@@ -666,7 +669,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                                 } else {
                                     showNODataView("当前没有委托")
                                 }
-                                b--
                             }, {
                                 showNODataView("当前没有委托")
                             })

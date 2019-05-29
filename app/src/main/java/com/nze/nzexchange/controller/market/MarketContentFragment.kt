@@ -11,16 +11,16 @@ import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
-import com.nze.nzexchange.controller.bibi.BibiSideContentFragment
-import com.nze.nzexchange.controller.login.selectcountry.SideBar.b
 import com.nze.nzexchange.database.dao.impl.PairDaoImpl
-import com.nze.nzexchange.http.HttpConfig
+import com.nze.nzexchange.config.HttpConfig
+import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.NLoopAction
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_market_content.view.*
@@ -43,6 +43,7 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
         arguments?.let {
             mainCurrency = it.getString(IntentConstant.PARAM_CURRENCY)
         }
+
 
     }
 
@@ -104,21 +105,21 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
     }
 
-    var disposable: Disposable? = null
+
     /**
      * 5秒刷新一下数据
      */
     override fun getDataFromNet() {
-        if (disposable != null && !disposable?.isDisposed!!)
-            disposable!!.dispose()
-        var b = 1
-        if (HttpConfig.isLoop&&false) {
-            b = HttpConfig.LOOP_NUM
-        }
-        disposable = Flowable.interval(0,HttpConfig.LOOP_INTERVAL_TIME, TimeUnit.SECONDS)
-                .filter { b > 0 }
-                .compose(netTf())
-                .subscribe {
+        CommonBibiP.getInstance(activity as NBaseActivity)
+                .currencyToLegal(mainCurrency!!, 1.0, {
+                    if (it.success) {
+                        lvAdapter.mainCurrencyLegal = it.result
+                    } else {
+                        lvAdapter.mainCurrencyLegal = 0.0
+                    }
+                }, onError)
+        NLoopAction.getInstance((activity as NBaseActivity?)!!)
+                .loop {
                     TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
                             .map {
                                 if (it.success) {
@@ -133,17 +134,15 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
                                     lvAdapter.group = list
                                     ptrLv.onPullDownRefreshComplete()
                                 }
-                                b--
                             }, {
                                 NLog.i("getTransactionPairs error....")
                                 ptrLv.onPullDownRefreshComplete()
                             })
                 }
-
     }
 
     override fun onFirstRequest() {
         getDataFromNet()
     }
-    
+
 }

@@ -17,7 +17,10 @@ import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.NLoopAction
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import kotlinx.android.synthetic.main.fragment_market_content.view.*
 import kotlinx.android.synthetic.main.fragment_market_optional.view.*
 
@@ -108,33 +111,44 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
     }
 
     override fun getDataFromNet() {
-        TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
-                .map {
-                    it.apply {
-                        result.map {
-                            it.optional = 1
-                        }
-                    }
-                }
-                .compose(netTf())
-                .subscribe({
+        CommonBibiP.getInstance(activity as NBaseActivity)
+                .currencyToLegal(mainCurrency!!, 1.0, {
                     if (it.success) {
-                        val list = it.result
-                        if (list.size > 0) {
-                            ptrLv.visibility = View.VISIBLE
-                            addLayout.visibility = View.GONE
-                            lvAdapter.group = it.result
-                        } else {
-                            ptrLv.visibility = View.GONE
-                            addLayout.visibility = View.VISIBLE
-                        }
+                        lvAdapter.mainCurrencyLegal = it.result
+                    } else {
+                        lvAdapter.mainCurrencyLegal = 0.0
                     }
-                    ptrLv.onPullDownRefreshComplete()
-                }, {
-                    lvAdapter.clearGroup(true)
-                    ptrLv.onPullDownRefreshComplete()
-                    ptrLv.visibility = View.GONE
-                    addLayout.visibility = View.VISIBLE
-                })
+                }, onError)
+        NLoopAction.getInstance((activity as NBaseActivity?)!!)
+                .loop {
+                    TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
+                            .map {
+                                it.apply {
+                                    result.map {
+                                        it.optional = 1
+                                    }
+                                }
+                            }
+                            .compose(netTf())
+                            .subscribe({
+                                if (it.success) {
+                                    val list = it.result
+                                    if (list.size > 0) {
+                                        ptrLv.visibility = View.VISIBLE
+                                        addLayout.visibility = View.GONE
+                                        lvAdapter.group = it.result
+                                    } else {
+                                        ptrLv.visibility = View.GONE
+                                        addLayout.visibility = View.VISIBLE
+                                    }
+                                }
+                                ptrLv.onPullDownRefreshComplete()
+                            }, {
+                                lvAdapter.clearGroup(true)
+                                ptrLv.onPullDownRefreshComplete()
+                                ptrLv.visibility = View.GONE
+                                addLayout.visibility = View.VISIBLE
+                            })
+                }
     }
 }

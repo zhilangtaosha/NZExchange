@@ -19,10 +19,7 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.otc.main.OtcContentFragment
-import com.nze.nzexchange.extend.formatForCurrency
-import com.nze.nzexchange.extend.formatForLegal
-import com.nze.nzexchange.extend.formatForLegal2
-import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.ViewFactory
 import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
@@ -139,10 +136,10 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                 .subscribe {
                     if (flag) {
                         flag = false
-                        var value = 0.0
+                        var value = ""
                         if (it.isNotEmpty() && price > 0.0)
-                            value = DoubleMath.div(it.toString().toDouble(), price)
-                        numEt.setText(value.formatForCurrency())
+                            value = DoubleMath.divByFloor(it.toString().toDouble(), price, 8).formatForCurrency()
+                        numEt.setText(value)
                     } else {
                         flag = true
                     }
@@ -181,7 +178,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                     return
                 }
                 val value = DoubleMath.mul(amount, price).formatForLegal2()
-                if (value < 400 ) {
+                if (value < 400) {
                     showToast("最小交易金额为400")
                     return
                 }

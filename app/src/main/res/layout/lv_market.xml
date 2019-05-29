@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_transaction"
         android:layout_marginLeft="140dp"
-        android:text="823.93186" />
+        android:text="0" />
 
     <TextView
         android:id="@+id/tv_total24"
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tv_exchange"
         android:layout_alignBottom="@+id/tv_total24"
-        android:text="¥3813.31" />
+        android:text="¥0" />
 
     <TextView
         android:id="@+id/tv_change"
@@ -62,5 +62,5 @@
         android:layout_centerVertical="true"
         android:background="@drawable/shape_radius_up_bg"
         android:gravity="center"
-        android:text="+18.56%" />
+        android:text="+0%" />
 </RelativeLayout>

@@ -19,10 +19,7 @@ import com.nze.nzexchange.config.KLineRequestBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.market.presenter.KLineP
-import com.nze.nzexchange.extend.formatForCurrency
-import com.nze.nzexchange.extend.retainInt
-import com.nze.nzexchange.extend.setTxtColor
-import com.nze.nzexchange.extend.twoPlace
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.HRetrofit
 import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
@@ -217,7 +214,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     }
     private var marketIndex: Int = 0
     private var isFirst = true
-    private var dataSource: DataSource? = null
 
     companion object {
         fun skip(context: Context, bean: TransactionPairsBean) {
@@ -246,6 +242,13 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         selfSelectTv.setOnClickListener(this)
 
         pairNameTv.text = pairsBean?.transactionPair
+
+        if (userBean != null) {
+            selfSelectTv.visibility = View.VISIBLE
+            selfSelectTv.isSelected = pairsBean?.optional == 1
+        } else {
+            selfSelectTv.visibility = View.GONE
+        }
 
         fenshiPopup.setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
             if (anchorView != null) {
@@ -430,14 +433,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     if (it.success) {
                         it.result.let {
                             tokenNameTv.text = it.tokenSymbol
-                            issueTimeTv.text = TimeTool.format(TimeTool.PATTERN10, it.tokenCreateTime)
+                            issueTimeTv.text = it.tokenTime
                             issueAmountTv.text = it.tokenAmount
                             circulatioAmountTv.text = it.tokenCirculate
                             crowdFundingPriceTv.text = it.tokenPrice
                             whitePaperTv.text = it.tokenPaper
                             officialWebsiteTv.text = it.tokenWebsite
                             blockQueryTv.text = it.tokenChaintype
-                            introductionTv.text = it.tokenIco
+                            introductionTv.text = it.tokenDesc
                         }
                     }
                 }, {
@@ -491,8 +494,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 finish()
             }
             R.id.iv_self_select_kline -> {
-//                if (UserBean.isLogin(this))
-//                kLineP.optionalHandler(userBean,pairsBean,)
+                kLineP.optionalHandler(userBean!!, pairsBean!!) {
+                    selfSelectTv.isSelected = it == 1
+                }
             }
         }
     }
@@ -792,7 +796,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 rangeTv.setTxtColor(R.color.color_down)
                 costTv.setTxtColor(R.color.color_down)
             }
-            rangeTv.text = "${(w).twoPlace()}%"
+            rangeTv.text = "${(w.mul(100.toDouble())).twoPlace()}%"
         } else {
             rangeTv.text = "0%"
         }

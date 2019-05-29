@@ -9,8 +9,11 @@ import com.nze.nzexchange.bean.MarketPopularBean
 import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.controller.base.BaseAda
+import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.setTxtColor
 import kotlinx.android.synthetic.main.abc_alert_dialog_material.view.*
 import kotlinx.android.synthetic.main.lv_rank_home.view.*
@@ -91,8 +94,20 @@ class RankListAdapter(mContext: Context) : BaseAda<TransactionPairsBean>(mContex
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
             vh.changeTv.text = "${bean.gain}%"
         }
+
+        CommonBibiP.getInstance(mContext as NBaseActivity)
+                .currencyToLegal(bean.currency, 1.0, {
+                    if (it.success) {
+                        vh.costTv.text = "≈${it.result.formatForLegal()} CNY"
+                    } else {
+                        vh.costTv.text = "≈0 CNY"
+                    }
+                }, {
+                    vh.costTv.text = "≈0 CNY"
+                })
+
         cView!!.setOnClickListener {
-            KLineActivity.skip(mContext,bean)
+            KLineActivity.skip(mContext, bean)
         }
         return cView!!
     }

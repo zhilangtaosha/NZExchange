@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/layout_give_bibi"
                         android:layout_marginTop="5dp"
-                        android:text="≈0.425568CNY"
+                        android:text="≈0CNY"
                         android:textColor="@color/color_FF8C90A1"
                         android:textSize="11sp" />
 
@@ -197,7 +197,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/layout_get_bibi"
                         android:layout_marginTop="5dp"
-                        android:text="可用0.5664654USDT"
+                        android:text="可用--"
                         android:textColor="@color/color_FF8C90A1"
                         android:textSize="11sp" />
 
@@ -323,7 +323,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/lv_handicap_sale_bibi"
                         android:layout_marginTop="10dp"
-                        android:text="2315.36"
+                        android:text="0"
                         android:textColor="@color/color_FF069F83"
                         android:textSize="14sp" />
 
@@ -333,7 +333,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_last_cost_bibi"
                         android:layout_marginTop="5dp"
-                        android:text="≈0.425568CNY"
+                        android:text="≈0CNY"
                         android:textColor="@color/color_FF8C90A1"
                         android:textSize="11sp" />
 

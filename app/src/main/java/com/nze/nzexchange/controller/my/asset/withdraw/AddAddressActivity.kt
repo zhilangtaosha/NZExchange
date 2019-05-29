@@ -12,6 +12,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.my.asset.withdraw.presenter.CurrencyWithdrawP
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import com.uuzuche.lib_zxing.activity.CaptureActivity
@@ -25,7 +26,7 @@ import pub.devrel.easypermissions.EasyPermissions
  * 添加完成后在列表展示
  */
 class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermissions.PermissionCallbacks {
-
+    val currencyWithdrawP:CurrencyWithdrawP by lazy { CurrencyWithdrawP(this) }
 
     val addressEt: ClearableEditText by lazy { et_address_aaa }
     val scanIv: ImageView by lazy { iv_scan_aaa }

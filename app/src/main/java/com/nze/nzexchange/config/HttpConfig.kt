@@ -1,4 +1,4 @@
-package com.nze.nzexchange.http
+package com.nze.nzexchange.config
 
 /**
  * @author: zwy

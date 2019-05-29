@@ -9,6 +9,8 @@ import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
+import com.nze.nzexchange.extend.mul
 import kotlinx.android.synthetic.main.lv_market.view.*
 
 /**
@@ -18,6 +20,13 @@ import kotlinx.android.synthetic.main.lv_market.view.*
  * @创建时间：2018/11/20
  */
 class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, MarketLvAdapter.ViewHolder>(mContext) {
+
+    var mainCurrencyLegal: Double? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     override fun setLayout(): Int = R.layout.lv_market
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
@@ -34,7 +43,12 @@ class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, Market
             vh.changeTv.text = "${item.gain}%"
         }
         vh.total24Tv.text = "24h量 ${item.volume}"
-//        vh.costTv.text = item.cost.toString()
+        if (mainCurrencyLegal != null){
+            vh.costTv.text = "¥${item.exchangeRate.mul(mainCurrencyLegal!!).formatForLegal()}"
+        }else{
+            vh.costTv.text= "--"
+        }
+
 
     }
 

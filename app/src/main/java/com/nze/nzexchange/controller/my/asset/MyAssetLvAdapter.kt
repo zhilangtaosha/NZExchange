@@ -6,7 +6,9 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.BibiAssetBean
 import com.nze.nzexchange.bean.UserAssetBean
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.extend.formatForCurrency
 import kotlinx.android.synthetic.main.lv_my_asset.view.*
 
@@ -25,6 +27,17 @@ class MyAssetLvAdapter(mContext: Context) : NBaseAda<UserAssetBean, MyAssetLvAda
         vh.currencyNameTv.text = item.currency
         vh.availableValueTv.text = item.available.formatForCurrency()
         vh.freezwValueTv.text = item.freeze.formatForCurrency()
+
+        CommonBibiP.getInstance(mContext as NBaseActivity)
+                .currencyToLegal(item.currency, 1.0, {
+                    if (it.success) {
+                        vh.moneyValueTv.text = "${it.result}"
+                    } else {
+                        vh.moneyValueTv.text = "0"
+                    }
+                }, {
+                    vh.moneyValueTv.text = "0"
+                })
     }
 
     class ViewHolder(view: View) {

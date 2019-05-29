@@ -23,7 +23,8 @@ fun Double.formatForCurrency(): String {
 //    var b: BigDecimal = BigDecimal(this)
 //    return b.setScale(10,BigDecimal.ROUND_HALF_DOWN).toString()
     val df = DecimalFormat("0.########")
-    return df.format(this)
+    df.roundingMode = RoundingMode.FLOOR
+    return df.format(this.toBigDecimal())
 }
 
 fun Double.formatForLegal(): String {
@@ -58,8 +59,8 @@ fun Double.retain2(): String {
  */
 fun Double.retain4ByFloor(): String {
     val df = DecimalFormat("0.####")
-    df.roundingMode = RoundingMode.FLOOR;
-    return df.format(this)
+    df.roundingMode = RoundingMode.FLOOR
+    return df.format(this.toBigDecimal())
 }
 
 /**
@@ -68,8 +69,8 @@ fun Double.retain4ByFloor(): String {
  */
 fun Double.retain4ByUp(): String {
     val df = DecimalFormat("0.########")
-    df.roundingMode = RoundingMode.UP;
-    return df.format(this)
+    df.roundingMode = RoundingMode.UP
+    return df.format(this.toBigDecimal())
 }
 
 /**
@@ -78,8 +79,8 @@ fun Double.retain4ByUp(): String {
  */
 fun Double.retain8ByFloor(): String {
     val df = DecimalFormat("0.########")
-    df.roundingMode = RoundingMode.FLOOR;
-    return df.format(this)
+    df.roundingMode = RoundingMode.FLOOR
+    return df.format(this.toBigDecimal())
 }
 
 /**
@@ -87,7 +88,7 @@ fun Double.retain8ByFloor(): String {
  */
 fun Double.retainInt(): String {
     val df = DecimalFormat("0")
-    df.roundingMode = RoundingMode.FLOOR;
+    df.roundingMode = RoundingMode.FLOOR
     return df.format(this)
 }
 

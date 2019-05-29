@@ -12,7 +12,7 @@
         android:id="@+id/tv_change_rhtp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+0.16%"
+        android:text="+0%"
         android:textColor="@color/color_up"
         android:textSize="19sp" />
 
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:text="6362.57" />
+        android:text="0" />
 
     <TextView
         android:id="@+id/tv_cost_rhtp"
@@ -37,5 +37,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="≈43733.86 CNY" />
+        android:text="≈0 CNY" />
 </LinearLayout>
