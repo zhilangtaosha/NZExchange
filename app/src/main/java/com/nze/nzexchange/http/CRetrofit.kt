@@ -14,7 +14,7 @@ class CRetrofit private constructor() {
     val SERVER_URL = "http://zhongyingying.qicp.io:8082"
 
 
-    var url: String = SERVER_URL
+    var url: String = LIU_URL
     var retrofit: Retrofit
     val builder by lazy {
         OkHttpClient.Builder()

@@ -32,6 +32,12 @@ fun Double.formatForLegal(): String {
     return df.format(this)
 }
 
+fun Double.formatForLegalByFloor(): String {
+    val df = DecimalFormat("0.##")
+    df.roundingMode = RoundingMode.FLOOR
+    return df.format(this.toBigDecimal())
+}
+
 fun Double.formatForLegal2(): Double {
     val df = DecimalFormat("0.##")
     return (df.format(this)).toDouble()

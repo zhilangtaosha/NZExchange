@@ -10,7 +10,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.TransactionListBean
 import com.nze.nzexchange.bean2.RechargeHistoryBean
+import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawHistoryAdapter
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.tools.TimeTool
+import kotlinx.android.synthetic.main.lv_withdraw_history.view.*
 import kotlinx.android.synthetic.main.rcv_recharge_history_content.view.*
 import kotlinx.android.synthetic.main.rcv_recharge_history_title.view.*
 
@@ -20,82 +26,33 @@ import kotlinx.android.synthetic.main.rcv_recharge_history_title.view.*
  * @类 说 明:
  * @创建时间：2018/12/25
  */
-class RechargeHistoryAdapter(var context: Context) : Adapter<RecyclerView.ViewHolder>() {
-    val data: MutableList<RechargeHistoryBean> = mutableListOf<RechargeHistoryBean>()
-    val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
-    val TYPE_TITLE = 0
-    val TYPE_CONTENT = 1
+class RechargeHistoryAdapter(mContext: Context) : NBaseAda<TransactionListBean, RechargeHistoryAdapter.ViewHolder>(mContext) {
 
-    private var onDetailClick: ((position: Int, item: RechargeHistoryBean) -> Unit)? = null
+    override fun setLayout(): Int = R.layout.lv_withdraw_history
 
-    fun setDetailClick(click: (position: Int, item: RechargeHistoryBean) -> Unit) {
-        onDetailClick = click
-    }
+    override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    fun setData(list: List<RechargeHistoryBean>) {
-        if (data.size > 0)
-            data.clear()
-        data.addAll(list)
-        notifyDataSetChanged()
-    }
-
-    fun addAllItem(list: List<RechargeHistoryBean>) {
-        data.addAll(list)
-        notifyDataSetChanged()
-    }
-
-    override fun getItemViewType(position: Int): Int =
-            if (data[position].isTitle) {
-                TYPE_TITLE
-            } else {
-                TYPE_CONTENT
+    override fun initView(vh: ViewHolder, item: TransactionListBean, position: Int) {
+        vh.amountTv.text = item.amount.formatForCurrency()
+        when (item.status) {
+            2001 -> {//提币成功
+                vh.statusTv.text = "审核中"
             }
-
-
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == TYPE_TITLE) {
-            val titleView = inflater.inflate(R.layout.rcv_recharge_history_title, viewGroup, false)
-            RechargeHistoryViewHolder.Title(titleView)
-        } else {
-            val contentView = inflater.inflate(R.layout.rcv_recharge_history_content, viewGroup, false)
-            RechargeHistoryViewHolder.Content(contentView)
-        }
-    }
-
-    override fun getItemCount(): Int = data.size
-
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        val item = data[position]
-        when (viewHolder) {
-            is RechargeHistoryViewHolder.Title -> {
-                viewHolder.titleTv.text = item.title
+            2002 -> {//提币审核
+                vh.statusTv.text = "已完成"
             }
-            is RechargeHistoryViewHolder.Content -> {
-                viewHolder.monthTv.text = item.month
-                viewHolder.timeTv.text = item.time
-                viewHolder.rechargeTypeTv.text = "${item.currency}充值"
-                viewHolder.rechargeAmountTv.text = "+${item.rechargeAmount} ${item.currency}"
-                viewHolder.itemView.setOnClickListener {
-                    onDetailClick?.invoke(position, item)
-                }
+            2004 -> {//提币失败
+                vh.statusTv.text = "充币失败"
             }
         }
+
+        vh.dateTv.text = TimeTool.format(TimeTool.PATTERN2, item.createTime)
     }
 
-    sealed class RechargeHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        class Title(itemView: View) : RechargeHistoryViewHolder(itemView) {
-            val titleTv: TextView = itemView.tv_title_rrht
-        }
-
-        class Content(itemView: View) : RechargeHistoryViewHolder(itemView) {
-            val monthTv: TextView = itemView.tv_month_rrhc
-            val timeTv: TextView = itemView.tv_time_rrhc
-            val detailIv: ImageView = itemView.iv_detail_rrhc
-            val rechargeAmountTv: TextView = itemView.tv_amount_recharge_rrhc
-            //            val totalAmountTv: TextView = itemView.tv_total_amount_rrhc
-            val rechargeTypeTv: TextView = itemView.tv_recharge_type_rrhc
-        }
+    class ViewHolder(view: View) {
+        val amountTv: TextView by lazy { view.tv_amount_lwh }
+        val statusTv: TextView by lazy { view.tv_status_lwh }
+        val dateTv: TextView by lazy { view.tv_date_lwh }
     }
-
 }

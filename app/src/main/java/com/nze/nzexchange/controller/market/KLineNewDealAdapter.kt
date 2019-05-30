@@ -9,6 +9,7 @@ import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForPrice
+import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_new_deal_kline.view.*
 
@@ -24,6 +25,11 @@ class KLineNewDealAdapter(mContext: Context) : NBaseAda<NewDealBean, KLineNewDea
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: NewDealBean, position: Int) {
+        if (item.type==0){
+            vh.priceTv.setTxtColor(R.color.color_up)
+        }else{
+            vh.priceTv.setTxtColor(R.color.color_down)
+        }
         vh.timeTv.text = TimeTool.format(TimeTool.PATTERN8, (item.time * 1000).toLong())
         vh.priceTv.text = item.price.formatForPrice()
         vh.amountTv.text = item.amount.formatForCurrency()

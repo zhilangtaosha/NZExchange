@@ -1,5 +1,7 @@
 package com.nze.nzexchange.controller.my.asset.withdraw
 
+import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,28 +10,63 @@ import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.CurrenyWithdrawAddressBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean2.CoinAddressBean
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.my.asset.withdraw.presenter.CurrencyWithdrawP
 import kotlinx.android.synthetic.main.activity_selet_address_list.*
 
 /***
  * 地址列表
  */
 class SelectCurrencyAddressListActivity : NBaseActivity() {
+    val currencyWithdrawP: CurrencyWithdrawP by lazy { CurrencyWithdrawP(this) }
     val selectLv: ListView by lazy { lv_select_asal }
-    val selectAdapter: SelectCurrencyAddressAdapter by lazy { SelectCurrencyAddressAdapter(this, "ETH") }
+    val selectAdapter: SelectCurrencyAddressAdapter by lazy {
+        SelectCurrencyAddressAdapter(this).apply {
+            onSelectListener = { position, isSelect ->
+                addressList[position].isSelect = isSelect
+            }
+        }
+    }
     val addBtn: Button by lazy { btn_add_asal }
+    var userBean = UserBean.loadFromApp()
+    val addressList: MutableList<CurrenyWithdrawAddressBean> by lazy { mutableListOf<CurrenyWithdrawAddressBean>() }
+    lateinit var currency: String
 
+    companion object {
+        fun skip(context: Context, currency: String) {
+            context.startActivity(Intent(context, SelectCurrencyAddressListActivity::class.java)
+                    .putExtra(IntentConstant.PARAM_CURRENCY, currency))
+        }
+    }
 
     override fun getRootView(): Int = R.layout.activity_selet_address_list
 
     override fun initView() {
+        intent?.let {
+            currency = it.getStringExtra(IntentConstant.PARAM_CURRENCY)
+        }
         selectLv.adapter = selectAdapter
-        selectAdapter.group = CoinAddressBean.getList()[0].coinAddress
 
         addBtn.setOnClickListener {
-            skipActivity(AddAddressActivity::class.java)
+            AddAddressActivity.skip(this, currency)
         }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        currencyWithdrawP.getCurrencyWithdrawAddress(userBean!!, currency, {
+            if (it.success) {
+                addressList.clear()
+                addressList.addAll(it.result)
+                selectAdapter.group = addressList
+            }
+        }, onError)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

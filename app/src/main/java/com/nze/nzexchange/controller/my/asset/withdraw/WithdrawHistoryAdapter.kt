@@ -26,7 +26,18 @@ class WithdrawHistoryAdapter(mContext: Context) : NBaseAda<TransactionListBean, 
 
     override fun initView(vh: ViewHolder, item: TransactionListBean, position: Int) {
         vh.amountTv.text = item.amount.formatForCurrency()
-        vh.statusTv.text = "已完成"
+        when (item.status) {
+            1001 -> {//提币审核
+                vh.statusTv.text = "审核中"
+            }
+            1002 -> {
+                vh.statusTv.text = "已完成"
+            }
+            1004 -> {
+                vh.statusTv.text = "提币失败"
+            }
+        }
+
         vh.dateTv.text = TimeTool.format(TimeTool.PATTERN2, item.createTime)
     }
 

@@ -69,7 +69,6 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
     override fun initView(rootView: View) {
         this.rootView = rootView
         userNameTV.setOnClickListener(this)
-        moneyLayout.setOnClickListener(this)
         rechargeTv.setOnClickListener(this)
         withdrawTv.setOnClickListener(this)
         assetTv.setOnClickListener(this)

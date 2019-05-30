@@ -18,6 +18,7 @@ import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.common.AuthorityDialog
+import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.common.ShowBankPayMethodActivity
 import com.nze.nzexchange.controller.common.ShowImagePayMethodActivity
 import com.nze.nzexchange.extend.*
@@ -37,7 +38,6 @@ import java.util.concurrent.TimeUnit
  * 交易成功
  */
 class OtcConfirmActivity : NBaseActivity() {
-
 
     private val orderNo: TextView by lazy { tv_order_no_abc }//订单编号
     private val copyIv: ImageView by lazy { iv_copy_abc }//复制按钮
@@ -68,6 +68,16 @@ class OtcConfirmActivity : NBaseActivity() {
     var time: Long = 0
     var suborderId: String? = null
     private var userBean: UserBean? = UserBean.loadFromApp()
+
+    val fundPopup: FundPasswordPopup by lazy {
+        FundPasswordPopup(this).apply {
+            onPasswordClick = {
+                release()
+            }
+        }
+    }
+
+
     override fun getRootView(): Int = R.layout.activity_buy_confirm
 
     override fun initView() {
@@ -99,7 +109,7 @@ class OtcConfirmActivity : NBaseActivity() {
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe {
                     //放币
-                    release()
+                    fundPopup.showPopupWindow()
                 }
 
         RxView.clicks(cancelBtn)
@@ -541,7 +551,7 @@ class OtcConfirmActivity : NBaseActivity() {
 
     fun cancel(rs: Result<Boolean>) {
         showToast(rs.message)
-        if (rs.success){
+        if (rs.success) {
             EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_OTC_ORDER))
             this@OtcConfirmActivity.finish()
 

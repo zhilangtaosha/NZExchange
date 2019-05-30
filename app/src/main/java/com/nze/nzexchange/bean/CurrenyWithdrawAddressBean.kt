@@ -7,11 +7,12 @@ package com.nze.nzexchange.bean
  * @创建时间：2019/5/16
  */
 data class CurrenyWithdrawAddressBean(
-    val addTime: Long,
-    val address: String,
-    val id: Int,
-    val market: String,
-    val status: Int,
-    val tokenName: String,
-    val userId: String
+        val addTime: Long,
+        val address: String,
+        val id: Int,
+        val market: String,
+        val status: Int,
+        val tokenName: String,
+        val userId: String,
+        var isSelect: Boolean=false
 )

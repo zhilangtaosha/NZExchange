@@ -4,9 +4,13 @@ import android.app.AlertDialog
 import android.content.Context
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.ErrorBean
+import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.tools.ViewFactory
+import org.greenrobot.eventbus.EventBus
 
 /**
  * @author: zwy
@@ -43,6 +47,7 @@ class AuthorityDialog(context: Context) {
         confirmTv = window.findViewById(R.id.tv_confirm_da)
 
         nameTv.text = name
+        var isExit= false
         error.forEachIndexed { index, errorBean ->
             var s = ""
             when (errorBean.errorCode) {
@@ -58,6 +63,10 @@ class AuthorityDialog(context: Context) {
                 "me_memb_buspw_nodata" -> {//未设置资金密码
                     s = "${index + 1}.设置资金密码"
                 }
+                "token_lost"->{//登录身份失效
+                    s = "${index + 1}.${errorBean.errorMsg}"
+                    isExit = true
+                }
             }
             val tv = ViewFactory.createAuthorityTv(s)
             tv.text = s
@@ -67,6 +76,11 @@ class AuthorityDialog(context: Context) {
         confirmTv.setOnClickListener {
             dialog.dismiss()
             onClick.invoke()
+            if (isExit){
+                UserBean.logout()
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 0))
+                EventBus.getDefault().post(EventCenter<String>(EventCode.CODE_LOGOUT_SUCCESS))
+            }
         }
 
 

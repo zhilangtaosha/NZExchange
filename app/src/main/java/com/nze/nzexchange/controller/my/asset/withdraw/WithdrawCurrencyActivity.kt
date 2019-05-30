@@ -24,7 +24,10 @@ import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.extend.mul
+import com.nze.nzexchange.extend.sub
 import com.nze.nzexchange.http.NRetrofit
+import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
 import com.nze.nzexchange.widget.VerifyButton
@@ -106,7 +109,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 verifyAccount = it.userEmail
             }
         }
-
+        amountEt.addTextChangedListener(EditCurrencyWatcher(amountEt))
         selectCurrencyIv.setOnClickListener(this)
         qcodeIv.setOnClickListener(this)
         addressIv.setOnClickListener(this)
@@ -119,7 +122,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 .subscribe {
                     if (!it.isNullOrEmpty()) {
                         val amount = it.toString().toDouble()
-                        actualAmountTv.text = "${amount - feeRate} ${userAssetBean?.currency}"
+                        actualAmountTv.text = "${amount.sub(feeRate)} ${userAssetBean?.currency}"
 
                     } else {
                         actualAmountTv.text = "0 ${userAssetBean?.currency}"
@@ -161,7 +164,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 cameraTask()
             }
             R.id.iv_address_acw -> {
-                skipActivity(SelectCurrencyAddressListActivity::class.java)
+                SelectCurrencyAddressListActivity.skip(this, userAssetBean!!.currency)
             }
             R.id.tv_all_acw -> {
                 amountEt.setText(userAssetBean?.available?.formatForCurrency())

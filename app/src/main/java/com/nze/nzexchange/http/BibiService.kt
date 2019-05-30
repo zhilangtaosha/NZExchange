@@ -175,7 +175,9 @@ interface BibiService {
     fun addCurrencyWithdrawAddress(
             @Field("userId") userId: String,
             @Field("address") address: String,
-            @Field("tokenName") tokenName: String
+            @Field("tokenName") tokenName: String,
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Any>>
 
     //删除用户提币地址
@@ -183,7 +185,9 @@ interface BibiService {
     @POST("deleteCoinAddress")
     fun deleteCurrencyWithdrawAddress(
             @Field("userId") userId: String,
-            @Field("address") address: String
+            @Field("address") address: String,
+            @Field("tokenUserId") tokenUserId: String,
+            @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Any>>
 
 

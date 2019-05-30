@@ -6,10 +6,20 @@
     android:paddingTop="20dp"
     android:paddingRight="15dp">
 
+    <CheckBox
+        android:id="@+id/cb_delete_lsa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:button="@null"
+        android:drawableLeft="@drawable/selector_checkbox_choice2"
+        android:paddingRight="10dp" />
+
     <TextView
         android:id="@+id/tv_desc_lsa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/cb_delete_lsa"
         android:text="两只小妹妹"
         android:textColor="@color/color_FFA3AAB9"
         android:textSize="15sp" />
@@ -31,15 +41,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_desc_lsa"
+        android:layout_alignLeft="@+id/tv_desc_lsa"
         android:layout_marginTop="10dp"
         android:text="sdfsdfsdf15131351sdf"
         android:textColor="@color/color_FF676C7A"
         android:textSize="14sp" />
 
     <View
-        android:layout_below="@+id/tv_address_lsa"
-        android:layout_marginTop="13dp"
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_below="@+id/tv_address_lsa"
+        android:layout_marginTop="13dp"
         android:background="@color/color_line" />
 </RelativeLayout>

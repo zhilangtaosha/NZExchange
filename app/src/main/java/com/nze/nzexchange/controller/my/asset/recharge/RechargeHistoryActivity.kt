@@ -6,9 +6,11 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
+import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshRecyclerView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
@@ -26,20 +28,13 @@ import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.recyclerview.Divider
 import kotlinx.android.synthetic.main.activity_recharge_history.*
 
-class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListener<RecyclerView> {
+class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListener<ListView> {
 
 
-    val ptrrv: PullToRefreshRecyclerView by lazy { ptrrv_arh }
-    val rcv: RecyclerView by lazy { ptrrv.refreshableView }
+    val ptrLv: PullToRefreshListView by lazy { ptrrv_arh }
     val layoutManager: LinearLayoutManager by lazy { LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false) }
     val rcvAdapter: RechargeHistoryAdapter by lazy {
-        RechargeHistoryAdapter(this).apply {
-            setDetailClick { position, item ->
-                //                startActivity(Intent(this@RechargeHistoryActivity, RechargeDetailActivity::class.java)
-//                        .putExtra(IntentConstant.PARAM_DETAIL, item))
-                WithdrawDetailActivity.skip(this@RechargeHistoryActivity, item.transactionListBean!!, userAssetBean?.currency!!, WithdrawDetailActivity.TYPE_RECHARGE)
-            }
-        }
+        RechargeHistoryAdapter(this)
     }
 
     val historyList: MutableList<TransactionListBean> by lazy { mutableListOf<TransactionListBean>() }
@@ -53,16 +48,13 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         intent?.let {
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
-        ptrrv.isPullLoadEnabled = false
-        ptrrv.setOnRefreshListener(this)
-        rcv.layoutManager = layoutManager
-        rcv.adapter = rcvAdapter
 
-        val divider = Divider(divider = ColorDrawable(getNColor(R.color.color_line)))
-        divider.setHeight(2)
-        rcv.addItemDecoration(divider)
 
-        ptrrv.doPullRefreshing(true, 200)
+        val listView = ptrLv.refreshableView
+        listView.adapter =rcvAdapter
+        ptrLv.setOnRefreshListener(this)
+
+        ptrLv.doPullRefreshing(true, 200)
 
     }
 
@@ -86,13 +78,13 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
 
     override fun getContainerTargetView(): View? = null
 
-    override fun onPullDownToRefresh(refreshView: PullToRefreshBase<RecyclerView>?) {
+    override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         page = 1
         refreshType = RrefreshType.PULL_DOWN
         getTransactionList(userBean?.userId!!, userAssetBean?.currency!!, page, PAGE_SIZE)
     }
 
-    override fun onPullUpToRefresh(refreshView: PullToRefreshBase<RecyclerView>?) {
+    override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         page++
         refreshType = RrefreshType.PULL_UP
         getTransactionList(userBean?.userId!!, userAssetBean?.currency!!, page, PAGE_SIZE)
@@ -104,55 +96,30 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
                 .subscribe({
                     if (it.success) {
                         val list = it.result
-                        val tmpList: MutableList<RechargeHistoryBean> = mutableListOf()
-                        list.groupBy {
-                            val month = TimeTool.format(TimeTool.PATTERN3, it.createTime)
-                            month
-                        }.forEach {
-                            NLog.i(it.toString())
-                            val current = TimeTool.format2(TimeTool.PATTERN3, TimeTool.date())
-                            if (it.key == current) {
-                                tmpList.add(RechargeHistoryBean(title = "本月", isTitle = true))
-                            } else {
-                                tmpList.add(RechargeHistoryBean(title = it.key, isTitle = true))
-                            }
-                            it.value.forEach {
-                                tmpList.add(RechargeHistoryBean(
-                                        month = TimeTool.format(TimeTool.PATTERN4, it.createTime),
-                                        time = TimeTool.format(TimeTool.PATTERN5, it.createTime),
-                                        currency = userAssetBean?.currency!!,
-                                        rechargeAmount = it.amount.formatForCurrency()!!,
-                                        address = it.to,
-                                        datetime = it.createTime,
-                                        isTitle = false,
-                                        transactionListBean = it
-                                ))
-                            }
-                        }
 
                         when (refreshType) {
                             RrefreshType.INIT -> {
                                 historyList.clear()
-                                rcvAdapter.setData(tmpList)
-                                ptrrv.onPullDownRefreshComplete()
+                                rcvAdapter.group = list
+                                ptrLv.onPullDownRefreshComplete()
                             }
                             RrefreshType.PULL_DOWN -> {
                                 historyList.clear()
-                                rcvAdapter.setData(tmpList)
-                                ptrrv.onPullDownRefreshComplete()
+                                rcvAdapter.group = list
+                                ptrLv.onPullDownRefreshComplete()
                             }
                             RrefreshType.PULL_UP -> {
-                                rcvAdapter.addAllItem(tmpList)
-                                ptrrv.onPullUpRefreshComplete()
+                                rcvAdapter.addItems(list)
+                                ptrLv.onPullUpRefreshComplete()
                             }
                         }
                         historyList.addAll(it.result)
                         if (historyList.size >= it.totalSize)
-                            ptrrv.setHasMoreData(false)
+                            ptrLv.setHasMoreData(false)
                     }
-                    ptrrv.onPullDownRefreshComplete()
+                    ptrLv.onPullDownRefreshComplete()
                 }, {
-                    ptrrv.onPullDownRefreshComplete()
+                    ptrLv.onPullDownRefreshComplete()
                 })
     }
 }

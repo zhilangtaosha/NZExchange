@@ -665,7 +665,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     }
 
                     if (latestDeal != null) {
-                        newDealList.addAll(latestDeal)
+                        newDealList.addAll(0,latestDeal)
                         it.onNext(DATE_NEW_DEAL)
                     }
 

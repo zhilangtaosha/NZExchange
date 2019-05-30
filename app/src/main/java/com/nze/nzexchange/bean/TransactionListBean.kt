@@ -25,7 +25,8 @@ data class TransactionListBean(
         val to: String,
         val txid: String?,
         val token: String?,
-        val status: Int?,
+        val status: Int,
+        val type:Int,
         val userId: String?
 ) : Parcelable {
     companion object {

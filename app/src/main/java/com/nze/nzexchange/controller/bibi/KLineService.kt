@@ -126,7 +126,7 @@ class KLineService : Service() {
                 mHandler.postDelayed({
                     initKSocket(market, kDataCallBack)
                     getKDataRequest(pairsBean)
-                }, 5000)
+                }, 10000)
             }
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -144,7 +144,7 @@ class KLineService : Service() {
             val DATA_DEPTH = 7
             var handicap: Handicap? = null
             override fun onMessage(webSocket: WebSocket, text: String) {
-//                NLog.i("service text>>>$text")
+                NLog.i("service text>>>$text")
                 Observable.create<Int> {
                     try {
                         var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)

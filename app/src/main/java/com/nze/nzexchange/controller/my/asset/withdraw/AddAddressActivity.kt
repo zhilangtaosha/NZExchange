@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.my.asset.withdraw
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -11,8 +12,12 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.presenter.CurrencyWithdrawP
+import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import com.uuzuche.lib_zxing.activity.CaptureActivity
@@ -26,7 +31,7 @@ import pub.devrel.easypermissions.EasyPermissions
  * 添加完成后在列表展示
  */
 class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermissions.PermissionCallbacks {
-    val currencyWithdrawP:CurrencyWithdrawP by lazy { CurrencyWithdrawP(this) }
+    val currencyWithdrawP: CurrencyWithdrawP by lazy { CurrencyWithdrawP(this) }
 
     val addressEt: ClearableEditText by lazy { et_address_aaa }
     val scanIv: ImageView by lazy { iv_scan_aaa }
@@ -34,15 +39,28 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
     val confirmBtn: CommonButton by lazy { btn_confirm_aaa }
 
     val REQUEST_CODE = 0x001
+    var userBean = UserBean.loadFromApp()
+    lateinit var currency: String
+
+    companion object {
+        fun skip(context: Context, currency: String) {
+            context.startActivity(Intent(context, AddAddressActivity::class.java)
+                    .putExtra(IntentConstant.PARAM_CURRENCY, currency))
+        }
+    }
 
     override fun getRootView(): Int = R.layout.activity_add_address
 
     override fun initView() {
+        intent?.let {
+            currency = it.getStringExtra(IntentConstant.PARAM_CURRENCY)
+        }
+        confirmBtn.initValidator()
+                .add(addressEt, EmptyValidation())
+                .executeValidator()
 
         scanIv.setOnClickListener(this)
         confirmBtn.setOnCommonClick(this)
-
-
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -70,6 +88,16 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
                 cameraTask()
             }
             R.id.btn_confirm_aaa -> {
+                currencyWithdrawP.addCurrencyWithdrawAddress(userBean!!, addressEt.getContent(), currency, {
+                    if (it.success) {
+                        showToast("提币地址添加成功")
+                        finish()
+                    } else {
+                        showToast("提币地址添加失败")
+                    }
+                }, {
+                    showToast("提币地址添加失败")
+                })
             }
         }
     }
@@ -80,10 +108,11 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
             if (null != data) {
                 var bundle: Bundle? = data.getExtras() ?: return;
                 if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    var result = bundle.getString(CodeUtils.RESULT_STRING);
-                    Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                    var result = bundle.getString(CodeUtils.RESULT_STRING)
+                    addressEt.setText(result)
+                    Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show()
                 } else if (bundle?.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(this@AddAddressActivity, "解析二维码失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this@AddAddressActivity, "解析二维码失败", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -114,9 +143,9 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             showToast("拒绝权限，不再弹出询问框，请前往APP应用设置中打开此权限")
-        }else{
+        } else {
             showToast("拒绝权限，等待下次询问哦")
         }
     }

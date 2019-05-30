@@ -12,6 +12,8 @@ import com.nze.nzexchange.bean.HandicapBean
 import com.nze.nzexchange.bean.OrderPendBean
 import com.nze.nzexchange.config.OrderStatus
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForPrice
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
@@ -47,36 +49,36 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
         vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, (item.ctime * 1000).toLong())
 
         vh.costKeyTv.text = "价格(${mainCurrency})"
-        vh.costValueTv.text = item.price
+        vh.costValueTv.text = item.price.formatForPrice()
 
         vh.amountKeyTv.text = "数量(${currency})"
-        vh.amountValueTv.text = item.amount
+        vh.amountValueTv.text = item.amount.formatForCurrency()
 
         vh.realAmountKeyTv.text = "实际成交(${currency})"
-        vh.realAmountValueTv.text = item.deal_stock
+        vh.realAmountValueTv.text = item.deal_stock.formatForCurrency()
 
         when (item.status) {
             OrderStatus.COMPLETED -> {
                 vh.cancelTv.text = "已完成"
                 vh.cancelTv.setTextColor(getNColor(R.color.color_common))
                 vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
-                vh.cancelTv.isClickable=false
+                vh.cancelTv.isClickable = false
             }
             OrderStatus.RESCINDED -> {
                 vh.cancelTv.text = "已撤销"
                 vh.cancelTv.setTextColor(getNColor(R.color.color_common))
                 vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
-                vh.cancelTv.isClickable=false
+                vh.cancelTv.isClickable = false
             }
             OrderStatus.NO_COMPLETE -> {
                 vh.cancelTv.text = "撤销"
                 vh.cancelTv.setTextColor(getNColor(R.color.color_main))
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    vh.cancelTv.background=ContextCompat.getDrawable(mContext,R.drawable.shape_radius_2536_bg2)
-                }else{
-                    vh.cancelTv.setBackgroundDrawable(ContextCompat.getDrawable(mContext,R.drawable.shape_radius_2536_bg2))
+                    vh.cancelTv.background = ContextCompat.getDrawable(mContext, R.drawable.shape_radius_2536_bg2)
+                } else {
+                    vh.cancelTv.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.shape_radius_2536_bg2))
                 }
-                vh.cancelTv.isClickable=true
+                vh.cancelTv.isClickable = true
             }
         }
         vh.cancelTv.setOnClickListener {

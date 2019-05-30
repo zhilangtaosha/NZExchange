@@ -24,6 +24,7 @@ import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.NRetrofit
+import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
@@ -84,6 +85,8 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             otcList = it.getParcelableArrayList(IntentConstant.PARAM_OTC_ACCOUNT)
             bibiList = it.getParcelableArrayList(IntentConstant.PARAM_BIBI_ACCOUNT)
         }
+
+        transferEt.addTextChangedListener(EditCurrencyWatcher(transferEt))
         refreshLayout(userAssetBean!!, false)
 
         transferBtn.initValidator()
@@ -113,7 +116,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                 swapAccount(type)
             }
             R.id.tv_all_at -> {
-                transferEt.setText(userAssetBean!!.available.toString())
+                transferEt.setText(userAssetBean!!.available.formatForCurrency())
             }
             R.id.btn_transfer_at -> {
                 if (transferBtn.validate()) {

@@ -10,11 +10,12 @@ import java.util.concurrent.TimeUnit
 
 class NRetrofit private constructor() {
     //http://zhongyingying.qicp.io:18080
-    val LIU_URL = "http://192.168.1.101:18080/zyy-otc/"
+    val LIU_URL = "http://192.168.1.101:18080/"
+//    val LIU_URL = "http://192.168.0.113:18080/"
     val SERVER_URL = "http://zhongyingying.qicp.io:18080/zyy-otc/"
 
 
-    var url: String = SERVER_URL
+    var url: String = LIU_URL
     var retrofit: Retrofit
 
     init {

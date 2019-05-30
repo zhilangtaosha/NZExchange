@@ -28,7 +28,7 @@ class CurrencyWithdrawP(activity: NBaseActivity) : BaseActivityP(activity) {
     fun addCurrencyWithdrawAddress(userBean: UserBean, address: String, tokenName: String, onSuccessRs: OnSuccessRs<Any>, onErrorRs: OnErrorRs) {
         NRetrofit.instance
                 .bibiService()
-                .addCurrencyWithdrawAddress(userBean.userId, address,tokenName)
+                .addCurrencyWithdrawAddress(userBean.userId, address,tokenName,userBean.tokenReqVo.tokenUserId,userBean.tokenReqVo.tokenUserKey)
                 .compose(activity.netTfWithDialog())
                 .subscribe(onSuccessRs, onErrorRs)
     }
@@ -36,7 +36,7 @@ class CurrencyWithdrawP(activity: NBaseActivity) : BaseActivityP(activity) {
     fun deleteCurrencyWithdrawAddress(userBean: UserBean, address: String, onSuccessRs: OnSuccessRs<Any>, onErrorRs: OnErrorRs) {
         NRetrofit.instance
                 .bibiService()
-                .deleteCurrencyWithdrawAddress(userBean.userId, address)
+                .deleteCurrencyWithdrawAddress(userBean.userId, address,userBean.tokenReqVo.tokenUserId,userBean.tokenReqVo.tokenUserKey)
                 .compose(activity.netTfWithDialog())
                 .subscribe(onSuccessRs, onErrorRs)
     }

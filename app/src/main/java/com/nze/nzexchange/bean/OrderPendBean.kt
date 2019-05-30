@@ -12,17 +12,17 @@ import retrofit2.http.Query
  * @创建时间：2019/1/7
  */
 data class OrderPendBean(
-        val amount: String,
+        val amount: Double,
         val ctime: Double,
         val deal_fee: String,
         val deal_money: String,
-        val deal_stock: String,
+        val deal_stock: Double,
         val id: String,
         val left: String,
         val maker_fee: String,
         val market: String,
         val mtime: Double,
-        val price: String,
+        val price: Double,
         val side: Int,
         val source: String,
         val taker_fee: String,

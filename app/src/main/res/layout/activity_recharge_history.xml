@@ -12,8 +12,40 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         app:tb_title_text="充值记录" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
 
-    <com.nze.nzeframework.widget.pulltorefresh.PullToRefreshRecyclerView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="数量"
+            android:textColor="@color/color_FF676C7A"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="状态"
+            android:textColor="@color/color_FF676C7A"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="@color/color_FF676C7A"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+    <com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
         android:id="@+id/ptrrv_arh"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

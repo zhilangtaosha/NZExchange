@@ -27,9 +27,12 @@ import com.nze.nzexchange.controller.my.asset.transfer.TransferHistoryActivity
 import com.nze.nzexchange.controller.my.asset.transfer.TransferSuccessDialog
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForLegal
+import com.nze.nzexchange.extend.formatForLegalByFloor
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.http.NRetrofit
+import com.nze.nzexchange.tools.editjudge.EditCurrencyPriceWatcher
+import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
@@ -84,6 +87,8 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
         selectCurrency.visibility = View.GONE
         currencyTv.text = LegalConfig.NAME
         unitTv.text = LegalConfig.NAME
+
+        transferEt.addTextChangedListener(EditLegalWatcher(transferEt))
         refreshLayout(false)
 
         transferBtn.initValidator()
@@ -112,7 +117,12 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
                 swapAccount(type)
             }
             R.id.tv_all_at -> {
-                transferEt.setText(userAssetBean!!.available.toString())
+                if (type == AccountType.BIBI) {
+                    transferEt.setText(userAssetBean!!.available.formatForLegalByFloor())
+                } else {
+                    transferEt.setText(accountBean!!.accAbleAmount.formatForLegalByFloor())
+                }
+
             }
             R.id.btn_transfer_at -> {
                 if (transferBtn.validate()) {
