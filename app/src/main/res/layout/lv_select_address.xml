@@ -6,7 +6,7 @@
     android:paddingTop="20dp"
     android:paddingRight="15dp">
 
-    <CheckBox
+    <TextView
         android:id="@+id/cb_delete_lsa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

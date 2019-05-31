@@ -9,7 +9,6 @@ import android.os.Message
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
-import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import com.leiyun.fingerprint.FingerprintDialog
@@ -19,7 +18,6 @@ import com.nze.nzeframework.tool.ActivityManager
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
-import com.nze.nzexchange.R.id.*
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.Preferences
@@ -131,9 +129,15 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         tab_bibi_main.setOnClickListener(this)
         tab_otc_main.setOnClickListener(this)
         tab_my_main.setOnClickListener(this)
+        initFragment()
         selectTab(mCurrentTab)
 
         FingerprintHelper.init(this)//指纹解锁
+    }
+
+    fun initFragment() {
+        var transaction = mFragmentManager.beginTransaction()
+        transaction.add(R.id.content_main, BibiFragment.newInstance(), "2").commitAllowingStateLoss()
     }
 
     override fun onClick(v: View?) {

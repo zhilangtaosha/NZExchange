@@ -600,10 +600,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                                 bean.Low = it[4].toFloat()
                                 bean.Volume = it[5].toFloat()
                                 if (bean.High < bean.Open || bean.High < bean.Close || bean.High < bean.Low) {
-                                    NLog.i("最高值出错>>>index=$index")
+                                    NLog.i("KLINE最高值出错>>>index=$index time=${it[0]}")
                                 }
                                 if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
-                                    NLog.i("最小值出错>>>index=$index")
+                                    NLog.i("KLINE最小值出错>>>index=$index time=${it[0]}")
                                 }
                                 kList.add(bean)
                             }

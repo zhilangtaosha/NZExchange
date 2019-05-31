@@ -16,18 +16,22 @@ import com.nze.nzexchange.bean2.CoinAddressBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.presenter.CurrencyWithdrawP
+import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_selet_address_list.*
 
 /***
  * 地址列表
  */
 class SelectCurrencyAddressListActivity : NBaseActivity() {
+    val topBar: CommonTopBar by lazy { ctb_asal }
     val currencyWithdrawP: CurrencyWithdrawP by lazy { CurrencyWithdrawP(this) }
     val selectLv: ListView by lazy { lv_select_asal }
     val selectAdapter: SelectCurrencyAddressAdapter by lazy {
         SelectCurrencyAddressAdapter(this).apply {
-            onSelectListener = { position, isSelect ->
-                addressList[position].isSelect = isSelect
+            onSelectListener = { position ->
+                val bean = addressList[position]
+                addressList[position].isSelect = !bean.isSelect
+                this.notifyDataSetChanged()
             }
         }
     }
@@ -55,7 +59,20 @@ class SelectCurrencyAddressListActivity : NBaseActivity() {
             AddAddressActivity.skip(this, currency)
         }
 
+        topBar.setRightClick {
+            addressList.forEach {
+                if (it.isSelect)
+                    currencyWithdrawP.deleteCurrencyWithdrawAddress(userBean!!, it, addressList, {
+                        if (it.success) {
+                            selectAdapter.group = addressList
+                        }
+                    }, onError)
+            }
+        }
 
+        selectLv.setOnItemClickListener { parent, view, position, id ->
+            
+        }
     }
 
     override fun onResume() {

@@ -610,8 +610,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val list = it.result
                         if (list != null && list.size > 0) {
                             //获取第一个计价货币的所有交易对
-                            TransactionPairsBean.getTransactionPairs(list[0].mainCurrency, userBean?.userId?.getValue())
-                                    .subscribeOn(Schedulers.io())
+                            if (currentTransactionPair == null) {
+                                TransactionPairsBean.getTransactionPairs(list[0].mainCurrency, userBean?.userId?.getValue())
+                                        .subscribeOn(Schedulers.io())
+                            } else {
+                                Flowable.empty()
+                            }
                         } else {
                             Flowable.error<String>(Throwable("没有交易对"))
                         }
@@ -715,7 +719,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             Log.i("zwy", "onServiceConnected")
             binder = service as KLineService.KBinder?
             isBinder = true
-            binder?.initKSocket(KLineParam.MARKET_MYSELF) { lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth? ->
+            binder?.initKSocket(KLineParam.MARKET_MYSELF, {
+                binder?.getKDataRequest(currentTransactionPair!!)
+            }, { lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth? ->
                 if (depth != null) {
                     val buyList = mutableListOf<HandicapBean>()
                     val saleList = mutableListOf<HandicapBean>()
@@ -737,7 +743,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         lastCostTv.text = quotes.get(1)
                     }
                 }
-            }
+            })
         }
     }
 }

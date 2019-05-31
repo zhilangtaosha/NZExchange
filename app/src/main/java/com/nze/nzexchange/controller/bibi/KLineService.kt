@@ -76,7 +76,9 @@ class KLineService : Service() {
         var mHandler: Handler = Handler()
 
         lateinit var kDataCallBack: ((lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth?) -> Unit)
-        fun initKSocket(market: String, kDataCallBack: ((lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth?) -> Unit)) {
+        lateinit var onOpen: () -> Unit
+        fun initKSocket(market: String, onOpen: () -> Unit, kDataCallBack: ((lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth?) -> Unit)) {
+            this.onOpen = onOpen
             this.kDataCallBack = kDataCallBack
             this.market = market
             socket?.cancel()
@@ -118,14 +120,15 @@ class KLineService : Service() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 super.onOpen(webSocket, response)
                 NLog.i("onOpen")
+                onOpen.invoke()
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 super.onFailure(webSocket, t, response)
                 NLog.i("onFailure")
                 mHandler.postDelayed({
-                    initKSocket(market, kDataCallBack)
-                    getKDataRequest(pairsBean)
+                    initKSocket(market, onOpen, kDataCallBack)
+//                    getKDataRequest(pairsBean)
                 }, 10000)
             }
 
@@ -144,7 +147,7 @@ class KLineService : Service() {
             val DATA_DEPTH = 7
             var handicap: Handicap? = null
             override fun onMessage(webSocket: WebSocket, text: String) {
-                NLog.i("service text>>>$text")
+//                NLog.i("service text>>>$text")
                 Observable.create<Int> {
                     try {
                         var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
@@ -166,10 +169,10 @@ class KLineService : Service() {
                                     bean.Low = it[4].toFloat()
                                     bean.Volume = it[5].toFloat()
                                     if (bean.High < bean.Open || bean.High < bean.Close || bean.High < bean.Low) {
-                                        NLog.i("最高值出错>>>index=$index")
+//                                        NLog.i("最高值出错>>>index=$index")
                                     }
                                     if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
-                                        NLog.i("最小值出错>>>index=$index")
+//                                        NLog.i("最小值出错>>>index=$index")
                                     }
                                     kList.add(bean)
                                 }

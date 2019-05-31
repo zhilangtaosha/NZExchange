@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.lv_select_address.view.*
  */
 class SelectCurrencyAddressAdapter(mContext: Context) : NBaseAda<CurrenyWithdrawAddressBean, SelectCurrencyAddressAdapter.ViewHolder>(mContext) {
 
-    var onSelectListener: ((position: Int, isSelect: Boolean) -> Unit)? = null
+    var onSelectListener: ((position: Int) -> Unit)? = null
 
     override fun setLayout(): Int = R.layout.lv_select_address
 
@@ -30,11 +30,12 @@ class SelectCurrencyAddressAdapter(mContext: Context) : NBaseAda<CurrenyWithdraw
         vh.descTv.text = item.market
         vh.currencyTv.text = item.tokenName
         vh.addressTv.text = item.address
+        vh.deleteCb.isSelected = item.isSelect
 
-        RxCompoundButton.checkedChanges(vh.deleteCb)
-                .subscribe {
-                    onSelectListener?.invoke(position, it)
-                }
+        vh.deleteCb.setOnClickListener {
+            onSelectListener?.invoke(position)
+        }
+
     }
 
 
@@ -42,7 +43,7 @@ class SelectCurrencyAddressAdapter(mContext: Context) : NBaseAda<CurrenyWithdraw
         val descTv: TextView = view.tv_desc_lsa
         val currencyTv: TextView = view.tv_currency_type_lsa
         val addressTv: TextView = view.tv_address_lsa
-        val deleteCb: CheckBox = view.cb_delete_lsa
+        val deleteCb: TextView = view.cb_delete_lsa
 
     }
 }

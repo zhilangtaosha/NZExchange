@@ -28,15 +28,21 @@ class CurrencyWithdrawP(activity: NBaseActivity) : BaseActivityP(activity) {
     fun addCurrencyWithdrawAddress(userBean: UserBean, address: String, tokenName: String, onSuccessRs: OnSuccessRs<Any>, onErrorRs: OnErrorRs) {
         NRetrofit.instance
                 .bibiService()
-                .addCurrencyWithdrawAddress(userBean.userId, address,tokenName,userBean.tokenReqVo.tokenUserId,userBean.tokenReqVo.tokenUserKey)
+                .addCurrencyWithdrawAddress(userBean.userId, address, tokenName, userBean.tokenReqVo.tokenUserId, userBean.tokenReqVo.tokenUserKey)
                 .compose(activity.netTfWithDialog())
                 .subscribe(onSuccessRs, onErrorRs)
     }
 
-    fun deleteCurrencyWithdrawAddress(userBean: UserBean, address: String, onSuccessRs: OnSuccessRs<Any>, onErrorRs: OnErrorRs) {
+    fun deleteCurrencyWithdrawAddress(userBean: UserBean, bean: CurrenyWithdrawAddressBean, addressList: MutableList<CurrenyWithdrawAddressBean>, onSuccessRs: OnSuccessRs<Any>, onErrorRs: OnErrorRs) {
         NRetrofit.instance
                 .bibiService()
-                .deleteCurrencyWithdrawAddress(userBean.userId, address,userBean.tokenReqVo.tokenUserId,userBean.tokenReqVo.tokenUserKey)
+                .deleteCurrencyWithdrawAddress(userBean.userId, bean.address, userBean.tokenReqVo.tokenUserId, userBean.tokenReqVo.tokenUserKey)
+                .map {
+                    if (it.success) {
+                        addressList.remove(bean)
+                    }
+                    it
+                }
                 .compose(activity.netTfWithDialog())
                 .subscribe(onSuccessRs, onErrorRs)
     }

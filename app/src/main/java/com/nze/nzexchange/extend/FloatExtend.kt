@@ -21,3 +21,12 @@ fun Float.formatForPrice(): String {
     df.setRoundingMode(RoundingMode.FLOOR);
     return df.format(this)
 }
+
+
+fun Float.formatForCurrency(): String {
+//    var b: BigDecimal = BigDecimal(this)
+//    return b.setScale(10,BigDecimal.ROUND_HALF_DOWN).toString()
+    val df = DecimalFormat("0.########")
+    df.roundingMode = RoundingMode.FLOOR
+    return df.format(this.toBigDecimal())
+}

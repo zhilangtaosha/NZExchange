@@ -9,17 +9,19 @@
     tools:context=".controller.my.asset.withdraw.SelectCurrencyAddressListActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
+        android:id="@+id/ctb_asal"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        app:tb_title_text="选择地址"
-        app:tb_right_icon="@mipmap/delete_icon"/>
+        app:tb_right_icon="@drawable/selector_btn_delete"
+        app:tb_title_text="选择地址" />
 
     <ListView
         android:id="@+id/lv_select_asal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="44dp"
-        android:listSelector="@drawable/selector_common_lv" />
+        android:listSelector="@drawable/selector_common_lv"
+        android:paddingBottom="55dp"/>
 
 
     <com.nze.nzexchange.widget.CommonButton
@@ -29,6 +31,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:text="+添加提现地址" />
 </RelativeLayout>
