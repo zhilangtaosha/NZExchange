@@ -75,6 +75,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val fenshiView: View by lazy { view_fenshi_kline }
     val shenduTv: TextView by lazy { tv_shendu_kline }
     val shenduView: View by lazy { view_shendu_kline }
+    val setIv: ImageView by lazy { iv_setting_kline }
     val hideCb: CheckBox by lazy { cb_hide_kline }
     val kChart: KLineChartView by lazy {
         chart_kline.apply {
@@ -144,6 +145,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             }
         }
     }
+    val setPopup: KLineSetPopup by lazy { KLineSetPopup(this) }
     val depthView: DepthMapView by lazy { depth_view }
     val orderTv: TextView by lazy { tv_order_kline }
     val orderView: View by lazy { view_order_kline }
@@ -215,6 +217,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private var marketIndex: Int = 0
     private var isFirst = true
 
+
     companion object {
         fun skip(context: Context, bean: TransactionPairsBean) {
             val intent = Intent(context, KLineActivity::class.java)
@@ -240,6 +243,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         switchLeftIv.setOnClickListener(this)
         switchRightIv.setOnClickListener(this)
         selfSelectTv.setOnClickListener(this)
+        setIv.setOnClickListener(this)
 
         pairNameTv.text = pairsBean?.transactionPair
 
@@ -253,6 +257,13 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         fenshiPopup.setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
             if (anchorView != null) {
                 fenshiPopup.offsetY = anchorView.height
+                return@setOnBeforeShowCallback true
+            }
+            false
+        }
+        setPopup.setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
+            if (anchorView != null) {
+                setPopup.offsetY = anchorView.height
                 return@setOnBeforeShowCallback true
             }
             false
@@ -326,6 +337,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         NLog.i("changeTimeRequest>>$param")
         socket?.send(param)
     }
+
 
     /**
      * k线加载更多历史数据
@@ -498,6 +510,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     selfSelectTv.isSelected = it == 1
                 }
             }
+            R.id.iv_setting_kline -> {
+                setPopup.showPopupWindow(setIv)
+            }
         }
     }
 
@@ -605,6 +620,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                                 if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
                                     NLog.i("KLINE最小值出错>>>index=$index time=${it[0]}")
                                 }
+                                if (bean.Low > 8000 || bean.Open > 8000 || bean.Close > 8000 || bean.High > 8000) {
+                                    NLog.i("KLINE出错>>>index=$index time=${it[0]}")
+                                }
                                 kList.add(bean)
                             }
 
@@ -665,7 +683,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     }
 
                     if (latestDeal != null) {
-                        newDealList.addAll(0,latestDeal)
+                        newDealList.addAll(0, latestDeal)
                         it.onNext(DATE_NEW_DEAL)
                     }
 
@@ -801,5 +819,13 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             rangeTv.text = "0%"
         }
 
+    }
+
+    var mainImage = "MA"
+    var subImage = "MACD"
+    fun refreshKLineTarget(){
+        when(mainImage){
+            
+        }
     }
 }

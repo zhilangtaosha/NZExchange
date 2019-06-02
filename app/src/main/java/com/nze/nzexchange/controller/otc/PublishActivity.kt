@@ -140,7 +140,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         var value = ""
                         val price = priceEt.text.toString()
                         if (it.isNotEmpty() && price.isNotEmpty()) {
-                            value = DoubleMath.divByUp(it.toString().toDouble(), price.toDouble(), 8).formatForCurrency()
+                            value = DoubleMath.divByFloor(it.toString().toDouble(), price.toDouble(), 8).formatForCurrency()
                         }
                         numEt.setText(value)
                     } else {

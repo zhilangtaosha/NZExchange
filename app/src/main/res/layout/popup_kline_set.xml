@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_black_tran"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_root_pks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_bg"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@color/color_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/tx14_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="主图" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="18dp"
+                    android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/tv_ma_pks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="MA"
+                    android:textColor="@color/color_selector_87a8_caca"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_boll_pks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="BOLL"
+                    android:textColor="@color/color_selector_87a8_caca"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/cb_main_pks"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:drawableRight="@drawable/selector_checkbox_pwd"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@color/color_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/tx14_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="副图" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="18dp"
+                    android:background="@color/color_line" />
+
+                <TextView
+                    android:id="@+id/tv_macd_pks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="MACD"
+                    android:textColor="@color/color_selector_87a8_caca"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_kdj_pks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="KDJ"
+                    android:textColor="@color/color_selector_87a8_caca"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_rsi_pks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="RSI"
+                    android:textColor="@color/color_selector_87a8_caca"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_wr_pks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="WR"
+                    android:textColor="@color/color_selector_87a8_caca"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/cb_sub_pks"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:button="@null"
+                android:drawableRight="@drawable/selector_checkbox_pwd"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_line" />
+
+        <TextView
+            android:id="@+id/tv_set_pks"
+            style="@style/tx14_main"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/color_bg"
+            android:drawableRight="@mipmap/right_arrow2"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="15dp"
+            android:text="指标设置" />
+    </LinearLayout>
+</LinearLayout>

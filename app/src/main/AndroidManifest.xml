@@ -177,7 +177,8 @@
         <activity android:name=".controller.common.webview.WebActivity" />
         <activity android:name=".controller.home.HelpCenterActivity" />
         <activity android:name=".controller.my.asset.legal.LegalTransferActivity" />
-        <activity android:name=".controller.my.asset.legal.LegalAssetDetailActivity"></activity>
+        <activity android:name=".controller.my.asset.legal.LegalAssetDetailActivity" />
+        <activity android:name=".controller.market.KLineTargetActivity"></activity>
     </application>
 
 </manifest>

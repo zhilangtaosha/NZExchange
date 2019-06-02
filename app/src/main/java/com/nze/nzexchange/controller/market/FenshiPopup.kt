@@ -47,7 +47,6 @@ class FenshiPopup(context: Activity?) : BasePopupWindow(context) {
     }
 
     override fun initExitAnimation(): Animation {
-
         val translateAnimation = TranslateAnimation(0f, 0f, 0f, (-dp2px(900f)).toFloat())
         translateAnimation.duration = 450
         return translateAnimation

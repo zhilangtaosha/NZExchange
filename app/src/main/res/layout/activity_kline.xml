@@ -265,6 +265,14 @@
                     android:textColor="@color/color_selector_abbe_87a8"
                     android:textSize="15sp" />
 
+                <ImageView
+                    android:id="@+id/iv_setting_kline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:paddingLeft="20dp"
+                    android:src="@mipmap/setting_icon2" />
+
                 <View
                     android:id="@+id/view_shendu_kline"
                     android:layout_width="50dp"

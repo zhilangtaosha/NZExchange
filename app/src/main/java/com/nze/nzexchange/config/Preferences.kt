@@ -13,7 +13,10 @@ class Preferences {
         val BACK_PWD_FINGERPRINT = 1//指纹解锁
         val BACK_PWD_NO = -1//不需要解锁
 
-        val LOGIN_USER_NAME="userName"
+        val LOGIN_USER_NAME = "userName"
+
+        val KLINE_MAIN_IMAGE = "mainImage"//k线主图
+        val KLINE_SUB_IMAGE = "subImage"//k线副图
     }
 
 }

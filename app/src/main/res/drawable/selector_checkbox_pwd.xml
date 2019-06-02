@@ -2,6 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@mipmap/pwd_visible" android:state_checked="true" />
+    <item android:drawable="@mipmap/pwd_visible" android:state_selected="true" />
+
     <item android:drawable="@mipmap/pwd_invisible" android:state_checked="false" />
     <item android:drawable="@mipmap/pwd_invisible" />
 </selector>

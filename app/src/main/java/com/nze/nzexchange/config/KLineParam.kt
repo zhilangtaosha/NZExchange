@@ -28,6 +28,15 @@ class KLineParam {
         const val METHOD_HISTORY = "historicalData"
         const val METHOD_QUERYDATASOURCE = "queryDataSource"//获取平台数据
 
+        const val STATUS_MA = "MA"
+        const val STATUS_BOLL = "BOLL"
+        const val STATUS_MACD = "MACD"
+        const val STATUS_KDJ = "KDJ"
+        const val STATUS_RSI = "RSI"
+        const val STATUS_WR = "WR"
+        const val STATUS_MAIN_EMPTY = "mainEmpty"
+        const val STATUS_SUB_EMPTY = "subEmpty"
+
     }
 }
 
