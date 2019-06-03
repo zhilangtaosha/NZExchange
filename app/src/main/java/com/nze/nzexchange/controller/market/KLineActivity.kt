@@ -12,10 +12,7 @@ import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.bean2.ShenDubean
-import com.nze.nzexchange.config.EventCode
-import com.nze.nzexchange.config.IntentConstant
-import com.nze.nzexchange.config.KLineParam
-import com.nze.nzexchange.config.KLineRequestBean
+import com.nze.nzexchange.config.*
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.market.presenter.KLineP
@@ -25,6 +22,7 @@ import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.nze.nzexchange.widget.chart.*
+import com.nze.nzexchange.widget.chart.draw.Status
 import com.nze.nzexchange.widget.chart.formatter.DateFormatter
 import com.nze.nzexchange.widget.depth.DepthData
 import com.nze.nzexchange.widget.depth.DepthDataBean
@@ -33,6 +31,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_kline.*
+import net.grandcentrix.tray.AppPreferences
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -41,6 +40,7 @@ import org.greenrobot.eventbus.EventBus
 import org.jetbrains.annotations.Nls
 import org.json.JSONObject
 import org.w3c.dom.Text
+import zlc.season.rxdownload3.core.DownloadConfig.context
 import java.util.*
 import kotlin.math.cos
 
@@ -97,6 +97,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         //切换时间价格
         FenshiPopup(this).apply {
             onItemClick = { position, item ->
+                kChart.hideSelectData()
                 fenshiTv.text = item
                 when (position) {
                     0 -> {
@@ -145,7 +146,13 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             }
         }
     }
-    val setPopup: KLineSetPopup by lazy { KLineSetPopup(this) }
+    val setPopup: KLineSetPopup by lazy {
+        KLineSetPopup(this).apply {
+            onKClick = {
+                refreshKLineConfig()
+            }
+        }
+    }
     val depthView: DepthMapView by lazy { depth_view }
     val orderTv: TextView by lazy { tv_order_kline }
     val orderView: View by lazy { view_order_kline }
@@ -290,6 +297,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
 //        checkMarket()
         refreshLayout()
+        refreshKLineConfig()
     }
 
     fun refreshLayout() {
@@ -821,11 +829,40 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     }
 
-    var mainImage = "MA"
-    var subImage = "MACD"
-    fun refreshKLineTarget(){
-        when(mainImage){
-            
+    val appPreferences: AppPreferences by lazy { AppPreferences(this) }
+    var mainImage = KLineParam.STATUS_MAIN_EMPTY
+    var subImage = KLineParam.STATUS_SUB_EMPTY
+    fun refreshKLineConfig() {
+        mainImage = appPreferences.getString(Preferences.KLINE_MAIN_IMAGE, KLineParam.STATUS_MAIN_EMPTY)!!
+        subImage = appPreferences.getString(Preferences.KLINE_SUB_IMAGE, KLineParam.STATUS_SUB_EMPTY)!!
+        kChart.hideSelectData()
+        when (mainImage) {//主图
+            KLineParam.STATUS_MA -> {
+                kChart.changeMainDrawType(Status.MA)
+            }
+            KLineParam.STATUS_BOLL -> {
+                kChart.changeMainDrawType(Status.BOLL)
+            }
+            KLineParam.STATUS_MAIN_EMPTY -> {
+                kChart.changeMainDrawType(Status.NONE)
+            }
+        }
+        when (subImage) {//副图
+            KLineParam.STATUS_MACD -> {
+                kChart.setChildDraw(0)
+            }
+            KLineParam.STATUS_KDJ -> {
+                kChart.setChildDraw(1)
+            }
+            KLineParam.STATUS_RSI -> {
+                kChart.setChildDraw(2)
+            }
+            KLineParam.STATUS_WR -> {
+                kChart.setChildDraw(3)
+            }
+            KLineParam.STATUS_SUB_EMPTY -> {
+                kChart.hideChildDraw()
+            }
         }
     }
 }

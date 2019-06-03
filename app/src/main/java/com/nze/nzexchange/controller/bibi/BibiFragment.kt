@@ -262,7 +262,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (type == TYPE_BUY) {
             buyTv.isSelected = true
             saleTv.isSelected = false
-            availableTv.setTextFromHtml("可用<font color=\"#0DA287\">${restOrderBean?.mainCurrency?.available?.removeE()
+            availableTv.setTextFromHtml("可用<font color=\"#0DA287\">${restOrderBean?.mainCurrency?.available?.formatForCurrency()
                     ?: "--"}${currentTransactionPair?.mainCurrency ?: "--"}</font>")
             buyIsb.visibility = View.VISIBLE
             saleIsb.visibility = View.GONE
@@ -278,7 +278,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         } else {
             buyTv.isSelected = false
             saleTv.isSelected = true
-            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${restOrderBean?.currency?.available?.removeE()
+            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${restOrderBean?.currency?.available?.formatForCurrency()
                     ?: "--"}${currentTransactionPair?.currency ?: "--"}</font>")
             buyIsb.visibility = View.GONE
             saleIsb.visibility = View.VISIBLE

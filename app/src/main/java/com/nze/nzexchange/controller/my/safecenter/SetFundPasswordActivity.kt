@@ -15,6 +15,7 @@ import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
+import com.nze.nzexchange.validation.FundPwdValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.VerifyButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
@@ -39,8 +40,8 @@ class SetFundPasswordActivity : NBaseActivity(), View.OnClickListener {
     override fun initView() {
 
         confirmBtn.initValidator()
-                .add(pwdEt, EmptyValidation())
-                .add(pwdConfirmEt, EmptyValidation())
+                .add(pwdEt, FundPwdValidation())
+                .add(pwdConfirmEt, FundPwdValidation())
                 .add(verifyEt, EmptyValidation())
                 .executeValidator()
 
@@ -76,8 +77,10 @@ class SetFundPasswordActivity : NBaseActivity(), View.OnClickListener {
             }
             R.id.btn_confirm_asfp -> {
 
-                if (checkcodeId == null)
+                if (checkcodeId == null){
                     showToast("验证码获取错误,请重新获取")
+                    return
+                }
                 if (confirmBtn.validate()) {
                     var pwdStr: String = pwdEt.getContent()
                     val pwdConfirm: String = pwdConfirmEt.getContent()

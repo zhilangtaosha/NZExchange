@@ -37,6 +37,7 @@ class KLineSetPopup(context: Activity?) : BasePopupWindow(context), View.OnClick
     val mainList = arrayListOf<TextView>(maTv, bollTv)
     val subList = arrayListOf<TextView>(macdTv, kdjTv, rsiTv, wrTv)
     var type = ""
+    var onKClick: (() -> Unit)? = null
 
     init {
         maTv.setOnClickListener(this)
@@ -90,6 +91,7 @@ class KLineSetPopup(context: Activity?) : BasePopupWindow(context), View.OnClick
         }
         appPreferences.put(Preferences.KLINE_MAIN_IMAGE, mainImage)
         appPreferences.put(Preferences.KLINE_SUB_IMAGE, subImage)
+        onKClick?.invoke()
         dismiss()
     }
 
@@ -116,7 +118,7 @@ class KLineSetPopup(context: Activity?) : BasePopupWindow(context), View.OnClick
                 }
             }
         }
-        if (subImage == KLineParam.STATUS_MAIN_EMPTY) {
+        if (subImage == KLineParam.STATUS_SUB_EMPTY) {
             subCb.isSelected = false
         } else {
             subCb.isSelected = true

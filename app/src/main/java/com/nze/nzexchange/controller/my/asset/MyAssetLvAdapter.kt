@@ -9,7 +9,10 @@ import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.controller.common.presenter.CommonBibiP
+import com.nze.nzexchange.extend.add
 import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
+import com.nze.nzexchange.extend.mul
 import kotlinx.android.synthetic.main.lv_my_asset.view.*
 
 /**
@@ -19,6 +22,7 @@ import kotlinx.android.synthetic.main.lv_my_asset.view.*
  * @创建时间：2018/12/21
  */
 class MyAssetLvAdapter(mContext: Context) : NBaseAda<UserAssetBean, MyAssetLvAdapter.ViewHolder>(mContext) {
+    
     override fun setLayout(): Int = R.layout.lv_my_asset
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
@@ -31,7 +35,7 @@ class MyAssetLvAdapter(mContext: Context) : NBaseAda<UserAssetBean, MyAssetLvAda
         CommonBibiP.getInstance(mContext as NBaseActivity)
                 .currencyToLegal(item.currency, 1.0, {
                     if (it.success) {
-                        vh.moneyValueTv.text = "${it.result}"
+                        vh.moneyValueTv.text = "${item.available.add(item.freeze).mul(it.result).formatForLegal()}"
                     } else {
                         vh.moneyValueTv.text = "0"
                     }

@@ -18,11 +18,13 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.CheckPermission
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.controller.my.asset.recharge.RechargeCurrencyActivity
 import com.nze.nzexchange.controller.my.asset.transfer.TransferActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawCurrencyActivity
 import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
 import kotlinx.android.synthetic.main.activity_concrete_currency_asset.*
 import org.greenrobot.eventbus.EventBus
 
@@ -82,7 +84,7 @@ class CurrencyAssetDetailActivity : NBaseActivity(), View.OnClickListener {
         userAssetBean?.let {
             currencyNameTv.text = it.currency
             availableValueTv.text = it.available.formatForCurrency()
-            freezValueTv.text = it.freeze.toString()
+            freezValueTv.text = it.freeze.formatForCurrency()
 
         }
 
@@ -100,6 +102,15 @@ class CurrencyAssetDetailActivity : NBaseActivity(), View.OnClickListener {
         tradeBtn.setOnClickListener(this)
         swithLayout(type)
         getFinancialRecord()
+
+        CommonBibiP.getInstance(this)
+                .currencyToLegal(userAssetBean?.currency!!, 1.0, {
+                    if (it.success) {
+                        moneyValueTv.text = it.result.formatForLegal()
+                    } else {
+                        moneyValueTv.text = "0"
+                    }
+                }, onError)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

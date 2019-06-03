@@ -10,6 +10,7 @@ import com.nze.nzeframework.ui.BaseApplication
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.tools.AppFrontBackTool
+import com.nze.nzexchange.tools.CrashHandler
 import com.nze.nzexchange.tools.download.CustomSqliteActor
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import org.greenrobot.eventbus.EventBus
@@ -46,7 +47,6 @@ class NzeApp : BaseApplication() {
                 .addExtension(ApkOpenExtension::class.java)
 
         DownloadConfig.init(builder)
-
     }
 
     override fun attachBaseContext(base: Context?) {

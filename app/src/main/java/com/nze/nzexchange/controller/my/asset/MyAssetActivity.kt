@@ -141,9 +141,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getContainerTargetView(): View? =listView
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         CurrencyAssetDetailActivity.skip(this, type, assetAdapter.getItem(position)!!, otcList, bibiList)
@@ -167,14 +165,15 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
+                    stopAllView()
                     if (it.success) {
                         otcList.clear()
                         otcList.addAll(it.result)
                         if (type == AccountType.OTC) {
                             assetAdapter.group = otcList
                         }
-                    }else{
-                        if (!dialog.isShow()&&it.isCauseNotEmpty()) {
+                    } else {
+                        if (!dialog.isShow() && it.isCauseNotEmpty()) {
                             AuthorityDialog.getInstance(this)
                                     .show("查询资产需要完成以下设置，请检查"
                                             , it.cause) {
@@ -182,20 +181,23 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                                     }
                         }
                     }
-                }, onError)
+                }, {
+                    showNODataView("未获取到OTC资产数据")
+                })
     }
 
     fun getBibiAsset() {
         UserAssetBean.assetInquiry(userBean?.userId!!, tokenUserId = userBean!!.tokenReqVo.tokenUserId, tokenUserKey = userBean!!.tokenReqVo.tokenUserKey)
                 .compose(netTfWithDialog())
                 .subscribe({
+                    stopAllView()
                     if (it.success) {
                         bibiList.clear()
                         bibiList.addAll(it.result)
                         if (type == AccountType.BIBI)
                             assetAdapter.group = bibiList
-                    }else{
-                        if (!dialog.isShow()&&it.isCauseNotEmpty()) {
+                    } else {
+                        if (!dialog.isShow() && it.isCauseNotEmpty()) {
                             AuthorityDialog.getInstance(this)
                                     .show("查询资产需要完成以下设置，请检查"
                                             , it.cause) {
@@ -203,6 +205,8 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                                     }
                         }
                     }
-                }, onError)
+                }, {
+                    showNODataView("未获取到币币资产数据")
+                })
     }
 }

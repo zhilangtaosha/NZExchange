@@ -142,5 +142,22 @@ class NFileTool {
 
             }
         }
+
+        /**
+         * 从指定文件夹获取文件
+         *
+         * @return 如果文件不存在则创建, 如果如果无法创建文件或文件名为空则返回null
+         */
+        fun getSaveFile(context: Application,folderPath: String, fileNmae: String): File {
+            val file = File(getFilePath(context,folderPath) + File.separator
+                    + fileNmae)
+            try {
+                file.createNewFile()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            return file
+        }
     }
 }

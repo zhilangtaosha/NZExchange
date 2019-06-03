@@ -314,8 +314,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-                        finish()
                         showToast("提币成功")
+                        finish()
                     } else {
                         showToast(it.message)
                     }

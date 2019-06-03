@@ -133,7 +133,7 @@ interface BibiService {
             @Field("curBuspwUcode") curBuspwUcode: String,
             @Field("checkcodeId") checkcodeId: String,
             @Field("checkcodeVal") checkcodeVal: String
-    ): Flowable<Result<String>>
+    ): Flowable<Result<Any>>
 
 
     //充值记录

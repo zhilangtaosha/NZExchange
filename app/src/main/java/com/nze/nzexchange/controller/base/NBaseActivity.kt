@@ -22,6 +22,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import android.app.Activity
 import android.graphics.Color
+import android.os.Bundle
+import com.nze.nzexchange.tools.CrashHandler
 
 
 abstract class NBaseActivity : BaseActivity() {
@@ -33,6 +35,11 @@ abstract class NBaseActivity : BaseActivity() {
     val mProgressDialog: KProgressHUD by lazy {
         KProgressHUD.create(this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        CrashHandler.create().init(this)
     }
 
     fun showLoad() {
@@ -146,7 +153,7 @@ abstract class NBaseActivity : BaseActivity() {
      *
      * @param activity
      */
-     fun fullScreen(activity: Activity) {
+    fun fullScreen(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val window = activity.window

@@ -125,7 +125,7 @@ class ActivityManager {
     /**
      * 应用程序退出
      */
-    fun AppExit(context: Context) {
+    fun AppExit() {
         try {
             finishAllActivity()
             Runtime.getRuntime().exit(0)
