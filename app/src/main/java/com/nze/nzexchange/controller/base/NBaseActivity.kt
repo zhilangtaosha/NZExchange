@@ -39,7 +39,7 @@ abstract class NBaseActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CrashHandler.create().init(this)
+//        CrashHandler.create().init(this)
     }
 
     fun showLoad() {

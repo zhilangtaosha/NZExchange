@@ -58,10 +58,17 @@
             android:textSize="12sp" />
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/lv_ama"
-        android:layout_marginTop="5dp"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
+        <com.nze.nzexchange.widget.LinearLayoutAsListView
+            android:id="@+id/lv_ama"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical" />
+
+    </ScrollView>
 </LinearLayout>
+

@@ -19,6 +19,8 @@ import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
+import com.nze.nzexchange.bean.OrderPendBean.Companion.orderPending
+import com.nze.nzexchange.bean.RestOrderBean.Companion.getPendingOrderInfo
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.KLineParam
@@ -569,6 +571,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             }
             currentOrderAdapter.mainCurrency = it.mainCurrency
             currentOrderAdapter.currency = it.currency
+            if (currentType == TYPE_BUY) {
+                availableTv.setTextFromHtml("可用<font color=\"#0DA287\">--${it.mainCurrency}</font>")
+            } else {
+                availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">--${it.currency}</font>")
+            }
 
         }
 

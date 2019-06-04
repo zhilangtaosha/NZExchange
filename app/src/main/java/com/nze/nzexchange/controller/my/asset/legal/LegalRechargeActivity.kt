@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LegalRechargeBean
@@ -39,6 +40,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
                             rechargeMode.setDrawables(R.mipmap.bank_icon, null, R.mipmap.right_arrow2, null)
                             rechargeMode.text = "${payMethodBean?.accmoneyBanktype}(${s.substring(s.length - 4)})"
                             rechargeType = RechargeModeBean.BANK
+                            checkpayType = LegalRechargeBean.TYPE_BANK
                         }
                     }
                     RechargeModeBean.OSKO -> {
@@ -46,6 +48,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
                             rechargeMode.setDrawables(R.mipmap.osko_icon, null, R.mipmap.right_arrow2, null)
                             rechargeMode.text = "OSKO"
                             rechargeType = RechargeModeBean.OSKO
+                            checkpayType = LegalRechargeBean.TYPE_OSKO
                         }
                     }
                     RechargeModeBean.BPAY -> {
@@ -53,6 +56,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
                             rechargeMode.setDrawables(R.mipmap.bpay_icon, null, R.mipmap.right_arrow2, null)
                             rechargeMode.text = "BPAY"
                             rechargeType = RechargeModeBean.BPAY
+                            checkpayType = LegalRechargeBean.TYPE_BPAY
                         }
                     }
                 }
@@ -65,9 +69,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
     var checkpayAccount: String? = null
     var checkpayType: String? = LegalRechargeBean.TYPE_BANK
     var checkpayCode: String? = null
-        get() {
-            return "PD${System.currentTimeMillis()}"
-        }
+
     var rechargeType = RechargeModeBean.BANK
 
     override fun getRootView(): Int = R.layout.activity_legal_recharge
@@ -76,17 +78,18 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
         topBar.setRightClick {
             skipActivity(LegalRechargeHistoryActivity::class.java)
         }
+        checkpayCode = "PD${System.currentTimeMillis()}"
         amountEt.addTextChangedListener(EditLegalWatcher(amountEt))
         rechargeMode.setOnClickListener {
             selectPopup.showPopupWindow()
         }
 
-        LegalRechargeBean.getLegalCode()
-                .compose(netTf())
-                .subscribe({
-                    if (it.success)
-                        checkpayCode = it.result
-                }, onError)
+//        LegalRechargeBean.getLegalCode()
+//                .compose(netTfWithDialog())
+//                .subscribe({
+//                    if (it.success)
+//                        checkpayCode = it.result
+//                }, onError)
 
         nextBtn.setOnCommonClick {
             if (checkpayAccount.isNullOrEmpty()) {
@@ -153,7 +156,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
     }
 
-    override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT
+    override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = BaseActivity.TransitionMode.DEFAULT
 
     override fun isBindEventBusHere(): Boolean = false
 

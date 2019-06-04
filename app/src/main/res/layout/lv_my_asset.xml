@@ -57,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_currency_name_lma"
         android:layout_alignParentRight="true"
+        android:gravity="right"
         android:layout_marginTop="12dp"
         android:orientation="vertical">
 

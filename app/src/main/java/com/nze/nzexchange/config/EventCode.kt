@@ -25,5 +25,6 @@ class EventCode {
         const val CODE_LOGIN_FAIL = 0x015//登录失效
         const val CODE_CHANGE_OTC_CURRENCY = 0x016//切换OTC交易交易币种
         const val CODE_REFRESH_OTC_ORDER = 0x017//刷新OTC订单列表
+        const val CODE_ASSET_STATISTICS = 0x018//刷新OTC订单列表
     }
 }

@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.my.asset
 
 import android.net.Uri
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.View
@@ -11,19 +12,25 @@ import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.AuthorityDialog
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import com.zhuang.zbannerlibrary.ZBanner
 import com.zhuang.zbannerlibrary.ZBannerAdapter
 import kotlinx.android.synthetic.main.activity_my_asset.*
+import org.greenrobot.eventbus.EventBus
+import java.util.Locale.filter
 
 /**
  * 我的资产
@@ -31,18 +38,43 @@ import kotlinx.android.synthetic.main.activity_my_asset.*
 class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionListener, AdapterView.OnItemClickListener {
 
     val zbanner: ZBanner by lazy { carousel_ama }
-    val accoutTypeList: List<Int> = listOf<Int>(AssetBannerFragment.ACCOUT_TYPE_BIBI, AssetBannerFragment.ACCOUT_TYPE_OTC, AssetBannerFragment.ACCOUT_TYPE_BIBI, AssetBannerFragment.ACCOUT_TYPE_OTC)
+    val accoutTypeList: List<Int> = listOf<Int>(
+            AssetBannerFragment.ACCOUT_TYPE_BIBI,
+            AssetBannerFragment.ACCOUT_TYPE_OTC,
+            AssetBannerFragment.ACCOUT_TYPE_BIBI,
+            AssetBannerFragment.ACCOUT_TYPE_OTC
+    )
+    val fragmentList: List<AssetBannerFragment> = listOf(
+            AssetBannerFragment.newInstance(AssetBannerFragment.ACCOUT_TYPE_BIBI),
+            AssetBannerFragment.newInstance(AssetBannerFragment.ACCOUT_TYPE_OTC)
+            , AssetBannerFragment.newInstance(AssetBannerFragment.ACCOUT_TYPE_BIBI),
+            AssetBannerFragment.newInstance(AssetBannerFragment.ACCOUT_TYPE_OTC)
+    )
     val bannerAdapter: AssetBannerAdapter by lazy { AssetBannerAdapter(supportFragmentManager, accoutTypeList) }
 
     val searchEt: ClearableEditText by lazy { et_search_ama }
     val showCb: CheckBox by lazy { cb_show_small_ama }
-    val listView: ListView by lazy { lv_ama }
-    val assetAdapter: MyAssetLvAdapter by lazy { MyAssetLvAdapter(this) }
+    val listView: LinearLayoutAsListView by lazy { lv_ama }
+
+    val mHandler: Handler = Handler()
+    var isRefresh = true
+    val assetAdapter: MyAssetLvAdapter by lazy {
+        MyAssetLvAdapter(this).apply {
+            onAssetCallBack = {
+//                fragmentList[bannerIndex].refresh(it)
+//                (bannerAdapter.getItem(bannerIndex) as AssetBannerFragment).refresh(it)
+            }
+            onAssetItemClick = { position, item ->
+                CurrencyAssetDetailActivity.skip(this@MyAssetActivity, type, assetAdapter.getItem(position)!!, otcList, bibiList)
+            }
+        }
+    }
     val userBean: UserBean? = UserBean.loadFromApp()
     var type = AccountType.BIBI
     val otcList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
     val bibiList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
     var isFirst = true
+    var bannerIndex = 0
 
     val dialog = AuthorityDialog.getInstance(this)
 
@@ -51,27 +83,32 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     override fun initView() {
         zbanner.setAdapter(bannerAdapter)
         listView.adapter = assetAdapter
-        listView.setOnItemClickListener(this)
+//        listView.onItemClickListener = this
 
         zbanner.setOnPageChangeLister {
             assetAdapter.clearGroup(true)
-            when (it) {
-                0 -> {
-                    getBibiAsset()
-                    type = AccountType.BIBI
+            bannerIndex = it
+            if (isRefresh) {
+                when (it) {
+                    0 -> {
+                        getBibiAsset()
+                        type = AccountType.BIBI
+                    }
+                    1 -> {
+                        getOtcAsset()
+                        type = AccountType.OTC
+                    }
+                    2 -> {
+                        getBibiAsset()
+                        type = AccountType.BIBI
+                    }
+                    3 -> {
+                        getOtcAsset()
+                        type = AccountType.OTC
+                    }
                 }
-                1 -> {
-                    getOtcAsset()
-                    type = AccountType.OTC
-                }
-                2 -> {
-                    getBibiAsset()
-                    type = AccountType.BIBI
-                }
-                3 -> {
-                    getOtcAsset()
-                    type = AccountType.OTC
-                }
+            } else {
+                isRefresh = true
             }
             searchEt.setText("")
             showCb.isChecked = false
@@ -84,6 +121,8 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                 .subscribe {
                     filter()
                 }
+
+        getOtcAsset()
     }
 
     fun filter() {
@@ -116,11 +155,10 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
 
     override fun onResume() {
         super.onResume()
-        getOtcAsset()
-        if (!isFirst) {
+        if (type == AccountType.BIBI) {
             getBibiAsset()
         } else {
-            isFirst = false
+            getOtcAsset()
         }
     }
 
@@ -141,7 +179,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? =listView
+    override fun getContainerTargetView(): View? = listView
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         CurrencyAssetDetailActivity.skip(this, type, assetAdapter.getItem(position)!!, otcList, bibiList)
@@ -151,9 +189,10 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     override fun onFragmentInteraction(uri: Uri) {
     }
 
-    class AssetBannerAdapter(fm: FragmentManager?, var typeList: List<Int>) : ZBannerAdapter(fm) {
+    inner class AssetBannerAdapter(fm: FragmentManager?, var typeList: List<Int>) : ZBannerAdapter(fm) {
         override fun getItem(position: Int): Fragment {
             return AssetBannerFragment.newInstance(typeList[position])
+//            return fList[position]
         }
 
         override fun getCount(): Int = typeList.size
@@ -171,6 +210,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                         otcList.addAll(it.result)
                         if (type == AccountType.OTC) {
                             assetAdapter.group = otcList
+                            listView.adapter = assetAdapter
                         }
                     } else {
                         if (!dialog.isShow() && it.isCauseNotEmpty()) {
@@ -194,8 +234,10 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                     if (it.success) {
                         bibiList.clear()
                         bibiList.addAll(it.result)
-                        if (type == AccountType.BIBI)
+                        if (type == AccountType.BIBI) {
                             assetAdapter.group = bibiList
+                            listView.adapter = assetAdapter
+                        }
                     } else {
                         if (!dialog.isShow() && it.isCauseNotEmpty()) {
                             AuthorityDialog.getInstance(this)

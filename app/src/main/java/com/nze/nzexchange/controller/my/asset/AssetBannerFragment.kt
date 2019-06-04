@@ -2,15 +2,25 @@ package com.nze.nzexchange.controller.my.asset
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.UserAssetBean
+import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.AccountType
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant.Companion.PARAM_CURRENCY
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.AuthorityDialog
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
+import com.nze.nzexchange.extend.formatForLegal
 import kotlinx.android.synthetic.main.fragment_asset_banner.view.*
 
 
@@ -28,6 +38,7 @@ class AssetBannerFragment : NBaseFragment() {
     val assetKeyTv: TextView by lazy { rootView.tv_asset_key_fab }
     val assetValueTv: TextView by lazy { rootView.tv_asset_value_fab }
     val moneyTv: TextView by lazy { rootView.tv_money_fab }
+    var userBean = UserBean.loadFromApp()
 
     companion object {
         const val ACCOUT_TYPE_BIBI = 0//币币
@@ -69,11 +80,21 @@ class AssetBannerFragment : NBaseFragment() {
                 accoutTypeTv.text = "OTC账户"
             }
         }
+//        Handler().postDelayed({
+//            assetValueTv.text = "12222"
+//        },2000)
+        getOtcAsset()
+    }
 
+    fun refresh(total: Double) {
+//      Handler().postDelayed({
+//          assetValueTv.text = total.formatForLegal()
+//      },100)
+//        assetValueTv.text = total.formatForLegal()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun isBindEventBusHere(): Boolean = false
@@ -90,5 +111,34 @@ class AssetBannerFragment : NBaseFragment() {
 
     override fun getContainerTargetView(): View? = null
 
+    fun getOtcAsset() {
+        UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        val list = it.result
+                        val len = list.size
+                        var i = 1
+                        var t = 0.0
+                        list.forEach {
+                            CommonBibiP.getInstance(activity as NBaseActivity)
+                                    .currencyToLegal(it.currency, it.amount!!, {
+                                        i++
+                                        if (it.success){
+                                            t+=it.result
+                                        }
+                                        if (i==len){
+                                            assetValueTv.text = t.formatForLegal()
+                                        }
+                                    }, {
+                                        i++
+                                        if (i==len){
+                                            assetValueTv.text = t.formatForLegal()
+                                        }
+                                    })
+                        }
 
+                    }
+                }, onError)
+    }
 }

@@ -24,7 +24,8 @@ data class UserAssetBean(
         val remark: String?,
         val tokenId: String?,
         val userId: String?,
-        val amount: Double?
+        val amount: Double?,
+        var total: Double = 0.0
 ) : Parcelable {
     companion object {
         /**

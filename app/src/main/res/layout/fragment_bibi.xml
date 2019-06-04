@@ -119,7 +119,7 @@
 
                         <EditText
                             android:id="@+id/et_give_bibi"
-                            style="@style/et15"
+                            style="@style/et13"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -171,7 +171,7 @@
 
                         <EditText
                             android:id="@+id/et_get_bibi"
-                            style="@style/et15"
+                            style="@style/et13"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"

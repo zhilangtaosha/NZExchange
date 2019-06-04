@@ -102,8 +102,12 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
                     showToast("当前账号可提现额为${accountBean.accAbleAmount}CNY")
                     return@setOnCommonClick
                 }
+                if (m < feeBean.feeAmtlow) {
+                    showToast("单次提现最小额为 ¥${feeBean.feeAmthigh}")
+                    return@setOnCommonClick
+                }
                 if (m > feeBean.feeAmthigh) {
-                    showToast("单日交易限额 ¥${feeBean.feeAmthigh}")
+                    showToast("单次提现最大额为 ¥${feeBean.feeAmthigh}")
                     return@setOnCommonClick
                 }
                 if (m > 0) {
