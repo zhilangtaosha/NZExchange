@@ -56,7 +56,7 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
 
             it.accmoney
         }?.run {
-            vh.nameTv.text = trueName
+            vh.nameTv.text = "${trueName?.substring(0, trueName.length - 1)}*"
             if (accmoneyWeixinurl != null && accmoneyWeixinurl.isNotEmpty())
                 vh.payLayout.addView(ViewFactory.createLeftPayMethod(R.mipmap.wechat_icon))
             if (accmoneyZfburl != null && accmoneyZfburl.isNotEmpty())

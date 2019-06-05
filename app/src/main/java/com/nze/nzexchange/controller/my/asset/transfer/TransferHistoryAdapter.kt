@@ -6,6 +6,7 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransferRecordBean
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_transfer_history.view.*
 
@@ -23,7 +24,7 @@ class TransferHistoryAdapter(mContext: Context) : NBaseAda<TransferRecordBean, T
     override fun initView(vh: ViewHolder, item: TransferRecordBean, position: Int) {
         vh.currencyTv.text = item.token
         vh.dateTv.text = TimeTool.format(TimeTool.PATTERN2, item.createTime)
-        vh.amountValueTv.text = item.amount
+        vh.amountValueTv.text = item.amount.formatForCurrency()
         when (item.from) {
             "coin" -> {
                 vh.typeValueTv.text = "币币账户到OTC账户"

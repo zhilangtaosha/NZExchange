@@ -438,7 +438,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     fun checkPrice(): Boolean {
         var s = giveEt.getContent()
-        if (s.isNullOrEmpty()) {
+        if (s.isNullOrEmpty() || s.toDouble() <= 0.0) {
             giveEt.requestFocus()
             showToast("请输入价格")
             return false

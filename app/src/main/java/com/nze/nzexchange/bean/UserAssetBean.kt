@@ -18,9 +18,9 @@ import retrofit2.http.Query
 @Parcelize
 data class UserAssetBean(
         val address: String?,
-        val available: Double,
+        var available: Double = 0.0,
         val currency: String,
-        val freeze: Double,
+        var freeze: Double = 0.0,
         val remark: String?,
         val tokenId: String?,
         val userId: String?,

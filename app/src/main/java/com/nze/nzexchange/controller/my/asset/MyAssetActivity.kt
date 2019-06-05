@@ -60,10 +60,6 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     var isRefresh = true
     val assetAdapter: MyAssetLvAdapter by lazy {
         MyAssetLvAdapter(this).apply {
-            onAssetCallBack = {
-//                fragmentList[bannerIndex].refresh(it)
-//                (bannerAdapter.getItem(bannerIndex) as AssetBannerFragment).refresh(it)
-            }
             onAssetItemClick = { position, item ->
                 CurrencyAssetDetailActivity.skip(this@MyAssetActivity, type, assetAdapter.getItem(position)!!, otcList, bibiList)
             }
@@ -84,10 +80,10 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
         zbanner.setAdapter(bannerAdapter)
         listView.adapter = assetAdapter
 //        listView.onItemClickListener = this
-
         zbanner.setOnPageChangeLister {
             assetAdapter.clearGroup(true)
             bannerIndex = it
+            (bannerAdapter.getItem(it) as AssetBannerFragment).refresh()
             if (isRefresh) {
                 when (it) {
                     0 -> {
@@ -151,6 +147,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
             list.addAll(l)
         }
         assetAdapter.group = list
+        listView.adapter = assetAdapter
     }
 
     override fun onResume() {
@@ -191,8 +188,9 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
 
     inner class AssetBannerAdapter(fm: FragmentManager?, var typeList: List<Int>) : ZBannerAdapter(fm) {
         override fun getItem(position: Int): Fragment {
-            return AssetBannerFragment.newInstance(typeList[position])
-//            return fList[position]
+//            val fragment = AssetBannerFragment.newInstance(typeList[position])
+//            return fragment
+            return fragmentList[position]
         }
 
         override fun getCount(): Int = typeList.size

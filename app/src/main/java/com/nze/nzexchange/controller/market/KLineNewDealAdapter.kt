@@ -25,12 +25,12 @@ class KLineNewDealAdapter(mContext: Context) : NBaseAda<NewDealBean, KLineNewDea
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: NewDealBean, position: Int) {
-        if (item.type==0){
+        if (item.type == 0) {
             vh.priceTv.setTxtColor(R.color.color_up)
-        }else{
+        } else {
             vh.priceTv.setTxtColor(R.color.color_down)
         }
-        vh.timeTv.text = TimeTool.format(TimeTool.PATTERN8, (item.time * 1000).toLong())
+        vh.timeTv.text = TimeTool.format(TimeTool.PATTERN8, item.time)
         vh.priceTv.text = item.price.formatForPrice()
         vh.amountTv.text = item.amount.formatForCurrency()
     }

@@ -203,18 +203,6 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
                 }
             }
             R.id.layout_available_otc -> {
-//                when (currentItem) {
-//                    0, 1 -> {
-//                        skipActivity(CapitalTransferActivity::class.java)
-//                    }
-//                    2 -> {
-//                        startActivity(Intent(activity, PublishActivity::class.java)
-//                                .putExtra(IntentConstant.PARAM_TOKENID, mCurrentAsset?.tokenId)
-//                                .putExtra(IntentConstant.PARAM_CURRENCY, mCurrentAsset?.currency))
-//                    }
-//                    else -> {
-//                    }
-//                }
             }
             R.id.iv_trade_list_market -> {
                 if (UserBean.isLogin(activity!!))
@@ -227,18 +215,6 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 
     fun changeAva(current: Int) {
         this.currentItem = current
-//        when (current) {
-//            0, 1 -> {
-//                refreshLayout()
-//            }
-//            2 -> {
-//                availableTv.text = "发布广告"
-//                frozenTv.text = "零手续费"
-//            }
-//            else -> {
-//
-//            }
-//        }
         val fragment = pages.get(current)
 
         if (fragment is IOtcView)

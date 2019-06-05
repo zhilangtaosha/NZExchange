@@ -128,7 +128,8 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
                 skipActivity(LoginActivity::class.java)
             }
             R.id.layout_legal_account_my -> {
-                LegalAssetDetailActivity.skip(activity!!, realNameAuthenticationBean)
+//                LegalAssetDetailActivity.skip(activity!!, realNameAuthenticationBean)
+               val i= 1/0
             }
             R.id.tv_recharge_my -> {
                 CheckPermission.getInstance()

@@ -8,16 +8,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import com.nze.nzeframework.tool.ActivityManager
 import com.nze.nzeframework.tool.NFileTool
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.tool.SystemTool
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.controller.main.MainActivity
-import zlc.season.rxdownload3.core.DownloadConfig.context
 import java.io.BufferedWriter
 import java.io.FileWriter
 import java.io.PrintWriter
+
 
 /**
  * @author: zwy
@@ -69,12 +68,13 @@ class CrashHandler private constructor() : Thread.UncaughtExceptionHandler {
         } finally {
             e?.printStackTrace()
 //            ActivityManager.instance.AppExit()
-            val intent = Intent(mContext, MainActivity::class.java)
+            val intent = Intent(application, MainActivity::class.java)
             val restartIntent = PendingIntent.getActivity(mContext, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK)
             val mgr = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, restartIntent)
-
             android.os.Process.killProcess(android.os.Process.myPid())
+
+
         }
     }
 

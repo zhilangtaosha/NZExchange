@@ -11,6 +11,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OrderPoolBean
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.sellNet
 import com.nze.nzexchange.bean.SubOrderInfoBean.Companion.submitNet
+import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.CurrencyTool
 import com.nze.nzexchange.config.EventCode
@@ -71,7 +72,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         }
     }
 
-
+    var userAssetBean: UserAssetBean? = null
     override fun getRootView(): Int = R.layout.activity_buy
 
     override fun initView() {
@@ -109,7 +110,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                 .add(numEt, EmptyValidation())
                 .add(moneyEt, EmptyValidation())
                 .executeValidator()
-                .setOnClickListener(this)
+                .setOnCommonClick(this)
 
         RxTextView.textChanges(numEt)
                 .subscribe {
@@ -147,6 +148,8 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
 
         tv_all_ab.setOnClickListener(this)
         btn_cancle_ab.setOnClickListener(this)
+
+        getOtcAsset()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -209,6 +212,10 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                 })
                     }
                 } else {//卖
+                    if (amount>userAssetBean?.available!!){
+                        showToast("当前可用资产为${userAssetBean?.available!!}")
+                        return
+                    }
                     fundPopup.showPopupWindow()
 
                 }
@@ -222,5 +229,30 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         }
     }
 
-
+    /**
+     * 获取发布币种的OTC资产
+     */
+    fun getOtcAsset() {
+        UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        val list = it.result
+                        val filter = list.filter {
+                            it.tokenId == orderPoolBean.tokenId
+                        }
+                        if (filter.size > 0) {
+                            userAssetBean = filter[0]
+                        }
+                    } else {
+                        if (it.isCauseNotEmpty()) {
+                            AuthorityDialog.getInstance(this)
+                                    .show("进行OTC交易需要完成以下设置，请检查"
+                                            , it.cause) {
+                                        finish()
+                                    }
+                        }
+                    }
+                }, onError)
+    }
 }

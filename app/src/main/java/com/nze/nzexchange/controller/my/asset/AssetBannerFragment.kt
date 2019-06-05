@@ -78,19 +78,18 @@ class AssetBannerFragment : NBaseFragment() {
             ACCOUT_TYPE_OTC -> {
                 rootLayout.setBackgroundResource(R.mipmap.asset_otc_bg)
                 accoutTypeTv.text = "OTC账户"
+                getOtcAsset()
             }
         }
-//        Handler().postDelayed({
-//            assetValueTv.text = "12222"
-//        },2000)
-        getOtcAsset()
+
     }
 
-    fun refresh(total: Double) {
-//      Handler().postDelayed({
-//          assetValueTv.text = total.formatForLegal()
-//      },100)
-//        assetValueTv.text = total.formatForLegal()
+    fun refresh() {
+        if (accoutType == ACCOUT_TYPE_OTC) {
+            getOtcAsset()
+        } else {
+            getBibiAsset()
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -118,26 +117,58 @@ class AssetBannerFragment : NBaseFragment() {
                     if (it.success) {
                         val list = it.result
                         val len = list.size
-                        var i = 1
+                        var i = 0
                         var t = 0.0
-                        list.forEach {
+                        list.forEach { asset ->
                             CommonBibiP.getInstance(activity as NBaseActivity)
-                                    .currencyToLegal(it.currency, it.amount!!, {
+                                    .currencyToLegal(asset.currency, asset.available + asset.freeze, {
                                         i++
-                                        if (it.success){
-                                            t+=it.result
+                                        if (it.success) {
+                                            t += it.result
+                                            NLog.i("${asset.currency}-->${asset.available + asset.freeze}--->${it.result}")
                                         }
-                                        if (i==len){
+                                        if (i == len) {
+                                            NLog.i("total>>>$t>>>>${t.formatForLegal()}")
                                             assetValueTv.text = t.formatForLegal()
                                         }
                                     }, {
                                         i++
-                                        if (i==len){
+                                        if (i == len) {
                                             assetValueTv.text = t.formatForLegal()
                                         }
                                     })
                         }
 
+                    }
+                }, onError)
+    }
+
+    fun getBibiAsset() {
+        UserAssetBean.assetInquiry(userBean?.userId!!, tokenUserId = userBean!!.tokenReqVo.tokenUserId, tokenUserKey = userBean!!.tokenReqVo.tokenUserKey)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        val list = it.result
+                        val len = list.size
+                        var i = 0
+                        var t = 0.0
+                        list.forEach { asset ->
+                            CommonBibiP.getInstance(activity as NBaseActivity)
+                                    .currencyToLegal(asset.currency, asset.available + asset.freeze, {
+                                        i++
+                                        if (it.success) {
+                                            t += it.result
+                                        }
+                                        if (i == len) {
+                                            assetValueTv.text = t.formatForLegal()
+                                        }
+                                    }, {
+                                        i++
+                                        if (i == len) {
+                                            assetValueTv.text = t.formatForLegal()
+                                        }
+                                    })
+                        }
                     }
                 }, onError)
     }

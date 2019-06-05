@@ -24,13 +24,7 @@ import kotlinx.android.synthetic.main.lv_my_asset.view.*
  */
 class MyAssetLvAdapter(mContext: Context) : NBaseAda<UserAssetBean, MyAssetLvAdapter.ViewHolder>(mContext) {
 
-    var onAssetCallBack: ((m: Double) -> Unit)? = null
     var onAssetItemClick: ((position: Int, item: UserAssetBean) -> Unit)? = null
-    var total: Double = 0.0
-    override fun notifyDataSetChanged() {
-        super.notifyDataSetChanged()
-        total = 0.0
-    }
 
     override fun setLayout(): Int = R.layout.lv_my_asset
 
@@ -46,21 +40,14 @@ class MyAssetLvAdapter(mContext: Context) : NBaseAda<UserAssetBean, MyAssetLvAda
         }
 
         CommonBibiP.getInstance(mContext as NBaseActivity)
-                .currencyToLegal(item.currency, 1.0, {
+                .currencyToLegal(item.currency, item.available + item.freeze, {
                     if (it.success) {
-                        val t = item.amount!!.mul(it.result)
-                        total += t
-                        vh.moneyValueTv.text = "${t.formatForLegal()}"
+                        vh.moneyValueTv.text = "${it.result.formatForLegal()}"
                     } else {
                         vh.moneyValueTv.text = "0"
                     }
-                    NLog.i("position>>$position  count>>>$count")
-                    if (position == count - 1)
-                        onAssetCallBack?.invoke(total)
                 }, {
                     vh.moneyValueTv.text = "0"
-                    if (position == count - 1)
-                        onAssetCallBack?.invoke(total)
                 })
     }
 

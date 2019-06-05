@@ -23,6 +23,7 @@ import io.reactivex.schedulers.Schedulers
 import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
+import com.nze.nzexchange.BuildConfig
 import com.nze.nzexchange.tools.CrashHandler
 
 
@@ -39,7 +40,8 @@ abstract class NBaseActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        CrashHandler.create().init(this)
+        if (!BuildConfig.DEBUG)
+            CrashHandler.create().init(this)
     }
 
     fun showLoad() {

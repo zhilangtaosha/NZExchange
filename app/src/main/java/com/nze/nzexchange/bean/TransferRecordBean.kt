@@ -11,7 +11,7 @@ import retrofit2.http.Query
  * @创建时间：2019/4/18
  */
 data class TransferRecordBean(
-        val amount: String,
+        val amount: Double,
         val createTime: Long,
         val from: String,
         val id: String,

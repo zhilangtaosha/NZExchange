@@ -16,13 +16,7 @@ import org.junit.Test
 class TimeToolTest {
 
     @Test
-    fun format(){
-        val p:Double = 1.881111111111111
-        val d=20.4
-        println("add>>${DoubleMath.add(p,d)}")
-        println("sub>>${DoubleMath.sub(p,d)}")
-        val m = DoubleMath.mul(p,d)
-        println("mul>>$m ${m.retain8ByFloor()}")
-        println("div>>${DoubleMath.divByFloor(p,d,2)}")
+    fun format() {
+      
     }
 }
