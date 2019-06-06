@@ -48,7 +48,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         BibiCurentOrderAdapter(this).apply {
             cancelClick = { position, item ->
                 //撤销
-                OrderPendBean.cancelOrder(item.id, item.userId, null, item.market, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                OrderPendBean.cancelOrder(item.id, item.userId, item.currencyId, null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                         .compose(netTfWithDialog())
                         .subscribe({
                             if (it.success) {

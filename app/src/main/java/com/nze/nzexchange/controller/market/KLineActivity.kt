@@ -15,6 +15,7 @@ import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.config.*
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.controller.market.presenter.KLineP
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.HRetrofit
@@ -499,12 +500,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 select(currentSelect)
             }
             R.id.btn_buy_kline -> {
+                skipActivity(MainActivity::class.java)
                 this@KLineActivity.finish()
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 2))
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 1))
                 EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, pairsBean))
             }
             R.id.btn_sale_kline -> {
+                skipActivity(MainActivity::class.java)
                 this@KLineActivity.finish()
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 2))
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 0))

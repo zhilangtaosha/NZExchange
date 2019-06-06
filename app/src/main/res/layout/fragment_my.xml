@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="48dp"
-                android:background="@color/color_FF2C3443" />
+                android:background="@color/color_line" />
 
             <TextView
                 android:id="@+id/tv_order_manage_my"
@@ -162,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="48dp"
-                android:background="@color/color_FF2C3443" />
+                android:background="@color/color_line" />
 
             <TextView
                 android:id="@+id/tv_pay_method_my"
@@ -202,7 +202,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="48dp"
-                android:background="@color/color_FF2C3443" />
+                android:background="@color/color_line" />
 
             <TextView
                 android:id="@+id/tv_authentication_my"
@@ -221,7 +221,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="48dp"
-                android:background="@color/color_FF2C3443" />
+                android:background="@color/color_line" />
 
             <TextView
                 android:id="@+id/tv_setting_my"

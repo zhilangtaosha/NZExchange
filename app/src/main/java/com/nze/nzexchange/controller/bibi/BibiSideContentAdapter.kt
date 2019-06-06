@@ -11,6 +11,7 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.bean.TransactionPairsBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.getCheckListener
@@ -51,7 +52,8 @@ class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean,
         vh.choiceCb.tag = position
         vh.choiceCb.setOnClickListener {
             val p: Int = it.tag as Int
-            onItemClick?.selftSelect(item, position)
+            if (UserBean.isLogin(mContext))
+                onItemClick?.selftSelect(item, position)
 
         }
 

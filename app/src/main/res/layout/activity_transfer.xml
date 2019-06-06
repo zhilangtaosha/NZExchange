@@ -139,6 +139,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:inputType="numberDecimal"
             android:hint="请输入划转数量" />
 
         <TextView

@@ -70,6 +70,8 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
     lateinit var setPayMethodBean: SetPayMethodBean
     var realNameAuthenticationBean: RealNameAuthenticationBean? = null
     lateinit var accountBean: LegalAccountBean
+    var lowLimit: Double = 0.0
+    var hightLimit: Double = 0.0
 
     companion object {
         fun skip(context: Context, realNameAuthenticationBean: RealNameAuthenticationBean, accountBean: LegalAccountBean) {
@@ -102,12 +104,12 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
                     showToast("当前账号可提现额为${accountBean.accAbleAmount}CNY")
                     return@setOnCommonClick
                 }
-                if (m < feeBean.feeAmtlow) {
-                    showToast("单次提现最小额为 ¥${feeBean.feeAmthigh}")
+                if (m < lowLimit) {
+                    showToast("单次提现最小额为 ¥$lowLimit")
                     return@setOnCommonClick
                 }
-                if (m > feeBean.feeAmthigh) {
-                    showToast("单次提现最大额为 ¥${feeBean.feeAmthigh}")
+                if (m > hightLimit) {
+                    showToast("单次提现最大额为 ¥$hightLimit")
                     return@setOnCommonClick
                 }
                 if (m > 0) {
@@ -151,8 +153,10 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
                     if (it.success) {
                         feeList.addAll(it.result)
                         if (feeList.size > 0) {
-                            feeBean = feeList[feeList.size - 1]
-                            limitTv.text = "单日交易限额 ¥${feeBean.feeAmthigh}"
+                            val len = feeList.size
+                            lowLimit = feeList[0].feeAmtlow
+                            hightLimit = feeList[len - 1].feeAmthigh
+                            limitTv.text = "单次交易限额 ¥$hightLimit"
                         }
                     }
                 }, onError)

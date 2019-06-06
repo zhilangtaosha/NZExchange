@@ -121,6 +121,10 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             R.id.btn_transfer_at -> {
                 if (transferBtn.validate()) {
                     val amount = transferEt.getContent()
+                    if (amount.toDouble() <= 0) {
+                        showToast("划转金额不能为0")
+                        return
+                    }
                     var from = TRANSFER_BIBI
                     var to = TRANSFER_OTC
                     if (type == AccountType.OTC) {

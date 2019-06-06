@@ -110,6 +110,7 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
     }
 
+    var loopAction: NLoopAction? = null
     override fun getDataFromNet() {
         CommonBibiP.getInstance(activity as NBaseActivity)
                 .currencyToLegal(mainCurrency!!, 1.0, {
@@ -119,36 +120,37 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
                         lvAdapter.mainCurrencyLegal = 0.0
                     }
                 }, onError)
-        NLoopAction.getInstance((activity as NBaseActivity?)!!)
-                .loop {
-                    TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
-                            .map {
-                                it.apply {
-                                    result.map {
-                                        it.optional = 1
-                                    }
-                                }
+        if (loopAction == null)
+            loopAction = NLoopAction.getInstance((activity as NBaseActivity?)!!)
+        loopAction?.loop {
+            TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
+                    .map {
+                        it.apply {
+                            result.map {
+                                it.optional = 1
                             }
-                            .compose(netTf())
-                            .subscribe({
-                                if (it.success) {
-                                    val list = it.result
-                                    if (list.size > 0) {
-                                        ptrLv.visibility = View.VISIBLE
-                                        addLayout.visibility = View.GONE
-                                        lvAdapter.group = it.result
-                                    } else {
-                                        ptrLv.visibility = View.GONE
-                                        addLayout.visibility = View.VISIBLE
-                                    }
-                                }
-                                ptrLv.onPullDownRefreshComplete()
-                            }, {
-                                lvAdapter.clearGroup(true)
-                                ptrLv.onPullDownRefreshComplete()
+                        }
+                    }
+                    .compose(netTf())
+                    .subscribe({
+                        if (it.success) {
+                            val list = it.result
+                            if (list.size > 0) {
+                                ptrLv.visibility = View.VISIBLE
+                                addLayout.visibility = View.GONE
+                                lvAdapter.group = it.result
+                            } else {
                                 ptrLv.visibility = View.GONE
                                 addLayout.visibility = View.VISIBLE
-                            })
-                }
+                            }
+                        }
+                        ptrLv.onPullDownRefreshComplete()
+                    }, {
+                        lvAdapter.clearGroup(true)
+                        ptrLv.onPullDownRefreshComplete()
+                        ptrLv.visibility = View.GONE
+                        addLayout.visibility = View.VISIBLE
+                    })
+        }
     }
 }

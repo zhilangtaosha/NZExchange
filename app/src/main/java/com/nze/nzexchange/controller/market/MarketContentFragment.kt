@@ -105,7 +105,7 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
     }
 
-
+    var loopAction: NLoopAction? = null
     /**
      * 5秒刷新一下数据
      */
@@ -118,27 +118,28 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
                         lvAdapter.mainCurrencyLegal = 0.0
                     }
                 }, onError)
-        NLoopAction.getInstance((activity as NBaseActivity?)!!)
-                .loop {
-                    TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
-                            .map {
-                                if (it.success) {
-                                    pairDao.addList(it.result)
-                                }
-                                it
-                            }
-                            .compose(netTf())
-                            .subscribe({
-                                if (it.success) {
-                                    val list = it.result
-                                    lvAdapter.group = list
-                                    ptrLv.onPullDownRefreshComplete()
-                                }
-                            }, {
-                                NLog.i("getTransactionPairs error....")
-                                ptrLv.onPullDownRefreshComplete()
-                            })
-                }
+        if (loopAction == null)
+            loopAction = NLoopAction.getInstance((activity as NBaseActivity?)!!)
+        loopAction?.loop {
+            TransactionPairsBean.getTransactionPairs(mainCurrency!!, NzeApp.instance.userBean?.userId)
+                    .map {
+                        if (it.success) {
+                            pairDao.addList(it.result)
+                        }
+                        it
+                    }
+                    .compose(netTf())
+                    .subscribe({
+                        if (it.success) {
+                            val list = it.result
+                            lvAdapter.group = list
+                            ptrLv.onPullDownRefreshComplete()
+                        }
+                    }, {
+                        NLog.i("getTransactionPairs error....")
+                        ptrLv.onPullDownRefreshComplete()
+                    })
+        }
     }
 
     override fun onFirstRequest() {

@@ -7,6 +7,7 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.VerifyBean
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.login.presenter.LoginP
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.tools.MD5Tool
@@ -21,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_find_pwd.*
 
 class FindPwdActivity : NBaseActivity(), View.OnClickListener {
 
-
+    val loginP by lazy { LoginP(this) }
     val accountEt: ClearableEditText by lazy { et_account_afp }
     val verifyEt: ClearableEditText by lazy { et_verify_afp }
     val verifyBtn: VerifyButton by lazy { tv_verify_afp }
@@ -72,15 +73,41 @@ class FindPwdActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_verify_afp -> {
-                VerifyBean.getVerifyCodeNet(accountEt.getContent(), VerifyBean.TYPE_FIND_PASSWORD)
-                        .compose(netTfWithDialog())
-                        .subscribe({
-                            if (it.success) {
-                                verifyBtn.startVerify()
-                                checkcodeId = it.result.checkcodeId
-                                showToast("验证码已经发送到${accountEt.getContent()}")
-                            }
-                        }, onError)
+                val account = accountEt.getContent()
+                if (account.length <= 0) {
+                    showToast("请输入邮箱或者手机号码")
+                    return
+                }
+                loginP.checkAccount(account, {
+                    if (!it.success) {
+                        VerifyBean.getVerifyCodeNet(accountEt.getContent(), VerifyBean.TYPE_FIND_PASSWORD)
+                                .compose(netTfWithDialog())
+                                .subscribe({
+                                    if (it.success) {
+                                        verifyBtn.startVerify()
+                                        checkcodeId = it.result.checkcodeId
+                                        showToast("验证码已经发送到${accountEt.getContent()}")
+                                    } else {
+                                        showToast(it.message)
+                                    }
+                                }, onError)
+                    } else {
+                        showToast("邮箱或者手机没有注册过")
+                    }
+                }, {
+                    VerifyBean.getVerifyCodeNet(accountEt.getContent(), VerifyBean.TYPE_FIND_PASSWORD)
+                            .compose(netTfWithDialog())
+                            .subscribe({
+                                if (it.success) {
+                                    verifyBtn.startVerify()
+                                    checkcodeId = it.result.checkcodeId
+                                    showToast("验证码已经发送到${accountEt.getContent()}")
+                                } else {
+                                    showToast(it.message)
+                                }
+                            }, onError)
+                })
+
             }
             R.id.btn_confirm_afp -> {
                 if (confirmBtn.validate()) {

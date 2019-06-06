@@ -29,7 +29,8 @@ data class OrderPendBean(
         val type: Int,
         val userId: String,
         val ftime: Double,
-        val status: Int
+        val status: Int,
+        val currencyId: String
 ) {
     companion object {
         fun orderPending(
@@ -48,14 +49,14 @@ data class OrderPendBean(
                 orderId: String,
                 userId: String,
                 currencyId: String?,
-                currencyName:String?,
+                currencyName: String?,
                 tokenUserId: String,
                 tokenUserKey: String
         ): Flowable<Result<OrderPendBean>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .cancelOrder(orderId, userId, currencyId,currencyName,tokenUserId,tokenUserKey)
+                        .cancelOrder(orderId, userId, currencyId, currencyName, tokenUserId, tokenUserKey)
             }
         }
 

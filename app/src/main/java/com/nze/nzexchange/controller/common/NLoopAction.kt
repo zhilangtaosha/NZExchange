@@ -37,7 +37,7 @@ class NLoopAction(val act: NBaseActivity) {
                 }
     }
 
-    fun disposable() {
+    fun close() {
         if (disposable != null && !disposable?.isDisposed!!) {
             disposable!!.dispose()
         }

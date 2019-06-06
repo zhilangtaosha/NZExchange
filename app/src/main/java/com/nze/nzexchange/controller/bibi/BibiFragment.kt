@@ -59,6 +59,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val limitTv: TextView by lazy { rootView.tv_limit_bibi }
     val giveReduceTv: TextView by lazy { rootView.tv_give_reduce_bibi }
     val giveAddTv: TextView by lazy { rootView.tv_give_add_bibi }
+    val getReduceTv: TextView by lazy { rootView.tv_get_reduce_bibi }
+    val getAddTv: TextView by lazy { rootView.tv_get_add_bibi }
     val giveEt: EditText by lazy {
         rootView.et_give_bibi
     }
@@ -216,6 +218,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         depthTv.setOnClickListener(this)
         transactionBtn.setShakeClickListener(this)
         klineIv.setOnClickListener(this)
+        giveReduceTv.setOnClickListener(this)
+        giveAddTv.setOnClickListener(this)
+        getReduceTv.setOnClickListener(this)
+        getAddTv.setOnClickListener(this)
 
         buyIsb.onSeekChangeListener = this
         saleIsb.onSeekChangeListener = this
@@ -307,6 +313,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             //切换交易对，切换盘口
             if (preCurrentTransactionPair == null || preCurrentTransactionPair?.id != currentTransactionPair?.id)
                 changePair()
+
         }
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
             userBean = UserBean.loadFromApp()
@@ -391,6 +398,50 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             R.id.iv_kline_bibi -> {
                 startActivity(Intent(activity, KLineActivity::class.java).putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, currentTransactionPair))
             }
+
+            R.id.tv_get_reduce_bibi -> {
+            }
+            R.id.tv_get_add_bibi -> {
+            }
+        }
+    }
+
+
+    private val onGiveActionClick = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            val give = giveEt.getContent()
+            var t = 0.0
+            var rate = 0.0
+            if (!give.isNullOrEmpty()) {
+                if (give.contains(".")) {
+                    val decimal = give.substring(give.indexOf(".") + 1, give.length)
+                    var s = "0."
+                    val len = decimal.length
+                    if (len > 1) {
+                        for (i in 0 until len - 1) {
+                            s = "${s}0"
+                        }
+                    }
+                    s = "${s}1"
+                    rate = s.toDouble()
+                } else {
+                    rate = 1.0
+                }
+            }
+            t = give.toDouble()
+            when (v?.id) {
+                R.id.tv_give_reduce_bibi -> {
+
+                }
+                R.id.tv_give_add_bibi -> {
+                }
+            }
+        }
+    }
+
+    private val onGetActionClick = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+
         }
     }
 
@@ -662,28 +713,29 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     }
 
-
+    var loopAction: NLoopAction? = null
     /**
      * 获取当前委托
      */
     private fun orderPending(currencyId: String, userId: String?) {
-        NLoopAction.getInstance((activity as NBaseActivity?)!!)
-                .loop {
-                    OrderPendBean.orderPending(currencyId, userId)
-                            .compose(netTf())
-                            .subscribe({
-                                val list = it.result
-                                if (it.success && list != null && list.size > 0) {
-                                    stopAllView()
-                                    currentOrderAdapter.group = it.result
-                                    currentOrderLv.adapter = currentOrderAdapter
-                                } else {
-                                    showNODataView("当前没有委托")
-                                }
-                            }, {
-                                showNODataView("当前没有委托")
-                            })
-                }
+        if (loopAction == null)
+            loopAction = NLoopAction.getInstance((activity as NBaseActivity?)!!)
+        loopAction?.loop {
+            OrderPendBean.orderPending(currencyId, userId)
+                    .compose(netTf())
+                    .subscribe({
+                        val list = it.result
+                        if (it.success && list != null && list.size > 0) {
+                            stopAllView()
+                            currentOrderAdapter.group = it.result
+                            currentOrderLv.adapter = currentOrderAdapter
+                        } else {
+                            showNODataView("当前没有委托")
+                        }
+                    }, {
+                        showNODataView("当前没有委托")
+                    })
+        }
 
     }
 

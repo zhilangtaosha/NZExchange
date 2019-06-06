@@ -61,24 +61,8 @@ class RankListAdapter(mContext: Context) : BaseAda<TransactionPairsBean>(mContex
                 vh.orderNumTv.background.mutate().alpha = 255
                 vh.orderNumTv.setTxtColor(R.color.color_head)
             }
-            6 -> {
+            in 6..20 -> {
                 vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
-                vh.orderNumTv.background.mutate().alpha = (255 * 0.8).toInt()
-                vh.orderNumTv.setTxtColor(R.color.color_head)
-            }
-            7 -> {
-                vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
-                vh.orderNumTv.background.mutate().alpha = (255 * 0.6).toInt()
-                vh.orderNumTv.setTxtColor(R.color.color_head)
-            }
-            8 -> {
-                vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
-                vh.orderNumTv.background.mutate().alpha = (255 * 0.5).toInt()
-                vh.orderNumTv.setTxtColor(R.color.color_head)
-            }
-            9 -> {
-                vh.orderNumTv.setBackgroundResource(R.color.color_FF202833)
-                vh.orderNumTv.background.mutate().alpha = (255 * 0.3).toInt()
                 vh.orderNumTv.setTxtColor(R.color.color_head)
             }
         }

@@ -9,12 +9,15 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.FinancialRecordBean
 import com.nze.nzexchange.bean.LegalAccountBean
 import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.LegalConfig
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.CheckPermission
+import com.nze.nzexchange.controller.my.asset.ConcreteAssetAdapter
 import com.nze.nzexchange.controller.my.asset.legal.presenter.LegalP
 import com.nze.nzexchange.extend.formatForLegal
 import kotlinx.android.synthetic.main.activity_legal_asset_detail.*
@@ -30,6 +33,7 @@ class LegalAssetDetailActivity : NBaseActivity(), View.OnClickListener {
     private var userBean = UserBean.loadFromApp()
     var realNameAuthenticationBean: RealNameAuthenticationBean? = null
     lateinit var accountBean: LegalAccountBean
+    val concreteAdapter: ConcreteAssetAdapter by lazy { ConcreteAssetAdapter(this, FinancialRecordBean.ACCOUNT_LEGAL) }
 
     companion object {
         fun skip(context: Context, realNameAuthenticationBean: RealNameAuthenticationBean?) {
@@ -47,6 +51,9 @@ class LegalAssetDetailActivity : NBaseActivity(), View.OnClickListener {
         rechargeBtn.setOnClickListener(this)
         withdrawBtn.setOnClickListener(this)
         transferBtn.setOnClickListener(this)
+        listView.adapter = concreteAdapter
+
+        getFinancialRecord()
     }
 
     override fun onClick(v: View?) {
@@ -104,5 +111,14 @@ class LegalAssetDetailActivity : NBaseActivity(), View.OnClickListener {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-
+    //获取最近财务记录
+    fun getFinancialRecord() {
+        FinancialRecordBean.getFinancialRecord(userBean!!.userId, LegalConfig.NAME, FinancialRecordBean.ACCOUNT_LEGAL)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        concreteAdapter.group = it.result
+                    }
+                }, onError)
+    }
 }

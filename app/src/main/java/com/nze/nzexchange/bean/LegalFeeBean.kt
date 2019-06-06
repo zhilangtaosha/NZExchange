@@ -8,8 +8,8 @@ package com.nze.nzexchange.bean
  */
 data class LegalFeeBean(
         val feeAmt: Any,
-        val feeAmthigh: Int,
-        val feeAmtlow: Int,
+        val feeAmthigh: Double,
+        val feeAmtlow: Double,
         val feeCurAmt: Any,
         val feeId: String,
         val feeMemo: Any,
