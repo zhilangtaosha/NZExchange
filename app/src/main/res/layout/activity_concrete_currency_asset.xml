@@ -42,14 +42,14 @@
         android:layout_below="@+id/tv_available_key_acca"
         android:layout_alignLeft="@+id/tv_available_key_acca"
         android:layout_marginTop="10dp"
-        android:text="0.1515" />
+        android:text="0" />
 
     <TextView
         android:id="@+id/tv_freeze_key_acca"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_currency_name_acca"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="135dp"
         android:layout_marginTop="12dp"
         android:text="冻结"
         android:textColor="@color/color_FF7F8592"
@@ -63,7 +63,7 @@
         android:layout_below="@+id/tv_freeze_key_acca"
         android:layout_alignLeft="@+id/tv_freeze_key_acca"
         android:layout_marginTop="10dp"
-        android:text="0.1515" />
+        android:text="0" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="2.5449865" />
+            android:text="0" />
     </LinearLayout>
 
     <View

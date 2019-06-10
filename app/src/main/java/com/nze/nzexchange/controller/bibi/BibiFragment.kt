@@ -218,10 +218,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         depthTv.setOnClickListener(this)
         transactionBtn.setShakeClickListener(this)
         klineIv.setOnClickListener(this)
-        giveReduceTv.setOnClickListener(this)
-        giveAddTv.setOnClickListener(this)
-        getReduceTv.setOnClickListener(this)
-        getAddTv.setOnClickListener(this)
+        giveReduceTv.setOnClickListener(onGiveActionClick)
+        giveAddTv.setOnClickListener(onGiveActionClick)
+        getReduceTv.setOnClickListener(onGetActionClick)
+        getAddTv.setOnClickListener(onGetActionClick)
 
         buyIsb.onSeekChangeListener = this
         saleIsb.onSeekChangeListener = this
@@ -231,6 +231,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         RxTextView.textChanges(giveEt)
                 .subscribe {
+                    isGiveChangeRate = !isGiveClick
+                    isGiveClick = false
                     val get = getEt.getContent()
                     if (it.isNotEmpty() && get.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
                         val input = it.toString().toDouble()
@@ -244,6 +246,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         RxTextView.textChanges(getEt)
                 .subscribe {
+                    isGetChangeRate = !isGetClick
+                    isGetClick = false
                     val give = giveEt.getContent()
                     if (it.isNotEmpty() && give.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
                         val input = it.toString().toDouble()
@@ -406,14 +410,16 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         }
     }
 
-
+    private var isGiveClick = false
+    private var isGiveChangeRate = false
+    private var giveRate = 0.0
     private val onGiveActionClick = object : View.OnClickListener {
         override fun onClick(v: View?) {
             val give = giveEt.getContent()
-            var t = 0.0
-            var rate = 0.0
+            var price = 0.0
             if (!give.isNullOrEmpty()) {
-                if (give.contains(".")) {
+                price = give.toDouble()
+                if (isGiveChangeRate && give.contains(".")) {
                     val decimal = give.substring(give.indexOf(".") + 1, give.length)
                     var s = "0."
                     val len = decimal.length
@@ -423,25 +429,66 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         }
                     }
                     s = "${s}1"
-                    rate = s.toDouble()
-                } else {
-                    rate = 1.0
+                    giveRate = s.toDouble()
+                } else if (isGiveChangeRate) {
+                    giveRate = 1.0
                 }
             }
-            t = give.toDouble()
             when (v?.id) {
                 R.id.tv_give_reduce_bibi -> {
-
+                    price = price.sub(giveRate)
                 }
                 R.id.tv_give_add_bibi -> {
+                    price = price.add(giveRate)
                 }
             }
+            isGiveClick = true
+            val s = price.formatForPrice()
+            giveEt.setText(s)
+            giveEt.setSelection(s.length)
         }
     }
 
+    private var isGetClick = false
+    private var isGetChangeRate = false
+    private var getRate = 0.0
     private val onGetActionClick = object : View.OnClickListener {
         override fun onClick(v: View?) {
-
+            val get = getEt.getContent()
+            NLog.i("get>>>$get")
+            var num = 0.0
+            if (!get.isNullOrEmpty()) {
+                num = get.toDouble()
+                NLog.i("条件 ${isGetChangeRate}&&${get.contains(".")}")
+                if (isGetChangeRate && get.contains(".")) {
+                    val decimal = get.substring(get.indexOf(".") + 1, get.length)
+                    var s = "0."
+                    val len = decimal.length
+                    if (len > 1) {
+                        for (i in 0 until len - 1) {
+                            s = "${s}0"
+                        }
+                    }
+                    s = "${s}1"
+                    getRate = s.toDouble()
+                } else if (isGetChangeRate) {
+                    getRate = 1.0
+                }
+            }
+            NLog.i("num>>$num getRate>>>$getRate")
+            when (v?.id) {
+                R.id.tv_get_reduce_bibi -> {
+                    num = num.sub(getRate)
+                }
+                R.id.tv_get_add_bibi -> {
+                    num = num.add(getRate)
+                }
+            }
+            NLog.i("num>>$num")
+            isGetClick = true
+            val s = num.retain4ByFloor()
+            getEt.setText(s)
+            getEt.setSelection(s.length)
         }
     }
 

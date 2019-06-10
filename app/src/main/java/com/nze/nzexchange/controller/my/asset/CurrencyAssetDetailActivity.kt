@@ -23,8 +23,10 @@ import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.controller.my.asset.recharge.RechargeCurrencyActivity
 import com.nze.nzexchange.controller.my.asset.transfer.TransferActivity
 import com.nze.nzexchange.controller.my.asset.withdraw.WithdrawCurrencyActivity
+import com.nze.nzexchange.extend.add
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForLegal
+import com.nze.nzexchange.extend.mul
 import kotlinx.android.synthetic.main.activity_concrete_currency_asset.*
 import org.greenrobot.eventbus.EventBus
 
@@ -106,7 +108,7 @@ class CurrencyAssetDetailActivity : NBaseActivity(), View.OnClickListener {
         CommonBibiP.getInstance(this)
                 .currencyToLegal(userAssetBean?.currency!!, 1.0, {
                     if (it.success) {
-                        moneyValueTv.text = it.result.formatForLegal()
+                        moneyValueTv.text = it.result.mul(userAssetBean?.available!!.add(userAssetBean?.freeze!!)).formatForLegal()
                     } else {
                         moneyValueTv.text = "0"
                     }

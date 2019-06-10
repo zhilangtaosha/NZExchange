@@ -8,10 +8,12 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.tools.CountryTool
 import kotlinx.android.synthetic.main.activity_authentication_home.*
 
 class AuthenticationHomeActivity : NBaseActivity(), View.OnClickListener {
@@ -43,7 +45,11 @@ class AuthenticationHomeActivity : NBaseActivity(), View.OnClickListener {
 
         realNameAuthenticationBean?.let {
             userNameTv.text = it.membName
-            certificateTv.text = it.membIdentitycard
+            var card = it.membIdentitycard
+            NLog.i(card)
+            card = "${card?.substring(0, 6)}****${card?.substring(6 + 4)}"
+            certificateTv.text = card
+            countryTv.text = CountryTool.getInstance(this).getCountryName(it.membCountry!!)
             when (it.mereallyStatus) {
                 990 -> {
                     primaryStatusTv.text = "已认证"

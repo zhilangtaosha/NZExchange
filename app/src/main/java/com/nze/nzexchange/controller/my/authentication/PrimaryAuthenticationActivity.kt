@@ -43,7 +43,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
             field = value
             countryTv.text = value
         }
-    var countryNumber = "+086"
+    var countryNumber = "+86"
     var userBean: UserBean? = UserBean.loadFromApp()
     var realNameAuthenticationBean: RealNameAuthenticationBean? = null
 

@@ -157,7 +157,7 @@ class AssetBannerFragment : NBaseFragment() {
                                     .currencyToLegal(asset.currency, asset.available + asset.freeze, {
                                         i++
                                         if (it.success) {
-                                            t += it.result
+                                            t += it.result.formatForLegal().toDouble()
                                         }
                                         if (i == len) {
                                             assetValueTv.text = t.formatForLegal()
