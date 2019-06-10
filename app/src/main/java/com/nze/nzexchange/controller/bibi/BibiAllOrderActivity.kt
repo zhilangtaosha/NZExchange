@@ -44,6 +44,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         }
     }
     val ptrLv: PullToRefreshListView by lazy { ptrlv_abao }
+    lateinit var listView: ListView
     val orderAdapter: BibiCurentOrderAdapter by lazy {
         BibiCurentOrderAdapter(this).apply {
             cancelClick = { position, item ->
@@ -106,7 +107,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
 
         ptrLv.isPullLoadEnabled = false
         ptrLv.setOnRefreshListener(this)
-        val listView = ptrLv.refreshableView
+        listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
 
@@ -132,7 +133,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? = null
+    override fun getContainerTargetView(): View? = listView
 
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
@@ -152,6 +153,8 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     val list = it.result
                     if (list != null && list.size > 0) {
                         orderAdapter.group = list
+                    } else {
+                        showNODataView("没有委托记录")
                     }
                     ptrLv.onPullDownRefreshComplete()
                 }, {

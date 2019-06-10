@@ -20,6 +20,8 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.presenter.CommonBibiP
+import com.nze.nzexchange.extend.add
+import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForLegal
 import kotlinx.android.synthetic.main.fragment_asset_banner.view.*
 
@@ -124,11 +126,9 @@ class AssetBannerFragment : NBaseFragment() {
                                     .currencyToLegal(asset.currency, asset.available + asset.freeze, {
                                         i++
                                         if (it.success) {
-                                            t += it.result
-                                            NLog.i("${asset.currency}-->${asset.available + asset.freeze}--->${it.result}")
+                                            t = t.add(it.result.formatForLegal().toDouble())
                                         }
                                         if (i == len) {
-                                            NLog.i("total>>>$t>>>>${t.formatForLegal()}")
                                             assetValueTv.text = t.formatForLegal()
                                         }
                                     }, {
@@ -157,7 +157,7 @@ class AssetBannerFragment : NBaseFragment() {
                                     .currencyToLegal(asset.currency, asset.available + asset.freeze, {
                                         i++
                                         if (it.success) {
-                                            t += it.result.formatForLegal().toDouble()
+                                            t = t.add(it.result.formatForLegal().toDouble())
                                         }
                                         if (i == len) {
                                             assetValueTv.text = t.formatForLegal()

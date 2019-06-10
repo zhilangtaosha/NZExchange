@@ -49,6 +49,11 @@ fun Double.formatForPrice(): String {
     return df.format(this)
 }
 
+fun Double.format(rule: String): String {
+    val df = DecimalFormat(rule)
+    return df.format(this)
+}
+
 
 /**
  * 保留2位小数

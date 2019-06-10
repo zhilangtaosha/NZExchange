@@ -413,6 +413,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     private var isGiveClick = false
     private var isGiveChangeRate = false
     private var giveRate = 0.0
+    private var giveRulue = "0.############"
     private val onGiveActionClick = object : View.OnClickListener {
         override fun onClick(v: View?) {
             val give = giveEt.getContent()
@@ -422,16 +423,19 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 if (isGiveChangeRate && give.contains(".")) {
                     val decimal = give.substring(give.indexOf(".") + 1, give.length)
                     var s = "0."
+                    giveRulue = "0.0"
                     val len = decimal.length
                     if (len > 1) {
                         for (i in 0 until len - 1) {
                             s = "${s}0"
+                            giveRulue = "${giveRulue}0"
                         }
                     }
                     s = "${s}1"
                     giveRate = s.toDouble()
                 } else if (isGiveChangeRate) {
                     giveRate = 1.0
+                    giveRulue = "0"
                 }
             }
             when (v?.id) {
@@ -442,8 +446,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     price = price.add(giveRate)
                 }
             }
+            if (price < 0.0)
+                price = 0.0
             isGiveClick = true
-            val s = price.formatForPrice()
+            val s = price.format(giveRulue)
             giveEt.setText(s)
             giveEt.setSelection(s.length)
         }
@@ -452,6 +458,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     private var isGetClick = false
     private var isGetChangeRate = false
     private var getRate = 0.0
+    private var getRulue = "0.####"
     private val onGetActionClick = object : View.OnClickListener {
         override fun onClick(v: View?) {
             val get = getEt.getContent()
@@ -463,19 +470,21 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 if (isGetChangeRate && get.contains(".")) {
                     val decimal = get.substring(get.indexOf(".") + 1, get.length)
                     var s = "0."
+                    getRulue = "0.0"
                     val len = decimal.length
                     if (len > 1) {
                         for (i in 0 until len - 1) {
                             s = "${s}0"
+                            getRulue = "${getRulue}0"
                         }
                     }
                     s = "${s}1"
                     getRate = s.toDouble()
                 } else if (isGetChangeRate) {
                     getRate = 1.0
+                    getRulue = "0"
                 }
             }
-            NLog.i("num>>$num getRate>>>$getRate")
             when (v?.id) {
                 R.id.tv_get_reduce_bibi -> {
                     num = num.sub(getRate)
@@ -484,9 +493,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     num = num.add(getRate)
                 }
             }
+            if (num < 0.0)
+                num = 0.0
             NLog.i("num>>$num")
             isGetClick = true
-            val s = num.retain4ByFloor()
+            val s = num.format(getRulue)
             getEt.setText(s)
             getEt.setSelection(s.length)
         }

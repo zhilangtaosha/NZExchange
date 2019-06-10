@@ -89,7 +89,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
 
         rootView.iv_add_ad.setOnClickListener {
             CheckPermission.getInstance()
-                    .commonCheck(activity as NBaseActivity, CheckPermission.OTC_SEND_ADVERT,"发布广告需要完成以下设置，请检查", onPass = {
+                    .commonCheck(activity as NBaseActivity, CheckPermission.OTC_SEND_ADVERT, "发布广告需要完成以下设置，请检查", onPass = {
                         startActivity(Intent(activity, PublishActivity::class.java)
                                 .putExtra(IntentConstant.PARAM_TOKENID, mMainCurrencyBean?.tokenId)
                                 .putExtra(IntentConstant.PARAM_CURRENCY, mMainCurrencyBean?.tokenSymbol))
@@ -118,7 +118,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? = null
+    override fun getContainerTargetView(): View? = ptrLv
     override fun refresh(tokenId: String?) {
         ptrLv.doPullRefreshing(true, 200)
     }
@@ -140,19 +140,28 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         FindSellBean.getFromNet(UserBean.loadFromApp()?.userId!!, page, PAGE_SIZE)
                 .compose(netTf())
                 .subscribe({
+                    stopAllView()
                     val rList = it.result
                     when (refreshType) {
                         RrefreshType.INIT -> {
-                            adAdapter.group = rList
+                            if (rList != null && rList.size > 0) {
+                                adAdapter.group = rList
+                            } else {
+                                showNODataView("没有广告")
+                            }
                         }
                         RrefreshType.PULL_DOWN -> {
-                            adAdapter.group = rList
-                            ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
-                            ptrLv.onPullDownRefreshComplete()
-                            if (adAdapter.count >= it.pageSize) {
-                                ptrLv.setHasMoreData(false)
+                            if (rList != null && rList.size > 0) {
+                                adAdapter.group = rList
+                                ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
+                                ptrLv.onPullDownRefreshComplete()
+                                if (adAdapter.count >= it.pageSize) {
+                                    ptrLv.setHasMoreData(false)
+                                } else {
+                                    ptrLv.setHasMoreData(true)
+                                }
                             } else {
-                                ptrLv.setHasMoreData(true)
+                                showNODataView("没有广告")
                             }
                         }
                         RrefreshType.PULL_UP -> {

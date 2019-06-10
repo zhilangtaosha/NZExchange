@@ -133,7 +133,7 @@ class CurrencyAssetDetailActivity : NBaseActivity(), View.OnClickListener {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? = null
+    override fun getContainerTargetView(): View? = listView
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -201,7 +201,12 @@ class CurrencyAssetDetailActivity : NBaseActivity(), View.OnClickListener {
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-                        concreteAdapter.group = it.result
+                        val list = it.result
+                        if (list != null && list.size > 0) {
+                            concreteAdapter.group = it.result
+                        } else {
+                            showNODataView("没有最近财务记录")
+                        }
                     }
                 }, onError)
     }
