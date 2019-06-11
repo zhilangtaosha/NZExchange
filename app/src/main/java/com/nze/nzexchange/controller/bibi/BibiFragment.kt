@@ -237,6 +237,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     if (it.isNotEmpty() && get.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
                         val input = it.toString().toDouble()
                         val price = get.toDouble()
+                        priceTv.text = "≈${price.mul(mainCurrencyPrice).formatForLegal()}CNY"
                         val total = DoubleMath.mul(input, price)
                         totalTransactionTv.text = "交易额 ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || get.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
@@ -563,6 +564,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (currentPopupType == POPUP_LIMIT) {
             limitTv.text = item
             transactionType = if (position == 0) {
+                totalTransactionTv.visibility = View.VISIBLE
                 giveEt.isFocusable = true
                 giveEt.isFocusableInTouchMode = true
                 giveEt.hint = "价格(${currentTransactionPair?.mainCurrency})"
@@ -582,13 +584,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 }
                 TRANSACTIONTYPE_LIMIT
             } else {
+                totalTransactionTv.visibility = View.INVISIBLE
                 giveEt.isFocusable = false
                 giveEt.setText("")
                 giveEt.hint = "以当前最优惠价格交易"
                 giveReduceTv.visibility = View.GONE
                 giveAddTv.visibility = View.GONE
 
-                totalTransactionTv.text = "交易额--${currentTransactionPair?.mainCurrency}"
+//                totalTransactionTv.text = "交易额--${currentTransactionPair?.mainCurrency}"
                 if (currentType == TYPE_BUY) {
                     getEt.hint = "交易额(${currentTransactionPair?.mainCurrency})"
                 }
@@ -690,20 +693,25 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     }
 
+    private var mainCurrencyPrice: Double = 0.0
     //获取挂单信息
     private fun getPendingOrderInfo(currencyId: String) {
         CommonBibiP.getInstance(activity as NBaseActivity)
-                .currencyToLegal(currentTransactionPair?.currency!!, 1.0, {
+                .currencyToLegal(currentTransactionPair?.mainCurrency!!, 1.0, {
                     if (it.success) {
-                        priceTv.text = "≈${it.result}CNY"
-                        lastPriceTv.text = "≈${it.result}CNY"
+                        mainCurrencyPrice = it.result
+//                        lastPriceTv.text = "≈${it.result}CNY"
                     } else {
                         priceTv.text = "≈0CNY"
-                        lastPriceTv.text = "≈0CNY"
+                    }
+                    val price = giveEt.getContent()
+                    if (!price.isNullOrEmpty()){
+                        priceTv.text = "≈${price.toDouble().mul(mainCurrencyPrice).formatForLegal()}CNY"
+                    }else{
+                        priceTv.text = "≈0CNY"
                     }
                 }, {
                     priceTv.text = "≈0CNY"
-                    lastPriceTv.text = "≈0CNY"
                 })
         RestOrderBean.getPendingOrderInfo(currencyId, userBean?.userId)
                 .compose(netTfWithDialog())

@@ -4,6 +4,7 @@ import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.http.CRetrofit
 import io.reactivex.Flowable
 
@@ -40,22 +41,26 @@ class CheckPermission {
 
 
     fun commonCheck(act: NBaseActivity, busTag: String, acion: String, onPass: (() -> Unit)? = null, onReject: (() -> Unit)? = null) {
-        busCheck(UserBean.loadFromApp()!!, busTag)
-                .compose(act.netTfWithDialog())
-                .subscribe({
-                    if (it.success) {
-                        onPass?.invoke()
-                    } else {
-                        if (it.isCauseNotEmpty())
-                            AuthorityDialog.getInstance(act)
-                                    .show(acion,
-                                            it.cause) {
-                                        onReject?.invoke()
-                                    }
-                    }
-                }, {
-                    NLog.i(it.message)
-                })
+        if (UserBean.isLogin()) {
+            busCheck(UserBean.loadFromApp()!!, busTag)
+                    .compose(act.netTfWithDialog())
+                    .subscribe({
+                        if (it.success) {
+                            onPass?.invoke()
+                        } else {
+                            if (it.isCauseNotEmpty())
+                                AuthorityDialog.getInstance(act)
+                                        .show(acion,
+                                                it.cause) {
+                                            onReject?.invoke()
+                                        }
+                        }
+                    }, {
+                        NLog.i(it.message)
+                    })
+        } else {
+            LoginActivity.skip(act)
+        }
     }
 
     fun busCheck(

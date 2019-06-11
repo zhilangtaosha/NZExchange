@@ -1,5 +1,7 @@
 package com.nze.nzexchange.controller.login
 
+import android.content.Context
+import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
@@ -28,6 +30,12 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
     val forgetTv: TextView by lazy { tv_forget_al }
 
     val appPreferences: AppPreferences by lazy { AppPreferences(this) }
+
+    companion object {
+        fun skip(context: Context) {
+            context.startActivity(Intent(context, LoginActivity::class.java))
+        }
+    }
 
     override fun getRootView(): Int = R.layout.activity_login
 

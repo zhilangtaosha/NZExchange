@@ -9,7 +9,7 @@ package com.nze.nzexchange.config
 class KLineParam {
 
     companion object {
-        const val MARKET_MYSELF = "ws://3.15.16.7:443/ws"
+        const val MARKET_MYSELF = "ws://192.168.1.107:443"
         const val MARKET_HUOBI = "ws://18.224.228.208:443/huobi"
 
 
@@ -28,6 +28,12 @@ class KLineParam {
         const val METHOD_HISTORY = "historicalData"
         const val METHOD_QUERYDATASOURCE = "queryDataSource"//获取平台数据
 
+        //张总新k线
+        const val method_query_price = "price.query"//查询价格
+        const val method_subscribe_price = "price.subscribe"//订阅价格
+        const val method_query_state = "state.query"//查询市场行情
+        const val method_subscribe_state = "state.subscribe"//订阅市场行情
+
         const val STATUS_MA = "MA"
         const val STATUS_BOLL = "BOLL"
         const val STATUS_MACD = "MACD"
@@ -40,9 +46,16 @@ class KLineParam {
     }
 }
 
+var socketId: Int = 0
+
 class KLineRequestBean(
         var method: String,
-        var params: MutableList<String>
+        var params: MutableList<String>,
+        var id: Int = ++socketId
 ) {
-
+    companion object {
+        fun create(method: String): KLineRequestBean {
+            return KLineRequestBean(method, mutableListOf<String>())
+        }
+    }
 }

@@ -49,13 +49,15 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
         vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, (item.ctime * 1000).toLong())
 
         vh.costKeyTv.text = "价格(${mainCurrency})"
-        if (item.price > 0) {
+        if (item.type == 1) {
             vh.costValueTv.text = item.price.formatForPrice()
+            vh.amountKeyTv.text = "数量(${currency})"
         } else {
             vh.costValueTv.text = "市价"
+            vh.amountKeyTv.text = "数量(${mainCurrency})"
         }
 
-        vh.amountKeyTv.text = "数量(${currency})"
+
         vh.amountValueTv.text = item.amount.formatForCurrency()
 
         vh.realAmountKeyTv.text = "实际成交(${currency})"
