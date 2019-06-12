@@ -269,7 +269,7 @@ interface UserService {
 
     //获取法币提现记录
     @FormUrlEncoded
-    @POST("amtRunBus/amtPickfund/page_amtPickfund_token_t.json")
+    @POST("amtRunBus/amtPickfund/page_amtPickfund_curToken_t.json")
     fun getLegalWithdrawHistory(
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String,

@@ -234,11 +234,16 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     isGiveChangeRate = !isGiveClick
                     isGiveClick = false
                     val get = getEt.getContent()
+                    if (it.isNotEmpty()){
+                        val price = it.toString().toDouble()
+                        priceTv.text = "≈${price.mul(mainCurrencyPrice).formatForLegal()}CNY"
+                    }else{
+                        priceTv.text = "≈0CNY"
+                    }
                     if (it.isNotEmpty() && get.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
                         val input = it.toString().toDouble()
-                        val price = get.toDouble()
-                        priceTv.text = "≈${price.mul(mainCurrencyPrice).formatForLegal()}CNY"
-                        val total = DoubleMath.mul(input, price)
+                        val num = get.toDouble()
+                        val total = DoubleMath.mul(input, num)
                         totalTransactionTv.text = "交易额 ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || get.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
                         totalTransactionTv.text = "交易额 0 ${currentTransactionPair?.mainCurrency}"
@@ -485,6 +490,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     getRate = 1.0
                     getRulue = "0"
                 }
+            }else{
+                getRate = 1.0
+                getRulue = "0"
             }
             when (v?.id) {
                 R.id.tv_get_reduce_bibi -> {
@@ -565,6 +573,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             limitTv.text = item
             transactionType = if (position == 0) {
                 totalTransactionTv.visibility = View.VISIBLE
+                priceTv.visibility = View.VISIBLE
                 giveEt.isFocusable = true
                 giveEt.isFocusableInTouchMode = true
                 giveEt.hint = "价格(${currentTransactionPair?.mainCurrency})"
@@ -585,6 +594,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 TRANSACTIONTYPE_LIMIT
             } else {
                 totalTransactionTv.visibility = View.INVISIBLE
+                priceTv.visibility = View.INVISIBLE
                 giveEt.isFocusable = false
                 giveEt.setText("")
                 giveEt.hint = "以当前最优惠价格交易"
@@ -844,7 +854,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             Log.i("zwy", "onServiceConnected")
             binder = service as KLineService.KBinder?
             isBinder = true
-            binder?.initKSocket(KLineParam.MARKET_MYSELF, {
+            binder?.initKSocket(KLineParam.MARKET_MYSELF2, {
                 binder?.getKDataRequest(currentTransactionPair!!)
             }, { lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth? ->
                 if (depth != null) {

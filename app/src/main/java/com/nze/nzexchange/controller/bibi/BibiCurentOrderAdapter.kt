@@ -54,7 +54,11 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
             vh.amountKeyTv.text = "数量(${currency})"
         } else {
             vh.costValueTv.text = "市价"
-            vh.amountKeyTv.text = "数量(${mainCurrency})"
+            if (item.side==2) {
+                vh.amountKeyTv.text = "数量(${mainCurrency})"
+            }else{
+                vh.amountKeyTv.text = "数量(${currency})"
+            }
         }
 
 

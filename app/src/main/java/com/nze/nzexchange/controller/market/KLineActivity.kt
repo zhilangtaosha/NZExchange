@@ -17,6 +17,7 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.controller.market.presenter.KLineP
+import com.nze.nzexchange.controller.market.presenter.WebSoketP
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.HRetrofit
 import com.nze.nzexchange.http.NWebSocket
@@ -49,6 +50,7 @@ import kotlin.math.cos
  * http://www.blue-zero.com/WebSocket/
  */
 class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFragmentInteractionListener {
+    val webSoketP by lazy { WebSoketP(this) }
     val kLineP: KLineP by lazy { KLineP(this) }
     val transactionNameTv: TextView by lazy { tv_transaction_name_kline }//交易对名称
     val switchLeftIv: ImageView by lazy { iv_switch_left_kline }//左切换按钮
@@ -299,6 +301,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 //        checkMarket()
         refreshLayout()
         refreshKLineConfig()
+        webSoketP.initSocket("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
+
     }
 
     fun refreshLayout() {
@@ -405,7 +409,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         marketNameTv.text = marketList[i].name
         chartData.clear()
         chartAdapter.clearData()
-        initKSocket(marketList[i].url)
+//        initKSocket(marketList[i].url)
     }
 
     /**
@@ -603,7 +607,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         val DATA_DEPTH = 7
         val DATA_DATASOURCE = 8
         override fun onMessage(webSocket: WebSocket, text: String) {
-            NLog.i("text>>>$text")
             Observable.create<Int> {
                 try {
                     var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)

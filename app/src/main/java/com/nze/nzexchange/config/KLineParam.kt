@@ -1,15 +1,20 @@
 package com.nze.nzexchange.config
 
+import com.nze.nzexchange.config.KLineParam.Companion.socketId
+
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
- * @类 说 明:
+ * @类 说 明: 关联类
+ * SoketRequestBean
+ * WebSoketP
  * @创建时间：2019/3/26
  */
 class KLineParam {
 
     companion object {
         const val MARKET_MYSELF = "ws://192.168.1.107:443"
+        const val MARKET_MYSELF2 = "ws://3.15.16.7:443"
         const val MARKET_HUOBI = "ws://18.224.228.208:443/huobi"
 
 
@@ -29,10 +34,18 @@ class KLineParam {
         const val METHOD_QUERYDATASOURCE = "queryDataSource"//获取平台数据
 
         //张总新k线
-        const val method_query_price = "price.query"//查询价格
-        const val method_subscribe_price = "price.subscribe"//订阅价格
-        const val method_query_state = "state.query"//查询市场行情
-        const val method_subscribe_state = "state.subscribe"//订阅市场行情
+        const val METHOD_QUERY_PRICE = "price.query"//查询价格
+        const val METHOD_SUBSCRIBE_PRICE = "price.subscribe"//订阅价格
+        const val METHOD_QUERY_STATE = "state.query"//查询市场行情
+        const val METHOD_SUBSCRIBE_STATE = "state.subscribe"//订阅市场行情
+        const val METHOD_QUERY_TODAY = "today.query"//查询今日行情
+        const val METHOD_SUBSCRIBE_TODAY = "today.subscribe"//订阅今日行情
+        const val METHOD_QUERY_DEALS = "deals.query"//查询最近成交列表
+        const val METHOD_SUBSCRIBE_DEALS = "deals.subscribe"//订阅最近成交列表
+        const val METHOD_QUERY_DEPTH = "depth.query"//查询深度
+        const val METHOD_SUBSCRIBE_DEPTH = "depth.subscribe"//订阅深度
+        const val METHOD_QUERY_KLINE = "kline.query"//查询K线
+        const val METHOD_SUBSCRIBE_KLINE = "kline.subscribe"//订阅K线
 
         const val STATUS_MA = "MA"
         const val STATUS_BOLL = "BOLL"
@@ -43,15 +56,32 @@ class KLineParam {
         const val STATUS_MAIN_EMPTY = "mainEmpty"
         const val STATUS_SUB_EMPTY = "subEmpty"
 
+        //订阅返回
+        const val SUBSCRIBE_KLINE = "kline.update"//k线数据
+        const val SUBSCRIBE_TODAY = "today.update"//今日行情
+        const val SUBSCRIBE_DEALS = "deals.update"//最近成交列表
+        const val SUBSCRIBE_DEPTH = "depth.update"//深度
+
+        //返回数据类型
+        const val DATA_KLINE_QUERY = 0
+        const val DATA_KLINE_SUBSCRIBE = 1
+        const val DATA_TODAY_SUBSCRIBE = 2
+        const val DATA_DEALS_SUBSCRIBE = 3
+        const val DATA_DEPTH_SUBSCRIBE = 4
+
+        const val DEPTH_4 = "0.0001"
+        const val DEPTH_8 = "0.00000001"
+
+
+        var socketId: Int = 0
+        val ID_KLINE: Int = 100001
     }
 }
 
-var socketId: Int = 0
 
 class KLineRequestBean(
         var method: String,
-        var params: MutableList<String>,
-        var id: Int = ++socketId
+        var params: MutableList<String>
 ) {
     companion object {
         fun create(method: String): KLineRequestBean {
