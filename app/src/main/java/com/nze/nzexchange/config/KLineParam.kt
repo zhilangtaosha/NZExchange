@@ -69,9 +69,28 @@ class KLineParam {
         const val DATA_DEALS_SUBSCRIBE = 3
         const val DATA_DEPTH_SUBSCRIBE = 4
 
+        //最近成交列表类型
+        const val DEALS_SELL = "sell"
+        const val DEALS_BUY = "buy"
+
+        //k线类型
+        const val KLINE_TYPE_ONE_MIN = 60
+        const val KLINE_TYPE_FIVE_MIN = 300
+        const val KLINE_TYPE_FIFTEEN_MIN = 900
+        const val KLINE_TYPE_THIRTY_MIN = 1800
+        const val KLINE_TYPE_ONE_HOUR = 3600
+        const val KLINE_TYPE_FOUR_HOUR = 14400
+        const val KLINE_TYPE_ONE_DAY = 86400
+        const val KLINE_TYPE_ONE_WEEK = 604800
+        const val KLINE_TYPE_ONE_MON = 2592000
+
         const val DEPTH_4 = "0.0001"
         const val DEPTH_8 = "0.00000001"
 
+        //查询、订阅k线数据返回数量
+        const val AMOUNT_KLINE = 100
+        //查询、订阅深度数据返回数量
+        const val AMOUNT_DEPTH = 10
 
         var socketId: Int = 0
         val ID_KLINE: Int = 100001

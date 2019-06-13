@@ -50,6 +50,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
 
     var userAssetBean: UserAssetBean? = null
     var type: Int = AccountType.BIBI
+    var toType:Int = AccountType.OTC
     var userBean = UserBean.loadFromApp()
 
     val TRANSFER_OTC = "outside"
@@ -110,8 +111,10 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             R.id.iv_swap_at -> {
                 if (type == AccountType.BIBI) {
                     type = AccountType.OTC
+                    toType = AccountType.BIBI
                 } else {
                     type = AccountType.BIBI
+                    toType = AccountType.OTC
                 }
                 swapAccount(type)
             }
@@ -227,7 +230,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-                        dialog.show(type)
+                        dialog.show(toType)
                         getAsset()
                     } else {
                         if (it.isCauseNotEmpty()) {

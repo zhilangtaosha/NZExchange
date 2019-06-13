@@ -32,12 +32,19 @@ class TransferSuccessDialog(context: Context) {
         window.setContentView(R.layout.dialog_transfer)
         contentTv = window.findViewById(R.id.tv_content_dt)
         toTv = window.findViewById(R.id.tv_to_dt)
-        if (type == AccountType.BIBI) {
-            contentTv.text = "资金已成功划转至OTC账户，马上进行OTC交易"
-            toTv.text = "OTC交易"
-        } else {
-            contentTv.text = "资金已成功划转至币币账户，马上进行币币交易"
-            toTv.text = "币币交易"
+        when (type) {
+            AccountType.OTC -> {
+                contentTv.text = "资金已成功划转至OTC账户，马上进行OTC交易"
+                toTv.text = "OTC交易"
+            }
+            AccountType.BIBI -> {
+                contentTv.text = "资金已成功划转至币币账户，马上进行币币交易"
+                toTv.text = "币币交易"
+            }
+            AccountType.LEGAL -> {
+                contentTv.text = "资金已成功划转至币币账户，马上进行法币交易"
+                toTv.text = "法币交易"
+            }
         }
 
         cancelTv = window.findViewById(R.id.tv_cancel_dt)

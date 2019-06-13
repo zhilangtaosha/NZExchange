@@ -32,3 +32,11 @@ data class SoketDepthBean(
         val asks: Array<Array<Double>>,
         val bids: Array<Array<Double>>
 )
+
+data class SoketDealBean(
+    val amount: Double,
+    val id: Int,
+    val price: Double,
+    val time: Double,
+    val type: String
+)

@@ -163,6 +163,9 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
             moreTv.setText(mMainCurrencyBean!!.tokenSymbol)
             changeAva(currentItem)
         }
+        if (eventCenter.eventCode==EventCode.CODE_LOGOUT_SUCCESS){
+            indicatorViewPager.setCurrentItem(0, false)
+        }
     }
 
 

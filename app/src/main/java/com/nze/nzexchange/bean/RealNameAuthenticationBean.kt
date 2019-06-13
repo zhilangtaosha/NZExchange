@@ -17,7 +17,7 @@ import retrofit2.http.Field
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class RealNameAuthenticationBean(
-        val membCountry: String?,
+        var membCountry: String?,
         val membId: String?,
         //身份证
         var membIdentitycard: String?,

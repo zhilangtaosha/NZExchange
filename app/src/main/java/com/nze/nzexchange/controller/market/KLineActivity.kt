@@ -106,44 +106,48 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     0 -> {
                         pattern = TimeTool.PATTERN5
                         kChart.setMainDrawLine(true)
-                        changeTimeRequest(KLineParam.TIME_ONE_MIN)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_ONE_MIN, pattern)
                     }
                     1 -> {
                         pattern = TimeTool.PATTERN5
                         kChart.setMainDrawLine(false)
-                        changeTimeRequest(KLineParam.TIME_ONE_MIN)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_ONE_MIN, pattern)
                     }
                     2 -> {
                         pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
-                        changeTimeRequest(KLineParam.TIME_FIVE_MIN)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_FIVE_MIN, pattern)
                     }
                     3 -> {
                         pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
-                        changeTimeRequest(KLineParam.TIME_FIFTEEN_MIN)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_FIFTEEN_MIN, pattern)
                     }
                     4 -> {
                         pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
                         changeTimeRequest(KLineParam.TIME_THIRTY_MIN)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_THIRTY_MIN, pattern)
                     }
                     5 -> {
                         pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
-                        changeTimeRequest(KLineParam.TIME_ONE_HOUR)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_ONE_HOUR, pattern)
                     }
                     6 -> {
+                        pattern = TimeTool.PATTERN9
+                        kChart.setMainDrawLine(false)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_FOUR_HOUR, pattern)
                     }
                     7 -> {
                         pattern = TimeTool.PATTERN10
                         kChart.setMainDrawLine(false)
-                        changeTimeRequest(KLineParam.TIME_ONE_DAY)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_ONE_DAY, pattern)
                     }
                     8 -> {
                         pattern = TimeTool.PATTERN10
                         kChart.setMainDrawLine(false)
-                        changeTimeRequest(KLineParam.TIME_ONE_WEEK)
+                        webSoketP.changeType(KLineParam.KLINE_TYPE_ONE_WEEK, pattern)
                     }
                 }
             }
@@ -293,16 +297,56 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         //测试数据
 //        test()
-        //先关闭测试币种详情接口
-        changMarket(0)
+
 
         getTokenInfo()
 
 //        checkMarket()
         refreshLayout()
         refreshKLineConfig()
-        webSoketP.initSocket("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
+        initSoket()
 
+        //先关闭测试币种详情接口
+        changMarket(0)
+    }
+
+    fun initSoket() {
+        webSoketP.initSocket(
+                "${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}",
+                {
+                    //查询k线
+                    chartAdapter.addFooterData(it)
+                    chartAdapter.notifyDataSetChanged()
+                },
+                {
+                    //订阅k线
+                    chartAdapter.addHeaderData(it)
+                    chartAdapter.notifyDataSetChanged()
+                },
+                {
+                    //订阅今日行情
+                    costTv.text = it.last.formatForPrice()
+                    hightCostTv.text = it.high.formatForPrice()
+                    lowCostTv.text = it.low.formatForPrice()
+                    volumeTv.text = it.deal.retainInt()
+                    setPriceWave(it.open, it.last)
+                },
+                { mDepthBuyList, mDepthSellList ->
+                    //订阅深度
+                    buyAdapter.group = mDepthBuyList
+                    buyLv.adapter = buyAdapter
+
+                    sellAdapter.group = mDepthSellList
+                    sellLv.adapter = sellAdapter
+
+                    depthView.setData(mDepthBuyList, mDepthSellList)
+                },
+                {
+                    //订阅最近成交列表
+                    newDealAdapter.group = it.take(20).toMutableList()
+                    newDealLv.adapter = newDealAdapter
+                })
+        webSoketP.subscribeAllData(KLineParam.KLINE_TYPE_ONE_MIN, pattern)
     }
 
     fun refreshLayout() {
@@ -313,8 +357,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         socket?.cancel()
         dataType = DATA_TYPE_INIT
         nWebSocket = NWebSocket.newInstance("$market", wsListener)
-//        nWebSocket = NWebSocket.newInstance("${NWebSocket.K_URL}/$market", wsListener)
-        // nWebSocket = NWebSocket.newInstance("ws://18.224.228.208:443/huobikline/exchange", wsListener)
         socket = nWebSocket?.open()
 
     }
@@ -325,11 +367,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private fun getKDataRequest() {
         dataType = DATA_TYPE_GET_DATA
         val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
-//        if (marketIndex % marketList.size == 0) {
         requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
-//        } else {
-//            requestBean.params.add("${pairsBean?.mainCurrency?.toUpperCase()}${pairsBean?.currency?.toUpperCase()}")
-//        }
         requestBean.params.add(KLineParam.TIME_ONE_MIN)
         requestBean.params.add(socketRequestId)
         val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
@@ -364,24 +402,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         socket?.send(param)
     }
 
-    /**
-     * K线测试数据
-     */
-    private fun getKlineData() {
-        Observable.create<List<KLineEntity>> {
-            val list = DataRequest.getALL(this@KLineActivity).subList(0, 500)
-            DataHelper.calculate(list)
-            it.onNext(list)
-            it.onComplete()
-        }.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    chartData.addAll(it)
-                    chartAdapter.addFooterData(it)
-                    chartAdapter.notifyDataSetChanged()
-                }
-
-    }
 
     /**
      * 切换市场
@@ -410,6 +430,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         chartData.clear()
         chartAdapter.clearData()
 //        initKSocket(marketList[i].url)
+
     }
 
     /**
@@ -752,8 +773,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
                             }
                             DATE_NEW_DEAL -> {//最新成交数据
-                                newDealAdapter.group = newDealList.take(20).toMutableList()
-                                newDealLv.adapter = newDealAdapter
+//                                newDealAdapter.group = newDealList.take(20).toMutableList()
+//                                newDealLv.adapter = newDealAdapter
                             }
                             DATA_DEPTH -> {
 

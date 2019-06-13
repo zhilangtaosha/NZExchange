@@ -105,6 +105,7 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
                         if (it.success) {
                             realNameAuthenticationBean?.membName = nameEt.getContent()
                             realNameAuthenticationBean?.membIdentitycard = credentialsEt.getContent()
+                            realNameAuthenticationBean?.membCountry = countryNumber.substring(1)
                             startActivity(Intent(this, RealNameAuthenticationActivity::class.java)
                                     .putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
 

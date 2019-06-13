@@ -56,9 +56,10 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
 
     var userAssetBean: UserAssetBean? = null
     var type: Int = AccountType.LEGAL
+    var toType:Int = AccountType.BIBI
     var userBean = UserBean.loadFromApp()
 
-    val TRANSFER_LEGALCURRENCY = "legalCurrency "
+    val TRANSFER_LEGALCURRENCY = "legalCurrency"
     val TRANSFER_BIBI = "coin"
 
 
@@ -111,8 +112,10 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
             R.id.iv_swap_at -> {
                 if (type == AccountType.BIBI) {
                     type = AccountType.LEGAL
+                    toType = AccountType.BIBI
                 } else {
                     type = AccountType.BIBI
+                    toType = AccountType.LEGAL
                 }
                 swapAccount(type)
             }
@@ -218,7 +221,7 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-                        dialog.show(type)
+                        dialog.show(toType)
                         getAsset()
                     } else {
                         if (it.isCauseNotEmpty()) {

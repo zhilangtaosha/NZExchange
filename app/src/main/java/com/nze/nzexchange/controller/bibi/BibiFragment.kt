@@ -19,19 +19,15 @@ import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
-import com.nze.nzexchange.bean.OrderPendBean.Companion.orderPending
-import com.nze.nzexchange.bean.RestOrderBean.Companion.getPendingOrderInfo
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
-import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.*
+import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.*
-import com.nze.nzexchange.config.HttpConfig
-import com.nze.nzexchange.controller.common.*
-import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.editjudge.EditCurrencyPriceWatcher
 import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
@@ -41,10 +37,8 @@ import com.nze.nzexchange.widget.indicatorseekbar.OnSeekChangeListener
 import com.nze.nzexchange.widget.indicatorseekbar.SeekParams
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_bibi.view.*
-import java.util.concurrent.TimeUnit
 
 class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnListPopupItemClick, OnSeekChangeListener {
 
@@ -183,7 +177,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
 
-    var binder: KLineService.KBinder? = null
+    var binder: SoketService.SoketBinder? = null
     var isBinder = false
     val mHandler: Handler = Handler()
 
@@ -234,10 +228,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     isGiveChangeRate = !isGiveClick
                     isGiveClick = false
                     val get = getEt.getContent()
-                    if (it.isNotEmpty()){
+                    if (it.isNotEmpty()) {
                         val price = it.toString().toDouble()
                         priceTv.text = "≈${price.mul(mainCurrencyPrice).formatForLegal()}CNY"
-                    }else{
+                    } else {
                         priceTv.text = "≈0CNY"
                     }
                     if (it.isNotEmpty() && get.isNotEmpty() && transactionType == TRANSACTIONTYPE_LIMIT) {
@@ -490,7 +484,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     getRate = 1.0
                     getRulue = "0"
                 }
-            }else{
+            } else {
                 getRate = 1.0
                 getRulue = "0"
             }
@@ -715,9 +709,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         priceTv.text = "≈0CNY"
                     }
                     val price = giveEt.getContent()
-                    if (!price.isNullOrEmpty()){
+                    if (!price.isNullOrEmpty()) {
                         priceTv.text = "≈${price.toDouble().mul(mainCurrencyPrice).formatForLegal()}CNY"
-                    }else{
+                    } else {
                         priceTv.text = "≈0CNY"
                     }
                 }, {
@@ -770,7 +764,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             showNODataView("当前没有登录")
                         }
                         //获取盘口
-                        getKData()
+//                        getKData()
+                        changePair()
                         //获取交易对的挂单信息
                         RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
                                 .subscribeOn(Schedulers.io())
@@ -816,7 +811,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     private fun getKData() {
-        binder?.getKDataRequest(currentTransactionPair!!)
+//        binder?.getKDataRequest(currentTransactionPair!!)
     }
 
 
@@ -827,7 +822,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun onResume() {
         super.onResume()
-        activity!!.bindService(Intent(activity, KLineService::class.java), connection, Context.BIND_AUTO_CREATE)
+        activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onDestroy() {
@@ -841,7 +836,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         handicapBuyLv.adapter = handicapBuyAdapter
         handicapSaleAdapter.clearGroup(true)
         handicapSaleLv.adapter = handicapSaleAdapter
-        binder?.changePair(currentTransactionPair!!)
+//        binder?.changePair(currentTransactionPair!!)
+        binder?.subscribeDepthAndToday(pair = "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
     }
 
     val connection = object : ServiceConnection {
@@ -852,33 +848,43 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.i("zwy", "onServiceConnected")
-            binder = service as KLineService.KBinder?
+            binder = service as SoketService.SoketBinder
             isBinder = true
-            binder?.initKSocket(KLineParam.MARKET_MYSELF2, {
-                binder?.getKDataRequest(currentTransactionPair!!)
-            }, { lineK: LineKBean?, handicap: Handicap?, latestDeal: List<NewDealBean>?, quotes: Array<String>?, depth: Depth? ->
-                if (depth != null) {
-                    val buyList = mutableListOf<HandicapBean>()
-                    val saleList = mutableListOf<HandicapBean>()
-                    depth.asks.forEachIndexed { index, strings ->
-                        saleList.add(HandicapBean(index + 1, strings[0].formatForPrice(), strings[1].toString(), ""))
-                    }
-                    depth.bids.forEachIndexed { index, strings ->
-                        buyList.add(HandicapBean(index + 1, strings[0].formatForPrice(), strings[1].toString(), ""))
-                    }
-                    handicapBuyAdapter.group = buyList.take(5).toMutableList()
-                    handicapBuyLv.adapter = handicapBuyAdapter
-                    handicapSaleAdapter.group = saleList.take(5).toMutableList().asReversed()
-                    handicapSaleLv.adapter = handicapSaleAdapter
-                }
-                if (quotes != null) {
-                    try {
-                        lastCostTv.text = quotes.get(6)
-                    } catch (e: Exception) {
-                        lastCostTv.text = quotes.get(1)
-                    }
-                }
-            })
+            binder?.initSocket(
+                    "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}",
+                    {
+                        //查询k线
+
+                    },
+                    {
+                        //订阅k线
+
+                    },
+                    {
+                        //订阅今日行情
+                        lastCostTv.text = it.last.formatForPrice()
+                    },
+                    { mDepthBuyList, mDepthSellList ->
+                        //订阅深度
+                        val buyList = mutableListOf<HandicapBean>()
+                        val saleList = mutableListOf<HandicapBean>()
+                        mDepthSellList.forEachIndexed { index, it ->
+                            saleList.add(HandicapBean(index + 1, it.price.formatForPrice(), it.volume.formatForCurrency(), ""))
+                        }
+                        mDepthBuyList.forEachIndexed { index, it ->
+                            buyList.add(HandicapBean(index + 1, it.price.formatForPrice(), it.volume.formatForCurrency(), ""))
+                        }
+                        handicapBuyAdapter.group = buyList.take(5).toMutableList()
+                        handicapBuyLv.adapter = handicapBuyAdapter
+                        handicapSaleAdapter.group = saleList.take(5).toMutableList().asReversed()
+                        handicapSaleLv.adapter = handicapSaleAdapter
+                    },
+                    {
+                        //订阅最近成交列表
+
+                    })
         }
+
+
     }
 }
