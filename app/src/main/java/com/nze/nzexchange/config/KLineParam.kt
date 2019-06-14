@@ -7,7 +7,7 @@ import com.nze.nzexchange.config.KLineParam.Companion.socketId
  * @email: zhouweiyong55@163.com
  * @类 说 明: 关联类
  * SoketRequestBean
- * WebSoketP
+ * WebSoketImpl
  * @创建时间：2019/3/26
  */
 class KLineParam {

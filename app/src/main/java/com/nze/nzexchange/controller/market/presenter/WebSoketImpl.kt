@@ -22,7 +22,7 @@ import java.math.BigDecimal
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
- * @类 说 明:
+ * @类 说 明:张总的格式
  * 测试地址
  * http://www.blue-zero.com/WebSocket/
  * 订阅今日行情
@@ -35,7 +35,8 @@ import java.math.BigDecimal
  * {"method": "kline.update", "params": [[1560214860, "8006.01234567", "8006.01234567", "8006.01234567", "8006.01234567", "0", "0", "BTCUSDT"]], "id": null}
  * @创建时间：2019/6/11
  */
-class WebSoketP(act: NBaseActivity) : BaseActivityP(act), IWebSoket {
+class WebSoketImpl : IWebSoket {
+
 
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
@@ -81,7 +82,6 @@ class WebSoketP(act: NBaseActivity) : BaseActivityP(act), IWebSoket {
 
     override fun subscribeAllData(type: Int, pattern: String) {
         queryKline(type, pattern)
-        subscribeKline()
         subscribeToday()
         subscribeDeals()
         subscribeDepth(KLineParam.AMOUNT_DEPTH, KLineParam.DEPTH_8)
@@ -90,6 +90,11 @@ class WebSoketP(act: NBaseActivity) : BaseActivityP(act), IWebSoket {
 
     override fun changeType(type: Int, pattern: String) {
         queryKline(type, pattern)
+    }
+
+    override fun subscribeDepthAndToday(amount: Int, depth: String, pair: String) {
+        subscribeDepth(amount, depth, pair)
+        subscribeToday()
     }
 
     fun queryPrice() {//查询当前价格
@@ -167,6 +172,11 @@ class WebSoketP(act: NBaseActivity) : BaseActivityP(act), IWebSoket {
         socket?.send(param)
     }
 
+    override fun close() {
+        nWebSocket?.close()
+        socket?.cancel()
+    }
+
     private val wsListener = object : WebSocketListener() {
         val gson: Gson = Gson()
         override fun onOpen(webSocket: WebSocket, response: Response) {
@@ -188,32 +198,13 @@ class WebSoketP(act: NBaseActivity) : BaseActivityP(act), IWebSoket {
         override fun onMessage(webSocket: WebSocket, text: String) {
             NLog.i("ntext>>>$text")
             Observable.create<Int> {
-                try {
                     if (text.contains("error")) {//查询或者订阅成功返回
-                        val queryBean: SoketQueryBean = gson.fromJson(text, SoketQueryBean::class.java)
-                        if (queryBean.id == KLineParam.ID_KLINE) {//查询根据id确认
-                            NLog.i("request>>>${queryBean.result}")
-                            val klist = gson.fromJson<Array<Array<String>>>(queryBean.result.toString(), Array<Array<String>>::class.java)
-                            klist.forEachIndexed { index, it ->
-                                val bean = KLineEntity()
-                                bean.Date = TimeTool.format(mPattern, BigDecimal(it[0]).toPlainString().toLong() * 1000)
-                                bean.Open = it[1].toFloat()
-                                bean.Close = it[2].toFloat()
-                                bean.High = it[3].toFloat()
-                                bean.Low = it[4].toFloat()
-                                bean.Volume = it[5].toFloat()
-                                mKList.add(bean)
-                            }
-                            it.onNext(KLineParam.DATA_KLINE_QUERY)
-
-                        }
-                    } else {//订阅
-                        val subscribeBean: SoketSubscribeBean = gson.fromJson(text, SoketSubscribeBean::class.java)
-                        when (subscribeBean.method) {
-                            KLineParam.SUBSCRIBE_KLINE -> {//k线
-                                mNewKList.clear()
-                                val klist = gson.fromJson<Array<Array<String>>>(subscribeBean.params.toString(), Array<Array<String>>::class.java)
-                                klist.forEachIndexed { index, it ->
+                        try {
+                            val queryBean: SoketQueryBean = gson.fromJson(text, SoketQueryBean::class.java)
+                            if (queryBean.id == KLineParam.ID_KLINE) {//查询根据id确认
+                                NLog.i("request>>>${queryBean.result}")
+                                val klist:Array<Array<String>>? = gson.fromJson<Array<Array<String>>>(queryBean.result.toString(), Array<Array<String>>::class.java)
+                                klist?.forEachIndexed { index, it ->
                                     val bean = KLineEntity()
                                     bean.Date = TimeTool.format(mPattern, BigDecimal(it[0]).toPlainString().toLong() * 1000)
                                     bean.Open = it[1].toFloat()
@@ -221,55 +212,92 @@ class WebSoketP(act: NBaseActivity) : BaseActivityP(act), IWebSoket {
                                     bean.High = it[3].toFloat()
                                     bean.Low = it[4].toFloat()
                                     bean.Volume = it[5].toFloat()
-                                    mNewKList.add(bean)
+                                    mKList.add(bean)
                                 }
-                                if (mKList[mKList.size - 1].date == mNewKList[0].date) {
-                                    mNewKList.removeAt(0)
-                                }
-                                mKList.addAll(mNewKList)
+                                it.onNext(KLineParam.DATA_KLINE_QUERY)
 
-                                it.onNext(KLineParam.DATA_KLINE_SUBSCRIBE)
+                            }
+                        } catch (e: Exception) {
+                            NLog.i("query出错")
+                        }
+                    } else {//订阅
+                        val subscribeBean: SoketSubscribeBean = gson.fromJson(text, SoketSubscribeBean::class.java)
+                        when (subscribeBean.method) {
+                            KLineParam.SUBSCRIBE_KLINE -> {//k线
+                                try {
+                                    mNewKList.clear()
+                                    val klist = gson.fromJson<Array<Array<String>>>(subscribeBean.params.toString(), Array<Array<String>>::class.java)
+                                    klist.forEachIndexed { index, it ->
+                                        val bean = KLineEntity()
+                                        bean.Date = TimeTool.format(mPattern, BigDecimal(it[0]).toPlainString().toLong() * 1000)
+                                        bean.Open = it[1].toFloat()
+                                        bean.Close = it[2].toFloat()
+                                        bean.High = it[3].toFloat()
+                                        bean.Low = it[4].toFloat()
+                                        bean.Volume = it[5].toFloat()
+                                        mNewKList.add(bean)
+                                    }
+                                    if (mKList[mKList.size - 1].date == mNewKList[0].date) {
+                                        mNewKList.removeAt(0)
+                                    }
+                                    mKList.addAll(mNewKList)
+
+                                    it.onNext(KLineParam.DATA_KLINE_SUBSCRIBE)
+                                } catch (e: Exception) {
+                                    NLog.i("kline.update出错")
+                                }
                             }
                             KLineParam.SUBSCRIBE_TODAY -> {//今日行情
-                                mTodayBean = gson.fromJson<SoketTodayBean>(subscribeBean.params[1].toString(), SoketTodayBean::class.java)
-                                it.onNext(KLineParam.DATA_TODAY_SUBSCRIBE)
+                                try {
+                                    mTodayBean = gson.fromJson<SoketTodayBean>(subscribeBean.params[1].toString(), SoketTodayBean::class.java)
+                                    it.onNext(KLineParam.DATA_TODAY_SUBSCRIBE)
+                                } catch (e: Exception) {
+                                    NLog.i("today.update出错")
+                                }
                             }
                             KLineParam.SUBSCRIBE_DEPTH -> {//深度
-                                mDepthBean = gson.fromJson<SoketDepthBean>(subscribeBean.params[1].toString(), SoketDepthBean::class.java)
-                                mDepthBean!!.asks.forEach {
-                                    //卖
-                                    val bean = DepthDataBean()
-                                    bean.price = it[0]
-                                    bean.volume = it[1]
-                                    mDepthSellList.add(bean)
+                                try {
+                                    mDepthBean = gson.fromJson<SoketDepthBean>(subscribeBean.params[1].toString(), SoketDepthBean::class.java)
+                                    mDepthBean!!.asks?.forEach {
+                                        //卖
+                                        val bean = DepthDataBean()
+                                        bean.price = it[0]
+                                        bean.volume = it[1]
+                                        mDepthSellList.add(bean)
+                                    }
+                                    mDepthBean!!.bids?.forEach {
+                                        //买
+                                        val bean = DepthDataBean()
+                                        bean.price = it[0]
+                                        bean.volume = it[1]
+                                        mDepthBuyList.add(bean)
+                                    }
+                                    it.onNext(KLineParam.DATA_DEPTH_SUBSCRIBE)
+                                } catch (e: Exception) {
+                                    NLog.i("depth.update出错")
                                 }
-                                mDepthBean!!.bids.forEach {
-                                    //买
-                                    val bean = DepthDataBean()
-                                    bean.price = it[0]
-                                    bean.volume = it[1]
-                                    mDepthBuyList.add(bean)
-                                }
-                                it.onNext(KLineParam.DATA_DEPTH_SUBSCRIBE)
                             }
                             KLineParam.SUBSCRIBE_DEALS -> {//最近成交列表
-                                mDealList.clear()
-                                val dealList: Array<SoketDealBean> = gson.fromJson<Array<SoketDealBean>>(subscribeBean.params[1].toString(), Array<SoketDealBean>::class.java)
-                                mDealList.addAll(dealList)
-                                it.onNext(KLineParam.DATA_DEALS_SUBSCRIBE)
+                                try {
+                                    mDealList.clear()
+                                    val dealList: Array<SoketDealBean> = gson.fromJson<Array<SoketDealBean>>(subscribeBean.params[1].toString(), Array<SoketDealBean>::class.java)
+                                    mDealList.addAll(dealList)
+                                    it.onNext(KLineParam.DATA_DEALS_SUBSCRIBE)
+                                } catch (e: Exception) {
+                                    NLog.i("deals.update出错")
+                                }
                             }
                         }
 
                     }
-                } catch (e: Exception) {
-                    it.onError(e)
-                }
+
             }.subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         when (it) {
                             KLineParam.DATA_KLINE_QUERY -> {
                                 mOnQueryKlineCallback?.invoke(mKList)
+                                subscribeKline()
                             }
                             KLineParam.DATA_KLINE_SUBSCRIBE -> {
                                 mOnSubscribeKlineCallback?.invoke(mNewKList)

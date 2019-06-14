@@ -21,6 +21,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.*
@@ -179,7 +180,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     var binder: SoketService.SoketBinder? = null
     var isBinder = false
-    val mHandler: Handler = Handler()
 
     val fundPopup: FundPasswordPopup by lazy {
         FundPasswordPopup(activity!!).apply {
@@ -353,8 +353,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.more_bibi -> {
-//                if (mainCurrencyList.size > 0)
-//                sidePopup.showPopupWindow()
                 skipActivity(BibiSideActivity::class.java)
             }
             R.id.tv_buy_bibi -> {
@@ -611,10 +609,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     saleIsb.setProgress(0f)
                 }
             }
-//            mHandler.postDelayed({
-//                tradeLayout.requestLayout()
-//                limitTv.text = item
-//            }, 100)
 
         } else {
             depthTv.text = "深度$item"
@@ -763,9 +757,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         } else {
                             showNODataView("当前没有登录")
                         }
-                        //获取盘口
-//                        getKData()
-                        changePair()
+
                         //获取交易对的挂单信息
                         RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
                                 .subscribeOn(Schedulers.io())
@@ -836,8 +828,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         handicapBuyLv.adapter = handicapBuyAdapter
         handicapSaleAdapter.clearGroup(true)
         handicapSaleLv.adapter = handicapSaleAdapter
-//        binder?.changePair(currentTransactionPair!!)
-        binder?.subscribeDepthAndToday(pair = "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
+        binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH, KLineParam.DEPTH_8, "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
     }
 
     val connection = object : ServiceConnection {
@@ -883,6 +874,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         //订阅最近成交列表
 
                     })
+
+            changePair()
         }
 
 

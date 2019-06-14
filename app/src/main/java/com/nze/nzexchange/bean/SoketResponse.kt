@@ -8,7 +8,7 @@ package com.nze.nzexchange.bean
  */
 
 data class SoketQueryBean(
-        val error: String?,
+        val error: Any?,
         val result: Any?,
         val id: Int?
 )
@@ -29,14 +29,14 @@ data class SoketTodayBean(
 )
 
 data class SoketDepthBean(
-        val asks: Array<Array<Double>>,
-        val bids: Array<Array<Double>>
+        val asks: Array<Array<Double>>?,
+        val bids: Array<Array<Double>>?
 )
 
 data class SoketDealBean(
-    val amount: Double,
-    val id: Int,
-    val price: Double,
-    val time: Double,
-    val type: String
+        val amount: Double,
+        val id: Int,
+        val price: Double,
+        val time: Double,
+        val type: String
 )

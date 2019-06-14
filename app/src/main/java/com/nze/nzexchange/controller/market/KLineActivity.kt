@@ -17,9 +17,8 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.controller.market.presenter.KLineP
-import com.nze.nzexchange.controller.market.presenter.WebSoketP
+import com.nze.nzexchange.controller.market.presenter.WebSoketImpl
 import com.nze.nzexchange.extend.*
-import com.nze.nzexchange.http.HRetrofit
 import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.LinearLayoutAsListView
@@ -39,18 +38,14 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.annotations.Nls
 import org.json.JSONObject
-import org.w3c.dom.Text
-import zlc.season.rxdownload3.core.DownloadConfig.context
 import java.util.*
-import kotlin.math.cos
 
 /**
  * http://www.blue-zero.com/WebSocket/
  */
 class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFragmentInteractionListener {
-    val webSoketP by lazy { WebSoketP(this) }
+    val webSoketP by lazy { WebSoketImpl() }
     val kLineP: KLineP by lazy { KLineP(this) }
     val transactionNameTv: TextView by lazy { tv_transaction_name_kline }//交易对名称
     val switchLeftIv: ImageView by lazy { iv_switch_left_kline }//左切换按钮
@@ -87,13 +82,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             setGridColumns(4)
         }
     }
-    var quote: Array<String>? = null
-    val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
-    val kNowList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
-    val kNewList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
-    val kOldList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
-    val depthBuyList: MutableList<DepthDataBean> by lazy { mutableListOf<DepthDataBean>() }
-    val depthSellList: MutableList<DepthDataBean> by lazy { mutableListOf<DepthDataBean>() }
+
     val chartAdapter by lazy { KLineChartAdapter() }
     var pattern: String = TimeTool.PATTERN5
     val fenshiPopup: FenshiPopup by lazy {
@@ -126,7 +115,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     4 -> {
                         pattern = TimeTool.PATTERN9
                         kChart.setMainDrawLine(false)
-                        changeTimeRequest(KLineParam.TIME_THIRTY_MIN)
                         webSoketP.changeType(KLineParam.KLINE_TYPE_THIRTY_MIN, pattern)
                     }
                     5 -> {
@@ -184,28 +172,15 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     var pairsBean: TransactionPairsBean? = null
     var userBean: UserBean? = UserBean.loadFromApp()
-    var nWebSocket: NWebSocket? = null
-    var socket: WebSocket? = null
-
 
     final val K_FENSHI = 0
     final val K_SHENDU = 1
     var kType: Int = K_FENSHI
 
-    final val DATA_TYPE_INIT = 0//k线初始化
-    final val DATA_TYPE_GET_DATA = 1//k线获取数据
-    final val DATA_TYPE_REFRESH = 2//k线加载历史数据
-    var dataType = DATA_TYPE_INIT
-    val KLINE_TYPE_NOWLINEK = "nowLineK"
-    val KLINE_TYPE_OLDLINEK = "oldLineK"
-    val KLINE_TYPE_NEWLINEK = "newLineK"
-
     private val buyAdapter: KLineBuyAdapter by lazy { KLineBuyAdapter(this) }
     private val sellAdapter: KLineSellAdapter by lazy { KLineSellAdapter(this) }
     private val newDealAdapter: KLineNewDealAdapter by lazy { KLineNewDealAdapter(this) }
-    private val buyList: MutableList<ShenDubean> by lazy { mutableListOf<ShenDubean>() }
-    private val sellList: MutableList<ShenDubean> by lazy { mutableListOf<ShenDubean>() }
-    private val newDealList: MutableList<NewDealBean> by lazy { mutableListOf<NewDealBean>() }
+
     //------------------------币种详情--------------------------------------------
     private val tokenNameTv: TextView by lazy { tv_token_name_kline }//交易币名称
     private val issueTimeTv: TextView by lazy { issue_time_value_kline }//发行时间
@@ -217,17 +192,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     private val blockQueryTv: TextView by lazy { block_query_value_kline }//区块查询地址
     private val introductionTv: TextView by lazy { introduction_value_kline }//简介
 
-    var socketRequestId: String = ""
-        get() {
-            return System.currentTimeMillis().toString()
-        }
-    val gson: Gson by lazy { Gson() }
 
-
-    private val marketList: MutableList<DataSource> = DataSource.getIntList()
-    private val marketParamList: MutableList<String> by lazy {
-        mutableListOf<String>(KLineParam.MARKET_MYSELF, KLineParam.MARKET_HUOBI)
-    }
     private var marketIndex: Int = 0
     private var isFirst = true
 
@@ -301,7 +266,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         getTokenInfo()
 
-//        checkMarket()
         refreshLayout()
         refreshKLineConfig()
         initSoket()
@@ -353,55 +317,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         selfSelectTv.isSelected = pairsBean!!.optional == 1
     }
 
-    private fun initKSocket(market: String) {
-        socket?.cancel()
-        dataType = DATA_TYPE_INIT
-        nWebSocket = NWebSocket.newInstance("$market", wsListener)
-        socket = nWebSocket?.open()
-
-    }
-
-    /**
-     * 获取K线数据
-     */
-    private fun getKDataRequest() {
-        dataType = DATA_TYPE_GET_DATA
-        val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_GET_K, mutableListOf<String>())
-        requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
-        requestBean.params.add(KLineParam.TIME_ONE_MIN)
-        requestBean.params.add(socketRequestId)
-        val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
-        NLog.i("socketRequestId>>>$socketRequestId")
-        NLog.i("getKDataRequest>>$param")
-        socket?.send(param)
-    }
-
-    /**
-     * 切换k线时间间隔
-     */
-    private fun changeTimeRequest(time: String) {
-        chartData.clear()
-        dataType = DATA_TYPE_GET_DATA
-        val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_CHANGE_TIME, mutableListOf<String>())
-        requestBean.params.add(time)
-        val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
-        NLog.i("changeTimeRequest>>$param")
-        socket?.send(param)
-    }
-
-
-    /**
-     * k线加载更多历史数据
-     */
-    private fun loadMoreRequest(oldTime: String) {
-        dataType = DATA_TYPE_REFRESH
-        val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_HISTORY, mutableListOf<String>())
-        requestBean.params.add(oldTime)
-        val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
-        NLog.i("loadMoreRequest>>$param")
-        socket?.send(param)
-    }
-
 
     /**
      * 切换市场
@@ -419,17 +334,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         buyLv.adapter = buyAdapter
         sellAdapter.clearGroup(true)
         sellLv.adapter = sellAdapter
-        newDealList.clear()
         newDealAdapter.clearGroup(true)
         newDealLv.adapter = newDealAdapter
 
         //切换市场
-        val len = marketList.size
-        val i = index % len
-        marketNameTv.text = marketList[i].name
-        chartData.clear()
         chartAdapter.clearData()
-//        initKSocket(marketList[i].url)
 
     }
 
@@ -595,227 +504,6 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     override fun getContainerTargetView(): View? = null
 
-    private val wsListener = object : WebSocketListener() {
-        val gson: Gson = Gson()
-        override fun onOpen(webSocket: WebSocket, response: Response) {
-            super.onOpen(webSocket, response)
-            NLog.i("onOpen")
-//            if (marketIndex == 0)
-            getKDataRequest()
-            if (isFirst) {
-                checkMarket()
-                isFirst = false
-            }
-        }
-
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            super.onFailure(webSocket, t, response)
-            NLog.i("onFailure")
-        }
-
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            super.onClosing(webSocket, code, reason)
-            NLog.i("onClosing")
-        }
-
-        val DATA_K = 0
-        val DATA_HANDICAP = 1
-        val DATE_NEW_DEAL = 2
-        val DATA_NOW_LINEK = 3
-        val DATA_OLD_LINEK = 4
-        val DATA_NEW_LINEK = 5
-        val DATA_QUOTES = 6
-        val DATA_DEPTH = 7
-        val DATA_DATASOURCE = 8
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            Observable.create<Int> {
-                try {
-                    var soketbean: Soketbean = gson.fromJson(text, Soketbean::class.java)
-                    val lineK = soketbean.lineK
-                    val handicap = soketbean.handicap
-                    val latestDeal = soketbean.latestDeal
-                    val quotes = soketbean.quotes
-                    val depth = soketbean.depth
-                    val source = soketbean.DataSource
-                    if (lineK != null) {
-                        var kList = mutableListOf<KLineEntity>()
-                        lineK.result?.let {
-                            it.forEachIndexed { index, it ->
-                                val bean = KLineEntity()
-//                                bean.Date = TimeTool.format(pattern, it[0].toLong() * 1000)
-                                bean.Date = "${TimeTool.format3(pattern, it[0].toLong())}"
-                                bean.Open = it[1].toFloat()
-                                bean.Close = it[2].toFloat()
-                                bean.High = it[3].toFloat()
-                                bean.Low = it[4].toFloat()
-                                bean.Volume = it[5].toFloat()
-                                if (bean.High < bean.Open || bean.High < bean.Close || bean.High < bean.Low) {
-                                    NLog.i("KLINE最高值出错>>>index=$index time=${it[0]}")
-                                }
-                                if (bean.Low > bean.Open || bean.Low > bean.Close || bean.Low > bean.High) {
-                                    NLog.i("KLINE最小值出错>>>index=$index time=${it[0]}")
-                                }
-                                if (bean.Low > 8000 || bean.Open > 8000 || bean.Close > 8000 || bean.High > 8000) {
-                                    NLog.i("KLINE出错>>>index=$index time=${it[0]}")
-                                }
-                                kList.add(bean)
-                            }
-
-//                            kList.forEach {
-//                                it.Date = TimeTool.format(pattern, it.Date.toLong() * 1000)
-//                            }
-                        }
-                        when (lineK.type) {
-                            KLINE_TYPE_NOWLINEK -> {
-                                chartData.addAll(0, kList)
-                                it.onNext(DATA_NOW_LINEK)
-                            }
-                            KLINE_TYPE_NEWLINEK -> {
-                                chartData.addAll(kList)
-                                it.onNext(DATA_NEW_LINEK)
-                            }
-                            KLINE_TYPE_OLDLINEK -> {
-                                chartData.addAll(0, kList)
-                                it.onNext(DATA_OLD_LINEK)
-                            }
-                        }
-                        DataHelper.calculate(chartData)
-                    }
-                    if (quotes != null) {//聚合行情
-                        quote = quotes
-                        it.onNext(DATA_QUOTES)
-                    }
-                    if (depth != null) {//深度图
-                        depthBuyList.clear()
-                        depthSellList.clear()
-                        depth.asks.forEach {
-                            val bean = DepthDataBean()
-                            bean.price = it[0]
-                            bean.volume = it[1]
-                            depthBuyList.add(bean)
-                        }
-                        depth.bids.forEach {
-                            val bean = DepthDataBean()
-                            bean.price = it[0]
-                            bean.volume = it[1]
-                            depthSellList.add(bean)
-                        }
-                        it.onNext(DATA_DEPTH)
-                    }
-
-                    if (handicap != null) {
-                        buyList.clear()
-                        handicap.asks?.forEach {
-                            val bean = ShenDubean(it[1], it[0])
-                            buyList.add(bean)
-                        }
-                        sellList.clear()
-                        handicap.bids?.forEach {
-                            val bean = ShenDubean(it[1], it[0])
-                            sellList.add(bean)
-                        }
-                        it.onNext(DATA_HANDICAP)
-                    }
-
-                    if (latestDeal != null) {
-                        newDealList.addAll(0, latestDeal)
-                        it.onNext(DATE_NEW_DEAL)
-                    }
-
-                    if (source != null && source.size > 1) {
-                        marketList.clear()
-                        marketList.addAll(source)
-                        it.onNext(DATA_DATASOURCE)
-                    }
-                } catch (e: Exception) {
-                    NLog.i("")
-//                    it.onError(Throwable("不存在该条交易对的K线信息"))
-                }
-            }.subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        when (it) {
-                            DATA_QUOTES -> {
-                                hightCostTv.text = quote?.get(2)
-                                lowCostTv.text = quote?.get(3)
-
-                                volumeTv.text = quote?.get(4)!!.toDouble().retainInt()
-                                try {
-                                    costTv.text = quote?.get(6)
-                                    setPriceWave(quote?.get(0)!!.toDouble(), quote?.get(6)!!.toDouble())
-                                } catch (e: Exception) {
-                                    costTv.text = quote?.get(1)
-                                    setPriceWave(quote?.get(0)!!.toDouble(), quote?.get(1)!!.toDouble())
-                                }
-                            }
-                            DATA_NOW_LINEK -> {//k线数据
-//                                chartData.addAll(kList)
-                                NLog.i("nowLineK>>>>>>>>>>")
-//                                DataHelper.calculate(chartData)
-                                chartAdapter.addFooterData(chartData)
-//                                chartAdapter.addFooterData(chartData)
-                                chartAdapter.notifyDataSetChanged()
-                            }
-                            DATA_NEW_LINEK -> {
-                                NLog.i("newLineK>>>>>>>>>")
-
-//                                DataHelper.calculate(chartData)
-                                chartAdapter.addHeaderData(chartData)
-                                chartAdapter.notifyDataSetChanged()
-                            }
-                            DATA_OLD_LINEK -> {
-
-//                                DataHelper.calculate(chartData)
-                                chartAdapter.addFooterData(chartData)
-                                chartAdapter.notifyDataSetChanged()
-                            }
-                            DATA_HANDICAP -> {//盘口数据
-
-                            }
-                            DATE_NEW_DEAL -> {//最新成交数据
-//                                newDealAdapter.group = newDealList.take(20).toMutableList()
-//                                newDealLv.adapter = newDealAdapter
-                            }
-                            DATA_DEPTH -> {
-
-                                val sellList = mutableListOf<DepthDataBean>()
-                                sellList.addAll(depthSellList)
-                                val buyList = mutableListOf<DepthDataBean>()
-                                buyList.addAll(depthBuyList)
-
-                                sellList.sortByDescending { it.price }
-                                buyAdapter.group = sellList
-                                buyLv.adapter = buyAdapter
-
-                                sellAdapter.group = buyList
-                                sellLv.adapter = sellAdapter
-
-                                depthView.setData(depthSellList, depthBuyList)
-
-                            }
-                            DATA_DATASOURCE -> {
-                                switchLeftIv.visibility = View.VISIBLE
-                                switchRightIv.visibility = View.VISIBLE
-                                backMySelf.visibility = View.VISIBLE
-                            }
-                        }
-                    }, {
-                        showToast(it.message!!)
-                    })
-
-            super.onMessage(webSocket, text)
-        }
-
-        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-            super.onMessage(webSocket, bytes)
-            NLog.i("bytes>>>$bytes")
-        }
-
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            super.onClosed(webSocket, code, reason)
-            NLog.i("onClosed")
-        }
-    }
 
     override fun onFragmentInteraction(uri: Uri) {
     }
@@ -823,18 +511,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     override fun onDestroy() {
         super.onDestroy()
-        nWebSocket?.close()
-        socket?.cancel()
+        webSoketP.close()
     }
 
-
-    fun checkMarket() {
-        val requestBean: KLineRequestBean = KLineRequestBean(KLineParam.METHOD_QUERYDATASOURCE, mutableListOf<String>())
-        requestBean.params.add("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}")
-        val param: String = gson.toJson(requestBean, KLineRequestBean::class.java)
-        NLog.i("changeTimeRequest>>$param")
-        socket?.send(param)
-    }
 
     /**
      * 设置涨跌幅

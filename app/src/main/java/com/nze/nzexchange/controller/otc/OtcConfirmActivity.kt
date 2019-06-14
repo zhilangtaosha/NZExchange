@@ -521,10 +521,13 @@ class OtcConfirmActivity : NBaseActivity() {
                             .show("OTC交易需要完成以下设置，请检查"
                                     , rs.cause) {
                             }
+                } else {
+                    showToast("放币失败")
                 }
             } catch (e: Exception) {
                 showToast("放币功能异常，请联系客服")
             }
+
         }
     }
 

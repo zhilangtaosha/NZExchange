@@ -66,11 +66,11 @@ data class TransactionPairsBean(
             }
         }
 
-        fun marketPopular(): Flowable<Result<MutableList<TransactionPairsBean>>> {
+        fun marketPopular( userId: String?=null): Flowable<Result<MutableList<TransactionPairsBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .marketPopular()
+                        .marketPopular(userId)
             }
         }
     }

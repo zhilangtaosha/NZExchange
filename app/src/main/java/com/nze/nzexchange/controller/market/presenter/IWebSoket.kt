@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.market.presenter
 
 import com.nze.nzexchange.bean.SoketDealBean
 import com.nze.nzexchange.bean.SoketTodayBean
+import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.widget.chart.KLineEntity
 import com.nze.nzexchange.widget.depth.DepthDataBean
 
@@ -31,5 +32,7 @@ interface IWebSoket {
 
     fun changeType(type: Int, pattern: String)
 
+    fun subscribeDepthAndToday(amount: Int= KLineParam.AMOUNT_DEPTH, depth: String= KLineParam.DEPTH_8, pair: String)
 
+    fun close()
 }

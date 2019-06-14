@@ -8,6 +8,7 @@ import com.nze.nzeframework.tool.EventCenter
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
+import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.webview.WebActivity
 import com.nze.nzexchange.controller.home.carousel.CarouselAdapter
@@ -44,6 +45,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
     //涨幅榜
     val mRandAdapter by lazy { RankListAdapter(activity!!) }
+    var userBean = UserBean.loadFromApp()
 
     init {
 //        imageUrls.add("http://bpic.588ku.com/back_pic/17/03/16/14391cb76638d75a22f35625dff40eee.jpg")
@@ -93,8 +95,8 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
         helpCenterLayout.setOnClickListener(this)
 
         initTopData()
-        marketPopular()
-        getRisingList()
+        marketPopular(userBean?.userId)
+        getRisingList(userBean?.userId)
     }
 
     override fun onClick(v: View?) {
@@ -139,8 +141,8 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
     /**
      * 获取热门交易对数据
      */
-    fun marketPopular() {
-        TransactionPairsBean.marketPopular()
+    fun marketPopular(userId: String?) {
+        TransactionPairsBean.marketPopular(userId)
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
@@ -154,10 +156,10 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
     /**
      * 涨幅榜
      */
-    fun getRisingList() {
+    fun getRisingList(userId: String? = null) {
         NRetrofit.instance
                 .bibiService()
-                .getRisingList()
+                .getRisingList(userId)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
@@ -168,10 +170,18 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
+            marketPopular(UserBean.loadFromApp()?.userId)
+            getRisingList(userBean?.userId)
+        }
+        if (eventCenter.eventCode == EventCode.CODE_SELF_SELECT) {
+            marketPopular(UserBean.loadFromApp()?.userId)
+            getRisingList(userBean?.userId)
+        }
     }
 
 
-    override fun isBindEventBusHere(): Boolean = false
+    override fun isBindEventBusHere(): Boolean = true
 
     override fun isBindNetworkListener(): Boolean = false
 

@@ -167,7 +167,9 @@ interface BibiService {
 
     //首页热门交易对
     @GET("market/marketPopular")
-    fun marketPopular(): Flowable<Result<MutableList<TransactionPairsBean>>>
+    fun marketPopular(
+            @Query("userId") userId: String?
+    ): Flowable<Result<MutableList<TransactionPairsBean>>>
 
     //添加用户提币地址
     @FormUrlEncoded
@@ -212,7 +214,7 @@ interface BibiService {
 
     //首页涨幅榜
     @GET("market/risingList")
-    fun getRisingList(): Flowable<Result<MutableList<TransactionPairsBean>>>
+    fun getRisingList(@Query("userId") userId: String?): Flowable<Result<MutableList<TransactionPairsBean>>>
 
     //获取充提币信息
     @FormUrlEncoded
