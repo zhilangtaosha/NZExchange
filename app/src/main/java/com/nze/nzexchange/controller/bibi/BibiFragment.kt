@@ -212,6 +212,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         depthTv.setOnClickListener(this)
         transactionBtn.setShakeClickListener(this)
         klineIv.setOnClickListener(this)
+        lastCostTv.setOnClickListener(this)
         giveReduceTv.setOnClickListener(onGiveActionClick)
         giveAddTv.setOnClickListener(onGiveActionClick)
         getReduceTv.setOnClickListener(onGetActionClick)
@@ -332,7 +333,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             userBean = UserBean.loadFromApp()
             restOrderBean = null
             switchType(currentType)
-            currentOrderAdapter.clearGroup(false)
+            showNODataView("当前没有委托")
             currentOrderLv.adapter = currentOrderAdapter
         }
     }
@@ -401,9 +402,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 startActivity(Intent(activity, KLineActivity::class.java).putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, currentTransactionPair))
             }
 
-            R.id.tv_get_reduce_bibi -> {
-            }
-            R.id.tv_get_add_bibi -> {
+            R.id.tv_last_cost_bibi -> {
+                giveEt.setText(lastCostTv.text)
+                priceTv.text = "≈${lastCostTv.text.toString().toDouble().mul(mainCurrencyPrice).formatForLegal()}CNY"
+
             }
         }
     }
@@ -824,6 +826,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     fun changePair() {
+        lastCostTv.text = "0"
+        lastPriceTv.text = "0CNY"
         handicapBuyAdapter.clearGroup(true)
         handicapBuyLv.adapter = handicapBuyAdapter
         handicapSaleAdapter.clearGroup(true)
@@ -854,6 +858,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     {
                         //订阅今日行情
                         lastCostTv.text = it.last.formatForPrice()
+                        lastPriceTv.text = "≈${it.last.mul(mainCurrencyPrice).formatForLegal()}CNY"
                     },
                     { mDepthBuyList, mDepthSellList ->
                         //订阅深度

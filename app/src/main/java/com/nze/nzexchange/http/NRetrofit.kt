@@ -11,11 +11,15 @@ import java.util.concurrent.TimeUnit
 class NRetrofit private constructor() {
     //http://zhongyingying.qicp.io:18080
     val LIU_URL = "http://192.168.1.101:18080/"
-//    val LIU_URL = "http://192.168.0.113:18080/"
+    //    val LIU_URL = "http://192.168.0.113:18080/"
     val SERVER_URL = "http://zhongyingying.qicp.io:18080/zyy-otc/"
 
 
-    var url: String = LIU_URL
+    var url: String = if (BuildConfig.DEBUG) {
+        LIU_URL
+    } else {
+        SERVER_URL
+    }
     var retrofit: Retrofit
 
     init {
@@ -23,7 +27,7 @@ class NRetrofit private constructor() {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
-                //.addInterceptor(RetryIntercepter(3))
+        //.addInterceptor(RetryIntercepter(3))
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         builder.addInterceptor(interceptor)
