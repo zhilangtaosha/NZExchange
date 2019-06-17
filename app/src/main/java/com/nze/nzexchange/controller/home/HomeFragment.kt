@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : NBaseFragment(), View.OnClickListener {
 
-
     lateinit var rootView: View
     lateinit var mCarousel: ZBanner
     lateinit var bulletinView: BulletinView

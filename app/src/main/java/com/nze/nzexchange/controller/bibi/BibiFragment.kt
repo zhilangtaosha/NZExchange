@@ -335,6 +335,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             switchType(currentType)
             showNODataView("当前没有委托")
             currentOrderLv.adapter = currentOrderAdapter
+            loopAction?.close()
+            loopAction = null
         }
     }
 
@@ -648,9 +650,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             }
         } else {
             if (restOrderBean != null && restOrderBean!!.currency != null) {
-//                val total = restOrderBean!!.currency!!.available * progress!! / 100
-//                val s = total.retain4ByFloor()
-                val s = restOrderBean!!.currency!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), 4).toString()
+                val s = restOrderBean!!.currency!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), 4).retain4ByFloor()
                 getEt.setText(s)
                 getEt.setSelection(s.length)
             }

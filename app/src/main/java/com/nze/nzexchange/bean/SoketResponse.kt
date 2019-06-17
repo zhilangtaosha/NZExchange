@@ -15,7 +15,7 @@ data class SoketQueryBean(
 
 data class SoketSubscribeBean(
         val method: String,
-        val params: Array<Any>,
+        val params: Any,
         val id: Int?
 )
 

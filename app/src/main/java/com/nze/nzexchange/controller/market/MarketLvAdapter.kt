@@ -35,18 +35,21 @@ class MarketLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, Market
         vh.transactionTv.text = item.currency
         vh.mainCurrencyTv.text = "/${item.mainCurrency}"
         vh.exchangeTv.text = item.exchangeRate.formatForCurrency()
-        if (item.gain >= 0) {
+        if (item.gain > 0) {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
             vh.changeTv.text = "+${item.gain}%"
+        } else if (item.gain == 0.0) {
+            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
+            vh.changeTv.text = "${item.gain}%"
         } else {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
             vh.changeTv.text = "${item.gain}%"
         }
         vh.total24Tv.text = "24h量 ${item.volume}"
-        if (mainCurrencyLegal != null){
+        if (mainCurrencyLegal != null) {
             vh.costTv.text = "¥${item.exchangeRate.mul(mainCurrencyLegal!!).formatForLegal()}"
-        }else{
-            vh.costTv.text= "--"
+        } else {
+            vh.costTv.text = "--"
         }
 
 

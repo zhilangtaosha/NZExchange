@@ -47,6 +47,9 @@ class HotTransactionPairAdapter(var context: Context, var datas: MutableList<Tra
             if (pairBean.gain > 0) {
                 holder.tvChange.setTxtColor(R.color.color_up)
                 holder.tvChange.text = "+${pairBean.gain}%"
+            } else if (pairBean.gain == 0.0) {
+                holder.tvChange.setTxtColor(R.color.color_up)
+                holder.tvChange.text = "${pairBean.gain}%"
             } else {
                 holder.tvChange.setTxtColor(R.color.color_down)
                 holder.tvChange.text = "-${pairBean.gain}%"
@@ -60,7 +63,7 @@ class HotTransactionPairAdapter(var context: Context, var datas: MutableList<Tra
                     .currencyToLegal(pairBean.currency, 1.0, {
                         if (it.success) {
                             holder.tvCost.text = "≈${it.result.formatForLegal()} CNY"
-                        }else{
+                        } else {
                             holder.tvCost.text = "≈0 CNY"
                         }
                     }, {

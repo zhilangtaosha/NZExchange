@@ -82,7 +82,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
             setGridColumns(4)
         }
     }
-
+    val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val chartAdapter by lazy { KLineChartAdapter() }
     var pattern: String = TimeTool.PATTERN5
     val fenshiPopup: FenshiPopup by lazy {
@@ -279,12 +279,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 "${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}",
                 {
                     //查询k线
-                    chartAdapter.addFooterData(it)
+                    chartData.addAll(it)
+                    chartAdapter.addFooterData(chartData)
                     chartAdapter.notifyDataSetChanged()
                 },
                 {
                     //订阅k线
-                    chartAdapter.addHeaderData(it)
+                    chartData.addAll(it)
+                    chartAdapter.addHeaderData(chartData)
                     chartAdapter.notifyDataSetChanged()
                 },
                 {

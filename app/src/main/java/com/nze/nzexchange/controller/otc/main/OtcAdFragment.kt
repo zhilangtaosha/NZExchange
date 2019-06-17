@@ -99,8 +99,10 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_PULISH)
+        if (eventCenter.eventCode == EventCode.CODE_PULISH) {
             ptrLv.doPullRefreshing(true, 200)
+//            getDataFromNet()
+        }
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
             ptrLv.doPullRefreshing(true, 200)
         }
@@ -134,7 +136,6 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         refreshType = RrefreshType.PULL_UP
         getDataFromNet()
     }
-
 
     override fun getDataFromNet() {
         FindSellBean.getFromNet(UserBean.loadFromApp()?.userId!!, page, PAGE_SIZE)
@@ -174,6 +175,8 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
                             }
                         }
                         else -> {
+                            ptrLv.onPullDownRefreshComplete()
+                            ptrLv.onPullUpRefreshComplete()
                         }
                     }
                 }, {

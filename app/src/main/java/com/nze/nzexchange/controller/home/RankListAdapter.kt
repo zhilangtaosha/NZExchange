@@ -71,9 +71,12 @@ class RankListAdapter(mContext: Context) : BaseAda<TransactionPairsBean>(mContex
         vh.transactionPairTv.text = bean.transactionPair
         vh.exchangeTv.text = bean.exchangeRate.formatForCurrency()
         vh.total24Tv.text = "24h量 ${bean.volume}"
-        if (bean.gain >= 0) {
+        if (bean.gain > 0) {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
             vh.changeTv.text = "+${bean.gain}%"
+        } else if (bean.gain == 0.0) {
+            vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
+            vh.changeTv.text = "${bean.gain}%"
         } else {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
             vh.changeTv.text = "${bean.gain}%"
