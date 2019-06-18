@@ -32,7 +32,7 @@ interface IWebSoket {
 
     fun changeType(type: Int, pattern: String)
 
-    fun subscribeDepthAndToday(amount: Int= KLineParam.AMOUNT_DEPTH, depth: String= KLineParam.DEPTH_8, pair: String)
+    fun subscribeDepthAndToday(amount: Int= KLineParam.AMOUNT_DEPTH_10, depth: String= KLineParam.DEPTH_8, pair: String)
 
     fun close()
 }

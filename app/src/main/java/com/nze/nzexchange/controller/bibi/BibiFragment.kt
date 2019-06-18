@@ -832,7 +832,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         handicapBuyLv.adapter = handicapBuyAdapter
         handicapSaleAdapter.clearGroup(true)
         handicapSaleLv.adapter = handicapSaleAdapter
-        binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH, KLineParam.DEPTH_8, "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
+        binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_8, "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
     }
 
     val connection = object : ServiceConnection {
@@ -872,7 +872,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         }
                         handicapBuyAdapter.group = buyList.take(5).toMutableList()
                         handicapBuyLv.adapter = handicapBuyAdapter
-                        handicapSaleAdapter.group = saleList.take(5).toMutableList().asReversed()
+                        handicapSaleAdapter.group = saleList.takeLast(5).toMutableList().asReversed()
                         handicapSaleLv.adapter = handicapSaleAdapter
                     },
                     {

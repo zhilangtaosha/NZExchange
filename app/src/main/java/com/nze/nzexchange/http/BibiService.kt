@@ -125,7 +125,7 @@ interface BibiService {
             @Field("userId") userId: String,
             @Field("token") currency: String,
             @Field("to") to: String,
-            @Field("amount") number: String,
+            @Field("amount") number: Double,
             @Field("password") password: String,
             @Field("remark") remark: String?,
             @Field("tokenUserId") tokenUserId: String,

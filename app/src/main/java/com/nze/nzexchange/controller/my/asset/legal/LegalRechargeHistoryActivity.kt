@@ -53,9 +53,7 @@ class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getContainerTargetView(): View? =ptrLv
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         page = 1
@@ -70,13 +68,19 @@ class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
     fun getHistory() {
         legalP.getRechargeHistory(userBean!!, page, PAGE_SIZE, {
             if (it.success) {
-                historyAdapter.group = it.result
+                val list = it.result
+                if (list != null && list.size > 0) {
+                    historyAdapter.group = it.result
+                } else {
+                    showNODataView("没有提现记录")
+                }
             } else {
                 showToast(it.message)
             }
             ptrLv.onPullDownRefreshComplete()
             ptrLv.onPullUpRefreshComplete()
         }, {
+            showNODataView("没有提现记录")
             ptrLv.onPullDownRefreshComplete()
             ptrLv.onPullUpRefreshComplete()
         })

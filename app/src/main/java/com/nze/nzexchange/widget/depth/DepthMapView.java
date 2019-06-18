@@ -157,7 +157,7 @@ public class DepthMapView extends View {
         mDrawHeight = h - mBottomPriceHeight;
     }
 
-    public void clearData(){
+    public void clearData() {
         mMaxVolume = 0.0;
         mBottomPrice = new Double[4];
         mBuyData.clear();
@@ -387,9 +387,14 @@ public class DepthMapView extends View {
     private String getValue(Double value) {
 //        String value = new BigDecimal(data).toPlainString();
 //        return subZeroAndDot(value);
-        DecimalFormat df =new DecimalFormat("0.############");
-        df.setRoundingMode(RoundingMode.FLOOR);
-        return df.format(value);
+        try {
+            DecimalFormat df = new DecimalFormat("0.############");
+            df.setRoundingMode(RoundingMode.FLOOR);
+            return df.format(value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "0";
+        }
 //        return String.format("%." + mPriceLimit + "f", value);
     }
 

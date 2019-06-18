@@ -299,10 +299,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 },
                 { mDepthBuyList, mDepthSellList ->
                     //订阅深度
-                    buyAdapter.group = mDepthBuyList
+                    buyAdapter.group = mDepthBuyList.take(20).toMutableList()
                     buyLv.adapter = buyAdapter
 
-                    sellAdapter.group = mDepthSellList
+                    sellAdapter.group = mDepthSellList.takeLast(20).toMutableList()
                     sellLv.adapter = sellAdapter
 
                     depthView.setData(mDepthBuyList, mDepthSellList)

@@ -17,6 +17,7 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import zlc.season.rxdownload3.helper.fileName
 import java.math.BigDecimal
 
 /**
@@ -84,7 +85,7 @@ class WebSoketImpl : IWebSoket {
         queryKline(type, pattern)
         subscribeToday()
         subscribeDeals()
-        subscribeDepth(KLineParam.AMOUNT_DEPTH, KLineParam.DEPTH_8)
+        subscribeDepth(KLineParam.AMOUNT_DEPTH_100, KLineParam.DEPTH_8)
     }
 
 
@@ -262,21 +263,70 @@ class WebSoketImpl : IWebSoket {
                         KLineParam.SUBSCRIBE_DEPTH -> {//深度
                             try {
                                 val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
+                                val isClear: Boolean = rs[0] as Boolean
+                                if (isClear) {
+                                    mDepthSellList.clear()
+                                    mDepthBuyList.clear()
+                                }
                                 mDepthBean = gson.fromJson<SoketDepthBean>(rs[1].toString(), SoketDepthBean::class.java)
                                 mDepthBean!!.asks?.forEach {
                                     //卖
                                     val bean = DepthDataBean()
                                     bean.price = it[0]
                                     bean.volume = it[1]
-                                    mDepthSellList.add(bean)
+                                    if (isClear) {
+                                        mDepthSellList.add(bean)
+                                    } else {
+                                        if (bean.volume != 0.0) {
+                                            var isAdd = true
+                                            for (sell in mDepthSellList) {
+                                                if (sell.price == bean.price) {
+                                                    sell.volume = bean.volume
+                                                    isAdd = false
+                                                    return@forEach
+                                                }
+                                            }
+                                            if (isAdd) {
+                                                mDepthSellList.add(bean)
+                                            }
+                                        } else {
+                                            val i = mDepthSellList.indexOfFirst {
+                                                it.price == bean.price
+                                            }
+                                            mDepthSellList.removeAt(i)
+                                        }
+                                    }
                                 }
                                 mDepthBean!!.bids?.forEach {
                                     //买
                                     val bean = DepthDataBean()
                                     bean.price = it[0]
                                     bean.volume = it[1]
-                                    mDepthBuyList.add(bean)
+                                    if (isClear) {
+                                        mDepthBuyList.add(bean)
+                                    } else {
+                                        if (bean.volume != 0.0) {
+                                            var isAdd = true
+                                            for (buy in mDepthBuyList) {
+                                                if (buy.price == bean.price) {
+                                                    buy.volume = bean.volume
+                                                    isAdd = false
+                                                    return@forEach
+                                                }
+                                            }
+                                            if (isAdd) {
+                                                mDepthBuyList.add(bean)
+                                            }
+                                        } else {
+                                            val i = mDepthBuyList.indexOfFirst {
+                                                it.price == bean.price
+                                            }
+                                            mDepthBuyList.removeAt(i)
+                                        }
+                                    }
                                 }
+                                mDepthSellList.sortBy { it.price }
+                                mDepthBuyList.sortByDescending { it.price }
                                 it.onNext(KLineParam.DATA_DEPTH_SUBSCRIBE)
                             } catch (e: Exception) {
                                 NLog.i("depth.update出错")

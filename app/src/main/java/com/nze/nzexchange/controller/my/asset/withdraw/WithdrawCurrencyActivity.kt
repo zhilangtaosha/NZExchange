@@ -27,6 +27,7 @@ import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.mul
 import com.nze.nzexchange.extend.sub
 import com.nze.nzexchange.http.NRetrofit
+import com.nze.nzexchange.tools.DoubleMath.Companion.sub
 import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
@@ -310,7 +311,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         }
         NRetrofit.instance
                 .bibiService()
-                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount, "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd, checkcodeId!!, verifyValueEt.getContent())
+                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount.toDouble().sub(feeRate), "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd, checkcodeId!!, verifyValueEt.getContent())
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {

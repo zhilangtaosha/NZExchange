@@ -90,7 +90,10 @@ class KLineParam {
         //查询、订阅k线数据返回数量
         const val AMOUNT_KLINE = 100
         //查询、订阅深度数据返回数量
-        const val AMOUNT_DEPTH = 10
+        const val AMOUNT_DEPTH_10 = 10
+        const val AMOUNT_DEPTH_5 = 5
+        const val AMOUNT_DEPTH_100 = 100
+
 
         var socketId: Int = 0
         val ID_KLINE: Int = 100001
