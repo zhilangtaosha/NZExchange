@@ -255,6 +255,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         //默认展示分时图
         kChart.setMainDrawLine(true)
+       
         kChart.setRefreshListener {
             kChart.refreshEnd()
         }
@@ -286,12 +287,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 {
                     //查询k线
                     chartData.addAll(it)
+                    DataHelper.calculate(chartData)
                     chartAdapter.addFooterData(chartData)
                     chartAdapter.notifyDataSetChanged()
                 },
                 {
                     //订阅k线
                     chartData.addAll(it)
+                    DataHelper.calculate(chartData)
                     chartAdapter.addHeaderData(chartData)
                     chartAdapter.notifyDataSetChanged()
                 },
@@ -357,6 +360,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         //切换市场
         chartAdapter.clearData()
+        chartData.clear()
 
         val titile = marketTitle[index % 2]
         marketNameTv.text = titile
