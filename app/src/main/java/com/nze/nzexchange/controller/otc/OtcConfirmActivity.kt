@@ -522,7 +522,7 @@ class OtcConfirmActivity : NBaseActivity() {
                                     , rs.cause) {
                             }
                 } else {
-                    showToast("放币失败")
+                    showToast(rs.message)
                 }
             } catch (e: Exception) {
                 showToast("放币功能异常，请联系客服")

@@ -15,7 +15,7 @@ class KLineParam {
     companion object {
         const val MARKET_MYSELF = "ws://192.168.1.107:443"
         const val MARKET_MYSELF2 = "ws://3.15.16.7:443"
-        const val MARKET_HUOBI = "ws://18.224.228.208:443/huobi"
+        const val MARKET_HUOBI = "ws://3.16.25.221:443"
 
 
         const val TIME_ONE_MIN = "1min"

@@ -21,6 +21,7 @@ interface IWebSoket {
 
     fun initSocket(
             pair: String,
+            marketUrl:String,
             mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
             mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
             mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),

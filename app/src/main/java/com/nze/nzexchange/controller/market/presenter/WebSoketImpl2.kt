@@ -29,6 +29,10 @@ import kotlin.text.Typography.quote
  * @创建时间：2019/6/14
  */
 class WebSoketImpl2 : IWebSoket {
+    override fun initSocket(pair: String, marketUrl: String, mOnQueryKlineCallback: (kList: MutableList<KLineEntity>) -> Unit, mOnSubscribeKlineCallback: (newKList: MutableList<KLineEntity>) -> Unit, mOnTodayCallback: (todayBean: SoketTodayBean) -> Unit, mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit, mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)? = null
     override var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)? = null
     override var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)? = null
@@ -66,9 +70,7 @@ class WebSoketImpl2 : IWebSoket {
     val KLINE_TYPE_NEWLINEK = "newLineK"
     var pairsBean: TransactionPairsBean? = null
 
-    override fun initSocket(pair: String, mOnQueryKlineCallback: (kList: MutableList<KLineEntity>) -> Unit, mOnSubscribeKlineCallback: (newKList: MutableList<KLineEntity>) -> Unit, mOnTodayCallback: (todayBean: SoketTodayBean) -> Unit, mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit, mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
 
     override fun subscribeAllData(type: Int, pattern: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -65,6 +65,7 @@ class WebSoketImpl : IWebSoket {
 
     override fun initSocket(
             pair: String,
+            marketUrl: String,
             mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
             mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
             mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
@@ -77,7 +78,9 @@ class WebSoketImpl : IWebSoket {
         this.mOnDepthCallback = mOnDepthCallback
         this.mOnDealCallback = mOnDealCallback
         this.mPair = pair
-        nWebSocket = NWebSocket.newInstance(KLineParam.MARKET_MYSELF, wsListener)
+        socket?.cancel()
+        NLog.i("请求接口：$marketUrl")
+        nWebSocket = NWebSocket.newInstance(marketUrl, wsListener)
         socket = nWebSocket?.open()
     }
 
@@ -278,15 +281,12 @@ class WebSoketImpl : IWebSoket {
                                         mDepthSellList.add(bean)
                                     } else {
                                         if (bean.volume != 0.0) {
-                                            var isAdd = true
-                                            for (sell in mDepthSellList) {
-                                                if (sell.price == bean.price) {
-                                                    sell.volume = bean.volume
-                                                    isAdd = false
-                                                    return@forEach
-                                                }
+                                            val i = mDepthSellList.indexOfFirst {
+                                                it.price == bean.price
                                             }
-                                            if (isAdd) {
+                                            if (i > 0) {
+                                                mDepthSellList[i].volume = bean.volume
+                                            } else {
                                                 mDepthSellList.add(bean)
                                             }
                                         } else {
@@ -325,8 +325,6 @@ class WebSoketImpl : IWebSoket {
                                         }
                                     }
                                 }
-                                mDepthSellList.sortBy { it.price }
-                                mDepthBuyList.sortByDescending { it.price }
                                 it.onNext(KLineParam.DATA_DEPTH_SUBSCRIBE)
                             } catch (e: Exception) {
                                 NLog.i("depth.update出错")
@@ -369,7 +367,7 @@ class WebSoketImpl : IWebSoket {
                             }
                         }
                     }, {
-                        NLog.i("出错了 。。。")
+                        NLog.i("出错了 。。。${it.message}")
                     })
 
 

@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.market
 import android.content.Context
 import android.view.View
 import android.widget.TextView
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.controller.base.NBaseAda
@@ -23,7 +24,9 @@ class KLineSellAdapter(mContext: Context) : NBaseAda<DepthDataBean, KLineSellAda
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: DepthDataBean, position: Int) {
-        vh.amountTv.text = item.volume.formatForCurrency()
+        val v = item.volume.formatForCurrency()
+//        NLog.i("sell depth>>${item.price} ${item.volume} $v")
+        vh.amountTv.text = v
         vh.priceTv.text = item.price.formatForPrice()
     }
 

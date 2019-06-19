@@ -194,8 +194,12 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
 
     private var marketIndex: Int = 0
-    private var isFirst = true
-
+    private val marketList: MutableList<String> by lazy {
+        mutableListOf<String>(KLineParam.MARKET_MYSELF, KLineParam.MARKET_HUOBI)
+    }
+    private val marketTitle: Array<String> by lazy {
+        arrayOf("AUSCOIN", "HUOBI")
+    }
 
     companion object {
         fun skip(context: Context, bean: TransactionPairsBean) {
@@ -268,15 +272,17 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         refreshLayout()
         refreshKLineConfig()
-        initSoket()
 
-        //先关闭测试币种详情接口
+        switchLeftIv.visibility = View.VISIBLE
+        switchRightIv.visibility = View.VISIBLE
+//        initSoket()
         changMarket(0)
     }
 
-    fun initSoket() {
+    fun initSoket(marketUrl: String) {
         webSoketP.initSocket(
                 "${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}",
+                marketUrl,
                 {
                     //查询k线
                     chartData.addAll(it)
@@ -299,13 +305,23 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 },
                 { mDepthBuyList, mDepthSellList ->
                     //订阅深度
+                    mDepthSellList.sortBy { it.price }
+                    mDepthBuyList.sortByDescending { it.price }
                     buyAdapter.group = mDepthBuyList.take(20).toMutableList()
                     buyLv.adapter = buyAdapter
 
-                    sellAdapter.group = mDepthSellList.takeLast(20).toMutableList()
+                    sellAdapter.group = mDepthSellList.take(20).toMutableList()
                     sellLv.adapter = sellAdapter
 
-                    depthView.setData(mDepthBuyList, mDepthSellList)
+                    val buyList = mutableListOf<DepthDataBean>()
+                    mDepthBuyList.forEach {
+                        buyList.add(DepthDataBean(it.price, it.volume))
+                    }
+                    val sellList = mutableListOf<DepthDataBean>()
+                    mDepthSellList.forEach {
+                        sellList.add(DepthDataBean(it.price, it.volume))
+                    }
+                    depthView.setData(buyList, sellList)
                 },
                 {
                     //订阅最近成交列表
@@ -342,6 +358,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         //切换市场
         chartAdapter.clearData()
 
+        val titile = marketTitle[index % 2]
+        marketNameTv.text = titile
+        initSoket(marketList[index % 2])
     }
 
     /**

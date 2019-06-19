@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class NRetrofit private constructor() {
     //http://zhongyingying.qicp.io:18080
-    val LIU_URL = "http://192.168.1.101:18080/"
+    val LIU_URL = "http://192.168.1.108:18080/"
     //    val LIU_URL = "http://192.168.0.113:18080/"
     val SERVER_URL = "http://zhongyingying.qicp.io:18080/"
 

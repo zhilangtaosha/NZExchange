@@ -847,6 +847,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             isBinder = true
             binder?.initSocket(
                     "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}",
+                    KLineParam.MARKET_MYSELF,
                     {
                         //查询k线
 
@@ -861,6 +862,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         lastPriceTv.text = "≈${it.last.mul(mainCurrencyPrice).formatForLegal()}CNY"
                     },
                     { mDepthBuyList, mDepthSellList ->
+                        mDepthSellList.sortBy { it.price }
+                        mDepthBuyList.sortByDescending { it.price }
                         //订阅深度
                         val buyList = mutableListOf<HandicapBean>()
                         val saleList = mutableListOf<HandicapBean>()
