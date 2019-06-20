@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.market
 import android.content.Context
 import android.view.View
 import android.widget.TextView
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.NewDealBean
 import com.nze.nzexchange.bean.SoketDealBean
@@ -14,6 +15,7 @@ import com.nze.nzexchange.extend.formatForPrice
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_new_deal_kline.view.*
+import java.math.BigDecimal
 
 /**
  * @author: zwy
@@ -32,7 +34,8 @@ class KLineNewDealAdapter(mContext: Context) : NBaseAda<SoketDealBean, KLineNewD
         } else {
             vh.priceTv.setTxtColor(R.color.color_down)
         }
-        vh.timeTv.text = TimeTool.format(TimeTool.PATTERN8, item.time.toLong())
+        NLog.i("time>>>${item.time}   ${BigDecimal(item.time).toPlainString().toLong() * 1000}  ${TimeTool.format(TimeTool.PATTERN8, BigDecimal(item.time).toPlainString().toLong() * 1000)}")
+        vh.timeTv.text = TimeTool.format(TimeTool.PATTERN8, BigDecimal(item.time).toPlainString().toLong() * 1000)
         vh.priceTv.text = item.price.formatForPrice()
         vh.amountTv.text = item.amount.formatForCurrency()
     }

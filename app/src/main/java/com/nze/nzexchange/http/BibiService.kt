@@ -84,7 +84,9 @@ interface BibiService {
     @GET("cc/orderPending")
     fun orderPending(
             @Query("currencyId") currencyId: String,
-            @Query("userId") userId: String?
+            @Query("userId") userId: String?,
+            @Query("pageNumber") pageNumber: Int?,
+            @Query("pageSize") pageSize: Int?
     ): Flowable<Result<MutableList<OrderPendBean>>>
 
     //取消订单
@@ -178,6 +180,7 @@ interface BibiService {
             @Field("userId") userId: String,
             @Field("address") address: String,
             @Field("tokenName") tokenName: String,
+            @Field("title") title: String,
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Any>>

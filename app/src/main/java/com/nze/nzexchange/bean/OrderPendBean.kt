@@ -35,12 +35,14 @@ data class OrderPendBean(
     companion object {
         fun orderPending(
                 currencyId: String,
-                userId: String?
+                userId: String?,
+                pageNumber: Int = 1,
+                pageSize: Int = 2000
         ): Flowable<Result<MutableList<OrderPendBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .bibiService()
-                        .orderPending(currencyId, userId)
+                        .orderPending(currencyId, userId, pageNumber, pageSize)
             }
         }
 

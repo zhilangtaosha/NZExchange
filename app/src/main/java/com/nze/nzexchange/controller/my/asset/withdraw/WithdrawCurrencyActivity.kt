@@ -14,10 +14,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.CurrencyWithdrawInfoBean
-import com.nze.nzexchange.bean.UserAssetBean
-import com.nze.nzexchange.bean.UserBean
-import com.nze.nzexchange.bean.VerifyBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.FundPasswordPopup
@@ -37,6 +34,7 @@ import com.uuzuche.lib_zxing.activity.CaptureActivity
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_coin_withdraw.*
 import pub.devrel.easypermissions.EasyPermissions
+import zlc.season.rxdownload3.core.DownloadConfig.context
 
 /**
  * 数字货币提现
@@ -65,6 +63,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
 
     val REQUEST_CODE_QCODE = 1
     val REQUEST_CODE_CURRENCY = 2
+    val REQUEST_CODE_ADDRESS = 3
 
     /**
      * 请求CAMERA权限码
@@ -165,7 +164,9 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 cameraTask()
             }
             R.id.iv_address_acw -> {
-                SelectCurrencyAddressListActivity.skip(this, userAssetBean!!.currency)
+//                SelectCurrencyAddressListActivity.skip(this, userAssetBean!!.currency)
+                startActivityForResult(Intent(this, SelectCurrencyAddressListActivity::class.java)
+                        .putExtra(IntentConstant.PARAM_CURRENCY, userAssetBean!!.currency), REQUEST_CODE_ADDRESS)
             }
             R.id.tv_all_acw -> {
                 amountEt.setText(userAssetBean?.available?.formatForCurrency())
@@ -210,6 +211,10 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             REQUEST_CODE_CURRENCY -> {
                 userAssetBean = bundle?.getParcelable(IntentConstant.PARAM_ASSET)
                 refreshLayout()
+            }
+            REQUEST_CODE_ADDRESS -> {
+                val addressBean = bundle?.getParcelable<CurrenyWithdrawAddressBean>(IntentConstant.PARAM_ADDRESS)
+                addressEt.setText(addressBean?.address)
             }
         }
     }

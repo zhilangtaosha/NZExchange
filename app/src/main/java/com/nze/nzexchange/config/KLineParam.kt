@@ -84,7 +84,13 @@ class KLineParam {
         const val KLINE_TYPE_ONE_WEEK = 604800
         const val KLINE_TYPE_ONE_MON = 2592000
 
+        const val DEPTH_1 = "0.1"
+        const val DEPTH_2 = "0.01"
+        const val DEPTH_3 = "0.001"
         const val DEPTH_4 = "0.0001"
+        const val DEPTH_5 = "0.00001"
+        const val DEPTH_6 = "0.000001"
+        const val DEPTH_7 = "0.0000001"
         const val DEPTH_8 = "0.00000001"
 
         //查询、订阅k线数据返回数量

@@ -1,5 +1,6 @@
 package com.nze.nzexchange.controller.my.asset.withdraw
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -40,12 +41,12 @@ class SelectCurrencyAddressListActivity : NBaseActivity() {
     val addressList: MutableList<CurrenyWithdrawAddressBean> by lazy { mutableListOf<CurrenyWithdrawAddressBean>() }
     lateinit var currency: String
 
-    companion object {
-        fun skip(context: Context, currency: String) {
-            context.startActivity(Intent(context, SelectCurrencyAddressListActivity::class.java)
-                    .putExtra(IntentConstant.PARAM_CURRENCY, currency))
-        }
-    }
+//    companion object {
+//        fun skip(context: Context, currency: String) {
+//            context.startActivity(Intent(context, SelectCurrencyAddressListActivity::class.java)
+//                    .putExtra(IntentConstant.PARAM_CURRENCY, currency))
+//        }
+//    }
 
     override fun getRootView(): Int = R.layout.activity_selet_address_list
 
@@ -71,7 +72,10 @@ class SelectCurrencyAddressListActivity : NBaseActivity() {
         }
 
         selectLv.setOnItemClickListener { parent, view, position, id ->
-            
+            val intent = Intent()
+            intent.putExtra(IntentConstant.PARAM_ADDRESS, addressList[position])
+            this.setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 

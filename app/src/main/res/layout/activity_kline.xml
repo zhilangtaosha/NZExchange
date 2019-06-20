@@ -457,7 +457,7 @@
                     android:paddingTop="10dp">
 
                     <TextView
-                        style="@style/tx15_head"
+                        style="@style/tx14_head"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -465,14 +465,14 @@
                         android:text="时间" />
 
                     <TextView
-                        style="@style/tx15_head"
+                        style="@style/tx14_head"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="价格" />
 
                     <TextView
-                        style="@style/tx15_head"
+                        style="@style/tx14_head"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"

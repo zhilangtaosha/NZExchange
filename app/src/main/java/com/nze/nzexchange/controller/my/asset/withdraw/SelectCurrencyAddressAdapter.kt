@@ -27,7 +27,7 @@ class SelectCurrencyAddressAdapter(mContext: Context) : NBaseAda<CurrenyWithdraw
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: CurrenyWithdrawAddressBean, position: Int) {
-        vh.descTv.text = item.market
+        vh.descTv.text = item.title
         vh.currencyTv.text = item.tokenName
         vh.addressTv.text = item.address
         vh.deleteCb.isSelected = item.isSelect

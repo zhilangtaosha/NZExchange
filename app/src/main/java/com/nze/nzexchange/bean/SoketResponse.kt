@@ -35,7 +35,7 @@ data class SoketDepthBean(
 
 data class SoketDealBean(
         val amount: Double,
-        val id: Int,
+        val id: String,
         val price: Double,
         val time: Double,
         val type: String

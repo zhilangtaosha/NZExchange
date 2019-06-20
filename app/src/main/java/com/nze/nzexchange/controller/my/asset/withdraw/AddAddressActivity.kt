@@ -57,6 +57,7 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
         }
         confirmBtn.initValidator()
                 .add(addressEt, EmptyValidation())
+                .add(remarkEt, EmptyValidation())
                 .executeValidator()
 
         scanIv.setOnClickListener(this)
@@ -88,16 +89,18 @@ class AddAddressActivity : NBaseActivity(), View.OnClickListener, EasyPermission
                 cameraTask()
             }
             R.id.btn_confirm_aaa -> {
-                currencyWithdrawP.addCurrencyWithdrawAddress(userBean!!, addressEt.getContent(), currency, {
-                    if (it.success) {
-                        showToast("提币地址添加成功")
-                        finish()
-                    } else {
+                if (confirmBtn.validate()) {
+                    currencyWithdrawP.addCurrencyWithdrawAddress(userBean!!, addressEt.getContent(), currency, remarkEt.getContent(), {
+                        if (it.success) {
+                            showToast("提币地址添加成功")
+                            finish()
+                        } else {
+                            showToast("提币地址添加失败")
+                        }
+                    }, {
                         showToast("提币地址添加失败")
-                    }
-                }, {
-                    showToast("提币地址添加失败")
-                })
+                    })
+                }
             }
         }
     }

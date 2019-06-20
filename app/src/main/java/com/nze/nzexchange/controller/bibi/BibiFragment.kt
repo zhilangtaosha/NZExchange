@@ -160,7 +160,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     private var userBean: UserBean? = NzeApp.instance.userBean
 
 
-    private val itemDepth: MutableList<String> = mutableListOf<String>("1", "2", "3", "4", "5", "6")
+    private val itemDepth: MutableList<String> = mutableListOf<String>("1", "2", "3", "4", "5", "6", "7", "8")
     private val depthPopup: CommonListPopup by lazy {
         CommonListPopup(activity, POPUP_DEPTH).apply {
             onItemClick = this@BibiFragment
@@ -616,6 +616,33 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         } else {
             depthTv.text = "深度$item"
+            val pair = "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}"
+            when (item) {
+                "1" -> {
+                    binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_1, pair)
+                }
+                "2" -> {
+                    binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_2, pair)
+                }
+                "3" -> {
+                    binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_3, pair)
+                }
+                "4" -> {
+                    binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_4, pair)
+                }
+                "5" -> {
+                    binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_5, pair)
+                }
+                "6" -> {
+                    binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_6, pair)
+                }
+                "7" -> {
+                    binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_7, pair)
+                }
+                "8" -> {
+                    binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_8, pair)
+                }
+            }
         }
     }
 
@@ -753,6 +780,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     if (it.success) {
                         currentTransactionPair = it.result[0]
                         refreshLayout()
+                        getPendingOrderInfo(currentTransactionPair?.id!!)
                         if (userBean != null) {
                             //获取订单
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
@@ -832,7 +860,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         handicapBuyLv.adapter = handicapBuyAdapter
         handicapSaleAdapter.clearGroup(true)
         handicapSaleLv.adapter = handicapSaleAdapter
-        binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_8, "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
+        binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_2, "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
     }
 
     val connection = object : ServiceConnection {

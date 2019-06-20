@@ -135,6 +135,7 @@ class WebSoketImpl : IWebSoket {
     }
 
     fun subscribeDeals() {//订阅最近成交列表
+        mDealList.clear()
         val requestBean = SoketRequestBean.create(KLineParam.METHOD_SUBSCRIBE_DEALS)
         requestBean.params.add(mPair)
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
@@ -202,13 +203,13 @@ class WebSoketImpl : IWebSoket {
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-            NLog.i("ntext>>>$text")
+//            NLog.i("ntext>>>$text")
             Observable.create<Int> {
                 if (text.contains("error")) {//查询或者订阅成功返回
                     try {
                         val queryBean: SoketQueryBean = gson.fromJson(text, SoketQueryBean::class.java)
                         if (queryBean.id == KLineParam.ID_KLINE) {//查询根据id确认
-                            NLog.i("request>>>${queryBean.result}")
+//                            NLog.i("request>>>${queryBean.result}")
                             val klist: Array<Array<String>>? = gson.fromJson<Array<Array<String>>>(queryBean.result.toString(), Array<Array<String>>::class.java)
                             klist?.forEachIndexed { index, it ->
                                 val bean = KLineEntity()
@@ -232,7 +233,7 @@ class WebSoketImpl : IWebSoket {
                         KLineParam.SUBSCRIBE_KLINE -> {//k线
                             try {
                                 mNewKList.clear()
-                                NLog.i("kline update>>>${subscribeBean.params}")
+//                                NLog.i("kline update>>>${subscribeBean.params}")
                                 val klist = gson.fromJson<Array<Array<String>>>(subscribeBean.params.toString(), Array<Array<String>>::class.java)
                                 klist.forEachIndexed { index, it ->
                                     val bean = KLineEntity()
@@ -332,10 +333,11 @@ class WebSoketImpl : IWebSoket {
                         }
                         KLineParam.SUBSCRIBE_DEALS -> {//最近成交列表
                             try {
-                                mDealList.clear()
+
                                 val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
                                 val dealList: Array<SoketDealBean> = gson.fromJson<Array<SoketDealBean>>(rs[1].toString(), Array<SoketDealBean>::class.java)
                                 mDealList.addAll(dealList)
+                                mDealList.sortByDescending { it.time }
                                 it.onNext(KLineParam.DATA_DEALS_SUBSCRIBE)
                             } catch (e: Exception) {
                                 NLog.i("deals.update出错")

@@ -357,8 +357,7 @@
                         android:paddingBottom="10dp"
                         android:text="深度2"
                         android:textColor="@color/color_FF6D87A8"
-                        android:textSize="12sp"
-                        android:visibility="gone" />
+                        android:textSize="12sp" />
                 </RelativeLayout>
             </LinearLayout>
 

@@ -27,8 +27,8 @@ class TimeTool {
         fun date(): Date = Date()
 
         fun format2(pattern: String, date: Date): String {
-//            val tz = TimeZone.getTimeZone("Asia/Shanghai")
-//            TimeZone.setDefault(tz)
+            val tz = TimeZone.getTimeZone("Asia/Shanghai")
+            TimeZone.setDefault(tz)
             val formatter = SimpleDateFormat(pattern)
             return formatter.format(date)
         }
