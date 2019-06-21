@@ -49,9 +49,9 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
 
-
+        ptrLv.isPullLoadEnabled = true
         val listView = ptrLv.refreshableView
-        listView.adapter =rcvAdapter
+        listView.adapter = rcvAdapter
         ptrLv.setOnRefreshListener(this)
 
         ptrLv.doPullRefreshing(true, 200)
@@ -76,7 +76,7 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? = null
+    override fun getContainerTargetView(): View? = ptrLv
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         page = 1
@@ -95,17 +95,25 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
+                        stopAllView()
                         val list = it.result
-
                         when (refreshType) {
                             RrefreshType.INIT -> {
                                 historyList.clear()
-                                rcvAdapter.group = list
+                                if (list != null && list.size > 0) {
+                                    rcvAdapter.group = list
+                                } else {
+                                    showNODataView("没有充值记录")
+                                }
                                 ptrLv.onPullDownRefreshComplete()
                             }
                             RrefreshType.PULL_DOWN -> {
                                 historyList.clear()
-                                rcvAdapter.group = list
+                                if (list != null && list.size > 0) {
+                                    rcvAdapter.group = list
+                                } else {
+                                    showNODataView("没有充值记录")
+                                }
                                 ptrLv.onPullDownRefreshComplete()
                             }
                             RrefreshType.PULL_UP -> {

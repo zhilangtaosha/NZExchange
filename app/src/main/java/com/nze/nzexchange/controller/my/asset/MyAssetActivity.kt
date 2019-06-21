@@ -15,14 +15,18 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.RealNameAuthenticationBean
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.LegalConfig
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.presenter.CommonBibiP
+import com.nze.nzexchange.controller.my.asset.legal.LegalAssetDetailActivity
+import com.nze.nzexchange.controller.my.asset.presenter.AssetP
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.widget.LinearLayoutAsListView
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
@@ -36,7 +40,7 @@ import java.util.Locale.filter
  * 我的资产
  */
 class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionListener, AdapterView.OnItemClickListener {
-
+    val assetP by lazy { AssetP(this) }
     val zbanner: ZBanner by lazy { carousel_ama }
     val accoutTypeList: List<Int> = listOf<Int>(
             AssetBannerFragment.ACCOUT_TYPE_BIBI,
@@ -61,7 +65,12 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     val assetAdapter: MyAssetLvAdapter by lazy {
         MyAssetLvAdapter(this).apply {
             onAssetItemClick = { position, item ->
-                CurrencyAssetDetailActivity.skip(this@MyAssetActivity, type, assetAdapter.getItem(position)!!, otcList, bibiList)
+                if (item!!.currency != LegalConfig.NAME) {
+                    CurrencyAssetDetailActivity.skip(this@MyAssetActivity, type, assetAdapter.getItem(position)!!, otcList, bibiList)
+                } else {
+                    LegalAssetDetailActivity.skip(this@MyAssetActivity, realNameAuthenticationBean)
+                }
+//                CurrencyAssetDetailActivity.skip(this@MyAssetActivity, type, assetAdapter.getItem(position)!!, otcList, bibiList)
             }
         }
     }
@@ -73,6 +82,7 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     var bannerIndex = 0
 
     val dialog = AuthorityDialog.getInstance(this)
+    var realNameAuthenticationBean: RealNameAuthenticationBean? = null
 
     override fun getRootView(): Int = R.layout.activity_my_asset
 
@@ -119,6 +129,10 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
                 }
 
         getOtcAsset()
+        assetP.getReanNameAuthentication(userBean!!, {
+            if (it.success)
+                realNameAuthenticationBean = it.result
+        }, onError)
     }
 
     fun filter() {
@@ -179,7 +193,12 @@ class MyAssetActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionList
     override fun getContainerTargetView(): View? = listView
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        CurrencyAssetDetailActivity.skip(this, type, assetAdapter.getItem(position)!!, otcList, bibiList)
+        val item = assetAdapter.getItem(position)
+        if (item!!.currency != LegalConfig.NAME) {
+            CurrencyAssetDetailActivity.skip(this, type, assetAdapter.getItem(position)!!, otcList, bibiList)
+        } else {
+            LegalAssetDetailActivity.skip(this, realNameAuthenticationBean)
+        }
     }
 
 

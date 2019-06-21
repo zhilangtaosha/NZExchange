@@ -70,6 +70,7 @@ interface SellService {
     @POST("otc/sell/confirmPayment")
     fun confirmPayment(@Field("userIdBu") userIdSell: String,
                        @Field("suborderId") suborderId: String,
+                       @Field("curBuspwUcode") curBuspwUcode: String,
                        @Field("tokenUserId") tokenUserId: String,
                        @Field("tokenUserKey") tokenUserKey: String
     ): Flowable<Result<Boolean>>

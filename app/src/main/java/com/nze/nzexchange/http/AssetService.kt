@@ -33,9 +33,9 @@ interface AssetService {
             @Field("remark") remark: String
     ): Flowable<Result<String>>
 
-//    @Headers("Content-Type: application/json;Accept: application/json")
+    //    @Headers("Content-Type: application/json;Accept: application/json")
     @POST("/")
-    fun zhangNet(@Body info: RequestBody):Flowable<Any>
+    fun zhangNet(@Body info: RequestBody): Flowable<Any>
 
     //资产划转
     @FormUrlEncoded
@@ -54,8 +54,11 @@ interface AssetService {
     //资产划转记录筛选
     @GET("screeningTransferRecord")
     fun transferRecord(
-        @Query("userId" ) userId:String,
-        @Query("from" ) from:String?,
-        @Query("to" ) to:String?
-    ):Flowable<Result<MutableList<TransferRecordBean>>>
+            @Query("userId") userId: String,
+            @Query("from") from: String?,
+            @Query("to") to: String?,
+            @Query("token") token: String?,
+            @Query("pageNumber") pageNumber: Int,
+            @Query("pageSize") pageSize: Int
+    ): Flowable<Result<MutableList<TransferRecordBean>>>
 }

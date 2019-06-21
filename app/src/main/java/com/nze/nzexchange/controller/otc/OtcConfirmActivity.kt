@@ -72,7 +72,7 @@ class OtcConfirmActivity : NBaseActivity() {
     val fundPopup: FundPasswordPopup by lazy {
         FundPasswordPopup(this).apply {
             onPasswordClick = {
-                release()
+                release(it)
             }
         }
     }
@@ -422,11 +422,11 @@ class OtcConfirmActivity : NBaseActivity() {
     /**
      * 收款，放币
      */
-    fun release() {
+    fun release(pwd:String) {
         if (userBean?.userId!! == subOrderInfoBean!!.userIdSell) {//本人是商家
             NRetrofit.instance
                     .buyService()
-                    .confirmPayment(subOrderInfoBean!!.userIdSell, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .confirmPayment(subOrderInfoBean!!.userIdSell, subOrderInfoBean!!.suborderId,pwd, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                     .compose(netTf())
                     .subscribe({
                         confirm(it)
@@ -434,7 +434,7 @@ class OtcConfirmActivity : NBaseActivity() {
         } else {
             NRetrofit.instance
                     .sellService()
-                    .confirmPayment(subOrderInfoBean!!.userIdBu, subOrderInfoBean!!.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                    .confirmPayment(subOrderInfoBean!!.userIdBu, subOrderInfoBean!!.suborderId,pwd, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
                     .compose(netTf())
                     .subscribe({
                         confirm(it)
@@ -465,49 +465,49 @@ class OtcConfirmActivity : NBaseActivity() {
 
 
     //确认付款
-    fun confirmPay(subOrderInfoBean: SubOrderInfoBean) {
-        if (userBean?.userId!! == subOrderInfoBean.userIdSell) {//本人是商家
-            if (subOrderInfoBean.transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
-                //商家确认收款
-                NRetrofit.instance
-                        .buyService()
-                        .confirmPayment(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                        .compose(netTf())
-                        .subscribe({
-                            confirm(it)
-                        }, onError)
-            } else {//卖币
-                //商家确认付款
-                NRetrofit.instance
-                        .sellService()
-                        .confirmReceipt(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                        .compose(netTf())
-                        .subscribe({
-                            confirm(it)
-                        }, onError)
-            }
-        } else {//本人是用户
-            if (subOrderInfoBean.transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
-                //确认付款
-                NRetrofit.instance
-                        .buyService()
-                        .confirmReceipt(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                        .compose(netTf())
-                        .subscribe({
-                            confirm(it)
-                        }, onError)
-            } else {//卖币
-                //确认收款
-                NRetrofit.instance
-                        .sellService()
-                        .confirmPayment(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                        .compose(netTf())
-                        .subscribe({
-                            confirm(it)
-                        }, onError)
-            }
-        }
-    }
+//    fun confirmPay(subOrderInfoBean: SubOrderInfoBean) {
+//        if (userBean?.userId!! == subOrderInfoBean.userIdSell) {//本人是商家
+//            if (subOrderInfoBean.transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
+//                //商家确认收款
+//                NRetrofit.instance
+//                        .buyService()
+//                        .confirmPayment(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+//                        .compose(netTf())
+//                        .subscribe({
+//                            confirm(it)
+//                        }, onError)
+//            } else {//卖币
+//                //商家确认付款
+//                NRetrofit.instance
+//                        .sellService()
+//                        .confirmReceipt(subOrderInfoBean.userIdSell, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+//                        .compose(netTf())
+//                        .subscribe({
+//                            confirm(it)
+//                        }, onError)
+//            }
+//        } else {//本人是用户
+//            if (subOrderInfoBean.transactionType == SubOrderInfoBean.TRANSACTIONTYPE_BUY) {//买币
+//                //确认付款
+//                NRetrofit.instance
+//                        .buyService()
+//                        .confirmReceipt(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+//                        .compose(netTf())
+//                        .subscribe({
+//                            confirm(it)
+//                        }, onError)
+//            } else {//卖币
+//                //确认收款
+//                NRetrofit.instance
+//                        .sellService()
+//                        .confirmPayment(subOrderInfoBean.userIdBu, subOrderInfoBean.suborderId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+//                        .compose(netTf())
+//                        .subscribe({
+//                            confirm(it)
+//                        }, onError)
+//            }
+//        }
+//    }
 
     fun confirm(rs: Result<Boolean>) {
         if (rs.success) {

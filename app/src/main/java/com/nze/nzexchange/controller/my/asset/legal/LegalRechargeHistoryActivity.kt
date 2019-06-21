@@ -9,7 +9,7 @@ import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
-import com.nze.nzexchange.controller.my.asset.legal.presenter.LegalP
+import com.nze.nzexchange.controller.my.asset.presenter.LegalP
 import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_legal_withdraw_history.*
 

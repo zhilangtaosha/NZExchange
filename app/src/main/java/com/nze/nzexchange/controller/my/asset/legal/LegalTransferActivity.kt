@@ -1,9 +1,7 @@
 package com.nze.nzexchange.controller.my.asset.legal
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -12,32 +10,24 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LegalAccountBean
-import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
-import com.nze.nzexchange.config.AccountType.Companion.LEGAL
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.LegalConfig
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
-import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
-import com.nze.nzexchange.controller.my.asset.legal.presenter.LegalP
+import com.nze.nzexchange.controller.my.asset.presenter.LegalP
 import com.nze.nzexchange.controller.my.asset.transfer.TransferHistoryActivity
 import com.nze.nzexchange.controller.my.asset.transfer.TransferSuccessDialog
 import com.nze.nzexchange.extend.formatForCurrency
-import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.formatForLegalByFloor
 import com.nze.nzexchange.extend.getContent
-import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.tools.editjudge.EditCurrencyPriceWatcher
 import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
-import io.reactivex.Flowable
-import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.activity_transfer.*
 
 class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
@@ -80,7 +70,9 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
 
     override fun initView() {
         topBar.setRightClick {
-            skipActivity(TransferHistoryActivity::class.java)
+            val intent = Intent(this,TransferHistoryActivity::class.java)
+            intent.putExtra(IntentConstant.PARAM_CURRENCY,LegalConfig.NAME)
+            startActivity(intent)
         }
         intent?.let {
             accountBean = it.getParcelableExtra(IntentConstant.PARAM_LEGAL_ACCOUNT)
@@ -130,6 +122,10 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
             R.id.btn_transfer_at -> {
                 if (transferBtn.validate()) {
                     val amount = transferEt.getContent()
+                    if (amount.toDouble() <= 0) {
+                        showToast("划转金额不能为0")
+                        return
+                    }
                     var from = TRANSFER_BIBI
                     var to = TRANSFER_LEGALCURRENCY
                     if (type == AccountType.LEGAL) {

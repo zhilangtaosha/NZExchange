@@ -39,7 +39,7 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         intent?.let {
             userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
-        ptrLv.isPullLoadEnabled = false
+        ptrLv.isPullLoadEnabled = true
         ptrLv.setOnRefreshListener(this)
         listView.adapter = historyAdapter
 
@@ -64,7 +64,7 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? = null
+    override fun getContainerTargetView(): View? = ptrLv
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         refreshType = RrefreshType.PULL_DOWN
@@ -83,14 +83,30 @@ class WithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
+                        stopAllView()
+                        val list = it.result
                         when (refreshType) {
-                            RrefreshType.PULL_DOWN -> {
-                                historyAdapter.group = it.result
+                            RrefreshType.INIT -> {
+                                if (list != null && list.size > 0) {
+                                    historyAdapter.group = list
+                                } else {
+                                    showNODataView("没有提现记录")
+                                }
                                 ptrLv.onPullDownRefreshComplete()
                             }
+                            RrefreshType.PULL_DOWN -> {
+                                if (list != null && list.size > 0) {
+                                    historyAdapter.group = list
+                                } else {
+                                    showNODataView("没有提现记录")
+                                }
+                                ptrLv.onPullDownRefreshComplete()
+
+                            }
                             RrefreshType.PULL_UP -> {
-                                historyAdapter.addItems(it.result)
+                                historyAdapter.addItems(list)
                                 ptrLv.onPullUpRefreshComplete()
+
                             }
                         }
                     }

@@ -1,4 +1,4 @@
-package com.nze.nzexchange.controller.my.asset.legal.presenter
+package com.nze.nzexchange.controller.my.asset.presenter
 
 import com.nze.nzeframework.ui.BaseActivityP
 import com.nze.nzexchange.bean.LegalAccountBean

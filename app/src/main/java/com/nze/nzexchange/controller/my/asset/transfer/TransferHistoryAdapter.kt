@@ -25,15 +25,35 @@ class TransferHistoryAdapter(mContext: Context) : NBaseAda<TransferRecordBean, T
         vh.currencyTv.text = item.token
         vh.dateTv.text = TimeTool.format(TimeTool.PATTERN2, item.createTime)
         vh.amountValueTv.text = item.amount.formatForCurrency()
-        when (item.from) {
+        var from = when (item.from) {
             "coin" -> {
-                vh.typeValueTv.text = "币币账户到OTC账户"
+                "币币账户"
             }
             "outside" -> {
-                vh.typeValueTv.text = "OTC账户到币币账户"
+                "OTC账户"
+            }
+            "legalCurrency" -> {
+                "法币账户"
+            }
+            else -> {
+                "币币账户"
             }
         }
-
+        var to = when (item.to) {
+            "coin" -> {
+                "币币账户"
+            }
+            "outside" -> {
+                "OTC账户"
+            }
+            "legalCurrency" -> {
+                "法币账户"
+            }
+            else -> {
+                "币币账户"
+            }
+        }
+        vh.typeValueTv.text = "${from}到${to}"
     }
 
 

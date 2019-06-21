@@ -23,11 +23,19 @@ data class TransferRecordBean(
     companion object {
         val ACCOUNT_OTC = "outside"
         val ACCOUNT_BIBI = "coin"
-        fun transferRecord(userId: String, from: String? = null, to: String? = null): Flowable<Result<MutableList<TransferRecordBean>>> {
+        val ACCOUNT_LEGAL = "legalCurrency"
+        fun transferRecord(
+                userId: String,
+                pageNumber: Int,
+                pageSize: Int,
+                from: String? = null,
+                to: String? = null,
+                token: String?
+        ): Flowable<Result<MutableList<TransferRecordBean>>> {
             return Flowable.defer {
                 NRetrofit.instance
                         .assetService()
-                        .transferRecord(userId, from, to)
+                        .transferRecord(userId, from, to, token, pageNumber, pageSize)
             }
         }
     }

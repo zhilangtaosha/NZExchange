@@ -12,7 +12,6 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LegalAccountBean
 import com.nze.nzexchange.bean.RealNameAuthenticationBean
-import com.nze.nzexchange.bean.RealNameAuthenticationBean.Companion.getReanNameAuthentication
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
@@ -26,8 +25,7 @@ import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalAssetDetailActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalRechargeActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalWithdrawActivity
-import com.nze.nzexchange.controller.my.asset.legal.presenter.LegalP
-import com.nze.nzexchange.controller.my.asset.withdraw.CurrencyAddressSetListActivity
+import com.nze.nzexchange.controller.my.asset.presenter.LegalP
 import com.nze.nzexchange.controller.my.authentication.AuthenticationFailActivity
 import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
 import com.nze.nzexchange.controller.my.authentication.PrimaryAuthenticationActivity

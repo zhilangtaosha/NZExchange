@@ -18,7 +18,7 @@ import com.nze.nzexchange.config.LegalConfig
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.CheckPermission
 import com.nze.nzexchange.controller.my.asset.ConcreteAssetAdapter
-import com.nze.nzexchange.controller.my.asset.legal.presenter.LegalP
+import com.nze.nzexchange.controller.my.asset.presenter.LegalP
 import com.nze.nzexchange.extend.formatForLegal
 import kotlinx.android.synthetic.main.activity_legal_asset_detail.*
 
