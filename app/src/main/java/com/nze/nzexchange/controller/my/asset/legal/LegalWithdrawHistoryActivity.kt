@@ -47,9 +47,7 @@ class LegalWithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getContainerTargetView(): View?=ptrLv
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         refreshType = RrefreshType.PULL_DOWN
@@ -87,7 +85,9 @@ class LegalWithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
 
                     }
                     RrefreshType.PULL_UP -> {
-                        historyAdapter.addItems(list)
+                        if (list != null && list.size > 0) {
+                            historyAdapter.addItems(list)
+                        }
                         ptrLv.onPullUpRefreshComplete()
 
                     }

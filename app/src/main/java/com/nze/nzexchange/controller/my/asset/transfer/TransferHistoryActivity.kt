@@ -33,10 +33,10 @@ class TransferHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
             add("全部")
             add("法币账户到币币账户")
             add("币币账户到法币账户")
-            if (token == null) {
+//            if (token == null) {
                 add("OTC账户到币币账户")
                 add("币币账户到OTC账户")
-            }
+//            }
         }
     }
 
@@ -78,9 +78,9 @@ class TransferHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
     override fun getRootView(): Int = R.layout.activity_transfer_history
 
     override fun initView() {
-        intent?.let {
-            token = it.getStringExtra(IntentConstant.PARAM_CURRENCY)
-        }
+//        intent?.let {
+//            token = it.getStringExtra(IntentConstant.PARAM_CURRENCY)
+//        }
         topBar.setRightClick {
             filterPopup.showPopupWindow()
         }

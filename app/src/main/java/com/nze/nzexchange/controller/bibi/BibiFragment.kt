@@ -781,6 +781,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         currentTransactionPair = it.result[0]
                         refreshLayout()
                         getPendingOrderInfo(currentTransactionPair?.id!!)
+                        changePair()
                         if (userBean != null) {
                             //获取订单
                             orderPending(currentTransactionPair?.id!!, userBean?.userId!!)

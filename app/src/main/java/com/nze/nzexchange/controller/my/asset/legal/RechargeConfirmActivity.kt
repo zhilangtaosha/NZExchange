@@ -9,8 +9,9 @@ import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
-import com.nze.nzexchange.R.id.tv_code_arc
 import com.nze.nzexchange.bean.CompanyPaymentBean
+import com.nze.nzexchange.bean.LegalRechargeBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean2.RechargeModeBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
@@ -32,24 +33,26 @@ class RechargeConfirmActivity : NBaseActivity(), View.OnClickListener {
     val codeTv: TextView by lazy { tv_code_arc }
     val cancelTv: TextView by lazy { tv_cancel_arc }
     val confirmTv: TextView by lazy { tv_confirm_arc }
-    var type: Int = RechargeModeBean.BANK
+    var type: String? = null
     var code: String? = null
     var amount: String? = null
     val companyPayList: MutableList<CompanyPaymentBean> by lazy { mutableListOf<CompanyPaymentBean>() }
+    var userBean = UserBean.loadFromApp()
 
     companion object {
-        fun skip(context: Context, type: Int, code: String, amount: String) {
+        fun skip(context: Context, type: String, code: String, amount: String) {
             context.startActivity(Intent(context, RechargeConfirmActivity::class.java)
                     .putExtra(IntentConstant.PARAM_TYPE, type)
                     .putExtra(IntentConstant.PARAM_CODE, code)
-                    .putExtra(IntentConstant.PARAM_ACCOUNT, amount))
+                    .putExtra(IntentConstant.PARAM_ACCOUNT, amount)
+            )
         }
     }
 
     override fun getRootView(): Int = R.layout.activity_recharge_confirm
     override fun initView() {
         intent?.let {
-            type = it.getIntExtra(IntentConstant.PARAM_TYPE, RechargeModeBean.BANK)
+            type = it.getStringExtra(IntentConstant.PARAM_TYPE)
             code = it.getStringExtra(IntentConstant.PARAM_CODE)
             amount = it.getStringExtra(IntentConstant.PARAM_ACCOUNT)
         }
@@ -62,20 +65,20 @@ class RechargeConfirmActivity : NBaseActivity(), View.OnClickListener {
                     if (it.success) {
                         companyPayList.addAll(it.result)
                         when (type) {
-                            RechargeModeBean.BANK -> {
+                            LegalRechargeBean.TYPE_BANK -> {
                                 val bank = companyPayList[2]
                                 bankNameTv.text = "${bank.contShow1}"
                                 accountValueTv.text = "${bank.contShow3}"
                                 payeeTv.text = "${bank.contShow4}"
                             }
-                            RechargeModeBean.BPAY -> {
+                            LegalRechargeBean.TYPE_BPAY -> {
                                 val bpay = companyPayList[1]
                                 bankNameLayout.visibility = View.GONE
                                 accountKeyTv.text = "BPAY账号"
                                 accountValueTv.text = "${bpay.contShow3}"
                                 payeeTv.text = "${bpay.contShow4}"
                             }
-                            RechargeModeBean.OSKO -> {
+                            LegalRechargeBean.TYPE_OSKO  -> {
                                 val osko = companyPayList[0]
                                 bankNameLayout.visibility = View.GONE
                                 accountKeyTv.text = "OSKO账号"
@@ -99,7 +102,13 @@ class RechargeConfirmActivity : NBaseActivity(), View.OnClickListener {
                 finish()
             }
             R.id.tv_confirm_arc -> {
-                finish()
+                LegalRechargeBean.legalRecharge(userBean!!, amount!!, null, null, null, null, type!!, code!!)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                finish()
+                            }
+                        }, onError)
             }
         }
     }

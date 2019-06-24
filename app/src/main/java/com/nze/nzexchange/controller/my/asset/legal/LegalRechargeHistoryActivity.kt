@@ -8,6 +8,7 @@ import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.presenter.LegalP
 import com.nze.nzexchange.widget.CommonTopBar
@@ -29,7 +30,7 @@ class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
     override fun getRootView(): Int = R.layout.activity_legal_withdraw_history
     override fun initView() {
         topBar.setTitle("充值记录")
-        ptrLv.setPullLoadEnabled(false)
+        ptrLv.setPullLoadEnabled(true)
         ptrLv.setOnRefreshListener(this)
         listView = ptrLv.refreshableView
         listView.adapter = historyAdapter
@@ -53,14 +54,16 @@ class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View? =ptrLv
+    override fun getContainerTargetView(): View? = ptrLv
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_DOWN
         page = 1
         getHistory()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
+        refreshType = RrefreshType.PULL_UP
         page++
         getHistory()
     }
@@ -69,10 +72,30 @@ class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
         legalP.getRechargeHistory(userBean!!, page, PAGE_SIZE, {
             if (it.success) {
                 val list = it.result
-                if (list != null && list.size > 0) {
-                    historyAdapter.group = it.result
-                } else {
-                    showNODataView("没有提现记录")
+                when (refreshType) {
+                    RrefreshType.INIT -> {
+                        if (list != null && list.size > 0) {
+                            historyAdapter.group = list
+                        } else {
+                            showNODataView("没有提现记录")
+                        }
+                        ptrLv.onPullDownRefreshComplete()
+                    }
+                    RrefreshType.PULL_DOWN -> {
+                        if (list != null && list.size > 0) {
+                            historyAdapter.group = list
+                        } else {
+                            showNODataView("没有提现记录")
+                        }
+                        ptrLv.onPullDownRefreshComplete()
+
+                    }
+                    RrefreshType.PULL_UP -> {
+                        if (list != null && list.size > 0) {
+                            historyAdapter.addItems(list)
+                        }
+                        ptrLv.onPullUpRefreshComplete()
+                    }
                 }
             } else {
                 showToast(it.message)

@@ -8,9 +8,9 @@ package com.nze.nzexchange.bean
  */
 data class LegalWithdrawHistoryBean(
         val accId: String,
-        val auditAuditdataDataVo: AuditAuditdataDataVo,
-        val auditAuditdataDataVos: List<AuditAuditdataDataVo>,
-        val auditDataFlowDataVos: List<AuditDataFlowDataVo>,
+        val auditAuditdataDataVo: AuditAuditdataDataVo?,
+        val auditAuditdataDataVos: List<AuditAuditdataDataVo>?,
+        val auditDataFlowDataVos: List<AuditDataFlowDataVo>?,
         val membId: String,
         val pickfundApplyamt: Double,
         val pickfundCode: String,
@@ -63,7 +63,7 @@ data class LegalWithdrawHistoryBean(
 
 
 data class AuditDataFlowDataVo(
-        val flowEvent: String,
-        val flowOrd: Int,
-        val flowTime: Long
+        val flowEvent: String?,
+        val flowOrd: Int?,
+        val flowTime: Long?
 )

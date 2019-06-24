@@ -38,7 +38,6 @@ import java.math.BigDecimal
  */
 class WebSoketImpl : IWebSoket {
 
-
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
     val gson: Gson by lazy { Gson() }
@@ -82,6 +81,20 @@ class WebSoketImpl : IWebSoket {
         NLog.i("请求接口：$marketUrl")
         nWebSocket = NWebSocket.newInstance(marketUrl, wsListener)
         socket = nWebSocket?.open()
+    }
+
+    override fun initCallBack(
+            mOnQueryKlineCallback: (kList: MutableList<KLineEntity>) -> Unit,
+            mOnSubscribeKlineCallback: (newKList: MutableList<KLineEntity>) -> Unit,
+            mOnTodayCallback: (todayBean: SoketTodayBean) -> Unit,
+            mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit,
+            mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit
+    ) {
+        this.mOnQueryKlineCallback = mOnQueryKlineCallback
+        this.mOnSubscribeKlineCallback = mOnSubscribeKlineCallback
+        this.mOnTodayCallback = mOnTodayCallback
+        this.mOnDepthCallback = mOnDepthCallback
+        this.mOnDealCallback = mOnDealCallback
     }
 
     override fun subscribeAllData(type: Int, pattern: String) {

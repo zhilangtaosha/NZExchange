@@ -21,7 +21,15 @@ interface IWebSoket {
 
     fun initSocket(
             pair: String,
-            marketUrl:String,
+            marketUrl: String,
+            mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
+            mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
+            mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
+            mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit),
+            mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)
+    )
+
+    fun initCallBack(
             mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
             mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
             mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
@@ -33,7 +41,7 @@ interface IWebSoket {
 
     fun changeType(type: Int, pattern: String)
 
-    fun subscribeDepthAndToday(amount: Int= KLineParam.AMOUNT_DEPTH_10, depth: String= KLineParam.DEPTH_8, pair: String)
+    fun subscribeDepthAndToday(amount: Int = KLineParam.AMOUNT_DEPTH_10, depth: String = KLineParam.DEPTH_8, pair: String)
 
     fun close()
 }

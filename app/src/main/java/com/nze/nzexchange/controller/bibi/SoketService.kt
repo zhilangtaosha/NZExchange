@@ -44,6 +44,8 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
+
+
         private val webSoket: IWebSoket by lazy { WebSoketImpl() }
         override var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)? = null
         override var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)? = null
@@ -53,7 +55,7 @@ class SoketService : Service() {
 
         override fun initSocket(
                 pair: String,
-                marketUrl:String,
+                marketUrl: String,
                 mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
                 mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
                 mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
@@ -63,6 +65,20 @@ class SoketService : Service() {
             webSoket.initSocket(
                     pair,
                     marketUrl,
+                    mOnQueryKlineCallback,
+                    mOnSubscribeKlineCallback,
+                    mOnTodayCallback,
+                    mOnDepthCallback,
+                    mOnDealCallback)
+        }
+
+        override fun initCallBack(
+                mOnQueryKlineCallback: (kList: MutableList<KLineEntity>) -> Unit,
+                mOnSubscribeKlineCallback: (newKList: MutableList<KLineEntity>) -> Unit,
+                mOnTodayCallback: (todayBean: SoketTodayBean) -> Unit,
+                mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit,
+                mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit) {
+            webSoket.initCallBack(
                     mOnQueryKlineCallback,
                     mOnSubscribeKlineCallback,
                     mOnTodayCallback,

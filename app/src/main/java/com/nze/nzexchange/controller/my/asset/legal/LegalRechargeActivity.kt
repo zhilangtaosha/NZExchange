@@ -1,6 +1,5 @@
 package com.nze.nzexchange.controller.my.asset.legal
 
-import android.text.TextUtils.substring
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -101,14 +100,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
                 showToast("请输入充值金额")
                 return@setOnCommonClick
             }
-            LegalRechargeBean.legalRecharge(userBean!!, amount, null, null, null, null, checkpayType!!, checkpayCode!!)
-                    .compose(netTfWithDialog())
-                    .subscribe({
-                        if (it.success) {
-                            RechargeConfirmActivity.skip(this, rechargeType, checkpayCode!!, amount)
-                            finish()
-                        }
-                    }, onError)
+            RechargeConfirmActivity.skip(this, checkpayType!!, checkpayCode!!, amount)
         }
     }
 

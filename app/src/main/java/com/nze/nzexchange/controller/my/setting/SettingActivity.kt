@@ -1,20 +1,34 @@
 package com.nze.nzexchange.controller.my.setting
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.R.id.*
+import com.nze.nzexchange.bean.HandicapBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.bibi.SoketService
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.main.MainActivity
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
+import com.nze.nzexchange.extend.formatForPrice
+import com.nze.nzexchange.extend.mul
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
@@ -133,4 +147,6 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
             }
         }
     }
+
+
 }
