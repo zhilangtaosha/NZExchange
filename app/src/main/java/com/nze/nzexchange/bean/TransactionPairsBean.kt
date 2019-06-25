@@ -19,7 +19,7 @@ data class TransactionPairsBean(
         val currency: String,//交易货币
         val exchangeRate: Double,
         val id: String,
-        val mainCurrency: String,//计价货币
+        var mainCurrency: String="",//计价货币
         val remark: String?,
         val status: Int,
         val transactionPair: String,//交易对

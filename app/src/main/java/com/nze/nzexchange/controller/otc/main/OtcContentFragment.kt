@@ -33,6 +33,7 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
     private val buyAdapter: OtcBuyAdapter by lazy {
         OtcBuyAdapter(activity!!, type)
     }
+    val list: MutableList<OrderPoolBean> by lazy { mutableListOf<OrderPoolBean>() }
     private var userBean = UserBean.loadFromApp()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,29 +117,34 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
                     val rList = it.result
                     when (refreshType) {
                         RrefreshType.INIT -> {
+                            list.addAll(rList)
                             buyAdapter.group = rList
                         }
                         RrefreshType.PULL_DOWN -> {
+                            list.clear()
+                            list.addAll(rList)
                             buyAdapter.group = rList
                             ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
                             ptrLv.onPullDownRefreshComplete()
-                            if (buyAdapter.count >= it.pageSize) {
-                                ptrLv.setHasMoreData(false)
-                            } else {
-                                ptrLv.setHasMoreData(true)
-                            }
+//                            if (buyAdapter.count >= it.pageSize) {
+//                                ptrLv.setHasMoreData(false)
+//                            } else {
+//                                ptrLv.setHasMoreData(true)
+//                            }
                         }
                         RrefreshType.PULL_UP -> {
-                            buyAdapter.addItems(rList)
+                            list.addAll(rList)
+                            buyAdapter.addItems(list)
                             ptrLv.onPullUpRefreshComplete()
-                            if (buyAdapter.count >= it.pageSize) {
-                                ptrLv.setHasMoreData(false)
-                            } else {
-                                ptrLv.setHasMoreData(true)
-                            }
+
                         }
                         else -> {
                         }
+                    }
+                    if (buyAdapter.count >= it.totalSize) {
+                        ptrLv.setHasMoreData(false)
+                    } else {
+                        ptrLv.setHasMoreData(true)
                     }
                 }, {
                     ptrLv.onPullDownRefreshComplete()

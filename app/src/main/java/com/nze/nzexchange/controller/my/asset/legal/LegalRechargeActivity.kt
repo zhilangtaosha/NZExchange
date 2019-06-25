@@ -101,6 +101,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
                 return@setOnCommonClick
             }
             RechargeConfirmActivity.skip(this, checkpayType!!, checkpayCode!!, amount)
+            finish()
         }
     }
 

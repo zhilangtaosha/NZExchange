@@ -241,7 +241,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val total = DoubleMath.mul(input, num)
                         totalTransactionTv.text = "交易额 ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || get.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
-                        totalTransactionTv.text = "交易额 0 ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "交易额 0 ${currentTransactionPair?.mainCurrency?.getValue()?:""}"
                     }
                 }
 
@@ -256,7 +256,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val total = DoubleMath.mul(input, price)
                         totalTransactionTv.text = "交易额 ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || give.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
-                        totalTransactionTv.text = "交易额 0${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "交易额 0${currentTransactionPair?.mainCurrency?.getValue()?:""}"
                     } else if (it.isNotEmpty() && transactionType == TRANSACTIONTYPE_MARKET) {
                         val input = it.toString().toDouble()
                         totalTransactionTv.text = "交易额 ${input.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
@@ -582,7 +582,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     val total = price.mul(num)
                     totalTransactionTv.text = "交易额${total.formatForCurrency()}${currentTransactionPair?.mainCurrency}"
                 } catch (e: Exception) {
-                    totalTransactionTv.text = "交易额0${currentTransactionPair?.mainCurrency}"
+                    totalTransactionTv.text = "交易额0${currentTransactionPair?.mainCurrency?.getValue()?:""}"
                 }
                 if (currentType == TYPE_BUY) {
                     getEt.hint = "数量(${currentTransactionPair?.currency})"
@@ -781,6 +781,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         currentTransactionPair = it.result[0]
                         refreshLayout()
                         getPendingOrderInfo(currentTransactionPair?.id!!)
+                        switchType(currentType)
                         changePair()
                         if (userBean != null) {
                             //获取订单

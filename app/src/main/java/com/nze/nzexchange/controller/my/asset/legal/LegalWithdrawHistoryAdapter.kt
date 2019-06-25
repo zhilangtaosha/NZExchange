@@ -6,6 +6,7 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LegalWithdrawHistoryBean
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_legal_withdraw_history.view.*
 
@@ -24,8 +25,8 @@ class LegalWithdrawHistoryAdapter(mContext: Context) : NBaseAda<LegalWithdrawHis
         vh.nameTv.text = "提现记录"
         vh.statusTv.text = item.getStatus()
         vh.timeValueTv.text = TimeTool.format(TimeTool.PATTERN2, item.pickfundCreateTime)
-        vh.amountValueTv.text = "-${item.pickfundApplyamt}"
-        vh.balanceValueTv.text = "${item.pickfundAbleamount + item.pickfundFronzenamount}"
+        vh.amountValueTv.text = "-${item.pickfundApplyamt.formatForLegal()}"
+        vh.balanceValueTv.text = "${(item.pickfundAbleamount + item.pickfundFronzenamount).formatForLegal()}"
     }
 
 

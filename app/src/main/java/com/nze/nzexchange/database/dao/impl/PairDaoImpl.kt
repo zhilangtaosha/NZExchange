@@ -28,9 +28,9 @@ class PairDaoImpl : PairDao {
         cv.put("transactionPair", it.transactionPair)
         cv.put("gain", it.gain)
         cv.put("optional", it.optional)
-        cv.put("volume",it.volume)
-        cv.put("popular",it.popular)
-        cv.put("deal",it.deal)
+        cv.put("volume", it.volume)
+        cv.put("popular", it.popular)
+        cv.put("deal", it.deal)
         db.update(DbHelper.TAB_TRANSACTION_PAIR, cv, "tid=?", arrayOf("${it.id}"))
         db.close()
     }
@@ -63,7 +63,7 @@ class PairDaoImpl : PairDao {
     }
 
     private fun isExistById(db: SQLiteDatabase, tid: String): Boolean {
-        val sql = "select * from ${DbHelper.TAB_TRANSACTION_PAIR} where tid=$tid"
+        val sql = "select * from ${DbHelper.TAB_TRANSACTION_PAIR} where tid='${tid}'"
         val cursor = db.rawQuery(sql, null)
         cursor.moveToFirst()
         var isExist = !cursor.isAfterLast
@@ -81,9 +81,9 @@ class PairDaoImpl : PairDao {
         cv.put("transactionPair", it.transactionPair)
         cv.put("gain", it.gain)
         cv.put("optional", it.optional)
-        cv.put("volume",it.volume)
-        cv.put("popular",it.popular)
-        cv.put("deal",it.deal)
+        cv.put("volume", it.volume)
+        cv.put("popular", it.popular)
+        cv.put("deal", it.deal)
         db.update(DbHelper.TAB_TRANSACTION_PAIR, cv, "tid=?", arrayOf("${it.id}"))
     }
 
@@ -98,9 +98,9 @@ class PairDaoImpl : PairDao {
         cv.put("transactionPair", it.transactionPair)
         cv.put("gain", it.gain)
         cv.put("optional", it.optional)
-        cv.put("volume",it.volume)
-        cv.put("popular",it.popular)
-        cv.put("deal",it.deal)
+        cv.put("volume", it.volume)
+        cv.put("popular", it.popular)
+        cv.put("deal", it.deal)
         db.insert(DbHelper.TAB_TRANSACTION_PAIR, null, cv)
     }
 
