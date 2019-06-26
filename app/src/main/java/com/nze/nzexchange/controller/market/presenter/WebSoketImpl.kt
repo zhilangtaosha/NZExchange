@@ -38,6 +38,7 @@ import java.math.BigDecimal
  */
 class WebSoketImpl : IWebSoket {
 
+
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
     val gson: Gson by lazy { Gson() }
@@ -61,43 +62,60 @@ class WebSoketImpl : IWebSoket {
     override var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)? = null
     override var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)? = null
     override var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)? = null
+    val mOnTodayMap: MutableMap<String, ((todayBean: SoketTodayBean) -> Unit)> by lazy {
+        mutableMapOf<String, ((todayBean: SoketTodayBean) -> Unit)>()
+    }
+    val mOnDepthMap: MutableMap<String, ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)> by lazy {
+        mutableMapOf<String, ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)>()
+    }
+    val mOnDealMap: MutableMap<String, ((dealList: MutableList<SoketDealBean>) -> Unit)> by lazy {
+        mutableMapOf<String, ((dealList: MutableList<SoketDealBean>) -> Unit)>()
+    }
+    val OnQueryKlineMap: MutableMap<String, ((kList: MutableList<KLineEntity>) -> Unit)> by lazy {
+        mutableMapOf<String, ((kList: MutableList<KLineEntity>) -> Unit)>()
+    }
+    val mOnSubscribeKlineMap: MutableMap<String, ((newKList: MutableList<KLineEntity>) -> Unit)> by lazy {
+        mutableMapOf<String, ((newKList: MutableList<KLineEntity>) -> Unit)>()
+    }
 
-    override fun initSocket(
-            pair: String,
-            marketUrl: String,
-            mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
-            mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
-            mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
-            mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit),
-            mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)
-    ) {
-        this.mOnQueryKlineCallback = mOnQueryKlineCallback
-        this.mOnSubscribeKlineCallback = mOnSubscribeKlineCallback
-        this.mOnTodayCallback = mOnTodayCallback
-        this.mOnDepthCallback = mOnDepthCallback
-        this.mOnDealCallback = mOnDealCallback
-        this.mPair = pair
+    override fun initSocket(marketUrl: String) {
         socket?.cancel()
         NLog.i("请求接口：$marketUrl")
         nWebSocket = NWebSocket.newInstance(marketUrl, wsListener)
         socket = nWebSocket?.open()
     }
 
-    override fun initCallBack(
+    override fun addCallBack(
+            key: String,
             mOnQueryKlineCallback: (kList: MutableList<KLineEntity>) -> Unit,
             mOnSubscribeKlineCallback: (newKList: MutableList<KLineEntity>) -> Unit,
             mOnTodayCallback: (todayBean: SoketTodayBean) -> Unit,
             mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit,
             mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit
     ) {
-        this.mOnQueryKlineCallback = mOnQueryKlineCallback
-        this.mOnSubscribeKlineCallback = mOnSubscribeKlineCallback
-        this.mOnTodayCallback = mOnTodayCallback
-        this.mOnDepthCallback = mOnDepthCallback
-        this.mOnDealCallback = mOnDealCallback
+//        this.mOnQueryKlineCallback = mOnQueryKlineCallback
+//        this.mOnSubscribeKlineCallback = mOnSubscribeKlineCallback
+//        this.mOnTodayCallback = mOnTodayCallback
+//        this.mOnDepthCallback = mOnDepthCallback
+//        this.mOnDealCallback = mOnDealCallback
+        this.OnQueryKlineMap.put(key, mOnQueryKlineCallback)
+        this.mOnSubscribeKlineMap.put(key, mOnSubscribeKlineCallback)
+        this.mOnTodayMap.put(key, mOnTodayCallback)
+        this.mOnDepthMap.put(key, mOnDepthCallback)
+        this.mOnDealMap.put(key, mOnDealCallback)
+
     }
 
-    override fun subscribeAllData(type: Int, pattern: String) {
+    override fun removeCallBack(key: String) {
+        this.OnQueryKlineMap.remove(key)
+        this.mOnSubscribeKlineMap.remove(key)
+        this.mOnTodayMap.remove(key)
+        this.mOnDepthMap.remove(key)
+        this.mOnDealMap.remove(key)
+    }
+
+    override fun subscribeAllData(pair: String, type: Int, pattern: String) {
+        this.mPair = pair
         queryKline(type, pattern)
         subscribeToday()
         subscribeDeals()
@@ -365,20 +383,35 @@ class WebSoketImpl : IWebSoket {
                     .subscribe({
                         when (it) {
                             KLineParam.DATA_KLINE_QUERY -> {
-                                mOnQueryKlineCallback?.invoke(mKList)
+//                                mOnQueryKlineCallback?.invoke(mKList)
+                                OnQueryKlineMap.forEach {
+                                    it.value.invoke(mKList)
+                                }
                                 subscribeKline()
                             }
                             KLineParam.DATA_KLINE_SUBSCRIBE -> {
-                                mOnSubscribeKlineCallback?.invoke(mNewKList)
+//                                mOnSubscribeKlineCallback?.invoke(mNewKList)
+                                mOnSubscribeKlineMap.forEach {
+                                    it.value.invoke(mNewKList)
+                                }
                             }
                             KLineParam.DATA_TODAY_SUBSCRIBE -> {
-                                mOnTodayCallback?.invoke(mTodayBean!!)
+                                mOnTodayMap.forEach {
+                                    it.value.invoke(mTodayBean!!)
+                                }
+//                                mOnTodayCallback?.invoke(mTodayBean!!)
                             }
                             KLineParam.DATA_DEPTH_SUBSCRIBE -> {
-                                mOnDepthCallback?.invoke(mDepthBuyList, mDepthSellList)
+                                mOnDepthMap.forEach {
+                                    it.value.invoke(mDepthBuyList, mDepthSellList)
+                                }
+//                                mOnDepthCallback?.invoke(mDepthBuyList, mDepthSellList)
                             }
                             KLineParam.DATA_DEALS_SUBSCRIBE -> {
-                                mOnDealCallback?.invoke(mDealList)
+                                mOnDealMap.forEach {
+                                    it.value.invoke(mDealList)
+                                }
+//                                mOnDealCallback?.invoke(mDealList)
                             }
                         }
                     }, {

@@ -281,9 +281,8 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     }
 
     fun initSoket(marketUrl: String) {
-        webSoketP.initSocket(
-                "${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}",
-                marketUrl,
+        webSoketP.initSocket(marketUrl)
+        webSoketP.addCallBack("kline",
                 {
                     //查询k线
                     chartData.addAll(it)
@@ -331,7 +330,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     newDealAdapter.group = it.take(20).toMutableList()
                     newDealLv.adapter = newDealAdapter
                 })
-        webSoketP.subscribeAllData(KLineParam.KLINE_TYPE_ONE_MIN, pattern)
+        webSoketP.subscribeAllData("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}", KLineParam.KLINE_TYPE_ONE_MIN, pattern)
     }
 
     fun refreshLayout() {

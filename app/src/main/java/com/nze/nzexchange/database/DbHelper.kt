@@ -37,7 +37,26 @@ class DbHelper private constructor(context: Context?, name: String?, factory: SQ
     override fun onCreate(db: SQLiteDatabase?) {
         val searchHistorySql = "create table $TAB_SEARCH_HISTORY(id integer primary key autoincrement,tid text ,createTime integer,currency text,exchangeRate real,mainCurrency text,status integer,transactionPair text,gain real,optional integer,volume real,popular integer,deal real)"
         db?.execSQL(searchHistorySql)
-        val transactionPairSql = "create table $TAB_TRANSACTION_PAIR(id integer primary key autoincrement,tid text ,createTime integer,currency text,exchangeRate real,mainCurrency text,status integer,transactionPair text,gain real,optional integer,volume real,popular integer,deal real)"
+        val transactionPairSql = "create table $TAB_TRANSACTION_PAIR(" +
+                "id integer primary key autoincrement," +
+                "tid text ," +
+                "createTime integer," +
+                "currency text," +
+                "exchangeRate real," +
+                "mainCurrency text," +
+                "status integer," +
+                "transactionPair text," +
+                "gain real," +
+                "optional integer," +
+                "volume real," +
+                "popular integer," +
+                "deal real," +
+                "feePrec integer," +
+                "stockPrec integer," +
+                "moneyPrec integer," +
+                "minAmount real," +
+                "statusInitTime integer," +
+                "statusUseTime integer)"
         db?.execSQL(transactionPairSql)
     }
 

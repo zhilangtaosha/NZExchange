@@ -19,25 +19,19 @@ interface IWebSoket {
     var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)?
     var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)?
 
-    fun initSocket(
-            pair: String,
-            marketUrl: String,
-            mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
-            mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
-            mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
-            mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit),
-            mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)
+    fun initSocket(marketUrl: String)
+
+    fun addCallBack(key: String,
+                    mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
+                    mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
+                    mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
+                    mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit),
+                    mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)
     )
 
-    fun initCallBack(
-            mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
-            mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
-            mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
-            mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit),
-            mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)
-    )
+    fun removeCallBack(key: String)
 
-    fun subscribeAllData(type: Int, pattern: String)
+    fun subscribeAllData(pair: String, type: Int, pattern: String)
 
     fun changeType(type: Int, pattern: String)
 

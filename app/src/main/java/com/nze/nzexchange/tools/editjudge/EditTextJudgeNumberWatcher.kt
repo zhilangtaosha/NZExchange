@@ -13,9 +13,11 @@ import android.widget.EditText
  */
 class EditTextJudgeNumberWatcher : TextWatcher {
     lateinit var editText: EditText
+    var mDigit: Int = 8
 
-    constructor(editText: EditText) {
+    constructor(editText: EditText, digit: Int) {
         this.editText = editText
+        this.mDigit = digit
     }
 
 
@@ -34,7 +36,7 @@ class EditTextJudgeNumberWatcher : TextWatcher {
         val posDot = temp.indexOf(".")//返回指定字符在此字符串中第一次出现处的索引
         val index = editText.selectionStart//获取光标位置
 
-        if (posDot > 0 && temp.length - posDot - 1 > 4)//如果包含小数点
+        if (posDot > 0 && temp.length - posDot - 1 > mDigit)//如果包含小数点
         {
             edt.delete(index - 1, index);//删除光标前的字符
             return;

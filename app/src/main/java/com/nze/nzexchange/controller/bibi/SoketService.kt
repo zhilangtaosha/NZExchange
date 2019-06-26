@@ -53,32 +53,19 @@ class SoketService : Service() {
         override var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)? = null
         override var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)? = null
 
-        override fun initSocket(
-                pair: String,
-                marketUrl: String,
-                mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
-                mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit),
-                mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit),
-                mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit),
-                mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)
-        ) {
-            webSoket.initSocket(
-                    pair,
-                    marketUrl,
-                    mOnQueryKlineCallback,
-                    mOnSubscribeKlineCallback,
-                    mOnTodayCallback,
-                    mOnDepthCallback,
-                    mOnDealCallback)
+        override fun initSocket(marketUrl: String) {
+            webSoket.initSocket(marketUrl)
         }
 
-        override fun initCallBack(
+        override fun addCallBack(
+                key: String,
                 mOnQueryKlineCallback: (kList: MutableList<KLineEntity>) -> Unit,
                 mOnSubscribeKlineCallback: (newKList: MutableList<KLineEntity>) -> Unit,
                 mOnTodayCallback: (todayBean: SoketTodayBean) -> Unit,
                 mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit,
                 mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit) {
-            webSoket.initCallBack(
+            webSoket.addCallBack(
+                    key,
                     mOnQueryKlineCallback,
                     mOnSubscribeKlineCallback,
                     mOnTodayCallback,
@@ -86,8 +73,12 @@ class SoketService : Service() {
                     mOnDealCallback)
         }
 
-        override fun subscribeAllData(type: Int, pattern: String) {
-            webSoket.subscribeAllData(type, pattern)
+        override fun removeCallBack(key: String) {
+            webSoket.removeCallBack(key)
+        }
+
+        override fun subscribeAllData(pair: String, type: Int, pattern: String) {
+            webSoket.subscribeAllData(pair, type, pattern)
         }
 
         override fun subscribeDepthAndToday(amount: Int, depth: String, pair: String) {

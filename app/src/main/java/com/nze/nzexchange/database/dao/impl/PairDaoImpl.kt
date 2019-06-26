@@ -31,6 +31,12 @@ class PairDaoImpl : PairDao {
         cv.put("volume", it.volume)
         cv.put("popular", it.popular)
         cv.put("deal", it.deal)
+        cv.put("feePrec", it.feePrec)
+        cv.put("stockPrec", it.stockPrec)
+        cv.put("moneyPrec", it.moneyPrec)
+        cv.put("minAmount", it.minAmount)
+        cv.put("statusInitTime", it.statusInitTime)
+        cv.put("statusUseTime", it.statusUseTime)
         db.update(DbHelper.TAB_TRANSACTION_PAIR, cv, "tid=?", arrayOf("${it.id}"))
         db.close()
     }
@@ -84,6 +90,12 @@ class PairDaoImpl : PairDao {
         cv.put("volume", it.volume)
         cv.put("popular", it.popular)
         cv.put("deal", it.deal)
+        cv.put("feePrec", it.feePrec)
+        cv.put("stockPrec", it.stockPrec)
+        cv.put("moneyPrec", it.moneyPrec)
+        cv.put("minAmount", it.minAmount)
+        cv.put("statusInitTime", it.statusInitTime)
+        cv.put("statusUseTime", it.statusUseTime)
         db.update(DbHelper.TAB_TRANSACTION_PAIR, cv, "tid=?", arrayOf("${it.id}"))
     }
 
@@ -101,6 +113,12 @@ class PairDaoImpl : PairDao {
         cv.put("volume", it.volume)
         cv.put("popular", it.popular)
         cv.put("deal", it.deal)
+        cv.put("feePrec", it.feePrec)
+        cv.put("stockPrec", it.stockPrec)
+        cv.put("moneyPrec", it.moneyPrec)
+        cv.put("minAmount", it.minAmount)
+        cv.put("statusInitTime", it.statusInitTime)
+        cv.put("statusUseTime", it.statusUseTime)
         db.insert(DbHelper.TAB_TRANSACTION_PAIR, null, cv)
     }
 
@@ -125,7 +143,14 @@ class PairDaoImpl : PairDao {
                     cursor.getInt(9),
                     cursor.getDouble(10),
                     cursor.getInt(11),
-                    cursor.getDouble(12)
+                    cursor.getDouble(12),
+                    cursor.getInt(13),
+                    cursor.getInt(14),
+                    cursor.getInt(15),
+                    cursor.getDouble(16),
+                    cursor.getLong(17),
+                    cursor.getLong(18)
+
             )
             list.add(bean)
             cursor.moveToNext()
