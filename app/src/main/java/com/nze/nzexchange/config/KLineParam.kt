@@ -46,6 +46,7 @@ class KLineParam {
         const val METHOD_SUBSCRIBE_DEPTH = "depth.subscribe"//订阅深度
         const val METHOD_QUERY_KLINE = "kline.query"//查询K线
         const val METHOD_SUBSCRIBE_KLINE = "kline.subscribe"//订阅K线
+        const val METHOD_QUERY_RANK = "price.ranking"//查询涨幅榜
 
         const val STATUS_MA = "MA"
         const val STATUS_BOLL = "BOLL"
@@ -68,6 +69,7 @@ class KLineParam {
         const val DATA_TODAY_SUBSCRIBE = 2
         const val DATA_DEALS_SUBSCRIBE = 3
         const val DATA_DEPTH_SUBSCRIBE = 4
+        const val DATA_RANK_QUERY = 5//涨幅榜
 
         //最近成交列表类型
         const val DEALS_SELL = "sell"
@@ -103,6 +105,7 @@ class KLineParam {
 
         var socketId: Int = 0
         val ID_KLINE: Int = 100001
+        val ID_RANK: Int = 100002
     }
 }
 

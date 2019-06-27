@@ -106,7 +106,9 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
             getDataFromNet()
         }
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
-            ptrLv.doPullRefreshing(true, 200)
+            page = 1
+            refreshType = RrefreshType.PULL_DOWN
+            getDataFromNet()
         }
     }
 

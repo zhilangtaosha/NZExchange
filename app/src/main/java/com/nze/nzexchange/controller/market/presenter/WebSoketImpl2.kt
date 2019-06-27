@@ -28,29 +28,23 @@ import kotlin.text.Typography.quote
  * @类 说 明: 曙光定义的格式
  * @创建时间：2019/6/14
  */
-class WebSoketImpl2 : IWebSoket {
-    override fun removeCallBack(key: String) {
+class WebSoketImpl2 {
+    fun removeCallBack(key: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun initSocket(marketUrl: String) {
+    fun initSocket(marketUrl: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun addCallBack(key: String, mOnQueryKlineCallback: (kList: MutableList<KLineEntity>) -> Unit, mOnSubscribeKlineCallback: (newKList: MutableList<KLineEntity>) -> Unit, mOnTodayCallback: (todayBean: SoketTodayBean) -> Unit, mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit, mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit) {
+    fun addCallBack(key: String, mOnQueryKlineCallback: (kList: MutableList<KLineEntity>) -> Unit, mOnSubscribeKlineCallback: (newKList: MutableList<KLineEntity>) -> Unit, mOnTodayCallback: (todayBean: SoketTodayBean) -> Unit, mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit, mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun subscribeAllData(pair: String, type: Int, pattern: String) {
+    fun subscribeAllData(pair: String, type: Int, pattern: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-
-    override var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)? = null
-    override var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)? = null
-    override var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)? = null
-    override var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)? = null
-    override var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)? = null
 
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
@@ -84,17 +78,15 @@ class WebSoketImpl2 : IWebSoket {
     var pairsBean: TransactionPairsBean? = null
 
 
-
-
-    override fun changeType(type: Int, pattern: String) {
+    fun changeType(type: Int, pattern: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun subscribeDepthAndToday(amount: Int, depth: String, pair: String) {
+    fun subscribeDepthAndToday(amount: Int, depth: String, pair: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun close() {
+    fun close() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -323,7 +315,7 @@ class WebSoketImpl2 : IWebSoket {
                             }
                         }
                     }, {
-                       NLog.i(it.message)
+                        NLog.i(it.message)
                     })
 
             super.onMessage(webSocket, text)

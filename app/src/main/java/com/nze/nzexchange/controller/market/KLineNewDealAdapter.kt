@@ -34,7 +34,6 @@ class KLineNewDealAdapter(mContext: Context) : NBaseAda<SoketDealBean, KLineNewD
         } else {
             vh.priceTv.setTxtColor(R.color.color_down)
         }
-        NLog.i("time>>>${item.time}   ${BigDecimal(item.time).toPlainString().toLong() * 1000}  ${TimeTool.format(TimeTool.PATTERN8, BigDecimal(item.time).toPlainString().toLong() * 1000)}")
         vh.timeTv.text = TimeTool.format(TimeTool.PATTERN8, BigDecimal(item.time).toPlainString().toLong() * 1000)
         vh.priceTv.text = item.price.formatForPrice()
         vh.amountTv.text = item.amount.formatForCurrency()

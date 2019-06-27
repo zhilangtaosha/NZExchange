@@ -57,11 +57,13 @@ class WebSoketImpl : IWebSoket {
     //k线
     val mKList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val mNewKList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
-    override var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)? = null
-    override var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)? = null
-    override var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)? = null
-    override var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)? = null
-    override var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)? = null
+    //涨幅榜
+    val mRankList: MutableList<SoketRankBean> by lazy { mutableListOf<SoketRankBean>() }
+    //    override var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)? = null
+//    override var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)? = null
+//    override var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)? = null
+//    override var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)? = null
+//    override var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)? = null
     val mOnTodayMap: MutableMap<String, ((todayBean: SoketTodayBean) -> Unit)> by lazy {
         mutableMapOf<String, ((todayBean: SoketTodayBean) -> Unit)>()
     }
@@ -77,8 +79,19 @@ class WebSoketImpl : IWebSoket {
     val mOnSubscribeKlineMap: MutableMap<String, ((newKList: MutableList<KLineEntity>) -> Unit)> by lazy {
         mutableMapOf<String, ((newKList: MutableList<KLineEntity>) -> Unit)>()
     }
+    val mOnQueryRankMap: MutableMap<String, ((rankList: MutableList<SoketRankBean>) -> Unit)> by lazy {
+        mutableMapOf<String, ((rankList: MutableList<SoketRankBean>) -> Unit)>()
+    }
+    val mOnOpenMap: MutableMap<String, (() -> Unit)> by lazy {
+        mutableMapOf<String, (() -> Unit)>()
+    }
+    val mOnCloseMap: MutableMap<String, (() -> Unit)> by lazy {
+        mutableMapOf<String, (() -> Unit)>()
+    }
 
-    override fun initSocket(marketUrl: String) {
+    override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
+        mOnOpenMap.put(key, onOpenCallback)
+        mOnCloseMap.put(key, onCloseCallback)
         socket?.cancel()
         NLog.i("请求接口：$marketUrl")
         nWebSocket = NWebSocket.newInstance(marketUrl, wsListener)
@@ -93,11 +106,6 @@ class WebSoketImpl : IWebSoket {
             mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit,
             mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit
     ) {
-//        this.mOnQueryKlineCallback = mOnQueryKlineCallback
-//        this.mOnSubscribeKlineCallback = mOnSubscribeKlineCallback
-//        this.mOnTodayCallback = mOnTodayCallback
-//        this.mOnDepthCallback = mOnDepthCallback
-//        this.mOnDealCallback = mOnDealCallback
         this.OnQueryKlineMap.put(key, mOnQueryKlineCallback)
         this.mOnSubscribeKlineMap.put(key, mOnSubscribeKlineCallback)
         this.mOnTodayMap.put(key, mOnTodayCallback)
@@ -106,12 +114,17 @@ class WebSoketImpl : IWebSoket {
 
     }
 
+    override fun addRankCallBak(key: String, mOnQueryRankCallback: (rankList: MutableList<SoketRankBean>) -> Unit) {
+        this.mOnQueryRankMap.put(key, mOnQueryRankCallback)
+    }
+
     override fun removeCallBack(key: String) {
         this.OnQueryKlineMap.remove(key)
         this.mOnSubscribeKlineMap.remove(key)
         this.mOnTodayMap.remove(key)
         this.mOnDepthMap.remove(key)
         this.mOnDealMap.remove(key)
+        this.mOnQueryRankMap.remove(key)
     }
 
     override fun subscribeAllData(pair: String, type: Int, pattern: String) {
@@ -210,6 +223,13 @@ class WebSoketImpl : IWebSoket {
         socket?.send(param)
     }
 
+    override fun queryRank() {//查询涨幅榜
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_QUERY_RANK, KLineParam.ID_RANK)
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("queryRank>>$param")
+        socket?.send(param)
+    }
+
     override fun close() {
         nWebSocket?.close()
         socket?.cancel()
@@ -219,13 +239,18 @@ class WebSoketImpl : IWebSoket {
         val gson: Gson = Gson()
         override fun onOpen(webSocket: WebSocket, response: Response) {
             NLog.i("nonOpen")
-
+            mOnOpenMap.forEach {
+                it.value.invoke()
+            }
 
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             super.onFailure(webSocket, t, response)
             NLog.i("nonFailure")
+            mOnCloseMap.forEach {
+                it.value.invoke()
+            }
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -234,29 +259,42 @@ class WebSoketImpl : IWebSoket {
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-//            NLog.i("ntext>>>$text")
+            NLog.i("ntext>>>$text")
             Observable.create<Int> {
                 if (text.contains("error")) {//查询或者订阅成功返回
                     try {
                         val queryBean: SoketQueryBean = gson.fromJson(text, SoketQueryBean::class.java)
-                        if (queryBean.id == KLineParam.ID_KLINE) {//查询根据id确认
+                        when (queryBean.id) {
+                            KLineParam.ID_KLINE -> {//查询根据id确认
 //                            NLog.i("request>>>${queryBean.result}")
-                            val klist: Array<Array<String>>? = gson.fromJson<Array<Array<String>>>(queryBean.result.toString(), Array<Array<String>>::class.java)
-                            klist?.forEachIndexed { index, it ->
-                                val bean = KLineEntity()
-                                bean.Date = TimeTool.format(mPattern, BigDecimal(it[0]).toPlainString().toLong() * 1000)
-                                bean.Open = it[1].toFloat()
-                                bean.Close = it[2].toFloat()
-                                bean.High = it[3].toFloat()
-                                bean.Low = it[4].toFloat()
-                                bean.Volume = it[5].toFloat()
-                                mKList.add(bean)
+                                val klist: Array<Array<String>>? = gson.fromJson<Array<Array<String>>>(queryBean.result.toString(), Array<Array<String>>::class.java)
+                                klist?.forEachIndexed { index, it ->
+                                    val bean = KLineEntity()
+                                    bean.Date = TimeTool.format(mPattern, BigDecimal(it[0]).toPlainString().toLong() * 1000)
+                                    bean.Open = it[1].toFloat()
+                                    bean.Close = it[2].toFloat()
+                                    bean.High = it[3].toFloat()
+                                    bean.Low = it[4].toFloat()
+                                    bean.Volume = it[5].toFloat()
+                                    mKList.add(bean)
+                                }
+                                it.onNext(KLineParam.DATA_KLINE_QUERY)
                             }
-                            it.onNext(KLineParam.DATA_KLINE_QUERY)
-
+                            KLineParam.ID_RANK -> {
+                                try {
+                                    val rankList: Array<SoketRankBean>? = gson.fromJson<Array<SoketRankBean>>(queryBean.result.toString(), Array<SoketRankBean>::class.java)
+                                    if (rankList != null && rankList.size > 0) {
+                                        mRankList.clear()
+                                        mRankList.addAll(rankList)
+                                        it.onNext(KLineParam.DATA_RANK_QUERY)
+                                    }
+                                } catch (e: Exception) {
+                                    NLog.i("rank出错>>${e.message}")
+                                }
+                            }
                         }
                     } catch (e: Exception) {
-                        NLog.i("query出错")
+                        NLog.i("query出错>>${e.message}")
                     }
                 } else {//订阅
                     val subscribeBean: SoketSubscribeBean = gson.fromJson(text, SoketSubscribeBean::class.java)
@@ -359,7 +397,7 @@ class WebSoketImpl : IWebSoket {
                                 }
                                 it.onNext(KLineParam.DATA_DEPTH_SUBSCRIBE)
                             } catch (e: Exception) {
-                                NLog.i("depth.update出错")
+                                NLog.i("depth.update出错>>${e.message}")
                             }
                         }
                         KLineParam.SUBSCRIBE_DEALS -> {//最近成交列表
@@ -371,9 +409,10 @@ class WebSoketImpl : IWebSoket {
                                 mDealList.sortByDescending { it.time }
                                 it.onNext(KLineParam.DATA_DEALS_SUBSCRIBE)
                             } catch (e: Exception) {
-                                NLog.i("deals.update出错")
+                                NLog.i("deals.update出错>>${e.message}")
                             }
                         }
+
                     }
 
                 }
@@ -412,6 +451,11 @@ class WebSoketImpl : IWebSoket {
                                     it.value.invoke(mDealList)
                                 }
 //                                mOnDealCallback?.invoke(mDealList)
+                            }
+                            KLineParam.DATA_RANK_QUERY -> {
+                                mOnQueryRankMap.forEach {
+                                    it.value.invoke(mRankList)
+                                }
                             }
                         }
                     }, {

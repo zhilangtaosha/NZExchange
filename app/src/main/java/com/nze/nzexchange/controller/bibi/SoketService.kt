@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.nze.nzexchange.bean.SoketDealBean
+import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.SoketTodayBean
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.market.presenter.IWebSoket
@@ -47,14 +48,9 @@ class SoketService : Service() {
 
 
         private val webSoket: IWebSoket by lazy { WebSoketImpl() }
-        override var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)? = null
-        override var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)? = null
-        override var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)? = null
-        override var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)? = null
-        override var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)? = null
 
-        override fun initSocket(marketUrl: String) {
-            webSoket.initSocket(marketUrl)
+        override fun initSocket(key: String,marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
+            webSoket.initSocket(key,marketUrl, onOpenCallback, onCloseCallback)
         }
 
         override fun addCallBack(
@@ -73,6 +69,10 @@ class SoketService : Service() {
                     mOnDealCallback)
         }
 
+        override fun addRankCallBak(key: String, mOnQueryRankCallback: (rankList: MutableList<SoketRankBean>) -> Unit) {
+            webSoket.addRankCallBak(key, mOnQueryRankCallback)
+        }
+
         override fun removeCallBack(key: String) {
             webSoket.removeCallBack(key)
         }
@@ -87,6 +87,10 @@ class SoketService : Service() {
 
         override fun changeType(type: Int, pattern: String) {
             webSoket.changeType(type, pattern)
+        }
+
+        override fun queryRank() {
+            webSoket.queryRank()
         }
 
         override fun close() {

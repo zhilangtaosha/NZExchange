@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.market.presenter
 
 import com.nze.nzexchange.bean.SoketDealBean
+import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.SoketTodayBean
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.widget.chart.KLineEntity
@@ -13,13 +14,8 @@ import com.nze.nzexchange.widget.depth.DepthDataBean
  * @创建时间：2019/6/13
  */
 interface IWebSoket {
-    var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)?
-    var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)?
-    var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)?
-    var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)?
-    var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)?
 
-    fun initSocket(marketUrl: String)
+    fun initSocket(key: String,marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit))
 
     fun addCallBack(key: String,
                     mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
@@ -29,6 +25,8 @@ interface IWebSoket {
                     mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)
     )
 
+    fun addRankCallBak(key: String, mOnQueryRankCallback: ((rankList: MutableList<SoketRankBean>) -> Unit))
+
     fun removeCallBack(key: String)
 
     fun subscribeAllData(pair: String, type: Int, pattern: String)
@@ -36,6 +34,8 @@ interface IWebSoket {
     fun changeType(type: Int, pattern: String)
 
     fun subscribeDepthAndToday(amount: Int = KLineParam.AMOUNT_DEPTH_10, depth: String = KLineParam.DEPTH_8, pair: String)
+
+    fun queryRank()
 
     fun close()
 }

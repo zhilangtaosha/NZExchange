@@ -1,20 +1,33 @@
 package com.nze.nzexchange.controller.home
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.bibi.SoketService
 import com.nze.nzexchange.controller.common.webview.WebActivity
 import com.nze.nzexchange.controller.home.carousel.CarouselAdapter
 import com.nze.nzexchange.controller.home.carousel.SimpleBulletinAdapter
 import com.nze.nzexchange.controller.my.asset.MyAssetActivity
 import com.nze.nzexchange.controller.my.asset.legal.LegalRechargeActivity
+import com.nze.nzexchange.extend.formatForCurrency
+import com.nze.nzexchange.extend.formatForLegal
+import com.nze.nzexchange.extend.formatForPrice
+import com.nze.nzexchange.extend.mul
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.widget.bulletin.BulletinView
 import com.nze.nzexchange.widget.recyclerview.Divider
@@ -70,7 +83,6 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
     override fun initView(rootView: View) {
         this.rootView = rootView
         mCarousel = rootView.carousel_home
-//        val carouselAdapter = CarouselAdapter(fragmentManager!!, imageUrls)
 
 
         bulletinView = rootView.bulletin_view
@@ -83,11 +95,6 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
         mHotRView.addItemDecoration(divider)
 
-
-//        Handler().postDelayed({
-//            mRandAdapter.group = hotDatas
-//            rootView.lav_rank_home.adapter = mRandAdapter
-//        }, 3000)
 
         myWallet.setOnClickListener(this)
         legalTransactionLayout.setOnClickListener(this)
@@ -194,12 +201,38 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-
+        activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
     }
 
 
     override fun onDestroy() {
         mCarousel.stop()
+//        binder?.close()
+        activity!!.unbindService(connection)
         super.onDestroy()
+    }
+
+    var binder: SoketService.SoketBinder? = null
+    var isBinder = false
+
+    val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i("zwy", "onServiceDisconnected")
+            isBinder = false
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i("zwy", "onServiceConnected")
+            binder = service as SoketService.SoketBinder
+            isBinder = true
+
+            binder?.addRankCallBak("home") {
+                NLog.i("home>>>")
+            }
+            binder?.initSocket("home", KLineParam.MARKET_MYSELF, {
+                NLog.i("home open")
+                binder?.queryRank()
+            }, {})
+        }
     }
 }

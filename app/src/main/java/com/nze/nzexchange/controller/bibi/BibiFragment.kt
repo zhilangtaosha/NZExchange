@@ -720,8 +720,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     getEt.removeTextChangedListener(getWatcher)
                 getWatcher = EditTextJudgeNumberWatcher(getEt, it.stockPrec)
                 getEt.addTextChangedListener(getWatcher)
-                NLog.i("计价货币${it.mainCurrency}--->${it.moneyPrec}--->${DecimalDigitTool.getDigit(it.moneyPrec)}")
-                NLog.i("交易货币${it.currency}--->${it.stockPrec}--->${DecimalDigitTool.getDigit(it.stockPrec)}")
             }
             if (transactionType == TRANSACTIONTYPE_LIMIT) {
                 getEt.hint = "数量(${currentTransactionPair?.currency})"
@@ -871,7 +869,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun onDestroy() {
         super.onDestroy()
-        binder?.close()
         activity!!.unbindService(connection)
     }
 
@@ -895,9 +892,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             Log.i("zwy", "onServiceConnected")
             binder = service as SoketService.SoketBinder
             isBinder = true
-            binder?.initSocket(
-                    KLineParam.MARKET_MYSELF
-            )
+
             binder?.addCallBack("bibi",
                     {
                         //查询k线
@@ -933,9 +928,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         //订阅最近成交列表
 
                     })
+//            binder?.initSocket("bibi",
+//                    KLineParam.MARKET_MYSELF,
+//                    {
+//                    }, {}
+//            )
             changePair()
         }
-
-
     }
 }

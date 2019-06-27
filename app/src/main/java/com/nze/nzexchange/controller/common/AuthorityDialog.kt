@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.common
 
 import android.app.AlertDialog
 import android.content.Context
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.nze.nzeframework.tool.EventCenter
@@ -46,8 +47,9 @@ class AuthorityDialog(context: Context) {
         contentLayout = window.findViewById(R.id.layout_content_da)
         confirmTv = window.findViewById(R.id.tv_confirm_da)
 
+        nameTv.visibility = View.VISIBLE
         nameTv.text = name
-        var isExit= false
+        var isExit = false
         error.forEachIndexed { index, errorBean ->
             var s = ""
             when (errorBean.errorCode) {
@@ -63,9 +65,13 @@ class AuthorityDialog(context: Context) {
                 "me_memb_buspw_nodata" -> {//未设置资金密码
                     s = "${index + 1}.设置资金密码"
                 }
-                "token_lost"->{//登录身份失效
+                "token_lost" -> {//登录身份失效
                     s = "${index + 1}.${errorBean.errorMsg}"
                     isExit = true
+                }
+                "me_memb_buspw_error" -> {
+                    s = "资金密码输入错误"
+                    nameTv.visibility = View.GONE
                 }
             }
             val tv = ViewFactory.createAuthorityTv(s)
@@ -76,7 +82,7 @@ class AuthorityDialog(context: Context) {
         confirmTv.setOnClickListener {
             dialog.dismiss()
             onClick.invoke()
-            if (isExit){
+            if (isExit) {
                 UserBean.logout()
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 0))
                 EventBus.getDefault().post(EventCenter<String>(EventCode.CODE_LOGOUT_SUCCESS))

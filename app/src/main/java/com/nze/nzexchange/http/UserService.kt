@@ -280,7 +280,7 @@ interface UserService {
 
     //资金账户查询_查询账户信息
     @FormUrlEncoded
-    @POST("meRunBus/meAcc/findDataVoByBusKey_meAcc_token.json")
+    @POST("meRunBus/meAcc/findDataVoByBusKey_meAcc_curToken.json")
     fun getLegalAccountInfo(
             @Field("tokenUserId") tokenUserId: String,
             @Field("tokenUserKey") tokenUserKey: String

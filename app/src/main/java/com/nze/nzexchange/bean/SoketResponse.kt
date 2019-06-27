@@ -1,5 +1,7 @@
 package com.nze.nzexchange.bean
 
+import java.math.BigDecimal
+
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
@@ -33,10 +35,22 @@ data class SoketDepthBean(
         val bids: Array<Array<Double>>?
 )
 
+
 data class SoketDealBean(
         val amount: Double,
         val id: String,
         val price: Double,
         val time: Double,
         val type: String
+)
+
+data class SoketRankBean(//首页涨幅榜
+        val change: String,
+        val deal: String,
+        val high: String,
+        val last: String,
+        val low: String,
+//        val market: String,
+        val open: String,
+        val volume: String
 )
