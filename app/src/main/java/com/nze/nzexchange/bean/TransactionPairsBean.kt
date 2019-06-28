@@ -16,14 +16,14 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class TransactionPairsBean(
         val createTime: Long,
-        val currency: String,//交易货币
-        val exchangeRate: Double,//汇率
+        var currency: String,//交易货币
+        var exchangeRate: Double,//汇率
         val id: String,
         var mainCurrency: String = "",//计价币种
         val remark: String?,
         val status: Int,//状态:0 初始化 1 测试阶段  2 准备阶段 3 激活  4 暂停 5 停用
-        val transactionPair: String,//交易对
-        val gain: Double,
+        var transactionPair: String,//交易对
+        var gain: Double,
         var optional: Int = 0,
         val volume: Double,
         val popular: Int,//热门交易对1001：热门，1002：非热门
@@ -33,10 +33,11 @@ data class TransactionPairsBean(
         val moneyPrec: Int,//计价币价格小数位数
         val minAmount: Double,//最小交易数量
         val statusInitTime: Long,//初始化状态时间
-        val statusUseTime: Long//激活使用状态时间
+        val statusUseTime: Long,//激活使用状态时间
+        var cny: Double = 0.0
 ) : Parcelable {
 
-    constructor() : this(0, "", 0.0, "", "", "", 0, "", 0.0, 0, 0.0, 0, 0.0, 0, 0, 0, 0.0, 0, 0) {}
+    constructor() : this(0, "", 0.0, "", "", "", 0, "", 0.0, 0, 0.0, 0, 0.0, 0, 0, 0, 0.0, 0, 0, 0.0) {}
 
     companion object {
         fun getAllTransactionPairs(): Flowable<Result<MutableList<TransactionPairsBean>>> {

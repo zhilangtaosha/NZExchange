@@ -32,7 +32,11 @@ import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.widget.bulletin.BulletinView
 import com.nze.nzexchange.widget.recyclerview.Divider
 import com.zhuang.zbannerlibrary.ZBanner
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import java.util.*
 
 
 class HomeFragment : NBaseFragment(), View.OnClickListener {
@@ -58,6 +62,8 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
     //涨幅榜
     val mRandAdapter by lazy { RankListAdapter(activity!!) }
     var userBean = UserBean.loadFromApp()
+    val mPopularList: MutableList<TransactionPairsBean> by lazy { mutableListOf<TransactionPairsBean>() }
+    val mRankList: MutableList<SoketRankBean> by lazy { mutableListOf<SoketRankBean>() }
 
     init {
 //        imageUrls.add("http://bpic.588ku.com/back_pic/17/03/16/14391cb76638d75a22f35625dff40eee.jpg")
@@ -152,9 +158,10 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
-                        mHotAdapter = HotTransactionPairAdapter(activity!!, it.result)
+                        mPopularList.addAll(it.result)
+                        mHotAdapter = HotTransactionPairAdapter(activity!!, mPopularList)
                         mHotRView.adapter = mHotAdapter
-
+                        refreshRank()
                     }
                 }, onError)
     }
@@ -169,8 +176,8 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
-                        mRandAdapter.group = it.result
-                        rootView.lav_rank_home.adapter = mRandAdapter
+//                        mRandAdapter.group = it.result
+//                        rootView.lav_rank_home.adapter = mRandAdapter
                     }
                 }, onError)
     }
@@ -226,13 +233,40 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
             binder = service as SoketService.SoketBinder
             isBinder = true
 
-            binder?.addRankCallBak("home") {
-                NLog.i("home>>>")
+            binder?.addRankCallBak("home") { rankList ->
+                NLog.i("home>>>rank")
+                mRankList.addAll(rankList)
+                mRandAdapter.group = mRankList.take(10).toMutableList()
+                rootView.lav_rank_home.adapter = mRandAdapter
+                refreshRank()
             }
             binder?.initSocket("home", KLineParam.MARKET_MYSELF, {
                 NLog.i("home open")
                 binder?.queryRank()
             }, {})
         }
+    }
+
+    fun refreshRank() {
+        Observable.create<Int> {
+            if (mPopularList.size > 0 && mRankList.size > 0) {
+                mPopularList.removeAt(0)
+                mPopularList.forEach { item ->
+                    mRankList.forEach {
+                        if (it.market == item.transactionPair) {
+                            item.gain = it.change
+                            item.cny = it.cny
+                        }
+                    }
+                }
+                it.onNext(1)
+            }
+            it.onComplete()
+        }.subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    mHotAdapter = HotTransactionPairAdapter(activity!!, mPopularList)
+                    mHotRView.adapter = mHotAdapter
+                }
     }
 }

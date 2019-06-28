@@ -1,5 +1,6 @@
 package com.nze.nzexchange.bean
 
+import com.nze.nzexchange.extend.retain2
 import java.math.BigDecimal
 
 /**
@@ -45,12 +46,22 @@ data class SoketDealBean(
 )
 
 data class SoketRankBean(//首页涨幅榜
-        val change: String,
-        val deal: String,
-        val high: String,
-        val last: String,
-        val low: String,
-//        val market: String,
-        val open: String,
-        val volume: String
-)
+        val deal: Double,
+        val high: Double,
+        val last: Double,
+        val low: Double,
+
+        val open: Double,
+        val volume: Double,
+        val cny: Double
+) {
+    var change: Double = 0.0
+        get() {
+            return field.retain2().toDouble()
+        }
+
+    var market: String = ""
+        get() {
+            return field.replace("-", "/")
+        }
+}

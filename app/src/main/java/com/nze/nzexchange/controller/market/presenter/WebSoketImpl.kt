@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.market.presenter
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivityP
 import com.nze.nzexchange.bean.*
@@ -19,6 +20,7 @@ import okhttp3.WebSocketListener
 import okio.ByteString
 import zlc.season.rxdownload3.helper.fileName
 import java.math.BigDecimal
+import java.net.URLEncoder
 
 /**
  * @author: zwy
@@ -282,7 +284,7 @@ class WebSoketImpl : IWebSoket {
                             }
                             KLineParam.ID_RANK -> {
                                 try {
-                                    val rankList: Array<SoketRankBean>? = gson.fromJson<Array<SoketRankBean>>(queryBean.result.toString(), Array<SoketRankBean>::class.java)
+                                    val rankList: Array<SoketRankBean>? = gson.fromJson<Array<SoketRankBean>>(queryBean.result.toString().replace("/", "-"), Array<SoketRankBean>::class.java)
                                     if (rankList != null && rankList.size > 0) {
                                         mRankList.clear()
                                         mRankList.addAll(rankList)

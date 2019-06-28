@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.MarketPopularBean
+import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.controller.base.BaseAda
@@ -18,7 +19,7 @@ import com.nze.nzexchange.extend.setTxtColor
 import kotlinx.android.synthetic.main.abc_alert_dialog_material.view.*
 import kotlinx.android.synthetic.main.lv_rank_home.view.*
 
-class RankListAdapter(mContext: Context) : BaseAda<TransactionPairsBean>(mContext) {
+class RankListAdapter(mContext: Context) : BaseAda<SoketRankBean>(mContext) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var vh: ViewHolder? = null
         var cView: View? = null
@@ -68,33 +69,28 @@ class RankListAdapter(mContext: Context) : BaseAda<TransactionPairsBean>(mContex
         }
         vh.orderNumTv.text = (position + 1).toString()
         val bean = getItem(position)!!
-        vh.transactionPairTv.text = bean.transactionPair
-        vh.exchangeTv.text = bean.exchangeRate.formatForCurrency()
+        vh.transactionPairTv.text = bean.market
+        vh.exchangeTv.text = bean.last.formatForCurrency()
         vh.total24Tv.text = "24h量 ${bean.volume}"
-        if (bean.gain > 0) {
+        if (bean.change > 0) {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
-            vh.changeTv.text = "+${bean.gain}%"
-        } else if (bean.gain == 0.0) {
+            vh.changeTv.text = "+${bean.change}%"
+        } else if (bean.change == 0.0) {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
-            vh.changeTv.text = "${bean.gain}%"
+            vh.changeTv.text = "${bean.change}%"
         } else {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
-            vh.changeTv.text = "${bean.gain}%"
+            vh.changeTv.text = "${bean.change}%"
         }
-
-        CommonBibiP.getInstance(mContext as NBaseActivity)
-                .currencyToLegal(bean.currency, 1.0, {
-                    if (it.success) {
-                        vh.costTv.text = "≈${it.result.formatForLegal()} CNY"
-                    } else {
-                        vh.costTv.text = "≈0 CNY"
-                    }
-                }, {
-                    vh.costTv.text = "≈0 CNY"
-                })
+        vh.costTv.text = "≈${bean.cny.formatForLegal()} CNY"
 
         cView!!.setOnClickListener {
-            KLineActivity.skip(mContext, bean)
+            val pair = TransactionPairsBean()
+            pair.transactionPair = bean.market
+            val split = bean.market.split("/")
+            pair.currency = split[0]
+            pair.mainCurrency = split[1]
+            KLineActivity.skip(mContext, pair)
         }
         return cView!!
     }

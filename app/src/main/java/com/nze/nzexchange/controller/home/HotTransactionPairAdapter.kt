@@ -52,23 +52,24 @@ class HotTransactionPairAdapter(var context: Context, var datas: MutableList<Tra
                 holder.tvChange.text = "${pairBean.gain}%"
             } else {
                 holder.tvChange.setTxtColor(R.color.color_down)
-                holder.tvChange.text = "-${pairBean.gain}%"
+                holder.tvChange.text = "${pairBean.gain}%"
             }
 
             holder.tvName.text = pairBean.transactionPair
             holder.tvExchange.text = pairBean.exchangeRate.toString()
             holder.tvCost.text = (pairBean.exchangeRate * 500).toString()
             holder.tvCost.tag = pairBean.currency
-            CommonBibiP.getInstance(context as NBaseActivity)
-                    .currencyToLegal(pairBean.currency, 1.0, {
-                        if (it.success) {
-                            holder.tvCost.text = "≈${it.result.formatForLegal()} CNY"
-                        } else {
-                            holder.tvCost.text = "≈0 CNY"
-                        }
-                    }, {
-                        holder.tvCost.text = "≈0 CNY"
-                    })
+            holder.tvCost.text = "≈${pairBean.cny.formatForLegal()} CNY"
+//            CommonBibiP.getInstance(context as NBaseActivity)
+//                    .currencyToLegal(pairBean.currency, 1.0, {
+//                        if (it.success) {
+//                            holder.tvCost.text = "≈${it.result.formatForLegal()} CNY"
+//                        } else {
+//                            holder.tvCost.text = "≈0 CNY"
+//                        }
+//                    }, {
+//                        holder.tvCost.text = "≈0 CNY"
+//                    })
 
             holder.rootLayout.setOnClickListener {
                 KLineActivity.skip(context, pairBean)
