@@ -1,6 +1,6 @@
 package com.nze.nzexchange.config
 
-import com.nze.nzexchange.config.KLineParam.Companion.socketId
+import com.nze.nzexchange.BuildConfig
 
 /**
  * @author: zwy
@@ -13,7 +13,16 @@ import com.nze.nzexchange.config.KLineParam.Companion.socketId
 class KLineParam {
 
     companion object {
-        const val MARKET_MYSELF = "ws://192.168.1.107:443"
+        fun getMarketMyself(): String {
+            return if (BuildConfig.DEBUG) {
+                MARKET_MYSELF_IN
+            } else {
+                MARKET_MYSELF_OUT
+            }
+        }
+
+        const val MARKET_MYSELF_IN = "ws://192.168.1.107:443"
+        const val MARKET_MYSELF_OUT = "http://zhongyingying.qicp.io:1443"
         const val MARKET_MYSELF2 = "ws://3.15.16.7:443"
         const val MARKET_HUOBI = "ws://3.16.25.221:443"
 
@@ -47,6 +56,7 @@ class KLineParam {
         const val METHOD_QUERY_KLINE = "kline.query"//查询K线
         const val METHOD_SUBSCRIBE_KLINE = "kline.subscribe"//订阅K线
         const val METHOD_QUERY_RANK = "price.ranking"//查询涨幅榜
+        const val METHOD_MARKET_RANK = "market.ranking"//查询行情列表
 
         const val STATUS_MA = "MA"
         const val STATUS_BOLL = "BOLL"
@@ -70,6 +80,7 @@ class KLineParam {
         const val DATA_DEALS_SUBSCRIBE = 3
         const val DATA_DEPTH_SUBSCRIBE = 4
         const val DATA_RANK_QUERY = 5//涨幅榜
+        const val DATA_MARKET_QUERY = 6//查询行情
 
         //最近成交列表类型
         const val DEALS_SELL = "sell"
@@ -106,6 +117,7 @@ class KLineParam {
         var socketId: Int = 0
         val ID_KLINE: Int = 100001
         val ID_RANK: Int = 100002
+        val ID_MARKET: Int = 100003
     }
 }
 

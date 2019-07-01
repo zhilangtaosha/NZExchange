@@ -18,14 +18,14 @@ data class TransactionPairsBean(
         val createTime: Long,
         var currency: String,//交易货币
         var exchangeRate: Double,//汇率
-        val id: String,
+        var id: String,
         var mainCurrency: String = "",//计价币种
         val remark: String?,
         val status: Int,//状态:0 初始化 1 测试阶段  2 准备阶段 3 激活  4 暂停 5 停用
         var transactionPair: String,//交易对
         var gain: Double,
         var optional: Int = 0,
-        val volume: Double,
+        var volume: Double,
         val popular: Int,//热门交易对1001：热门，1002：非热门
         val deal: Double,
         val feePrec: Int,//计费费用小数位
@@ -38,6 +38,18 @@ data class TransactionPairsBean(
 ) : Parcelable {
 
     constructor() : this(0, "", 0.0, "", "", "", 0, "", 0.0, 0, 0.0, 0, 0.0, 0, 0, 0, 0.0, 0, 0, 0.0) {}
+
+    fun setValueFromRankBean(rankBean: SoketRankBean) {
+        currency = rankBean.getCurrency()
+        mainCurrency = rankBean.getMainCurrency()
+        transactionPair = rankBean.market
+        cny = rankBean.cny
+        exchangeRate = rankBean.last
+        gain = rankBean.change
+        id = rankBean.market
+        volume = rankBean.volume
+    }
+
 
     companion object {
         fun getAllTransactionPairs(): Flowable<Result<MutableList<TransactionPairsBean>>> {
@@ -79,6 +91,16 @@ data class TransactionPairsBean(
                         .bibiService()
                         .marketPopular(userId)
             }
+        }
+
+        fun getListFromRankList(rankList: MutableList<SoketRankBean>): MutableList<TransactionPairsBean> {
+            val list: MutableList<TransactionPairsBean> = mutableListOf()
+            rankList.forEach {
+                val pairsBean = TransactionPairsBean()
+                pairsBean.setValueFromRankBean(it)
+                list.add(pairsBean)
+            }
+            return list
         }
     }
 }

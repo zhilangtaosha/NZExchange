@@ -45,6 +45,14 @@ interface BibiService {
                        @Field("userId") userId: String
     ): Flowable<Result<String>>
 
+    //是否是自选交易对
+    @FormUrlEncoded
+    @POST("market/isOptional")
+    fun isOptional(
+            @Field("userId") userId: String,
+            @Field("optionalCurrency") optionalCurrency: String
+    ): Flowable<Result<Any>>
+
     //获取挂单信息
     @GET("cc/getPendingOrderInfo")
     fun getPendingOrderInfo(

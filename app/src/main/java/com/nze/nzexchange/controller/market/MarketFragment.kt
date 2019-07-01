@@ -1,23 +1,36 @@
 package com.nze.nzexchange.controller.market
 
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import android.support.v4.view.ViewPager
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.SoketMarketBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.bibi.SoketService
 import com.nze.nzexchange.controller.login.LoginActivity
+import com.nze.nzexchange.database.dao.impl.PairDaoImpl
 import com.nze.nzexchange.tools.dp2px
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.indicator.indicator.IndicatorViewPager
 import com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
 import com.nze.nzexchange.widget.indicator.indicator.slidebar.ColorBar
 import com.nze.nzexchange.widget.indicator.indicator.transition.OnTransitionTextListener
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_market.view.*
 
 
@@ -36,7 +49,8 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
     }
 
     private val mainCurrencyList: MutableList<TransactionPairsBean> = mutableListOf()
-
+    private val mMarketList: MutableList<SoketMarketBean> by lazy { mutableListOf<SoketMarketBean>() }
+    val pairDao by lazy { PairDaoImpl() }
 
     companion object {
         @JvmStatic
@@ -63,7 +77,7 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
         indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
 
 
-        getTransactionPair()
+//        getTransactionPair()
     }
 
     override fun onClick(v: View?) {
@@ -136,5 +150,80 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
                         }
                     }
                 }, onError)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
+    }
+
+
+    override fun onDestroy() {
+        activity!!.unbindService(connection)
+        super.onDestroy()
+    }
+
+    var binder: SoketService.SoketBinder? = null
+    var isBinder = false
+
+    val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i("zwy", "onServiceDisconnected")
+            isBinder = false
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i("zwy", "onServiceConnected")
+            binder = service as SoketService.SoketBinder
+            isBinder = true
+            binder?.addMarketCallBack("market") {
+                NLog.i("market resut")
+                mMarketList.addAll(it)
+                tabs.clear()
+                tabs.add("自选")
+                pages.clear()
+                pages.add(MarketOptionalFragment.newInstance(tabs[0]))
+                mMarketList.forEach {
+                    tabs.add(it.money)
+                    pages.add(MarketContentFragment.newInstance(it.money))
+                }
+                Observable.create<Int> {
+                    mMarketList.forEach {
+                        val pairList = TransactionPairsBean.getListFromRankList(it.list.toMutableList())
+                        pairDao.addList(pairList)
+                    }
+                    it.onNext(1)
+                    it.onComplete()
+                }.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            
+                        }
+                viewPager.offscreenPageLimit = tabs.size
+                val indicatorAdapter = MarketIndicatorAdapter(fragmentManager!!, activity!!, tabs, pages)
+                indicatorViewPager.adapter = indicatorAdapter
+                indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
+                    if (currentItem == 0 && !UserBean.isLogin()) {
+                        skipActivity(LoginActivity::class.java)
+                        indicatorViewPager.setCurrentItem(1, true)
+                    } else if (currentItem == 0 && UserBean.isLogin()) {
+                        (pages[currentItem] as MarketOptionalFragment).refreshData()
+                        searchIv.visibility = View.GONE
+                        editIv.visibility = View.VISIBLE
+                    } else if (currentItem != 0) {
+                        searchIv.visibility = View.VISIBLE
+                        editIv.visibility = View.GONE
+                    }
+
+                }
+                indicatorViewPager.setCurrentItem(1, true)
+                if (pages.size > 2) {
+                    for (i in 1..pages.size - 1) {
+                        (pages[i] as MarketContentFragment).refreshData(it[i - 1].list.toMutableList())
+                    }
+                }
+            }
+            binder?.queryMarket()
+        }
     }
 }

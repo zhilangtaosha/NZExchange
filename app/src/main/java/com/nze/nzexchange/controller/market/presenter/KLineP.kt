@@ -67,4 +67,18 @@ class KLineP(activity: NBaseActivity) : BaseActivityP(activity) {
                     .deleteOptional(currencyId, userId)
         }
     }
+
+
+    fun isOptional(currencyId: String, userId: String, rs: (isOptional: Boolean) -> Unit) {
+        NRetrofit.instance
+                .bibiService()
+                .isOptional(userId, currencyId)
+                .compose(activity.netTfWithDialog())
+                .subscribe({
+                    rs.invoke(it.success)
+                }, {
+                    rs.invoke(false)
+                })
+    }
+
 }

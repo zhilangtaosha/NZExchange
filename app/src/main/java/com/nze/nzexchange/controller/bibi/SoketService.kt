@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.nze.nzexchange.bean.SoketDealBean
+import com.nze.nzexchange.bean.SoketMarketBean
 import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.SoketTodayBean
 import com.nze.nzexchange.config.KLineParam
@@ -46,11 +47,10 @@ class SoketService : Service() {
 
     class SoketBinder : Binder(), IWebSoket {
 
-
         private val webSoket: IWebSoket by lazy { WebSoketImpl() }
 
-        override fun initSocket(key: String,marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
-            webSoket.initSocket(key,marketUrl, onOpenCallback, onCloseCallback)
+        override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
+            webSoket.initSocket(key, marketUrl, onOpenCallback, onCloseCallback)
         }
 
         override fun addCallBack(
@@ -72,6 +72,9 @@ class SoketService : Service() {
         override fun addRankCallBak(key: String, mOnQueryRankCallback: (rankList: MutableList<SoketRankBean>) -> Unit) {
             webSoket.addRankCallBak(key, mOnQueryRankCallback)
         }
+        override fun addMarketCallBack(key: String, onMarketRankCallback: (marketList: MutableList<SoketMarketBean>) -> Unit) {
+            webSoket.addMarketCallBack(key, onMarketRankCallback)
+        }
 
         override fun removeCallBack(key: String) {
             webSoket.removeCallBack(key)
@@ -91,6 +94,10 @@ class SoketService : Service() {
 
         override fun queryRank() {
             webSoket.queryRank()
+        }
+
+        override fun queryMarket() {
+            webSoket.queryMarket()
         }
 
         override fun close() {

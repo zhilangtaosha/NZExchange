@@ -29,6 +29,7 @@ class IntentConstant {
         const val PARAM_URL = "url"
         const val PARAM_ADDRESS = "address"
         const val PARAM_AUTHENTICATION = "authentication"//实名验证参数
+        const val PARAM_LIST="list"
 
         //设置支付方式
         const val TYPE_ZHIFUBAO = 0x001//支付宝

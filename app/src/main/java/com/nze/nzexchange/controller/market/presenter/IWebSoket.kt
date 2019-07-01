@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.market.presenter
 
 import com.nze.nzexchange.bean.SoketDealBean
+import com.nze.nzexchange.bean.SoketMarketBean
 import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.SoketTodayBean
 import com.nze.nzexchange.config.KLineParam
@@ -15,7 +16,7 @@ import com.nze.nzexchange.widget.depth.DepthDataBean
  */
 interface IWebSoket {
 
-    fun initSocket(key: String,marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit))
+    fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit))
 
     fun addCallBack(key: String,
                     mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),
@@ -27,6 +28,8 @@ interface IWebSoket {
 
     fun addRankCallBak(key: String, mOnQueryRankCallback: ((rankList: MutableList<SoketRankBean>) -> Unit))
 
+    fun addMarketCallBack(key: String, onMarketRankCallback: ((marketList: MutableList<SoketMarketBean>) -> Unit))
+
     fun removeCallBack(key: String)
 
     fun subscribeAllData(pair: String, type: Int, pattern: String)
@@ -36,6 +39,8 @@ interface IWebSoket {
     fun subscribeDepthAndToday(amount: Int = KLineParam.AMOUNT_DEPTH_10, depth: String = KLineParam.DEPTH_8, pair: String)
 
     fun queryRank()
+
+    fun queryMarket()
 
     fun close()
 }

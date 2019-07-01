@@ -1,6 +1,7 @@
 package com.nze.nzexchange.controller.market
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -31,8 +32,8 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
     lateinit var addLayout: LinearLayout
     lateinit var addActionLayout: LinearLayout
     var mainCurrency: String? = null
-    val lvAdapter: MarketLvAdapter by lazy {
-        MarketLvAdapter(activity!!)
+    val lvAdapter: MarkeOptionaltLvAdapter by lazy {
+        MarkeOptionaltLvAdapter((activity as Context?)!!)
     }
 
     var userBean: UserBean? = UserBean.loadFromApp()

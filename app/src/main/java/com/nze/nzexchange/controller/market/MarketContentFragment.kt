@@ -11,6 +11,8 @@ import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.SoketMarketBean
+import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
@@ -28,7 +30,6 @@ import java.util.concurrent.TimeUnit
 
 class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<ListView> {
 
-
     lateinit var ptrLv: PullToRefreshListView
 
     val lvAdapter: MarketLvAdapter by lazy {
@@ -37,14 +38,13 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
     var mainCurrency: String? = null
     var userBean: UserBean? = UserBean.loadFromApp()
     val pairDao = PairDaoImpl()
+    val mMarketList: MutableList<SoketRankBean> by lazy { mutableListOf<SoketRankBean>() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             mainCurrency = it.getString(IntentConstant.PARAM_CURRENCY)
         }
-
-
     }
 
     companion object {
@@ -64,17 +64,23 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
         ptrLv.setOnRefreshListener(this)
         val listView: ListView = ptrLv.refreshableView
         listView.adapter = lvAdapter
+        ptrLv.isPullRefreshEnabled = false
 
         listView.setOnItemClickListener { parent, view, position, id ->
+            val rankBean = lvAdapter.getItem(position)!!
+            val pairsBean: TransactionPairsBean = TransactionPairsBean()
+            pairsBean.setValueFromRankBean(rankBean)
+
+            pairsBean.currency
             startActivity(Intent(activity, KLineActivity::class.java)
-                    .putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, lvAdapter.getItem(position)))
+                    .putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, pairsBean))
         }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS || eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
             userBean = UserBean.loadFromApp()
-            refreshData()
+//            refreshData()
         }
 
     }
@@ -94,12 +100,15 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
     override fun getContainerTargetView(): View? = null
 
     fun refreshData() {
-        ptrLv.doPullRefreshing(true, 200)
+//        ptrLv.doPullRefreshing(true, 200)
     }
 
+    fun refreshData(marketList: MutableList<SoketRankBean>) {
+        lvAdapter.group = marketList
+    }
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
-        getDataFromNet()
+//        getDataFromNet()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
@@ -131,9 +140,9 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
                     .compose(netTf())
                     .subscribe({
                         if (it.success) {
-                            val list = it.result
-                            lvAdapter.group = list
-                            ptrLv.onPullDownRefreshComplete()
+//                            val list = it.result
+//                            lvAdapter.group = list
+//                            ptrLv.onPullDownRefreshComplete()
                         }
                     }, {
                         NLog.i("getTransactionPairs error....")
@@ -143,7 +152,7 @@ class MarketContentFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListen
     }
 
     override fun onFirstRequest() {
-        getDataFromNet()
+//        getDataFromNet()
     }
 
 }

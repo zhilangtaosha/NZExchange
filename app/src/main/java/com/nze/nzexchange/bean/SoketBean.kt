@@ -64,7 +64,7 @@ data class DataSource(
 
     companion object {
         fun getIntList() = mutableListOf<DataSource>().apply {
-            add(DataSource(0, "AUSCOIN", KLineParam.MARKET_MYSELF))
+            add(DataSource(0, "AUSCOIN", KLineParam.getMarketMyself()))
         }
     }
 }

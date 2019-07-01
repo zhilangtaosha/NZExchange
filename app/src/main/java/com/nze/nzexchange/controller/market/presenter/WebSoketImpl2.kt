@@ -65,7 +65,7 @@ class WebSoketImpl2 {
     private val newDealList: MutableList<NewDealBean> by lazy { mutableListOf<NewDealBean>() }
     private val marketList: MutableList<DataSource> = DataSource.getIntList()
     private val marketParamList: MutableList<String> by lazy {
-        mutableListOf<String>(KLineParam.MARKET_MYSELF, KLineParam.MARKET_HUOBI)
+        mutableListOf<String>(KLineParam.getMarketMyself(), KLineParam.MARKET_HUOBI)
     }
 
     final val DATA_TYPE_INIT = 0//k线初始化

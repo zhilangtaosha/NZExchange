@@ -1,6 +1,8 @@
 package com.nze.nzexchange.bean
 
+import android.os.Parcelable
 import com.nze.nzexchange.extend.retain2
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 
 /**
@@ -64,4 +66,17 @@ data class SoketRankBean(//首页涨幅榜
         get() {
             return field.replace("-", "/")
         }
+
+    fun getCurrency(): String {
+        return market.split("/")[0]
+    }
+
+    fun getMainCurrency(): String {
+        return market.split("/")[1]
+    }
 }
+
+data class SoketMarketBean(
+        val money: String,
+        val list: List<SoketRankBean>
+)

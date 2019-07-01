@@ -195,7 +195,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     private var marketIndex: Int = 0
     private val marketList: MutableList<String> by lazy {
-        mutableListOf<String>(KLineParam.MARKET_MYSELF, KLineParam.MARKET_HUOBI)
+        mutableListOf<String>(KLineParam.getMarketMyself(), KLineParam.MARKET_HUOBI)
     }
     private val marketTitle: Array<String> by lazy {
         arrayOf("AUSCOIN", "HUOBI")
@@ -232,7 +232,9 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         if (userBean != null) {
             selfSelectTv.visibility = View.VISIBLE
-            selfSelectTv.isSelected = pairsBean?.optional == 1
+            kLineP.isOptional(pairsBean?.id!!, userBean?.userId!!) {
+                selfSelectTv.isSelected = it
+            }
         } else {
             selfSelectTv.visibility = View.GONE
         }
@@ -271,13 +273,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         getTokenInfo()
 
-        refreshLayout()
         refreshKLineConfig()
 
         switchLeftIv.visibility = View.VISIBLE
         switchRightIv.visibility = View.VISIBLE
 //        initSoket()
         changMarket(0)
+
+
     }
 
     fun initSoket(marketUrl: String) {
@@ -330,15 +333,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     newDealAdapter.group = it.take(20).toMutableList()
                     newDealLv.adapter = newDealAdapter
                 })
-        webSoketP.initSocket("kline",marketUrl,{
+        webSoketP.initSocket("kline", marketUrl, {
             webSoketP.subscribeAllData("${pairsBean?.currency?.toUpperCase()}${pairsBean?.mainCurrency?.toUpperCase()}", KLineParam.KLINE_TYPE_ONE_MIN, pattern)
-        },{})
+        }, {})
     }
-
-    fun refreshLayout() {
-        selfSelectTv.isSelected = pairsBean!!.optional == 1
-    }
-
 
     /**
      * 切换市场

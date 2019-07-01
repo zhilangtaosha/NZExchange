@@ -158,6 +158,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                 .compose(netTf())
                 .subscribe({
                     if (it.success) {
+                        mPopularList.clear()
                         mPopularList.addAll(it.result)
                         mHotAdapter = HotTransactionPairAdapter(activity!!, mPopularList)
                         mHotRView.adapter = mHotAdapter
@@ -240,7 +241,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                 rootView.lav_rank_home.adapter = mRandAdapter
                 refreshRank()
             }
-            binder?.initSocket("home", KLineParam.MARKET_MYSELF, {
+            binder?.initSocket("home", KLineParam.getMarketMyself(), {
                 NLog.i("home open")
                 binder?.queryRank()
             }, {})

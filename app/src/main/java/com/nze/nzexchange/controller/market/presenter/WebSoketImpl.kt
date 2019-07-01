@@ -40,7 +40,6 @@ import java.net.URLEncoder
  */
 class WebSoketImpl : IWebSoket {
 
-
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
     val gson: Gson by lazy { Gson() }
@@ -61,6 +60,8 @@ class WebSoketImpl : IWebSoket {
     val mNewKList: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     //涨幅榜
     val mRankList: MutableList<SoketRankBean> by lazy { mutableListOf<SoketRankBean>() }
+    //行情
+    val mMarketList: MutableList<SoketMarketBean> by lazy { mutableListOf<SoketMarketBean>() }
     //    override var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)? = null
 //    override var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)? = null
 //    override var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)? = null
@@ -89,6 +90,9 @@ class WebSoketImpl : IWebSoket {
     }
     val mOnCloseMap: MutableMap<String, (() -> Unit)> by lazy {
         mutableMapOf<String, (() -> Unit)>()
+    }
+    val mOnMarketRankMap: MutableMap<String, ((marketList: MutableList<SoketMarketBean>) -> Unit)> by lazy {
+        mutableMapOf<String, ((marketList: MutableList<SoketMarketBean>) -> Unit)>()
     }
 
     override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
@@ -120,6 +124,11 @@ class WebSoketImpl : IWebSoket {
         this.mOnQueryRankMap.put(key, mOnQueryRankCallback)
     }
 
+    override fun addMarketCallBack(key: String, onMarketRankCallback: (marketList: MutableList<SoketMarketBean>) -> Unit) {
+        this.mOnMarketRankMap.put(key, onMarketRankCallback)
+    }
+
+
     override fun removeCallBack(key: String) {
         this.OnQueryKlineMap.remove(key)
         this.mOnSubscribeKlineMap.remove(key)
@@ -127,6 +136,7 @@ class WebSoketImpl : IWebSoket {
         this.mOnDepthMap.remove(key)
         this.mOnDealMap.remove(key)
         this.mOnQueryRankMap.remove(key)
+        this.mOnMarketRankMap.remove(key)
     }
 
     override fun subscribeAllData(pair: String, type: Int, pattern: String) {
@@ -232,6 +242,13 @@ class WebSoketImpl : IWebSoket {
         socket?.send(param)
     }
 
+    override fun queryMarket() {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_MARKET)
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("queryMarket>>$param")
+        socket?.send(param)
+    }
+
     override fun close() {
         nWebSocket?.close()
         socket?.cancel()
@@ -292,6 +309,18 @@ class WebSoketImpl : IWebSoket {
                                     }
                                 } catch (e: Exception) {
                                     NLog.i("rank出错>>${e.message}")
+                                }
+                            }
+                            KLineParam.ID_MARKET -> {
+                                try {
+                                    val marketList: Array<SoketMarketBean>? = gson.fromJson<Array<SoketMarketBean>>(queryBean.result.toString().replace("/", "-"), Array<SoketMarketBean>::class.java)
+                                    if (marketList != null && marketList.size > 0) {
+                                        mMarketList.clear()
+                                        mMarketList.addAll(marketList.toMutableList())
+                                        it.onNext(KLineParam.DATA_MARKET_QUERY)
+                                    }
+                                } catch (e: Exception) {
+                                    NLog.i("market出错>>${e.message}")
                                 }
                             }
                         }
@@ -457,6 +486,11 @@ class WebSoketImpl : IWebSoket {
                             KLineParam.DATA_RANK_QUERY -> {
                                 mOnQueryRankMap.forEach {
                                     it.value.invoke(mRankList)
+                                }
+                            }
+                            KLineParam.DATA_MARKET_QUERY -> {
+                                mOnMarketRankMap.forEach {
+                                    it.value.invoke(mMarketList)
                                 }
                             }
                         }
