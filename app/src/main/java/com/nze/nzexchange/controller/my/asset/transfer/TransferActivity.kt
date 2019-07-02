@@ -50,7 +50,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
 
     var userAssetBean: UserAssetBean? = null
     var type: Int = AccountType.BIBI
-    var toType:Int = AccountType.OTC
+    var toType: Int = AccountType.OTC
     var userBean = UserBean.loadFromApp()
 
     val TRANSFER_OTC = "outside"
@@ -145,10 +145,12 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             AccountType.BIBI -> {
                 fromAccountTv.text = "币币账户"
                 toAccountTv.text = "OTC账户"
+                toType = AccountType.OTC
             }
             AccountType.OTC -> {
                 fromAccountTv.text = "OTC账户"
                 toAccountTv.text = "币币账户"
+                toType = AccountType.BIBI
             }
             AccountType.LEGAL -> {
                 fromAccountTv.text = "法币账户"

@@ -85,12 +85,15 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
     val chartData: MutableList<KLineEntity> by lazy { mutableListOf<KLineEntity>() }
     val chartAdapter by lazy { KLineChartAdapter() }
     var pattern: String = TimeTool.PATTERN5
+    var fenshiType: Int = 0
     val fenshiPopup: FenshiPopup by lazy {
         //切换时间价格
         FenshiPopup(this).apply {
             onItemClick = { position, item ->
                 kChart.hideSelectData()
+                chartData.clear()
                 fenshiTv.text = item
+                fenshiType = position
                 when (position) {
                     0 -> {
                         pattern = TimeTool.PATTERN5
@@ -138,6 +141,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                         webSoketP.changeType(KLineParam.KLINE_TYPE_ONE_WEEK, pattern)
                     }
                 }
+                refreshKLineConfig()
             }
         }
     }
@@ -257,10 +261,10 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         //默认展示分时图
         kChart.setMainDrawLine(true)
-
-        kChart.setRefreshListener {
-            kChart.refreshEnd()
-        }
+        
+//        kChart.setRefreshListener {
+//            kChart.refreshEnd()
+//        }
         selectKline(kType)
         select(currentSelect)
 
@@ -280,7 +284,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 //        initSoket()
         changMarket(0)
 
-
+        kChart.setLoadMoreEnd()
     }
 
     fun initSoket(marketUrl: String) {
@@ -292,6 +296,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     DataHelper.calculate(chartData)
                     chartAdapter.addFooterData(chartData)
                     chartAdapter.notifyDataSetChanged()
+
                 },
                 {
                     //订阅k线
@@ -566,16 +571,20 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         mainImage = appPreferences.getString(Preferences.KLINE_MAIN_IMAGE, KLineParam.STATUS_MAIN_EMPTY)!!
         subImage = appPreferences.getString(Preferences.KLINE_SUB_IMAGE, KLineParam.STATUS_SUB_EMPTY)!!
         kChart.hideSelectData()
-        when (mainImage) {//主图
-            KLineParam.STATUS_MA -> {
-                kChart.changeMainDrawType(Status.MA)
+        if (fenshiType > 0) {//分时图不显示MA和BOLL 
+            when (mainImage) {//主图
+                KLineParam.STATUS_MA -> {
+                    kChart.changeMainDrawType(Status.MA)
+                }
+                KLineParam.STATUS_BOLL -> {
+                    kChart.changeMainDrawType(Status.BOLL)
+                }
+                KLineParam.STATUS_MAIN_EMPTY -> {
+                    kChart.changeMainDrawType(Status.NONE)
+                }
             }
-            KLineParam.STATUS_BOLL -> {
-                kChart.changeMainDrawType(Status.BOLL)
-            }
-            KLineParam.STATUS_MAIN_EMPTY -> {
-                kChart.changeMainDrawType(Status.NONE)
-            }
+        } else {
+            kChart.changeMainDrawType(Status.NONE)
         }
         when (subImage) {//副图
             KLineParam.STATUS_MACD -> {

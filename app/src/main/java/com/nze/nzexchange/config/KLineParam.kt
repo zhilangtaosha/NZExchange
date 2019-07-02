@@ -22,7 +22,7 @@ class KLineParam {
         }
 
         const val MARKET_MYSELF_IN = "ws://192.168.1.107:443"
-        const val MARKET_MYSELF_OUT = "http://zhongyingying.qicp.io:1443"
+        const val MARKET_MYSELF_OUT = "ws://zhongyingying.qicp.io:1443"
         const val MARKET_MYSELF2 = "ws://3.15.16.7:443"
         const val MARKET_HUOBI = "ws://3.16.25.221:443"
 

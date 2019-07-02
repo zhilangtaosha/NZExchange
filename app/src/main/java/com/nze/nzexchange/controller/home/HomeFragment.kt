@@ -184,18 +184,11 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
-            marketPopular(UserBean.loadFromApp()?.userId)
-            getRisingList(userBean?.userId)
-        }
-        if (eventCenter.eventCode == EventCode.CODE_SELF_SELECT) {
-            marketPopular(UserBean.loadFromApp()?.userId)
-            getRisingList(userBean?.userId)
-        }
+
     }
 
 
-    override fun isBindEventBusHere(): Boolean = true
+    override fun isBindEventBusHere(): Boolean = false
 
     override fun isBindNetworkListener(): Boolean = false
 
@@ -237,7 +230,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
             binder?.addRankCallBak("home") { rankList ->
                 NLog.i("home>>>rank")
                 mRankList.addAll(rankList)
-                mRandAdapter.group = mRankList.take(10).toMutableList()
+                mRandAdapter.group = mRankList.take(15).toMutableList()
                 rootView.lav_rank_home.adapter = mRandAdapter
                 refreshRank()
             }

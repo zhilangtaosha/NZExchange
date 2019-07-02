@@ -46,7 +46,7 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
 
     var userAssetBean: UserAssetBean? = null
     var type: Int = AccountType.LEGAL
-    var toType:Int = AccountType.BIBI
+    var toType: Int = AccountType.BIBI
     var userBean = UserBean.loadFromApp()
 
     val TRANSFER_LEGALCURRENCY = "legalCurrency"
@@ -70,8 +70,8 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
 
     override fun initView() {
         topBar.setRightClick {
-            val intent = Intent(this,TransferHistoryActivity::class.java)
-            intent.putExtra(IntentConstant.PARAM_CURRENCY,LegalConfig.NAME)
+            val intent = Intent(this, TransferHistoryActivity::class.java)
+            intent.putExtra(IntentConstant.PARAM_CURRENCY, LegalConfig.NAME)
             startActivity(intent)
         }
         intent?.let {
@@ -143,6 +143,7 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
             AccountType.BIBI -> {
                 fromAccountTv.text = "币币账户"
                 toAccountTv.text = "法币账户"
+                toType = AccountType.LEGAL
             }
             AccountType.OTC -> {
                 fromAccountTv.text = "OTC账户"
@@ -151,6 +152,7 @@ class LegalTransferActivity : NBaseActivity(), View.OnClickListener {
             AccountType.LEGAL -> {
                 fromAccountTv.text = "法币账户"
                 toAccountTv.text = "币币账户"
+                toType = AccountType.BIBI
             }
         }
 

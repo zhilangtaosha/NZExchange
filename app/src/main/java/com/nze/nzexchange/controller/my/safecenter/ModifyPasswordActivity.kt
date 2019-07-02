@@ -63,6 +63,8 @@ class ModifyPasswordActivity : NBaseActivity() {
                                 startActivity(intent)
                                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 0))
                                 EventBus.getDefault().post(EventCenter<String>(EventCode.CODE_LOGOUT_SUCCESS))
+                            } else {
+                                showToast(it.message)
                             }
                         }, onError)
             }

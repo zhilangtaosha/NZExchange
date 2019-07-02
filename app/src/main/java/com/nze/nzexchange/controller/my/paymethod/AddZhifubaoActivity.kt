@@ -33,6 +33,7 @@ import com.nze.nzexchange.tools.FileTool
 import com.nze.nzexchange.tools.TakePhotoTool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
+import kotlinx.android.synthetic.main.abc_activity_chooser_view.view.*
 import kotlinx.android.synthetic.main.activity_add_zhifubao.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -167,6 +168,16 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                 layout_add_aaz.isClickable = true
             }
             R.id.btn_save_aaz -> {
+
+                if (iv_close_aaz.visibility == View.GONE) {
+                    showToast("请上传付款码图片")
+                    return
+                }
+//                if (accmoneyZfburl.isNullOrEmpty() && accmoneyWeixinurl.isNullOrEmpty()) {
+//                    showToast("请上传付款码图片")
+//                    return
+//                }
+
                 if (saveBtn.validate()) {
                     if (type == IntentConstant.TYPE_ZHIFUBAO) {
                         accmoneyZfbacc = cardNoValueEt.getContent()
@@ -190,7 +201,7 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                     accmoneyWeixinurl,
                     accmoneyWeixinacc,
                     accmoneyZfburl,
-                    accmoneyZfbacc, pwd,null,null,null,null,null)
+                    accmoneyZfbacc, pwd, null, null, null, null, null)
                     .compose(netTfWithDialog())
                     .subscribe({
                         if (it.success) {
@@ -204,7 +215,7 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                             }
                             NzeApp.instance.userBean = userBean
                             this@AddZhifubaoActivity.finish()
-                        }else{
+                        } else {
                             showToast(it.message)
                         }
                     }, onError)
