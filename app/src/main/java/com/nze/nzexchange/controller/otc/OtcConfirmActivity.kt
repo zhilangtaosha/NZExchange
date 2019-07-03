@@ -517,6 +517,10 @@ class OtcConfirmActivity : NBaseActivity() {
         } else {
             try {
                 if (rs.isCauseNotEmpty()) {
+                    if (rs.cause[0].errorCode=="me_memb_buspw_error"){
+                        showToast("资金密码输入错误")
+                        return
+                    }
                     AuthorityDialog.getInstance(this)
                             .show("OTC交易需要完成以下设置，请检查"
                                     , rs.cause) {

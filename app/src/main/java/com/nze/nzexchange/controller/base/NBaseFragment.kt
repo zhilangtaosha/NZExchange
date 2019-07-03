@@ -134,7 +134,7 @@ abstract class NBaseFragment : BaseFragment() {
 
     //每次 Fragment 对用户可见都会去请求
     open fun onVisibleRequest() {
-
+       
     }
 
     fun setWindowStatusBarColor(colorResId: Int) {

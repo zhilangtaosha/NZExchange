@@ -18,9 +18,7 @@ import com.nze.nzexchange.controller.common.TipDialog
 import com.nze.nzexchange.controller.common.VerifyPopup
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodPresenter
 import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodView
-import com.nze.nzexchange.extend.formatForLegal
-import com.nze.nzexchange.extend.formatForLegal2
-import com.nze.nzexchange.extend.getContent
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
 import com.nze.nzexchange.validation.EmptyValidation
@@ -138,7 +136,7 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
                         }
                         val rateMoney = (m * rate).formatForLegal2()
                         feeTv.text = "手续费 ${rateMoney}CNY"
-                        availableTv.text = "可转金额${m - rateMoney}CNY"
+                        availableTv.text = "可转金额${m.sub(rateMoney).formatForLegal()}CNY"
                     } else {
                         feeTv.text = "手续费 --CNY"
                         availableTv.text = "可转金额0CNY"

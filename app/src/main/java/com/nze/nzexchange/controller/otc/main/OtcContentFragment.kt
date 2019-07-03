@@ -133,8 +133,9 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
 //                            }
                         }
                         RrefreshType.PULL_UP -> {
-                            list.addAll(rList)
-                            buyAdapter.addItems(list)
+//                            list.addAll(rList)
+//                            buyAdapter.notifyDataSetChanged()
+                            buyAdapter.addItems(rList)
                             ptrLv.onPullUpRefreshComplete()
 
                         }

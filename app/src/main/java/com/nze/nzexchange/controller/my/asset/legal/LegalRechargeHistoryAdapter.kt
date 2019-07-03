@@ -6,6 +6,8 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LegalRechargeHistoryBean
 import com.nze.nzexchange.controller.base.NBaseAda
+import com.nze.nzexchange.extend.add
+import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.abc_alert_dialog_material.view.*
 import kotlinx.android.synthetic.main.lv_legal_withdraw_history.view.*
@@ -26,8 +28,8 @@ class LegalRechargeHistoryAdapter(mContext: Context) : NBaseAda<LegalRechargeHis
         vh.amountKeyTv.text = "提现数量"
         vh.statusTv.text = item.getStatus()
         vh.timeValueTv.text = TimeTool.format(TimeTool.PATTERN2, item.checkpayCreateTime)
-        vh.amountValueTv.text = "+${item.checkpayAmt}"
-        vh.balanceValueTv.text = "${item.checkpayFronzenamount + item.checkpayAbleamount}"
+        vh.amountValueTv.text = "+${item.checkpayAmt.formatForLegal()}"
+        vh.balanceValueTv.text = "${item.checkpayFronzenamount.add(item.checkpayAbleamount).formatForLegal()}"
     }
 
 

@@ -196,7 +196,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     companion object {
         @JvmStatic
         fun newInstance() = BibiFragment().apply {
-            onFirstRequest()
         }
     }
 
@@ -699,9 +698,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun onStopTrackingTouch(seekBar: IndicatorSeekBar?) {
     }
 
-    override fun onFirstRequest() {
-
-    }
 
     var giveWatcher: EditTextJudgeNumberWatcher? = null
     var getWatcher: EditTextJudgeNumberWatcher? = null

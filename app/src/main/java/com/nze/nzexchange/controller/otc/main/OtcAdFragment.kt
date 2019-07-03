@@ -57,35 +57,34 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
 
     override fun initView(rootView: View) {
         ptrLv = rootView.ptrlv_ad
-        ptrLv.isPullLoadEnabled = false
-        ptrLv.isScrollLoadEnabled = false
+        ptrLv.isPullLoadEnabled = true
         ptrLv.setOnRefreshListener(this)
 
         val listView = ptrLv.refreshableView
-        listView.adapter = adAdapter
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
+        listView.adapter = adAdapter
 
-        adAdapter.onClick = { poolId, userId, transactionType ->
-            if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
-                cancelBuyOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                        .compose(netTfWithDialog())
-                        .subscribe({
-                            showToast(it.message)
-                            if (it.success)
-                                ptrLv.doPullRefreshing(true, 200)
-                        }, onError)
-            } else {
-                cancelSaleOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                        .compose(netTfWithDialog())
-                        .subscribe({
-                            showToast(it.message)
-                            if (it.success)
-                                ptrLv.doPullRefreshing(true, 200)
-                        }, onError)
-            }
-
-        }
+//        adAdapter.onClick = { poolId, userId, transactionType ->
+//            if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
+//                cancelBuyOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+//                        .compose(netTfWithDialog())
+//                        .subscribe({
+//                            showToast(it.message)
+//                            if (it.success)
+//                                ptrLv.doPullRefreshing(true, 200)
+//                        }, onError)
+//            } else {
+//                cancelSaleOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+//                        .compose(netTfWithDialog())
+//                        .subscribe({
+//                            showToast(it.message)
+//                            if (it.success)
+//                                ptrLv.doPullRefreshing(true, 200)
+//                        }, onError)
+//            }
+//
+//        }
 
         rootView.iv_add_ad.setOnClickListener {
             CheckPermission.getInstance()
@@ -145,11 +144,13 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         FindSellBean.getFromNet(UserBean.loadFromApp()?.userId!!, page, PAGE_SIZE)
                 .compose(netTf())
                 .subscribe({
-                    stopAllView()
+//                    stopAllView()
                     val rList = it.result
                     when (refreshType) {
                         RrefreshType.INIT -> {
                             if (rList != null && rList.size > 0) {
+                                findSellList.clear()
+                                findSellList.addAll(rList)
                                 adAdapter.group = rList
                             } else {
                                 showNODataView("没有广告")
@@ -157,31 +158,30 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
                         }
                         RrefreshType.PULL_DOWN -> {
                             if (rList != null && rList.size > 0) {
+                                findSellList.clear()
+                                findSellList.addAll(rList)
                                 adAdapter.group = rList
-                                ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
                                 ptrLv.onPullDownRefreshComplete()
-                                if (adAdapter.count >= it.pageSize) {
-                                    ptrLv.setHasMoreData(false)
-                                } else {
-                                    ptrLv.setHasMoreData(true)
-                                }
+
                             } else {
                                 showNODataView("没有广告")
                             }
                         }
                         RrefreshType.PULL_UP -> {
+                            findSellList.addAll(rList)
+
                             adAdapter.addItems(rList)
                             ptrLv.onPullUpRefreshComplete()
-                            if (adAdapter.count >= it.pageSize) {
-                                ptrLv.setHasMoreData(false)
-                            } else {
-                                ptrLv.setHasMoreData(true)
-                            }
                         }
                         else -> {
                             ptrLv.onPullDownRefreshComplete()
                             ptrLv.onPullUpRefreshComplete()
                         }
+                    }
+                    if (adAdapter.count >= it.pageSize) {
+                        ptrLv.setHasMoreData(false)
+                    } else {
+                        ptrLv.setHasMoreData(true)
                     }
                 }, {
                     ptrLv.onPullDownRefreshComplete()

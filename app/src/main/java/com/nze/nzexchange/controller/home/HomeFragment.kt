@@ -229,6 +229,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
             binder?.addRankCallBak("home") { rankList ->
                 NLog.i("home>>>rank")
+                mRankList.clear()
                 mRankList.addAll(rankList)
                 mRandAdapter.group = mRankList.take(15).toMutableList()
                 rootView.lav_rank_home.adapter = mRandAdapter
@@ -262,5 +263,12 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                     mHotAdapter = HotTransactionPairAdapter(activity!!, mPopularList)
                     mHotRView.adapter = mHotAdapter
                 }
+    }
+
+
+    override fun onVisibleRequest() {
+        super.onVisibleRequest()
+        NLog.i("HomeFragment....")
+        binder?.queryRank()
     }
 }

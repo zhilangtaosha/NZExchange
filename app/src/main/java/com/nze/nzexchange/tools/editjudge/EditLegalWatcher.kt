@@ -34,7 +34,7 @@ class EditLegalWatcher : TextWatcher {
         val posDot = temp.indexOf(".")//返回指定字符在此字符串中第一次出现处的索引
         val index = editText.selectionStart//获取光标位置
 
-        if (temp.indexOf(".")==0||temp.indexOf("0")==0) {//第一位是小数点
+        if (temp.indexOf(".")==0) {//第一位是小数点
             edt.delete(0, 1)
             return
         }

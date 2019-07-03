@@ -198,6 +198,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
             transaction.show(fragment)
         }
         mLastFragment = fragment as NBaseFragment
+        fragment.onVisibleRequest()
         transaction.commitAllowingStateLoss()
     }
 

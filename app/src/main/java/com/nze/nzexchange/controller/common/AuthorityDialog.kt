@@ -69,10 +69,6 @@ class AuthorityDialog(context: Context) {
                     s = "${index + 1}.${errorBean.errorMsg}"
                     isExit = true
                 }
-                "me_memb_buspw_error" -> {
-                    s = "资金密码输入错误"
-                    nameTv.visibility = View.GONE
-                }
             }
             val tv = ViewFactory.createAuthorityTv(s)
             tv.text = s

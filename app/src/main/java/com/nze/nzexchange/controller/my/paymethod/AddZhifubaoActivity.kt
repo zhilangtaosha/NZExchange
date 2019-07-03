@@ -173,10 +173,6 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                     showToast("请上传付款码图片")
                     return
                 }
-//                if (accmoneyZfburl.isNullOrEmpty() && accmoneyWeixinurl.isNullOrEmpty()) {
-//                    showToast("请上传付款码图片")
-//                    return
-//                }
 
                 if (saveBtn.validate()) {
                     if (type == IntentConstant.TYPE_ZHIFUBAO) {
