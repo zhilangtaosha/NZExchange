@@ -18,30 +18,30 @@ import kotlinx.android.synthetic.main.lv_ad_otc.view.*
 class OtcAdAdapter(mContext: Context) : NBaseAda<FindSellBean, OtcAdAdapter.ViewHolder>(mContext) {
     var onClick: ((String, String, Int) -> Unit)? = null
     override fun initView(vh: ViewHolder, item: FindSellBean, position: Int) {
-//        item.run {
-//            val tip = if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
-//                vh.nameTv.setTxtColor(R.color.color_buy)
-//                "购买"
-//            } else {
-//                vh.nameTv.setTxtColor(R.color.color_sale)
-//                "出售"
-//            }
-//            vh.nameTv.text = "${tip}${CurrencyTool.getCurrency(tokenId)}"
-//            vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, poolCreateTime)
-//            vh.priceTv.text = poolPrice.formatForLegal()
-//            if (item.poolStatus == 1004) {
-//                vh.totalNumTv.text = item.poolLockamount.formatForCurrency()
-//            } else {
-//                vh.totalNumTv.text = poolAllCount.formatForCurrency()
-//
-//            }
-//            vh.transactionNumTv.text = poolSuccessamount.formatForCurrency()
-//
-//        }
+        item.run {
+            val tip = if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
+                vh.nameTv.setTxtColor(R.color.color_buy)
+                "购买"
+            } else {
+                vh.nameTv.setTxtColor(R.color.color_sale)
+                "出售"
+            }
+            vh.nameTv.text = "${tip}${CurrencyTool.getCurrency(tokenId)}"
+            vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, poolCreateTime)
+            vh.priceTv.text = poolPrice.formatForLegal()
+            if (item.poolStatus == 1004) {
+                vh.totalNumTv.text = item.poolLockamount.formatForCurrency()
+            } else {
+                vh.totalNumTv.text = poolAllCount.formatForCurrency()
 
-//        vh.cancelBtn.setOnClickListener {
-//            onClick?.invoke(item.poolId, item.userId, item.transactionType)
-//        }
+            }
+            vh.transactionNumTv.text = poolSuccessamount.formatForCurrency()
+
+        }
+
+        vh.cancelBtn.setOnClickListener {
+            onClick?.invoke(item.poolId, item.userId, item.transactionType)
+        }
     }
 
     override fun setLayout(): Int = R.layout.lv_ad_otc

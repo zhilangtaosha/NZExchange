@@ -23,10 +23,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.login.LoginActivity
-import com.nze.nzexchange.controller.otc.main.IOtcView
-import com.nze.nzexchange.controller.otc.main.OtcAdFragment
-import com.nze.nzexchange.controller.otc.main.OtcContentFragment
-import com.nze.nzexchange.controller.otc.main.OtcSideAdapter
+import com.nze.nzexchange.controller.otc.main.*
 import com.nze.nzexchange.controller.otc.tradelist.TradeListActivity
 import com.nze.nzexchange.controller.transfer.CapitalTransferActivity
 import com.nze.nzexchange.tools.dp2px
@@ -107,7 +104,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         colorBar.setWidth(dp2px(41F))
         scrollIndicatorView.setScrollBar(colorBar)
 
-        viewPager.offscreenPageLimit = 2
+        viewPager.offscreenPageLimit = 3
         indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
         val indicatorAdapter = OtcIndicatorAdapter(fragmentManager!!, activity!!, tabs, pages)
         indicatorViewPager.adapter = indicatorAdapter
@@ -163,7 +160,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
             moreTv.setText(mMainCurrencyBean!!.tokenSymbol)
             changeAva(currentItem)
         }
-        if (eventCenter.eventCode==EventCode.CODE_LOGOUT_SUCCESS){
+        if (eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
             indicatorViewPager.setCurrentItem(0, false)
         }
     }

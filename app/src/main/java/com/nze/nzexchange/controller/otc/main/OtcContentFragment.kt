@@ -60,12 +60,12 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
 
     override fun initView(rootView: View) {
         ptrLv = rootView.plv_foc
-        ptrLv.setPullLoadEnabled(true)
+        ptrLv.isPullLoadEnabled = false
         ptrLv.setOnRefreshListener(this)
         val listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
-
+        ptrLv.isScrollLoadEnabled = true
 
         listView.adapter = buyAdapter
 
@@ -117,12 +117,12 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
                     val rList = it.result
                     when (refreshType) {
                         RrefreshType.INIT -> {
-                            list.addAll(rList)
+//                            list.addAll(rList)
                             buyAdapter.group = rList
                         }
                         RrefreshType.PULL_DOWN -> {
-                            list.clear()
-                            list.addAll(rList)
+//                            list.clear()
+//                            list.addAll(rList)
                             buyAdapter.group = rList
                             ptrLv.setLastUpdatedLabel(TimeTool.getLastUpdateTime())
                             ptrLv.onPullDownRefreshComplete()

@@ -3,11 +3,14 @@ package com.nze.nzexchange.controller.otc.main
 
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.support.v4.app.Fragment
 import android.view.View
+import android.widget.AbsListView
 import android.widget.ListView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
@@ -25,6 +28,7 @@ import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
+import org.jetbrains.annotations.Nls
 import retrofit2.http.Field
 
 
@@ -32,7 +36,8 @@ import retrofit2.http.Field
  * A simple [Fragment] subclass.
  *
  */
-class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
+class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshListener<ListView>, AbsListView.OnScrollListener {
+
 
     private val findSellList: MutableList<FindSellBean> by lazy {
         mutableListOf<FindSellBean>()
@@ -42,11 +47,13 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         OtcAdAdapter(activity!!)
     }
     lateinit var ptrLv: PullToRefreshListView
+    lateinit var listView: ListView
     var mMainCurrencyBean: MainCurrencyBean? = null
     var userBean: UserBean? = null
         get() {
             return UserBean.loadFromApp()
         }
+    var mTotal = 0
 
     companion object {
         @JvmStatic
@@ -58,33 +65,34 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     override fun initView(rootView: View) {
         ptrLv = rootView.ptrlv_ad
         ptrLv.isPullLoadEnabled = true
+        ptrLv.isScrollLoadEnabled = false
         ptrLv.setOnRefreshListener(this)
 
-        val listView = ptrLv.refreshableView
+        listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
         listView.adapter = adAdapter
+//        ptrLv.setOnScrollListener(this)
+        adAdapter.onClick = { poolId, userId, transactionType ->
+            if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
+                cancelBuyOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            showToast(it.message)
+                            if (it.success)
+                                ptrLv.doPullRefreshing(true, 200)
+                        }, onError)
+            } else {
+                cancelSaleOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            showToast(it.message)
+                            if (it.success)
+                                ptrLv.doPullRefreshing(true, 200)
+                        }, onError)
+            }
 
-//        adAdapter.onClick = { poolId, userId, transactionType ->
-//            if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
-//                cancelBuyOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-//                        .compose(netTfWithDialog())
-//                        .subscribe({
-//                            showToast(it.message)
-//                            if (it.success)
-//                                ptrLv.doPullRefreshing(true, 200)
-//                        }, onError)
-//            } else {
-//                cancelSaleOrder(poolId, userId, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-//                        .compose(netTfWithDialog())
-//                        .subscribe({
-//                            showToast(it.message)
-//                            if (it.success)
-//                                ptrLv.doPullRefreshing(true, 200)
-//                        }, onError)
-//            }
-//
-//        }
+        }
 
         rootView.iv_add_ad.setOnClickListener {
             CheckPermission.getInstance()
@@ -140,12 +148,28 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         getDataFromNet()
     }
 
+    var isRefresh = false
+    override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+        NLog.i("mTotal>>$mTotal totalItemCount>>$totalItemCount firstVisibleItem>>$firstVisibleItem visibleItemCount>>$visibleItemCount")
+        if (userBean != null && mTotal > totalItemCount - 1 && !isRefresh && firstVisibleItem + visibleItemCount >= totalItemCount - 2) {
+            isRefresh = true
+            RrefreshType.PULL_UP
+            page++
+            getDataFromNet()
+        }
+    }
+
+    override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
+    }
+
     override fun getDataFromNet() {
         FindSellBean.getFromNet(UserBean.loadFromApp()?.userId!!, page, PAGE_SIZE)
                 .compose(netTf())
                 .subscribe({
-//                    stopAllView()
+                    //                    stopAllView()
                     val rList = it.result
+                    mTotal = it.totalSize
+                    isRefresh = false
                     when (refreshType) {
                         RrefreshType.INIT -> {
                             if (rList != null && rList.size > 0) {
@@ -168,17 +192,17 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
                             }
                         }
                         RrefreshType.PULL_UP -> {
-                            findSellList.addAll(rList)
-
-                            adAdapter.addItems(rList)
+//                            findSellList.addAll(rList)
+                            if (rList.size > 0)
+                                adAdapter.addItems(rList)
                             ptrLv.onPullUpRefreshComplete()
+                            listView.setSelection(adAdapter.count - 2)
                         }
                         else -> {
-                            ptrLv.onPullDownRefreshComplete()
-                            ptrLv.onPullUpRefreshComplete()
+
                         }
                     }
-                    if (adAdapter.count >= it.pageSize) {
+                    if (adAdapter.count >= it.totalSize) {
                         ptrLv.setHasMoreData(false)
                     } else {
                         ptrLv.setHasMoreData(true)
