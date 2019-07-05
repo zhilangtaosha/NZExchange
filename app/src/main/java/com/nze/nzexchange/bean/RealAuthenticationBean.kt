@@ -1,7 +1,9 @@
 package com.nze.nzexchange.bean
 
+import android.os.Parcelable
 import com.nze.nzexchange.http.CRetrofit
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import retrofit2.http.Field
 
 /**
@@ -35,7 +37,7 @@ data class RealAuthenticationBean(
         val treeauthCode: String,
         val treeauthName: String,
         val userId: String
-){
+) {
     companion object {
         fun saveOneEntity(
                 tokenUserId: String,
@@ -52,38 +54,39 @@ data class RealAuthenticationBean(
     }
 }
 
+@Parcelize
 data class AuditAuditdataDataVo(
-        val auditUsers: List<Any>?,
-        val auditdataContent: Any?,
+        val auditUsers: List<String>?,
+        val auditdataContent: String?,
         val auditdataCreateTime: Long?,
         val auditdataCreateTimeStr: String?,
         val auditdataCreateUser: String?,
         val auditdataId: String?,
-        val auditdataPass: Any?,
+        val auditdataPass: String?,
         val auditdataPassStr: String?,
         val auditdataStatus: Int?,
         val auditdataStatusStr: String?,
-        val auditdataTitle: Any?,
+        val auditdataTitle: String?,
         val auditdataUpdateTime: Long?,
         val auditdataUpdateTimeStr: String?,
-        val auditdataUpdateUser: Any?,
+        val auditdataUpdateUser: String?,
         val auditflowId: String?,
         val auditflowName: String?,
         val auditflowTag: String?,
         val auditusers_all: String?,
-        val busId: Any?,
+        val busId: String?,
         val jobdataBusNo: String?,
         val jobdataBusType: String?,
-        val jobdataContent: Any?,
+        val jobdataContent: String?,
         val jobdataId: String?,
         val jobdataName: String?,
         val permissionId: String?,
         val permissionName: String?,
         val permissionTag: String?,
-        val permissionflowApplydeal: Any?,
+        val permissionflowApplydeal: String?,
         val permissionflowBackNo: String?,
         val permissionflowId: String?,
-        val permissionflowLogic: Any?,
+        val permissionflowLogic: String?,
         val permissionflowName: String?,
         val permissionflowNo: String?,
         val permissionflowPassNo: String?,
@@ -94,5 +97,5 @@ data class AuditAuditdataDataVo(
         val treeauthId: String?,
         val treeauthName: String?,
         val userIdApply: String?,
-        val userIdAudit: Any?
-)
+        val userIdAudit: String?
+) : Parcelable

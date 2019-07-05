@@ -150,6 +150,7 @@
             android:name=".controller.bibi.SoketService"
             android:enabled="true"
             android:exported="true" />
+
         <activity android:name=".controller.my.asset.transfer.TransferActivity" />
         <activity android:name=".controller.my.asset.transfer.TransferHistoryActivity" />
         <activity android:name=".controller.my.asset.legal.LegalRechargeActivity" />
@@ -182,6 +183,7 @@
         <activity android:name=".controller.my.asset.legal.LegalTransferActivity" />
         <activity android:name=".controller.my.asset.legal.LegalAssetDetailActivity" />
         <activity android:name=".controller.market.KLineTargetActivity"></activity>
+        <activity android:name=".controller.my.asset.legal.RechargeHistoryDetailActivity" />
     </application>
 
 </manifest>

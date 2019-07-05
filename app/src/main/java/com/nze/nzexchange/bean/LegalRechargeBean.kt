@@ -1,8 +1,10 @@
 package com.nze.nzexchange.bean
 
+import android.os.Parcelable
 import com.nze.nzexchange.http.CRetrofit
 import com.nze.nzexchange.http.NRetrofit
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import retrofit2.http.Field
 
 /**
@@ -48,7 +50,7 @@ data class LegalRechargeBean(
         val TYPE_OSKO = "澳洲银行卡 osko 转账"
 
 
-        fun getLegalCode(): Flowable<Result<String>>{
+        fun getLegalCode(): Flowable<Result<String>> {
             return Flowable.defer {
                 CRetrofit.instance
                         .userService()
@@ -77,14 +79,15 @@ data class LegalRechargeBean(
     }
 }
 
+@Parcelize
 data class AmtBusicheckEntity(
         val busId: String,
         val busicheckBusType: String,
         val busicheckCreateTime: Long,
         val busicheckCreateUser: String,
         val busicheckId: String,
-        val busicheckStatus: Any,
-        val busicheckUpdateTime: Any,
-        val busicheckUpdateUser: Any,
+        val busicheckStatus: String,
+        val busicheckUpdateTime: String,
+        val busicheckUpdateUser: String,
         val checkpayId: String
-)
+) : Parcelable

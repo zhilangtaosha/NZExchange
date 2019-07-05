@@ -36,6 +36,10 @@ class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
         listView.adapter = historyAdapter
 
         ptrLv.doPullRefreshing(true, 200)
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            skipActivity(RechargeHistoryDetailActivity::class.java)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -99,9 +103,9 @@ class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
                 }
             } else {
                 showToast(it.message)
+                ptrLv.onPullDownRefreshComplete()
+                ptrLv.onPullUpRefreshComplete()
             }
-            ptrLv.onPullDownRefreshComplete()
-            ptrLv.onPullUpRefreshComplete()
         }, {
             showNODataView("没有提现记录")
             ptrLv.onPullDownRefreshComplete()
