@@ -10,6 +10,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LegalRechargeHistoryBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.extend.formatForLegal
 import kotlinx.android.synthetic.main.activity_withdraw_reject.*
 
 class RechargeHistoryDetailActivity : NBaseActivity() {
@@ -22,6 +23,9 @@ class RechargeHistoryDetailActivity : NBaseActivity() {
     val rejectReasonTv: TextView by lazy { tv_reject_reason_aws }
     val foundTimeTv: TextView by lazy { tv_found_time_aws }
     val orderNumTv: TextView by lazy { tv_order_num_aws }
+
+    var historyBean: LegalRechargeHistoryBean? = null
+
     override fun getRootView(): Int = R.layout.activity_withdraw_reject
 
 
@@ -33,10 +37,19 @@ class RechargeHistoryDetailActivity : NBaseActivity() {
     }
 
     override fun initView() {
+        intent?.let {
+            historyBean = it.getParcelableExtra(IntentConstant.PARAM_HISTORY)
+        }
+
+        historyBean?.let {
+            amountTv.text = it.checkpayAmt.formatForLegal()
+            statusTv.text=it.getStatus()
+            
+        }
+
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT

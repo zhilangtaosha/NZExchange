@@ -25,7 +25,7 @@ class LegalRechargeHistoryAdapter(mContext: Context) : NBaseAda<LegalRechargeHis
 
     override fun initView(vh: ViewHolder, item: LegalRechargeHistoryBean, position: Int) {
         vh.nameTv.text = "充值记录"
-        vh.amountKeyTv.text = "提现数量"
+        vh.amountKeyTv.text = "充值数量"
         vh.statusTv.text = item.getStatus()
         vh.timeValueTv.text = TimeTool.format(TimeTool.PATTERN2, item.checkpayCreateTime)
         vh.amountValueTv.text = "+${item.checkpayAmt.formatForLegal()}"

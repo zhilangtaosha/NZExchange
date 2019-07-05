@@ -13,6 +13,7 @@ import kotlinx.android.parcel.Parcelize
 data class LegalRechargeHistoryBean(
         val amtBusicheckEntity: AmtBusicheckEntity,
         val auditAuditdataDataVo: AuditAuditdataDataVo,
+        val auditDataFlowDataVos: List<AuditDataFlowDataVos>,
         val checkpayAbleamount: Double,
         val checkpayAccount: String,
         val checkpayAmt: Double,
@@ -43,7 +44,7 @@ data class LegalRechargeHistoryBean(
         val treeauthName: String,
         val userIdApply: String,
         val userIdAudit: String
-) :Parcelable{
+) : Parcelable {
 
     fun getStatus(): String =
             when (checkpayStatus) {
@@ -64,4 +65,11 @@ data class LegalRechargeHistoryBean(
                 }
             }
 }
+
+@Parcelize
+data class AuditDataFlowDataVos(
+        val flowTime: Long,
+        val flowEvent: String,
+        val flowOrd: Int
+) : Parcelable
 
