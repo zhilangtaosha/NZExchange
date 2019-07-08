@@ -51,6 +51,7 @@
         android:layout_marginRight="15dp">
 
         <TextView
+            android:id="@+id/tv_action_aws"
             style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,6 +161,7 @@
         android:layout_marginRight="15dp">
 
         <TextView
+            android:id="@+id/tv_reason_key_aws"
             style="@style/tx15_common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -173,7 +175,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="充值金额跟到账金额不一致" />
+            android:text="----" />
 
         <View
             android:layout_width="match_parent"

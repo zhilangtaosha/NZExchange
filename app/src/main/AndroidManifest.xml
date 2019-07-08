@@ -184,6 +184,7 @@
         <activity android:name=".controller.my.asset.legal.LegalAssetDetailActivity" />
         <activity android:name=".controller.market.KLineTargetActivity"></activity>
         <activity android:name=".controller.my.asset.legal.RechargeHistoryDetailActivity" />
+        <activity android:name=".controller.my.asset.legal.WithdrawHistoryDetailActivity" />
     </application>
 
 </manifest>

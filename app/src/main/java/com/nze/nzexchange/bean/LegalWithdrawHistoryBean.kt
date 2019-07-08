@@ -1,16 +1,20 @@
 package com.nze.nzexchange.bean
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
  * @类 说 明:
  * @创建时间：2019/5/20
  */
+@Parcelize
 data class LegalWithdrawHistoryBean(
         val accId: String,
         val auditAuditdataDataVo: AuditAuditdataDataVo?,
         val auditAuditdataDataVos: List<AuditAuditdataDataVo>?,
-        val auditDataFlowDataVos: List<AuditDataFlowDataVo>?,
+        val auditDataFlowDataVos: List<AuditDataFlowDataVo>,
         val membId: String,
         val pickfundApplyamt: Double,
         val pickfundCode: String,
@@ -30,17 +34,17 @@ data class LegalWithdrawHistoryBean(
         val pickfundToinfo3: String,
         val pickfundUpdateTime: Long,
         val pickfundUpdateTimeStr: String,
-        val pickfundUpdateUser: Any,
+        val pickfundUpdateUser: String?,
         val systreeId: String,
         val treeauthCode: String,
         val treeauthId: String,
         val treeauthName: String,
         val userId: String,
-        val userIdApply: Any,
-        val userIdAudit: Any,
+        val userIdApply: String?,
+        val userIdAudit: String?,
         val pickfundAbleamount: Double,
         val pickfundFronzenamount: Double
-) {
+) : Parcelable {
     fun getStatus(): String =
             when (pickfundStatus) {
                 100 -> {
@@ -61,9 +65,9 @@ data class LegalWithdrawHistoryBean(
             }
 }
 
-
+@Parcelize
 data class AuditDataFlowDataVo(
         val flowEvent: String?,
         val flowOrd: Int?,
-        val flowTime: Long?
-)
+        val flowTime: Long
+) : Parcelable

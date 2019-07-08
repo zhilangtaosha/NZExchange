@@ -29,6 +29,10 @@ class LegalWithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
         listView = ptrLv.refreshableView
         listView.adapter = historyAdapter
         ptrLv.doPullRefreshing(true, 200)
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            WithdrawHistoryDetailActivity.skip(this, historyAdapter.getItem(position)!!)
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -47,7 +51,7 @@ class LegalWithdrawHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getContainerTargetView(): View?=ptrLv
+    override fun getContainerTargetView(): View? = ptrLv
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         refreshType = RrefreshType.PULL_DOWN

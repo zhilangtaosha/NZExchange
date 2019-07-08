@@ -81,13 +81,13 @@ data class LegalRechargeBean(
 
 @Parcelize
 data class AmtBusicheckEntity(
-        val busId: String,
-        val busicheckBusType: String,
+        val busId: String?,
+        val busicheckBusType: String?,
         val busicheckCreateTime: Long,
-        val busicheckCreateUser: String,
-        val busicheckId: String,
-        val busicheckStatus: String,
-        val busicheckUpdateTime: String,
-        val busicheckUpdateUser: String,
-        val checkpayId: String
+        val busicheckCreateUser: String?,
+        val busicheckId: String?,
+        val busicheckStatus: String?,
+        val busicheckUpdateTime: String?,
+        val busicheckUpdateUser: String?,
+        val checkpayId: String?
 ) : Parcelable

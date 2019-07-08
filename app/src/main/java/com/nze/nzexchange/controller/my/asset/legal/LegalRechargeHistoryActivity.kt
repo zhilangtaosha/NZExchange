@@ -38,7 +38,7 @@ class LegalRechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefres
         ptrLv.doPullRefreshing(true, 200)
 
         listView.setOnItemClickListener { parent, view, position, id ->
-            skipActivity(RechargeHistoryDetailActivity::class.java)
+            RechargeHistoryDetailActivity.skip(this, historyAdapter.getItem(position)!!)
         }
     }
 

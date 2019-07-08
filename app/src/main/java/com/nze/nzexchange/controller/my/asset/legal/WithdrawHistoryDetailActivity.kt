@@ -7,20 +7,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.CompanyPaymentBean
-import com.nze.nzexchange.bean.LegalRechargeBean
-import com.nze.nzexchange.bean.LegalRechargeHistoryBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.my.asset.presenter.LegalP
+import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodPresenter
+import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodView
 import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.setDrawables
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.activity_withdraw_reject.*
 
-class RechargeHistoryDetailActivity : NBaseActivity() {
-    val legalP: LegalP by lazy { LegalP(this) }
+class WithdrawHistoryDetailActivity : NBaseActivity(), PayMethodView {
+    val payMehodP: PayMethodPresenter by lazy { PayMethodPresenter(this, this) }
     val bankTv: TextView by lazy { tv_bank_aws }
     val amountTv: TextView by lazy { tv_amount_aws }
     val statusTv: TextView by lazy { tv_status_aws }
@@ -36,16 +37,16 @@ class RechargeHistoryDetailActivity : NBaseActivity() {
     val actionTv: TextView by lazy { tv_action_aws }
     val rejectIv: ImageView by lazy { iv_success_aws }
     val reasonKeyTv: TextView by lazy { tv_reason_key_aws }
-    val companyPayList: MutableList<CompanyPaymentBean> by lazy { mutableListOf<CompanyPaymentBean>() }
 
-    var historyBean: LegalRechargeHistoryBean? = null
+    var historyBean: LegalWithdrawHistoryBean? = null
+    var userBean = UserBean.loadFromApp()
 
     override fun getRootView(): Int = R.layout.activity_withdraw_reject
 
 
     companion object {
-        fun skip(context: Context, bean: LegalRechargeHistoryBean) {
-            context.startActivity(Intent(context, RechargeHistoryDetailActivity::class.java)
+        fun skip(context: Context, bean: LegalWithdrawHistoryBean) {
+            context.startActivity(Intent(context, WithdrawHistoryDetailActivity::class.java)
                     .putExtra(IntentConstant.PARAM_HISTORY, bean))
         }
     }
@@ -56,46 +57,19 @@ class RechargeHistoryDetailActivity : NBaseActivity() {
         }
 
         historyBean?.let {
-            actionTv.text = "转入进度"
-            applyTv.text = "充值申请"
-            bankTv.text = it.checkpayType
+            actionTv.text = "转出进度"
+            applyTv.text = "提现申请"
+//            bankTv.text = it.checkpayType
 
-            amountTv.text = it.checkpayAmt.formatForLegal()
+            amountTv.text = it.pickfundApplyamt.formatForLegal()
             statusTv.text = it.getStatus()
-            orderNumTv.text = it.checkpayCode
-            foundTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.checkpayCreateTime)
+            orderNumTv.text = it.pickfundCode
+            foundTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.pickfundCreateTime)
 
+            applyTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.pickfundCreateTime)
+            processTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.pickfundCreateTime)
 
-            applyTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.checkpayCreateTime)
-            processTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.checkpayCreateTime)
-
-            if (it.checkpayStatus == 101 || it.checkpayStatus == 102 || it.checkpayStatus == 990) {
-                legalP.getCompanyPaymethod({ rs ->
-                    if (rs.success) {
-                        companyPayList.addAll(rs.result)
-                        when (it.checkpayType) {
-                            "bpay转账" -> {
-                                bankTv.setDrawables(R.mipmap.bpay_icon, null, null, null)
-                                val bpay = companyPayList[1]
-                                rejectReasonTv.text = "BPAY账号(${bpay.contShow3})"
-                            }
-                            "银行卡转账" -> {
-                                bankTv.setDrawables(R.mipmap.bank_icon, null, null, null)
-                                val bank = companyPayList[2]
-                                rejectReasonTv.text = "${bank.contShow1}(${bank.contShow3})"
-                            }
-                            "澳洲银行卡 osko 转账" -> {
-                                bankTv.setDrawables(R.mipmap.osko_icon, null, null, null)
-                                val osko = companyPayList[0]
-                                rejectReasonTv.text = "OSKO账号(${osko.contShow3})"
-                            }
-                        }
-                    } else {
-                        showToast(rs.message)
-                    }
-                }, onError)
-            }
-            when (it.checkpayStatus) {
+            when (it.pickfundStatus) {
                 100 -> {//"待审核"
 
                 }
@@ -104,21 +78,33 @@ class RechargeHistoryDetailActivity : NBaseActivity() {
                     rejectTv.visibility = View.GONE
                     rejectIv.visibility = View.GONE
                     rejectTimeTv.visibility = View.GONE
-                    reasonKeyTv.text = "转入账户"
+                    reasonKeyTv.text = "转出账户"
                 }
                 990 -> {//"已完成"
-                    reasonKeyTv.text = "转入账户"
+                    reasonKeyTv.text = "转出账户"
                     rejectIv.setImageResource(R.mipmap.hook_icon3)
-                    rejectTv.text = "充值完成"
+                    rejectTv.text = "提现完成"
                     rejectTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.auditDataFlowDataVos[2].flowTime)
                 }
                 9901 -> {//"审核失败"
                     rejectTv.text = "审核失败"
                     rejectTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.auditDataFlowDataVos[1].flowTime)
                     reasonKeyTv.text = "驳回原因"
-                    rejectReasonTv.text = it.auditAuditdataDataVo.auditdataContent
+                    rejectReasonTv.text = it.auditAuditdataDataVo?.auditdataContent
                 }
             }
+
+            payMehodP.getAllPayMethod(userBean!!, { rs ->
+                val payMethodBean = rs.result
+                if (!payMethodBean.accmoneyBankcard.isNullOrEmpty()) {
+                    bankTv.setDrawables(R.mipmap.bank_icon, null, null, null)
+                    bankTv.text = payMethodBean.accmoneyBanktype
+                    if (it.pickfundStatus == 101 || it.pickfundStatus == 102 || it.pickfundStatus == 990) {
+                        val s = payMethodBean.accmoneyBankcard!!
+                        rejectReasonTv.text = "${payMethodBean.accmoneyBanktype}(${s.substring(s.length - 4)})"
+                    }
+                }
+            }, onError)
         }
 
     }
@@ -126,7 +112,7 @@ class RechargeHistoryDetailActivity : NBaseActivity() {
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
     }
 
-    override fun getOverridePendingTransitionMode(): TransitionMode = TransitionMode.DEFAULT
+    override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = BaseActivity.TransitionMode.DEFAULT
 
     override fun isBindEventBusHere(): Boolean = false
 

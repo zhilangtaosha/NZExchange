@@ -1,10 +1,7 @@
 package com.nze.nzexchange.controller.my.asset.presenter
 
 import com.nze.nzeframework.ui.BaseActivityP
-import com.nze.nzexchange.bean.LegalAccountBean
-import com.nze.nzexchange.bean.LegalRechargeHistoryBean
-import com.nze.nzexchange.bean.LegalWithdrawHistoryBean
-import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.OnErrorRs
 import com.nze.nzexchange.extend.OnSuccessRs
@@ -61,4 +58,10 @@ class LegalP(activity: NBaseActivity) : BaseActivityP(activity) {
                 .subscribe(onSuccess, onError)
     }
 
+    //获取公司收款账号
+    fun getCompanyPaymethod(successRs: OnSuccessRs<MutableList<CompanyPaymentBean>>, errorRs: OnErrorRs) {
+        CompanyPaymentBean.getCompanyPaymethod()
+                .compose(activity.netTfWithDialog())
+                .subscribe(successRs, errorRs)
+    }
 }

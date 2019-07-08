@@ -15,6 +15,7 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.bean2.RechargeModeBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.my.asset.presenter.LegalP
 import kotlinx.android.synthetic.main.activity_recharge_confirm.*
 
 /**
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_recharge_confirm.*
  */
 class RechargeConfirmActivity : NBaseActivity(), View.OnClickListener {
 
-
+    val legalP: LegalP by lazy { LegalP(this) }
     val moneyTv: TextView by lazy { tv_money_arc }
     val bankNameLayout: LinearLayout by lazy { layout_bank_name_arc }
     val bankNameTv: TextView by lazy { tv_bank_name_arc }
@@ -59,37 +60,35 @@ class RechargeConfirmActivity : NBaseActivity(), View.OnClickListener {
 
         moneyTv.text = "¥${amount}"
         codeTv.text = "$code"
-        CompanyPaymentBean.getCompanyPaymethod()
-                .compose(netTfWithDialog())
-                .subscribe({
-                    if (it.success) {
-                        companyPayList.addAll(it.result)
-                        when (type) {
-                            LegalRechargeBean.TYPE_BANK -> {
-                                val bank = companyPayList[2]
-                                bankNameTv.text = "${bank.contShow1}"
-                                accountValueTv.text = "${bank.contShow3}"
-                                payeeTv.text = "${bank.contShow4}"
-                            }
-                            LegalRechargeBean.TYPE_BPAY -> {
-                                val bpay = companyPayList[1]
-                                bankNameLayout.visibility = View.GONE
-                                accountKeyTv.text = "BPAY账号"
-                                accountValueTv.text = "${bpay.contShow3}"
-                                payeeTv.text = "${bpay.contShow4}"
-                            }
-                            LegalRechargeBean.TYPE_OSKO  -> {
-                                val osko = companyPayList[0]
-                                bankNameLayout.visibility = View.GONE
-                                accountKeyTv.text = "OSKO账号"
-                                accountValueTv.text = "${osko.contShow3}"
-                                payeeTv.text = "${osko.contShow4}"
-                            }
-                        }
-                    } else {
-                        showToast(it.message)
+        legalP.getCompanyPaymethod({
+            if (it.success) {
+                companyPayList.addAll(it.result)
+                when (type) {
+                    LegalRechargeBean.TYPE_BANK -> {
+                        val bank = companyPayList[2]
+                        bankNameTv.text = "${bank.contShow1}"
+                        accountValueTv.text = "${bank.contShow3}"
+                        payeeTv.text = "${bank.contShow4}"
                     }
-                }, onError)
+                    LegalRechargeBean.TYPE_BPAY -> {
+                        val bpay = companyPayList[1]
+                        bankNameLayout.visibility = View.GONE
+                        accountKeyTv.text = "BPAY账号"
+                        accountValueTv.text = "${bpay.contShow3}"
+                        payeeTv.text = "${bpay.contShow4}"
+                    }
+                    LegalRechargeBean.TYPE_OSKO -> {
+                        val osko = companyPayList[0]
+                        bankNameLayout.visibility = View.GONE
+                        accountKeyTv.text = "OSKO账号"
+                        accountValueTv.text = "${osko.contShow3}"
+                        payeeTv.text = "${osko.contShow4}"
+                    }
+                }
+            } else {
+                showToast(it.message)
+            }
+        },onError)
 
         cancelTv.setOnClickListener(this)
         confirmTv.setOnClickListener(this)

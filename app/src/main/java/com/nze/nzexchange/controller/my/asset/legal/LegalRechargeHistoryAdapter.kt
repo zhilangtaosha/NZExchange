@@ -29,7 +29,7 @@ class LegalRechargeHistoryAdapter(mContext: Context) : NBaseAda<LegalRechargeHis
         vh.statusTv.text = item.getStatus()
         vh.timeValueTv.text = TimeTool.format(TimeTool.PATTERN2, item.checkpayCreateTime)
         vh.amountValueTv.text = "+${item.checkpayAmt.formatForLegal()}"
-        vh.balanceValueTv.text = "${item.checkpayFronzenamount.add(item.checkpayAbleamount).formatForLegal()}"
+        vh.balanceValueTv.text = "${item.checkpayFronzenamount?.add(item.checkpayAbleamount).formatForLegal()}"
     }
 
 
