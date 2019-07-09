@@ -129,7 +129,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         tab_bibi_main.setOnClickListener(this)
         tab_otc_main.setOnClickListener(this)
         tab_my_main.setOnClickListener(this)
-        initFragment()
+//        initFragment()
         selectTab(mCurrentTab)
 
         FingerprintHelper.init(this)//指纹解锁

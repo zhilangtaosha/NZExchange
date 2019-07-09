@@ -19,13 +19,11 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
-import com.nze.nzexchange.extend.formatForCurrency
-import com.nze.nzexchange.extend.getContent
-import com.nze.nzexchange.extend.mul
-import com.nze.nzexchange.extend.sub
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.tools.DoubleMath.Companion.sub
 import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
+import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
 import com.nze.nzexchange.widget.VerifyButton
@@ -108,8 +106,8 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 verifyValueEt.hint = "请输入邮箱证码"
                 verifyAccount = it.userEmail
             }
+            amountEt.addTextChangedListener(EditTextJudgeNumberWatcher(amountEt,userAssetBean!!.decimalPrec))
         }
-        amountEt.addTextChangedListener(EditCurrencyWatcher(amountEt))
         selectCurrencyIv.setOnClickListener(this)
         qcodeIv.setOnClickListener(this)
         addressIv.setOnClickListener(this)
@@ -122,7 +120,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 .subscribe {
                     if (!it.isNullOrEmpty()) {
                         val amount = it.toString().toDouble()
-                        actualAmountTv.text = "${amount.sub(feeRate)} ${userAssetBean?.currency}"
+                        actualAmountTv.text = "${amount.sub(feeRate).format(userAssetBean!!.decimalPrec)} ${userAssetBean?.currency}"
 
                     } else {
                         actualAmountTv.text = "0 ${userAssetBean?.currency}"
@@ -260,7 +258,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
         userAssetBean?.let {
             topBar.setTitle("${it.currency}提现")
             currencyTv.text = it.currency
-            availableTv.text = "可提数量：${it.available} ${it.currency}"
+            availableTv.text = "可提数量：${it.available.format(it.decimalPrec)} ${it.currency}"
             amountEt.hint = "最小提现数量为200 ${it.currency}"
             serviceChargeTv.text = "--${it.currency}"
             actualAmountTv.text = "0 ${it.currency}"
@@ -273,7 +271,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                             val withdrawInfoBean = rs.result
                             feeLimitlowGet = withdrawInfoBean.feeLimitlowGet
                             feeRate = withdrawInfoBean.feeRate
-                            serviceChargeTv.text = "${feeRate.formatForCurrency()}${it.currency}"
+                            serviceChargeTv.text = "${feeRate.format(it.decimalPrec)}${it.currency}"
                             tipTv.text = withdrawInfoBean.feeGetbiText
                         }
                     }, onError)

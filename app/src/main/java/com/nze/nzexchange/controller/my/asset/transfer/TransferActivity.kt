@@ -21,10 +21,12 @@ import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
+import com.nze.nzexchange.extend.format
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.NRetrofit
 import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
+import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
@@ -61,6 +63,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
     lateinit var otcList: ArrayList<UserAssetBean>
     lateinit var bibiList: ArrayList<UserAssetBean>
     val dialog: TransferSuccessDialog  by lazy { TransferSuccessDialog(this) }
+    var editTextJudgeNumberWatcher: EditTextJudgeNumberWatcher? = null
 
     companion object {
         fun skip(context: Context, bundle: Bundle) {
@@ -87,7 +90,6 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
             bibiList = it.getParcelableArrayList(IntentConstant.PARAM_BIBI_ACCOUNT)
         }
 
-        transferEt.addTextChangedListener(EditCurrencyWatcher(transferEt))
         refreshLayout(userAssetBean!!, false)
 
         transferBtn.initValidator()
@@ -119,7 +121,7 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
                 swapAccount(type)
             }
             R.id.tv_all_at -> {
-                transferEt.setText(userAssetBean!!.available.formatForCurrency())
+                transferEt.setText(userAssetBean!!.available.format(userAssetBean!!.decimalPrec))
             }
             R.id.btn_transfer_at -> {
                 if (transferBtn.validate()) {
@@ -209,8 +211,12 @@ class TransferActivity : NBaseActivity(), View.OnClickListener {
         }
         userAssetBean?.let {
             currencyTv.text = it.currency
-            availableTv.text = "可用${it.available.formatForCurrency()}${it.currency}"
+            availableTv.text = "可用${it.available.format(userAssetBean!!.decimalPrec)}${it.currency}"
             unitTv.text = it.currency
+            if (editTextJudgeNumberWatcher != null)
+                transferEt.removeTextChangedListener(editTextJudgeNumberWatcher)
+            editTextJudgeNumberWatcher = EditTextJudgeNumberWatcher(transferEt, it.decimalPrec)
+            transferEt.addTextChangedListener(editTextJudgeNumberWatcher)
         }
     }
 

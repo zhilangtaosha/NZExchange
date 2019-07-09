@@ -144,7 +144,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                     val bulletinAdapter = SimpleBulletinAdapter(activity!!, noticeList)
                     bulletinView.setAdapter(bulletinAdapter)
                     bulletinView.setOnBulletinItemClickListener {
-                        WebActivity.skip(activity, noticeList[it].noticeUrl, "公告")
+                        WebActivity.skip(activity, noticeList[it].noticeBashmtlUrl, "公告")
                     }
 
                 }, onError)
@@ -218,12 +218,12 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
     val connection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.i("zwy", "onServiceDisconnected")
+            Log.i("zwy", "home onServiceDisconnected")
             isBinder = false
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.i("zwy", "onServiceConnected")
+            Log.i("zwy", "home onServiceConnected")
             binder = service as SoketService.SoketBinder
             isBinder = true
 

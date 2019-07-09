@@ -54,6 +54,23 @@ fun Double.format(rule: String): String {
     return df.format(this)
 }
 
+fun Double.format(num: Int): String {
+    val df = DecimalFormat(getRule(num))
+    return df.format(this)
+}
+
+fun getRule(num: Int): String = when (num) {
+    1 -> "0.#"
+    2 -> "0.##"
+    3 -> "0.###"
+    4 -> "0.####"
+    5 -> "0.#####"
+    6 -> "0.######"
+    7 -> "0.#######"
+    8 -> "0.########"
+    else -> "0.########"
+}
+
 
 /**
  * 保留2位小数

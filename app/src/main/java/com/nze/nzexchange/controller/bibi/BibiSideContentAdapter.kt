@@ -9,6 +9,7 @@ import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.TransactionPairBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
@@ -25,26 +26,27 @@ import kotlinx.android.synthetic.main.lv_bibi_side_content.view.*
  * @类 说 明:
  * @创建时间：2018/12/4
  */
-class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, BibiSideContentAdapter.ViewHolder>(mContext) {
+class BibiSideContentAdapter(mContext: Context) : NBaseAda<SoketRankBean, BibiSideContentAdapter.ViewHolder>(mContext) {
     override fun setLayout(): Int = R.layout.lv_bibi_side_content
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: TransactionPairsBean, position: Int) {
-        vh.currencyTv.text = item.currency
-        vh.mainCurrencyTv.text = "${item.mainCurrency}"
-        vh.costTv.text = item.exchangeRate.formatForCurrency()
+    override fun initView(vh: ViewHolder, item: SoketRankBean, position: Int) {
+        vh.currencyTv.text = item.getCurrency()
+        vh.mainCurrencyTv.text = "/${item.getMainCurrency()}"
+        vh.costTv.text = item.last.formatForCurrency()
 
         vh.choiceCb.isSelected = item.optional == 1
-        var gainStr = "0%"
-        if (item.gain >= 0) {
-            vh.changeTv.setTxtColor(R.color.color_FF019D81)
-            gainStr = "+${item.gain}<font color=\"#C1C0C7\" size=8>%</font>"
+        if (item.change > 0) {
+            vh.changeTv.setTxtColor(R.color.color_up)
+            vh.changeTv.text = "+${item.change}"
+        } else if (item.change == 0.0) {
+            vh.changeTv.setTxtColor(R.color.color_up)
+            vh.changeTv.text = "${item.change}"
         } else {
-            vh.changeTv.setTxtColor(R.color.color_FFFF4A5F)
-            gainStr = "${item.gain}<font color=\"#C1C0C7\" size=8>%</font>"
+            vh.changeTv.setTxtColor(R.color.color_down)
+            vh.changeTv.text = "${item.change}"
         }
-        vh.changeTv.setTextFromHtml(gainStr)
 
 //        vh.rootLayout.setOnClickListener {
 //            onItemClick?.itemClick(item)
@@ -64,7 +66,7 @@ class BibiSideContentAdapter(mContext: Context) : NBaseAda<TransactionPairsBean,
 
     interface OnItemClickListener {
         //        fun itemClick(item: TransactionPairsBean)
-        fun selftSelect(item: TransactionPairsBean, position: Int)
+        fun selftSelect(item: SoketRankBean, position: Int)
     }
 
     class ViewHolder(var view: View) {

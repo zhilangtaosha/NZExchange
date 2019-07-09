@@ -58,7 +58,8 @@ data class SoketRankBean(//首页涨幅榜
         val cny: Double,
         val stock_prec: Int,//交易币小数位数
         val money_prec: Int,// 计价币小数位数
-        val min_amount: Double//最小交易数量
+        val min_amount: Double,//最小交易数量
+        var optional: Int = 0
 ) {
     var change: Double = 0.0
         get() {

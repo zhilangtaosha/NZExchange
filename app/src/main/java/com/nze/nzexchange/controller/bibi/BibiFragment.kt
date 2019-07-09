@@ -265,7 +265,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
                 }
 
-        getTransactionPair()
+//        getTransactionPair()
     }
 
     /**
@@ -741,7 +741,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 .currencyToLegal(currentTransactionPair?.mainCurrency!!, 1.0, {
                     if (it.success) {
                         mainCurrencyPrice = it.result
-//                        lastPriceTv.text = "≈${it.result}CNY"
                     } else {
                         priceTv.text = "≈0CNY"
                     }
@@ -863,9 +862,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
     }
 
+
     override fun onDestroy() {
-        super.onDestroy()
         activity!!.unbindService(connection)
+        super.onDestroy()
     }
 
     fun changePair() {
@@ -885,7 +885,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.i("zwy", "onServiceConnected")
+            Log.i("zwy", "bibi onServiceConnected")
             binder = service as SoketService.SoketBinder
             isBinder = true
 
@@ -924,12 +924,32 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         //订阅最近成交列表
 
                     })
-//            binder?.initSocket("bibi",
-//                    KLineParam.MARKET_MYSELF,
-//                    {
-//                    }, {}
-//            )
-            changePair()
+            binder?.addMarketCallBack("bibi") {
+                currentTransactionPair = TransactionPairsBean()
+                currentTransactionPair!!.setValueFromRankBean(it[0].list[0])
+                refreshLayout()
+                getPendingOrderInfo(currentTransactionPair?.id!!)
+                switchType(currentType)
+                changePair()
+                if (userBean != null) {
+                    //获取订单
+                    orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+                } else {
+                    showNODataView("当前没有登录")
+                }
+
+                //获取交易对的挂单信息
+                RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
+                        .compose(netTfWithDialog())
+                        .subscribe({
+                            if (it.success) {
+                                restOrderBean = it.result
+                                switchType(currentType)
+                            }
+                        }, onError)
+            }
+            binder?.queryMarket()
+//            changePair()
         }
     }
 }

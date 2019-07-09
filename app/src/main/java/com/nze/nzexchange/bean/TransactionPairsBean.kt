@@ -29,9 +29,9 @@ data class TransactionPairsBean(
         val popular: Int,//热门交易对1001：热门，1002：非热门
         val deal: Double,
         val feePrec: Int,//计费费用小数位
-        val stockPrec: Int,//交易币个数小数位数
-        val moneyPrec: Int,//计价币价格小数位数
-        val minAmount: Double,//最小交易数量
+        var stockPrec: Int,//交易币个数小数位数
+        var moneyPrec: Int,//计价币价格小数位数
+        var minAmount: Double,//最小交易数量
         val statusInitTime: Long,//初始化状态时间
         val statusUseTime: Long,//激活使用状态时间
         var cny: Double = 0.0
@@ -48,6 +48,9 @@ data class TransactionPairsBean(
         gain = rankBean.change
         id = rankBean.market
         volume = rankBean.volume
+        stockPrec = rankBean.stock_prec
+        moneyPrec = rankBean.money_prec
+        minAmount = rankBean.min_amount
     }
 
 

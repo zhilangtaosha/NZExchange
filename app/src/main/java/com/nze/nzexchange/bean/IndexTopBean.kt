@@ -38,7 +38,8 @@ data class IndexNotices(
         val noticeEndtimeStr: String,
         val noticeId: String,
         val noticeTitle: String,
-        val noticeUrl: String
+        val noticeUrl: String,
+        val noticeBashmtlUrl: String
 )
 
 data class IndexImgs(

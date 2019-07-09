@@ -173,7 +173,7 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.i("zwy", "onServiceConnected")
+            Log.i("zwy", "market onServiceConnected")
             binder = service as SoketService.SoketBinder
             isBinder = true
             binder?.addMarketCallBack("market") {
@@ -197,7 +197,7 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
                 }.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
-                            
+
                         }
                 viewPager.offscreenPageLimit = tabs.size
                 val indicatorAdapter = MarketIndicatorAdapter(fragmentManager!!, activity!!, tabs, pages)
