@@ -39,6 +39,10 @@ data class TransactionPairsBean(
 
     constructor() : this(0, "", 0.0, "", "", "", 0, "", 0.0, 0, 0.0, 0, 0.0, 0, 0, 0, 0.0, 0, 0, 0.0) {}
 
+    fun getPair(): String {
+        return "${currency}${mainCurrency}"
+    }
+
     fun setValueFromRankBean(rankBean: SoketRankBean) {
         currency = rankBean.getCurrency()
         mainCurrency = rankBean.getMainCurrency()

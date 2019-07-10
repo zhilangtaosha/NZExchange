@@ -101,27 +101,27 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val currentOrderAdapter by lazy {
         BibiCurentOrderAdapter(activity!!).apply {
             cancelClick = { position, item ->
-                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!, null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                        .compose(netTfWithDialog())
-                        .subscribe({
-                            if (it.success) {
-                                orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
-                            } else {
-                                if (it.isCauseNotEmpty()) {
-                                    AuthorityDialog.getInstance(activity!!)
-                                            .show("取消当前委托需要完成以下设置，请检查"
-                                                    , it.cause) {
-
-                                            }
-                                }
-                            }
-                        }, onError)
+                //                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!, null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+//                        .compose(netTfWithDialog())
+//                        .subscribe({
+//                            if (it.success) {
+//                                orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+//                            } else {
+//                                if (it.isCauseNotEmpty()) {
+//                                    AuthorityDialog.getInstance(activity!!)
+//                                            .show("取消当前委托需要完成以下设置，请检查"
+//                                                    , it.cause) {
+//
+//                                            }
+//                                }
+//                            }
+//                        }, onError)
             }
         }
     }
 
-    val TYPE_BUY = 1
-    val TYPE_SALE = 0
+    val TYPE_BUY = 2
+    val TYPE_SALE = 1
     var currentType = TYPE_BUY
 
     private val sidePopup: BibiSidePopup by lazy { BibiSidePopup(mBaseActivity, childFragmentManager!!) }
@@ -315,7 +315,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             refreshLayout()
             getPendingOrderInfo(currentTransactionPair?.id!!)
             if (userBean != null)
-                orderPending(currentTransactionPair?.id!!, userBean?.userId)
+                binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
+//                orderPending(currentTransactionPair?.id!!, userBean?.userId)
             //切换交易对，切换盘口
             if (preCurrentTransactionPair == null || preCurrentTransactionPair?.id != currentTransactionPair?.id)
                 changePair()
@@ -324,7 +325,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS) {
             userBean = UserBean.loadFromApp()
             getPendingOrderInfo(currentTransactionPair?.id!!)
-            orderPending(currentTransactionPair?.id!!, userBean?.userId)
+//            orderPending(currentTransactionPair?.id!!, userBean?.userId)
+            binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
         }
         if (eventCenter.eventCode == EventCode.CODE_TRADE_BIBI) {
             val type: Int = eventCenter.data as Int
@@ -396,7 +398,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 }
                 CheckPermission.getInstance()
                         .commonCheck(activity as NBaseActivity, CheckPermission.BIBI_TRADE, "进行币币交易需要完成以下设置，请检查", onPass = {
-                            fundPopup.showPopupWindow()
+                            //                            fundPopup.showPopupWindow()
+                            btnHandler(userBean!!, getEt.getContent().toDouble(), if (!giveEt.getContent().isNullOrEmpty()) {
+                                giveEt.getContent().toDouble()
+                            } else {
+                                0.0
+                            }, "")
                         })
 
 
@@ -515,30 +522,32 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
      */
     fun btnHandler(user: UserBean, number: Double, price: Double, pwd: String) {
         if (transactionType == TRANSACTIONTYPE_LIMIT) {//限价交易
-            LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble(), user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey, pwd)
-                    .compose(netTfWithDialog())
-                    .subscribe({
-                        if (it.success) {
-                            showToast("下单成功")
-                            getPendingOrderInfo(currentTransactionPair?.id!!)
-                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
-                        } else {
-                            showToast(it.message)
-                        }
-                    }, onError)
+                binder?.limitDeal(currentTransactionPair!!.getPair(), currentType, number, price)
+//            LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble(), user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey, pwd)
+//                    .compose(netTfWithDialog())
+//                    .subscribe({
+//                        if (it.success) {
+//                            showToast("下单成功")
+//                            getPendingOrderInfo(currentTransactionPair?.id!!)
+////                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+//                        } else {
+//                            showToast(it.message)
+//                        }
+//                    }, onError)
         } else {//市价交易
-            LimitTransactionBean.marketTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey, pwd)
-                    .compose(netTfWithDialog())
-                    .subscribe({
-                        if (it.success) {
-                            showToast("下单成功")
-                            getPendingOrderInfo(currentTransactionPair?.id!!)
-                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
-                        } else {
-                            showToast(it.message)
-
-                        }
-                    }, onError)
+            binder?.marketDeal(currentTransactionPair!!.getPair(), currentType, number)
+//            LimitTransactionBean.marketTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey, pwd)
+//                    .compose(netTfWithDialog())
+//                    .subscribe({
+//                        if (it.success) {
+//                            showToast("下单成功")
+//                            getPendingOrderInfo(currentTransactionPair?.id!!)
+////                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+//                        } else {
+//                            showToast(it.message)
+//
+//                        }
+//                    }, onError)
         }
     }
 
@@ -798,7 +807,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         changePair()
                         if (userBean != null) {
                             //获取订单
-                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+//                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                         } else {
                             showNODataView("当前没有登录")
                         }
@@ -835,8 +844,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val list = it.result
                         if (it.success && list != null && list.size > 0) {
                             stopAllView()
-                            currentOrderAdapter.group = it.result
-                            currentOrderLv.adapter = currentOrderAdapter
+//                            currentOrderAdapter.group = it.result
+//                            currentOrderLv.adapter = currentOrderAdapter
                         } else {
                             showNODataView("当前没有委托")
                         }
@@ -925,6 +934,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
                     })
             binder?.addMarketCallBack("bibi") {
+                //获取所有交易对
                 currentTransactionPair = TransactionPairsBean()
                 currentTransactionPair!!.setValueFromRankBean(it[0].list[0])
                 refreshLayout()
@@ -933,7 +943,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 changePair()
                 if (userBean != null) {
                     //获取订单
-                    orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+//                    orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                 } else {
                     showNODataView("当前没有登录")
                 }
@@ -948,8 +958,26 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             }
                         }, onError)
             }
+            binder?.addCurrentOrderCallBack("bibi", {
+                currentOrderAdapter.group = it
+            }, {
+
+            })
+            binder?.addLimitDealCallBack {
+                if (it) {
+                    queryCurrentOrder()
+                }
+            }
+            binder?.addMarketDealCallBack {
+                if (it)
+                    queryCurrentOrder()
+            }
             binder?.queryMarket()
 //            changePair()
         }
+    }
+
+    fun queryCurrentOrder() {
+        binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
     }
 }

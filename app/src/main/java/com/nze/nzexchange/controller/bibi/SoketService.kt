@@ -4,10 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import com.nze.nzexchange.bean.SoketDealBean
-import com.nze.nzexchange.bean.SoketMarketBean
-import com.nze.nzexchange.bean.SoketRankBean
-import com.nze.nzexchange.bean.SoketTodayBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.market.presenter.IWebSoket
 import com.nze.nzexchange.controller.market.presenter.WebSoketImpl
@@ -46,6 +43,37 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
+        override fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit) {
+            webSoket.addLimitDealCallBack(onLimitDeal)
+        }
+
+        override fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit) {
+            webSoket.addMarketDealCallBack(onMarketDeal)
+        }
+
+        override fun removeCallBack2() {
+            webSoket.removeCallBack2()
+        }
+
+        override fun limitDeal(pair: String, side: Int, amount: Double, price: Double) {
+            webSoket.limitDeal(pair, side, amount, price)
+        }
+
+        override fun marketDeal(pair: String, side: Int, amount: Double) {
+            webSoket.marketDeal(pair, side, amount)
+        }
+
+        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeBean) -> Unit) {
+            webSoket.addCurrentOrderCallBack(key, onQueryOrder, onSubscribeOrder)
+        }
+
+        override fun queryCurrentOrder(pair: String) {
+            webSoket.queryCurrentOrder(pair)
+        }
+
+        override fun subscribeOrder(pair: String) {
+            webSoket.subscribeOrder(pair)
+        }
 
         private val webSoket: IWebSoket by lazy { WebSoketImpl() }
 
@@ -72,9 +100,15 @@ class SoketService : Service() {
         override fun addRankCallBak(key: String, mOnQueryRankCallback: (rankList: MutableList<SoketRankBean>) -> Unit) {
             webSoket.addRankCallBak(key, mOnQueryRankCallback)
         }
+
         override fun addMarketCallBack(key: String, onMarketRankCallback: (marketList: MutableList<SoketMarketBean>) -> Unit) {
             webSoket.addMarketCallBack(key, onMarketRankCallback)
         }
+
+        override fun addAuthCallBack(key: String, mOnAuthCallBack: (rs: Boolean) -> Unit) {
+            webSoket.addAuthCallBack(key, mOnAuthCallBack)
+        }
+
 
         override fun removeCallBack(key: String) {
             webSoket.removeCallBack(key)
@@ -98,6 +132,10 @@ class SoketService : Service() {
 
         override fun queryMarket() {
             webSoket.queryMarket()
+        }
+
+        override fun auth(token: String) {
+            webSoket.auth(token)
         }
 
         override fun close() {

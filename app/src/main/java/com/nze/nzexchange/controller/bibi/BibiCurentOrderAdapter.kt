@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.HandicapBean
 import com.nze.nzexchange.bean.OrderPendBean
+import com.nze.nzexchange.bean.SoketOrderBean
 import com.nze.nzexchange.config.OrderStatus
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.formatForCurrency
@@ -25,17 +26,17 @@ import kotlinx.android.synthetic.main.lv_bibi_current_order.view.*
  * @类 说 明: 当前委托列表
  * @创建时间：2018/12/4
  */
-class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCurentOrderAdapter.ViewHolder>(mContext) {
+class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiCurentOrderAdapter.ViewHolder>(mContext) {
     var mainCurrency: String? = null
     var currency: String? = null
 
-    var cancelClick: ((position: Int, item: OrderPendBean) -> Unit)? = null
+    var cancelClick: ((position: Int, item: SoketOrderBean) -> Unit)? = null
 
     override fun setLayout(): Int = R.layout.lv_bibi_current_order
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: OrderPendBean, position: Int) {
+    override fun initView(vh: ViewHolder, item: SoketOrderBean, position: Int) {
         if (item.side == 1) {//；卖出
             vh.statusTv.setTxtColor(R.color.color_FFFF4A5F)
             vh.statusTv.text = "卖出"
@@ -43,9 +44,9 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
             vh.statusTv.setTxtColor(R.color.color_FF019D81)
             vh.statusTv.text = "买入"
         }
-        val split = item.market.split("/")
-        val currency = split[0]
-        val mainCurrency = split[1]
+//        val split = item.market.split("/")
+//        val currency = split[0]
+//        val mainCurrency = split[1]
         vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, (item.ctime * 1000).toLong())
 
         vh.costKeyTv.text = "价格(${mainCurrency})"
@@ -67,30 +68,30 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<OrderPendBean, BibiCu
         vh.realAmountKeyTv.text = "实际成交(${currency})"
         vh.realAmountValueTv.text = item.deal_stock.formatForCurrency()
 
-        when (item.status) {
-            OrderStatus.COMPLETED -> {
-                vh.cancelTv.text = "已完成"
-                vh.cancelTv.setTextColor(getNColor(R.color.color_common))
-                vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
-                vh.cancelTv.isClickable = false
-            }
-            OrderStatus.RESCINDED -> {
-                vh.cancelTv.text = "已撤销"
-                vh.cancelTv.setTextColor(getNColor(R.color.color_common))
-                vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
-                vh.cancelTv.isClickable = false
-            }
-            OrderStatus.NO_COMPLETE -> {
-                vh.cancelTv.text = "撤销"
-                vh.cancelTv.setTextColor(getNColor(R.color.color_main))
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    vh.cancelTv.background = ContextCompat.getDrawable(mContext, R.drawable.shape_radius_2536_bg2)
-                } else {
-                    vh.cancelTv.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.shape_radius_2536_bg2))
-                }
-                vh.cancelTv.isClickable = true
-            }
-        }
+//        when (item.status) {
+//            OrderStatus.COMPLETED -> {
+//                vh.cancelTv.text = "已完成"
+//                vh.cancelTv.setTextColor(getNColor(R.color.color_common))
+//                vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
+//                vh.cancelTv.isClickable = false
+//            }
+//            OrderStatus.RESCINDED -> {
+//                vh.cancelTv.text = "已撤销"
+//                vh.cancelTv.setTextColor(getNColor(R.color.color_common))
+//                vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
+//                vh.cancelTv.isClickable = false
+//            }
+//            OrderStatus.NO_COMPLETE -> {
+//                vh.cancelTv.text = "撤销"
+//                vh.cancelTv.setTextColor(getNColor(R.color.color_main))
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                    vh.cancelTv.background = ContextCompat.getDrawable(mContext, R.drawable.shape_radius_2536_bg2)
+//                } else {
+//                    vh.cancelTv.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.shape_radius_2536_bg2))
+//                }
+//                vh.cancelTv.isClickable = true
+//            }
+//        }
         vh.cancelTv.setOnClickListener {
             cancelClick?.invoke(position, item)
         }

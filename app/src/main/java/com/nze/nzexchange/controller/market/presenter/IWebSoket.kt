@@ -1,9 +1,6 @@
 package com.nze.nzexchange.controller.market.presenter
 
-import com.nze.nzexchange.bean.SoketDealBean
-import com.nze.nzexchange.bean.SoketMarketBean
-import com.nze.nzexchange.bean.SoketRankBean
-import com.nze.nzexchange.bean.SoketTodayBean
+import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.widget.chart.KLineEntity
 import com.nze.nzexchange.widget.depth.DepthDataBean
@@ -30,7 +27,16 @@ interface IWebSoket {
 
     fun addMarketCallBack(key: String, onMarketRankCallback: ((marketList: MutableList<SoketMarketBean>) -> Unit))
 
+    fun addAuthCallBack(key: String, mOnAuthCallBack: (rs: Boolean) -> Unit)
+
+    fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeBean) -> Unit)
+
+    fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit)
+    fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit)
+
     fun removeCallBack(key: String)
+
+    fun removeCallBack2()
 
     fun subscribeAllData(pair: String, type: Int, pattern: String)
 
@@ -41,6 +47,36 @@ interface IWebSoket {
     fun queryRank()
 
     fun queryMarket()
+    /**
+     * 身份认证
+     */
+    fun auth(token: String)
+
+    /**
+     * 查询当前订单
+     */
+    fun queryCurrentOrder(pair: String)
+
+    /**
+     * 订阅订单
+     */
+    fun subscribeOrder(pair: String)
+
+    /**
+     * 挂限价单
+    参数1：market，交易对名称
+    参数2：side，购买或者出售。取值范围：1为出售，2为购买。
+    参数3：amount，交易数量
+    参数4：price，单价
+    参数5：source，请求源，30字节。由客户端APP和WEB填写，撮合系统在请求响应和订单成交通知消息中原样返回，APP和WEB可以用于匹配。
+     */
+    fun limitDeal(pair: String, side: Int, amount: Double, price: Double)
+
+    /**
+     * 挂市价单
+     * 市价不需要提交价格
+     */
+    fun marketDeal(pair: String, side: Int, amount: Double)
 
     fun close()
 }

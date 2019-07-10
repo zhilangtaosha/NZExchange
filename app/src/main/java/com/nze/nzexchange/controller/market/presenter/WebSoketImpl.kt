@@ -40,6 +40,7 @@ import java.net.URLEncoder
  */
 class WebSoketImpl : IWebSoket {
 
+
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
     val gson: Gson by lazy { Gson() }
@@ -62,11 +63,13 @@ class WebSoketImpl : IWebSoket {
     val mRankList: MutableList<SoketRankBean> by lazy { mutableListOf<SoketRankBean>() }
     //行情
     val mMarketList: MutableList<SoketMarketBean> by lazy { mutableListOf<SoketMarketBean>() }
-    //    override var mOnTodayCallback: ((todayBean: SoketTodayBean) -> Unit)? = null
-//    override var mOnDepthCallback: ((mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit)? = null
-//    override var mOnDealCallback: ((dealList: MutableList<SoketDealBean>) -> Unit)? = null
-//    override var mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit)? = null
-//    override var mOnSubscribeKlineCallback: ((newKList: MutableList<KLineEntity>) -> Unit)? = null
+    //身份认证
+    var isAuth: Boolean = false
+    //当前订单
+    var orderRs: SoketOrderResultBean? = null
+    //下单结果
+    var dealRs: Boolean = false
+
     val mOnTodayMap: MutableMap<String, ((todayBean: SoketTodayBean) -> Unit)> by lazy {
         mutableMapOf<String, ((todayBean: SoketTodayBean) -> Unit)>()
     }
@@ -95,6 +98,21 @@ class WebSoketImpl : IWebSoket {
         mutableMapOf<String, ((marketList: MutableList<SoketMarketBean>) -> Unit)>()
     }
 
+    val mOnAuthMap: MutableMap<String, ((rs: Boolean) -> Unit)> by lazy {
+        mutableMapOf<String, ((rs: Boolean) -> Unit)>()
+    }
+
+    val mOnQueryCurrentOrderMap: MutableMap<String, ((orderList: MutableList<SoketOrderBean>) -> Unit)> by lazy {
+        mutableMapOf<String, ((orderList: MutableList<SoketOrderBean>) -> Unit)>()
+    }
+
+    val mOnSubscribeOrderMap: MutableMap<String, ((order: SoketSubscribeBean) -> Unit)> by lazy {
+        mutableMapOf<String, ((order: SoketSubscribeBean) -> Unit)>()
+    }
+
+    var mOnLimitDeal: ((rs: Boolean) -> Unit)? = null
+    var mOnMarketDeal: ((rs: Boolean) -> Unit)? = null
+    //---------------------------------------------------------------------------------------------
     override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
         mOnOpenMap.put(key, onOpenCallback)
         mOnCloseMap.put(key, onCloseCallback)
@@ -128,6 +146,22 @@ class WebSoketImpl : IWebSoket {
         this.mOnMarketRankMap.put(key, onMarketRankCallback)
     }
 
+    override fun addAuthCallBack(key: String, mOnAuthCallBack: (rs: Boolean) -> Unit) {
+        this.mOnAuthMap.put(key, mOnAuthCallBack)
+    }
+
+    override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeBean) -> Unit) {
+        this.mOnQueryCurrentOrderMap.put(key, onQueryOrder)
+        this.mOnSubscribeOrderMap.put(key, onSubscribeOrder)
+    }
+
+    override fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit) {
+        this.mOnLimitDeal = onLimitDeal
+    }
+
+    override fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit) {
+        this.mOnMarketDeal = onMarketDeal
+    }
 
     override fun removeCallBack(key: String) {
         this.OnQueryKlineMap.remove(key)
@@ -137,8 +171,17 @@ class WebSoketImpl : IWebSoket {
         this.mOnDealMap.remove(key)
         this.mOnQueryRankMap.remove(key)
         this.mOnMarketRankMap.remove(key)
+        this.mOnAuthMap.remove(key)
+        this.mOnQueryCurrentOrderMap.remove(key)
+        this.mOnSubscribeOrderMap.remove(key)
     }
 
+    override fun removeCallBack2() {
+        this.mOnLimitDeal = null
+        this.mOnMarketDeal = null
+    }
+
+    //--------------------------------------------------------------------------------------------------
     override fun subscribeAllData(pair: String, type: Int, pattern: String) {
         this.mPair = pair
         queryKline(type, pattern)
@@ -249,11 +292,64 @@ class WebSoketImpl : IWebSoket {
         socket?.send(param)
     }
 
+    override fun auth(token: String) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_AUTH, KLineParam.ID_AUTH)
+        requestBean.params.add(token)
+        requestBean.params.add("Android")
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("auth>>$param")
+        socket?.send(param)
+    }
+
+    override fun queryCurrentOrder(pair: String) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_QUERY_ORDER, KLineParam.ID_AUTH)
+        requestBean.params.add(pair)
+        requestBean.params.add(0)
+        requestBean.params.add(20)
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("queryCurrentOrder>>$param")
+        socket?.send(param)
+    }
+
+    override fun subscribeOrder(pair: String) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_SUBSCRIBE_ORDER)
+        requestBean.params.add(pair)
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("subscribeOrder>>$param")
+        socket?.send(param)
+    }
+
+    override fun limitDeal(pair: String, side: Int, amount: Double, price: Double) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_LIMIT_DEAL, KLineParam.ID_LIMIT_DEAL)
+        requestBean.params.add(pair)
+        requestBean.params.add(side)
+        requestBean.params.add("$amount")
+        requestBean.params.add("$price")
+        requestBean.params.add("Android")
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("limitDeal>>$param")
+        socket?.send(param)
+    }
+
+    override fun marketDeal(pair: String, side: Int, amount: Double) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_DEAL, KLineParam.ID_MARKET_DEAL)
+        requestBean.params.add(pair)
+        requestBean.params.add(side)
+        requestBean.params.add(amount)
+        requestBean.params.add("Android")
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("marketDeal>>$param")
+        socket?.send(param)
+    }
+
+    //----------------------------------------------------------------------------------------------
+
     override fun close() {
         nWebSocket?.close()
         socket?.cancel()
     }
 
+    //----------------------------------------------------------------------------------------------
     private val wsListener = object : WebSocketListener() {
         val gson: Gson = Gson()
         override fun onOpen(webSocket: WebSocket, response: Response) {
@@ -322,6 +418,22 @@ class WebSoketImpl : IWebSoket {
                                 } catch (e: Exception) {
                                     NLog.i("market出错>>${e.message}")
                                 }
+                            }
+                            KLineParam.ID_AUTH -> {
+                                isAuth = queryBean.error == null
+                                it.onNext(KLineParam.DATA_AUTH)
+                            }
+                            KLineParam.ID_ORDER -> {
+                                orderRs = gson.fromJson<SoketOrderResultBean>(queryBean.result.toString(), SoketOrderResultBean::class.java)
+                                it.onNext(KLineParam.DATA_CURRENT_ORDER_QUERY)
+                            }
+                            KLineParam.ID_LIMIT_DEAL -> {
+                                dealRs = queryBean.error == null
+                                it.onNext(KLineParam.DATA_LIMIT_DEAL)
+                            }
+                            KLineParam.ID_MARKET_DEAL -> {
+                                dealRs = queryBean.error == null
+                                it.onNext(KLineParam.DATA_MARKET_DEAL)
                             }
                         }
                     } catch (e: Exception) {
@@ -492,6 +604,22 @@ class WebSoketImpl : IWebSoket {
                                 mOnMarketRankMap.forEach {
                                     it.value.invoke(mMarketList)
                                 }
+                            }
+                            KLineParam.DATA_AUTH -> {
+                                mOnAuthMap.forEach {
+                                    it.value.invoke(isAuth)
+                                }
+                            }
+                            KLineParam.DATA_CURRENT_ORDER_QUERY -> {
+                                mOnQueryCurrentOrderMap.forEach {
+                                    it.value.invoke(orderRs!!.records.toMutableList())
+                                }
+                            }
+                            KLineParam.DATA_LIMIT_DEAL -> {
+                                mOnLimitDeal?.invoke(dealRs)
+                            }
+                            KLineParam.DATA_MARKET_DEAL -> {
+                                mOnMarketDeal?.invoke(dealRs)
                             }
                         }
                     }, {

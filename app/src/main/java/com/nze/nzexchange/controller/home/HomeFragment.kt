@@ -208,7 +208,6 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
     override fun onDestroy() {
         mCarousel.stop()
-//        binder?.close()
         activity!!.unbindService(connection)
         super.onDestroy()
     }

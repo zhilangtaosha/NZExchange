@@ -1,24 +1,32 @@
 package com.nze.nzexchange.controller.login
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.bibi.SoketService
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.MD5Tool
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.clearedit.ClearableEditText
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import net.grandcentrix.tray.AppPreferences
 import org.greenrobot.eventbus.EventBus
 
@@ -88,6 +96,40 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
         super.onResume()
         val userName = appPreferences.getString(Preferences.LOGIN_USER_NAME, "")
         accountEt.setText(userName)
+        bindService(Intent(this, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
+    }
+
+
+    override fun onDestroy() {
+        unbindService(connection)
+        binder?.removeCallBack("login")
+        super.onDestroy()
+    }
+
+    var binder: SoketService.SoketBinder? = null
+    var isBinder = false
+
+    val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i("zwy", "login onServiceDisconnected")
+            isBinder = false
+            binder = null
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i("zwy", "login onServiceConnected")
+            binder = service as SoketService.SoketBinder
+            isBinder = true
+
+            binder?.addAuthCallBack("login") {
+                if (!it) {
+                    showToast("身份认证失败")
+                } else {
+                    showToast("身份认证成功")
+                }
+            }
+
+        }
     }
 
     override fun onClick(v: View?) {
@@ -107,6 +149,7 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
                             .subscribe({
                                 //                                showToast(it.message)
                                 if (it.result.token != null) {
+                                    binder?.auth(it.result.token.tokenReqVo.tokenUserKey)
                                     NzeApp.instance.userBean = it.result.cloneToUserBean()
                                     EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
                                     appPreferences.put(Preferences.LOGIN_USER_NAME, userName)
@@ -120,4 +163,6 @@ class LoginActivity : NBaseActivity(), View.OnClickListener {
             }
         }
     }
+
+
 }

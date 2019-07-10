@@ -12,19 +12,19 @@ import java.math.BigDecimal
  * @创建时间：2019/6/12
  */
 
-data class SoketQueryBean(
+data class SoketQueryBean(//查询返回
         val error: Any?,
         val result: Any?,
         val id: Int?
 )
 
-data class SoketSubscribeBean(
+data class SoketSubscribeBean(//订阅返回
         val method: String,
         val params: Any,
         val id: Int?
 )
 
-data class SoketTodayBean(
+data class SoketTodayBean(//今日行情
         val deal: Double,
         val high: Double,
         val last: Double,
@@ -33,13 +33,13 @@ data class SoketTodayBean(
         val volume: Double
 )
 
-data class SoketDepthBean(
+data class SoketDepthBean(//深度
         val asks: Array<Array<Double>>?,
         val bids: Array<Array<Double>>?
 )
 
 
-data class SoketDealBean(
+data class SoketDealBean(//最近成交
         val amount: Double,
         val id: String,
         val price: Double,
@@ -80,7 +80,40 @@ data class SoketRankBean(//首页涨幅榜
     }
 }
 
-data class SoketMarketBean(
+data class SoketMarketBean(//交易对
         val money: String,
         val list: List<SoketRankBean>
+)
+
+
+data class SoketOrderBean(//订单：当前委托订单、全部委托订单
+        val amount: Double,//挂单总数量
+        val ctime: Long,//订单创建时间
+        val mtime: Long,//订单更新时间，也就是最新成交时间
+        val deal_fee: Double,//成交手续费
+        val deal_money: Double,//已成交总价=deal_stock*price
+        val deal_stock: Double,//已成交数量
+        val ftime: Int,//
+        val id: Long,//订单id
+        val maker_fee: String,//maker费率
+        val taker_fee: String,//taker费率
+        val market: String,//交易对
+        val price: Double,//挂单价格
+        val side: Int,//1表示出售  2 表示购买
+        val source: String,
+        val type: Int,//1表示限价单   2. 市价订单
+        val user: Int,
+        val left: Double//剩余数量
+)
+
+data class SoketOrderResultBean(//订单返回结果
+        val limit: Int,
+        val offset: Int,
+        val total: Int,
+        val records: List<SoketOrderBean>
+)
+
+data class SoketSubscribeOrderBean(//订单订阅返回
+        val event: Int,//1表示挂单，2 表示更新，3表示订单完全成交和取消
+        val order: SoketOrderBean
 )

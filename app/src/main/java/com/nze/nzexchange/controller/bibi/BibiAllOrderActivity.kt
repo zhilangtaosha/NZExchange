@@ -49,21 +49,21 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         BibiCurentOrderAdapter(this).apply {
             cancelClick = { position, item ->
                 //撤销
-                OrderPendBean.cancelOrder(item.id, item.userId, item.currencyId, null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-                        .compose(netTfWithDialog())
-                        .subscribe({
-                            if (it.success) {
-                                ptrLv.doPullRefreshing(true, 200)
-                            } else {
-                                if (it.isCauseNotEmpty()) {
-                                    AuthorityDialog.getInstance(this@BibiAllOrderActivity)
-                                            .show("取消当前委托需要完成以下设置，请检查"
-                                                    , it.cause) {
-
-                                            }
-                                }
-                            }
-                        }, onError)
+//                OrderPendBean.cancelOrder(item.id, item.userId, item.currencyId, null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+//                        .compose(netTfWithDialog())
+//                        .subscribe({
+//                            if (it.success) {
+//                                ptrLv.doPullRefreshing(true, 200)
+//                            } else {
+//                                if (it.isCauseNotEmpty()) {
+//                                    AuthorityDialog.getInstance(this@BibiAllOrderActivity)
+//                                            .show("取消当前委托需要完成以下设置，请检查"
+//                                                    , it.cause) {
+//
+//                                            }
+//                                }
+//                            }
+//                        }, onError)
             }
         }
     }
@@ -152,7 +152,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                 .subscribe({
                     val list = it.result
                     if (list != null && list.size > 0) {
-                        orderAdapter.group = list
+//                        orderAdapter.group = list
                     } else {
                         showNODataView("没有委托记录")
                     }

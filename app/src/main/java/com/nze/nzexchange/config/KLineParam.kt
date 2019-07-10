@@ -57,7 +57,13 @@ class KLineParam {
         const val METHOD_SUBSCRIBE_KLINE = "kline.subscribe"//订阅K线
         const val METHOD_QUERY_RANK = "price.ranking"//查询涨幅榜
         const val METHOD_MARKET_RANK = "market.ranking"//查询行情列表
+        const val METHOD_AUTH = "server.auth"//身份验证
+        const val METHOD_QUERY_ORDER = "order.query"//查询当前订单
+        const val METHOD_SUBSCRIBE_ORDER = "order.subscribe"//订单订阅/通知
+        const val METHOD_LIMIT_DEAL = "order.limit"//挂限价单
+        const val METHOD_MARKET_DEAL = "order.market"//挂限价单
 
+        //副图类型
         const val STATUS_MA = "MA"
         const val STATUS_BOLL = "BOLL"
         const val STATUS_MACD = "MACD"
@@ -81,6 +87,11 @@ class KLineParam {
         const val DATA_DEPTH_SUBSCRIBE = 4
         const val DATA_RANK_QUERY = 5//涨幅榜
         const val DATA_MARKET_QUERY = 6//查询行情
+        const val DATA_AUTH = 7//身份认证
+        const val DATA_CURRENT_ORDER_QUERY = 8//查询当前订单
+        const val DATA_ORDER_SUBSCRIBE = 9//订阅订单
+        const val DATA_LIMIT_DEAL = 10//挂限价单
+        const val DATA_MARKET_DEAL = 11//挂市价单
 
         //最近成交列表类型
         const val DEALS_SELL = "sell"
@@ -97,6 +108,7 @@ class KLineParam {
         const val KLINE_TYPE_ONE_WEEK = 604800
         const val KLINE_TYPE_ONE_MON = 2592000
 
+        //深度
         const val DEPTH_1 = "0.1"
         const val DEPTH_2 = "0.01"
         const val DEPTH_3 = "0.001"
@@ -115,9 +127,15 @@ class KLineParam {
 
 
         var socketId: Int = 0
-        val ID_KLINE: Int = 100001
-        val ID_RANK: Int = 100002
-        val ID_MARKET: Int = 100003
+        val ID_KLINE: Int = 100001//K线查询
+        val ID_RANK: Int = 100002//涨幅榜
+        val ID_MARKET: Int = 100003//行情
+        val ID_AUTH: Int = 100004//身份认证
+        val ID_ORDER: Int = 100005//当前订单
+        val ID_LIMIT_DEAL: Int = 100006//挂限价单
+        val ID_MARKET_DEAL: Int = 100007//挂限价单
+
+
     }
 }
 

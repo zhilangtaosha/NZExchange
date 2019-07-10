@@ -1,7 +1,13 @@
 package com.nze.nzexchange.controller.login
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
+import android.util.Log
 import android.view.View
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
@@ -9,7 +15,9 @@ import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.LoginBean
 import com.nze.nzexchange.config.EventCode
+import com.nze.nzexchange.config.Preferences
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.controller.bibi.SoketService
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.MD5Tool
 import kotlinx.android.synthetic.main.activity_quick_login.*
@@ -78,6 +86,7 @@ class QuickLoginActivity : NBaseActivity() {
                 .subscribe({
                     showToast(it.message)
                     if (it.result.token != null) {
+                        binder?.auth(it.result.token.tokenReqVo.tokenUserKey)
                         NzeApp.instance.userBean = it.result.cloneToUserBean()
                         EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
                         this@QuickLoginActivity.finish()
@@ -86,5 +95,43 @@ class QuickLoginActivity : NBaseActivity() {
                 }, {
                     showToast("登录失败")
                 })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bindService(Intent(this, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
+    }
+
+
+    override fun onDestroy() {
+        unbindService(connection)
+        binder?.removeCallBack("quick")
+        super.onDestroy()
+    }
+
+    var binder: SoketService.SoketBinder? = null
+    var isBinder = false
+
+    val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i("zwy", "quick onServiceDisconnected")
+            isBinder = false
+            binder = null
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i("zwy", "quick onServiceConnected")
+            binder = service as SoketService.SoketBinder
+            isBinder = true
+
+            binder?.addAuthCallBack("quick") {
+                if (!it) {
+                    showToast("身份认证失败")
+                } else {
+                    showToast("身份认证成功")
+                }
+            }
+
+        }
     }
 }
