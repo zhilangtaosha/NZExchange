@@ -78,6 +78,7 @@ class KLineParam {
         const val SUBSCRIBE_TODAY = "today.update"//今日行情
         const val SUBSCRIBE_DEALS = "deals.update"//最近成交列表
         const val SUBSCRIBE_DEPTH = "depth.update"//深度
+        const val SUBSCRIBE_ORDER = "order.update"//订单订阅和通知
 
         //返回数据类型
         const val DATA_KLINE_QUERY = 0

@@ -116,4 +116,10 @@ data class SoketOrderResultBean(//订单返回结果
 data class SoketSubscribeOrderBean(//订单订阅返回
         val event: Int,//1表示挂单，2 表示更新，3表示订单完全成交和取消
         val order: SoketOrderBean
-)
+) {
+    companion object {
+        val EVENT_DEAL = 1
+        val EVENT_UPDATE = 2
+        val EVENT_FINISH = 3
+    }
+}

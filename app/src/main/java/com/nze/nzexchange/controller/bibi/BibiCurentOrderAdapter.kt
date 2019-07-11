@@ -15,6 +15,7 @@ import com.nze.nzexchange.config.OrderStatus
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForPrice
+import com.nze.nzexchange.extend.removeE
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor

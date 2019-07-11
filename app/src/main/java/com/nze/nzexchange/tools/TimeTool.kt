@@ -13,7 +13,7 @@ import java.util.*
 class TimeTool {
     companion object {
         const val PATTERN_DEFAULT = "yyyy-MM-dd HH:mm:ss"
-        const val PATTERN2 = "MM/dd HH:mm"
+        const val PATTERN2 = "MM/dd HH:mm:ss"
         const val PATTERN3 = "yyyy-MM"
         const val PATTERN4 = "MM-dd"
         const val PATTERN5 = "HH:mm"

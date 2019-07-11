@@ -74,6 +74,11 @@ abstract class NBaseAda<T, V>(var mContext: Context) : BaseAdapter() {
         notifyDataSetChanged()
     }
 
+    fun setItem(position: Int, item: T) {
+        group.set(position, item)
+        notifyDataSetChanged()
+    }
+
     fun clearGroup(notify: Boolean) {
         group.clear()
         if (notify) {
@@ -92,8 +97,8 @@ abstract class NBaseAda<T, V>(var mContext: Context) : BaseAdapter() {
             cView = convertView
             vh = cView.tag as V
         }
-        val item:T = group[position]
-        initView(vh,item,position)
+        val item: T = group[position]
+        initView(vh, item, position)
         return cView!!
     }
 
@@ -101,5 +106,5 @@ abstract class NBaseAda<T, V>(var mContext: Context) : BaseAdapter() {
 
     abstract fun createViewHold(convertView: View): V
 
-    abstract fun initView(vh: V,item:T,position: Int)
+    abstract fun initView(vh: V, item: T, position: Int)
 }

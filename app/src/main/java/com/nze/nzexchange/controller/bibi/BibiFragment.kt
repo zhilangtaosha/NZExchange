@@ -193,6 +193,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         }
     }
 
+    val currentOrderList: MutableList<SoketOrderBean> by lazy { mutableListOf<SoketOrderBean>() }
+
     companion object {
         @JvmStatic
         fun newInstance() = BibiFragment().apply {
@@ -314,8 +316,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             currentTransactionPair = eventCenter.data as TransactionPairsBean
             refreshLayout()
             getPendingOrderInfo(currentTransactionPair?.id!!)
-            if (userBean != null)
-                binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
+            if (userBean != null) {
+                queryCurrentOrder()
+            }
 //                orderPending(currentTransactionPair?.id!!, userBean?.userId)
             //切换交易对，切换盘口
             if (preCurrentTransactionPair == null || preCurrentTransactionPair?.id != currentTransactionPair?.id)
@@ -326,7 +329,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             userBean = UserBean.loadFromApp()
             getPendingOrderInfo(currentTransactionPair?.id!!)
 //            orderPending(currentTransactionPair?.id!!, userBean?.userId)
-            binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
+
+            queryCurrentOrder()
         }
         if (eventCenter.eventCode == EventCode.CODE_TRADE_BIBI) {
             val type: Int = eventCenter.data as Int
@@ -522,7 +526,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
      */
     fun btnHandler(user: UserBean, number: Double, price: Double, pwd: String) {
         if (transactionType == TRANSACTIONTYPE_LIMIT) {//限价交易
-                binder?.limitDeal(currentTransactionPair!!.getPair(), currentType, number, price)
+            binder?.limitDeal(currentTransactionPair!!.getPair(), currentType, number, price)
 //            LimitTransactionBean.limitTransaction(currentType, user.userId, currentTransactionPair?.id!!, number, giveEt.getContent().toDouble(), user.tokenReqVo.tokenUserId, user.tokenReqVo.tokenUserKey, pwd)
 //                    .compose(netTfWithDialog())
 //                    .subscribe({
@@ -959,18 +963,57 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         }, onError)
             }
             binder?.addCurrentOrderCallBack("bibi", {
-                currentOrderAdapter.group = it
+                NLog.i("订单查询")
+                stopAllView()
+                if (it.size > 0) {
+                    currentOrderList.addAll(it)
+                    currentOrderAdapter.group = currentOrderList
+                    currentOrderLv.adapter = currentOrderAdapter
+                } else {
+                    showNODataView("当前没有委托单")
+                }
+                binder?.subscribeOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
             }, {
-
+                NLog.i("订单更新")
+                when (it.event) {
+                    SoketSubscribeOrderBean.EVENT_DEAL -> {
+                        stopAllView()
+                        currentOrderList.add(0, it.order)
+                        currentOrderAdapter.addItem(0, it.order)
+                        currentOrderLv.adapter = currentOrderAdapter
+                    }
+                    SoketSubscribeOrderBean.EVENT_UPDATE -> {
+                        val i = currentOrderList.indexOfFirst { item ->
+                            item.id == it.order.id
+                        }
+                        if (i >= 0) {
+                            currentOrderList.set(i, it.order)
+                            currentOrderAdapter.setItem(i, it.order)
+                            currentOrderLv.adapter = currentOrderAdapter
+                        }
+                    }
+                    SoketSubscribeOrderBean.EVENT_FINISH -> {
+                        val i = currentOrderList.indexOfFirst { item ->
+                            item.id == it.order.id
+                        }
+                        if (i >= 0) {
+                            currentOrderList.removeAt(i)
+                            currentOrderAdapter.removeItem(i)
+                        }
+                        currentOrderLv.adapter = currentOrderAdapter
+                        if (currentOrderList.size < 20)
+                            queryCurrentOrder()
+                    }
+                }
             })
             binder?.addLimitDealCallBack {
-                if (it) {
-                    queryCurrentOrder()
-                }
+                //                if (it) {
+//                    queryCurrentOrder()
+//                }
             }
             binder?.addMarketDealCallBack {
-                if (it)
-                    queryCurrentOrder()
+                //                if (it)
+//                    queryCurrentOrder()
             }
             binder?.queryMarket()
 //            changePair()
@@ -978,6 +1021,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     fun queryCurrentOrder() {
+        currentOrderList.clear()
         binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
     }
 }

@@ -69,7 +69,8 @@ class WebSoketImpl : IWebSoket {
     var orderRs: SoketOrderResultBean? = null
     //下单结果
     var dealRs: Boolean = false
-
+    var subscribeOrderRs: SoketSubscribeOrderBean? = null
+    //--------------------------------------------------------------------------------------------------
     val mOnTodayMap: MutableMap<String, ((todayBean: SoketTodayBean) -> Unit)> by lazy {
         mutableMapOf<String, ((todayBean: SoketTodayBean) -> Unit)>()
     }
@@ -106,8 +107,8 @@ class WebSoketImpl : IWebSoket {
         mutableMapOf<String, ((orderList: MutableList<SoketOrderBean>) -> Unit)>()
     }
 
-    val mOnSubscribeOrderMap: MutableMap<String, ((order: SoketSubscribeBean) -> Unit)> by lazy {
-        mutableMapOf<String, ((order: SoketSubscribeBean) -> Unit)>()
+    val mOnSubscribeOrderMap: MutableMap<String, ((order: SoketSubscribeOrderBean) -> Unit)> by lazy {
+        mutableMapOf<String, ((order: SoketSubscribeOrderBean) -> Unit)>()
     }
 
     var mOnLimitDeal: ((rs: Boolean) -> Unit)? = null
@@ -150,7 +151,7 @@ class WebSoketImpl : IWebSoket {
         this.mOnAuthMap.put(key, mOnAuthCallBack)
     }
 
-    override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeBean) -> Unit) {
+    override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit) {
         this.mOnQueryCurrentOrderMap.put(key, onQueryOrder)
         this.mOnSubscribeOrderMap.put(key, onSubscribeOrder)
     }
@@ -302,7 +303,7 @@ class WebSoketImpl : IWebSoket {
     }
 
     override fun queryCurrentOrder(pair: String) {
-        val requestBean = SoketRequestBean.create(KLineParam.METHOD_QUERY_ORDER, KLineParam.ID_AUTH)
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_QUERY_ORDER, KLineParam.ID_ORDER)
         requestBean.params.add(pair)
         requestBean.params.add(0)
         requestBean.params.add(20)
@@ -555,11 +556,18 @@ class WebSoketImpl : IWebSoket {
                                 NLog.i("deals.update出错>>${e.message}")
                             }
                         }
-
+                        KLineParam.SUBSCRIBE_ORDER -> {
+                            try {
+                                val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
+                                val orderBean = gson.fromJson<SoketOrderBean>(rs[1].toString(), SoketOrderBean::class.java)
+                                subscribeOrderRs = SoketSubscribeOrderBean(rs[0].toString().toDouble().toInt(), orderBean)
+                                it.onNext(KLineParam.DATA_ORDER_SUBSCRIBE)
+                            } catch (e: Exception) {
+                                NLog.i("order.update出错>>${e.message}")
+                            }
+                        }
                     }
-
                 }
-
             }.subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
@@ -620,6 +628,11 @@ class WebSoketImpl : IWebSoket {
                             }
                             KLineParam.DATA_MARKET_DEAL -> {
                                 mOnMarketDeal?.invoke(dealRs)
+                            }
+                            KLineParam.DATA_ORDER_SUBSCRIBE -> {
+                                mOnSubscribeOrderMap.forEach {
+                                    it.value.invoke(subscribeOrderRs!!)
+                                }
                             }
                         }
                     }, {

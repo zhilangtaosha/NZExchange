@@ -63,7 +63,7 @@ class SoketService : Service() {
             webSoket.marketDeal(pair, side, amount)
         }
 
-        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeBean) -> Unit) {
+        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit) {
             webSoket.addCurrentOrderCallBack(key, onQueryOrder, onSubscribeOrder)
         }
 

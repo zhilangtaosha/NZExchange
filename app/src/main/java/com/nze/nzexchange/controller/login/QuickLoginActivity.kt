@@ -88,7 +88,6 @@ class QuickLoginActivity : NBaseActivity() {
                     if (it.result.token != null) {
                         binder?.auth(it.result.token.tokenReqVo.tokenUserKey)
                         NzeApp.instance.userBean = it.result.cloneToUserBean()
-                        EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
                         this@QuickLoginActivity.finish()
                     }
 
@@ -129,6 +128,7 @@ class QuickLoginActivity : NBaseActivity() {
                     showToast("身份认证失败")
                 } else {
                     showToast("身份认证成功")
+                    EventBus.getDefault().post(EventCenter<Boolean>(EventCode.CODE_LOGIN_SUCCUSS, true))
                 }
             }
 
