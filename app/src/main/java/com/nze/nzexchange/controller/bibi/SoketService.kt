@@ -43,6 +43,10 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
+        override fun orderCancel(pair: String, id: Long) {
+            webSoket.orderCancel(pair, id)
+        }
+
         override fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit) {
             webSoket.addLimitDealCallBack(onLimitDeal)
         }
@@ -63,8 +67,8 @@ class SoketService : Service() {
             webSoket.marketDeal(pair, side, amount)
         }
 
-        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit) {
-            webSoket.addCurrentOrderCallBack(key, onQueryOrder, onSubscribeOrder)
+        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)) {
+            webSoket.addCurrentOrderCallBack(key, onQueryOrder, onSubscribeOrder, mOnCurrentOrderCancel)
         }
 
         override fun queryCurrentOrder(pair: String) {

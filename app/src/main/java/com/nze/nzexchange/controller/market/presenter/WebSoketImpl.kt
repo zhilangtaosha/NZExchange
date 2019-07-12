@@ -40,7 +40,6 @@ import java.net.URLEncoder
  */
 class WebSoketImpl : IWebSoket {
 
-
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
     val gson: Gson by lazy { Gson() }
@@ -69,7 +68,10 @@ class WebSoketImpl : IWebSoket {
     var orderRs: SoketOrderResultBean? = null
     //下单结果
     var dealRs: Boolean = false
+    //订阅订单
     var subscribeOrderRs: SoketSubscribeOrderBean? = null
+    //取消订单
+    var mOrderCancelRs: Boolean = false
     //--------------------------------------------------------------------------------------------------
     val mOnTodayMap: MutableMap<String, ((todayBean: SoketTodayBean) -> Unit)> by lazy {
         mutableMapOf<String, ((todayBean: SoketTodayBean) -> Unit)>()
@@ -110,7 +112,7 @@ class WebSoketImpl : IWebSoket {
     val mOnSubscribeOrderMap: MutableMap<String, ((order: SoketSubscribeOrderBean) -> Unit)> by lazy {
         mutableMapOf<String, ((order: SoketSubscribeOrderBean) -> Unit)>()
     }
-
+    var mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)? = null
     var mOnLimitDeal: ((rs: Boolean) -> Unit)? = null
     var mOnMarketDeal: ((rs: Boolean) -> Unit)? = null
     //---------------------------------------------------------------------------------------------
@@ -151,9 +153,15 @@ class WebSoketImpl : IWebSoket {
         this.mOnAuthMap.put(key, mOnAuthCallBack)
     }
 
-    override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit) {
+    override fun addCurrentOrderCallBack(
+            key: String,
+            onQueryOrder: (MutableList<SoketOrderBean>) -> Unit,
+            onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit,
+            mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)
+    ) {
         this.mOnQueryCurrentOrderMap.put(key, onQueryOrder)
         this.mOnSubscribeOrderMap.put(key, onSubscribeOrder)
+        this.mOnCurrentOrderCancel = mOnCurrentOrderCancel
     }
 
     override fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit) {
@@ -180,6 +188,7 @@ class WebSoketImpl : IWebSoket {
     override fun removeCallBack2() {
         this.mOnLimitDeal = null
         this.mOnMarketDeal = null
+        this.mOnCurrentOrderCancel = null
     }
 
     //--------------------------------------------------------------------------------------------------
@@ -343,6 +352,16 @@ class WebSoketImpl : IWebSoket {
         socket?.send(param)
     }
 
+    override fun orderCancel(pair: String, id: Long) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_ORDER_CANCEL, KLineParam.ID_ORDER_CANCEL)
+        requestBean.params.add(pair)
+        requestBean.params.add(id)
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("orderCancel>>$param")
+        socket?.send(param)
+    }
+
+
     //----------------------------------------------------------------------------------------------
 
     override fun close() {
@@ -435,6 +454,10 @@ class WebSoketImpl : IWebSoket {
                             KLineParam.ID_MARKET_DEAL -> {
                                 dealRs = queryBean.error == null
                                 it.onNext(KLineParam.DATA_MARKET_DEAL)
+                            }
+                            KLineParam.ID_ORDER_CANCEL -> {
+                                mOrderCancelRs = queryBean.error == null
+                                it.onNext(KLineParam.DATA_ORDER_CANCEL)
                             }
                         }
                     } catch (e: Exception) {
@@ -633,6 +656,9 @@ class WebSoketImpl : IWebSoket {
                                 mOnSubscribeOrderMap.forEach {
                                     it.value.invoke(subscribeOrderRs!!)
                                 }
+                            }
+                            KLineParam.DATA_ORDER_CANCEL -> {
+                                mOnCurrentOrderCancel?.invoke(mOrderCancelRs)
                             }
                         }
                     }, {

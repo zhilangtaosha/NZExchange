@@ -1,9 +1,15 @@
 package com.nze.nzexchange.controller.bibi
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.drawable.ColorDrawable
+import android.os.IBinder
+import android.util.Log
 import android.view.View
 import android.widget.ListView
+import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -12,9 +18,9 @@ import com.nze.nzeframework.widget.basepopup.BasePopupWindow
 import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.HandicapBean
-import com.nze.nzexchange.bean.OrderPendBean
-import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.bean.*
+import com.nze.nzexchange.bean.OrderPendBean.Companion.orderTracking
+import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
@@ -27,6 +33,10 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
 
 
     val topBar: CommonTopBar by lazy { ctb_abao }
+    val currentTv: TextView by lazy { tv_current_abao }
+    val currentView: View by lazy { view_current_abao }
+    val historyTv: TextView by lazy { tv_history_abao }
+    val historyView: View by lazy { view_history_abao }
     var currency: String? = null
     var mainCurrency: String? = null
     var status: Int? = null
@@ -48,40 +58,30 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     val orderAdapter: BibiCurentOrderAdapter by lazy {
         BibiCurentOrderAdapter(this).apply {
             cancelClick = { position, item ->
-                //撤销
-//                OrderPendBean.cancelOrder(item.id, item.userId, item.currencyId, null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-//                        .compose(netTfWithDialog())
-//                        .subscribe({
-//                            if (it.success) {
-//                                ptrLv.doPullRefreshing(true, 200)
-//                            } else {
-//                                if (it.isCauseNotEmpty()) {
-//                                    AuthorityDialog.getInstance(this@BibiAllOrderActivity)
-//                                            .show("取消当前委托需要完成以下设置，请检查"
-//                                                    , it.cause) {
-//
-//                                            }
-//                                }
-//                            }
-//                        }, onError)
             }
         }
     }
+    val SELECT_CURRENT = 1
+    val SELECT_HISTORY = 2
+    var mSelect = SELECT_CURRENT
+
 
     companion object {
         val FROM = "from"
         val FROM_BIBI = 0
         val FROM_MY = 1
-        fun toAllOrderActivity(activity: BaseActivity, from: Int) {
+        fun toAllOrderActivity(activity: BaseActivity, from: Int, pair: String) {
             val intent = Intent(activity, BibiAllOrderActivity::class.java)
             intent.putExtra(FROM, from)
+            intent.putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, pair)
             activity.startActivity(intent)
         }
     }
 
-
+    var from = FROM_BIBI
     var userBean: UserBean? = UserBean.loadFromApp()
-
+    val currentOrderList: MutableList<SoketOrderBean> by lazy { mutableListOf<SoketOrderBean>() }
+    var pair = "*"
 
     override fun getRootView(): Int = R.layout.activity_bibi_all_order
 
@@ -90,7 +90,11 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
             if (!filterPopup.isShowing)
                 filterPopup.showPopupWindow(topBar)
         }
-        val from = intent.getIntExtra(FROM, FROM_BIBI)
+        intent.let {
+            from = it.getIntExtra(FROM, FROM_BIBI)
+            pair = it.getStringExtra(IntentConstant.PARAM_TRANSACTION_PAIR)
+        }
+
         if (from == FROM_BIBI) {
             topBar.setTitle("全部委托")
         } else {
@@ -112,7 +116,15 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         listView.dividerHeight = 1
 
         listView.adapter = orderAdapter
-        ptrLv.doPullRefreshing(true, 200)
+        currentTv.setOnClickListener {
+            mSelect = SELECT_CURRENT
+            select(mSelect)
+        }
+        historyTv.setOnClickListener {
+            mSelect = SELECT_HISTORY
+            select(mSelect)
+        }
+        select(mSelect)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -138,28 +150,93 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         refreshType = RrefreshType.PULL_DOWN
-        orderTracking(currency, mainCurrency, userBean?.userId, status, transactionType)
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         refreshType = RrefreshType.PULL_UP
     }
 
-
-    fun orderTracking(currency: String?, mainCurrency: String?, userId: String?, status: Int?, transactionType: Int?) {
-        OrderPendBean.orderTracking(currency, mainCurrency, userId, status, transactionType)
-                .compose(netTf())
-                .subscribe({
-                    val list = it.result
-                    if (list != null && list.size > 0) {
-//                        orderAdapter.group = list
-                    } else {
-                        showNODataView("没有委托记录")
-                    }
-                    ptrLv.onPullDownRefreshComplete()
-                }, {
-                    ptrLv.onPullDownRefreshComplete()
-                })
+    override fun onResume() {
+        super.onResume()
+        bindService(Intent(this, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
     }
 
+    override fun onDestroy() {
+        unbindService(connection)
+        binder?.removeCallBack("order")
+        super.onDestroy()
+    }
+
+    var binder: SoketService.SoketBinder? = null
+    var isBinder = false
+
+    val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i("zwy", "onServiceDisconnected")
+            isBinder = false
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i("zwy", "order onServiceConnected")
+            binder = service as SoketService.SoketBinder
+            isBinder = true
+
+            binder?.addCurrentOrderCallBack("order", {
+                NLog.i("订单查询")
+                stopAllView()
+                if (it.size > 0) {
+                    orderAdapter.group = it
+                } else {
+                    showNODataView("当前没有委托单")
+                }
+                binder?.subscribeOrder(pair)
+            }, {
+                NLog.i("订单更新")
+                when (it.event) {
+                    SoketSubscribeOrderBean.EVENT_DEAL -> {
+                        stopAllView()
+                        currentOrderList.add(0, it.order)
+                    }
+                    SoketSubscribeOrderBean.EVENT_UPDATE -> {
+                        val i = currentOrderList.indexOfFirst { item ->
+                            item.id == it.order.id
+                        }
+                        if (i >= 0) {
+                            currentOrderList.set(i, it.order)
+                        }
+                    }
+                    SoketSubscribeOrderBean.EVENT_FINISH -> {
+                        val i = currentOrderList.indexOfFirst { item ->
+                            item.id == it.order.id
+                        }
+                        if (i >= 0) {
+                            currentOrderList.removeAt(i)
+                        }
+                    }
+                }
+            }, {
+                //取消订单
+
+            })
+            queryCurrentOrder()
+        }
+    }
+
+    private fun select(select: Int) {
+        currentTv.isSelected = select == SELECT_CURRENT
+        currentView.visibility = if (select == SELECT_CURRENT) View.VISIBLE else View.GONE
+
+        historyTv.isSelected = select == SELECT_HISTORY
+        historyView.visibility = if (select == SELECT_HISTORY) View.VISIBLE else View.GONE
+        if (select == SELECT_CURRENT) {
+            queryCurrentOrder()
+        } else {
+
+        }
+    }
+
+    fun queryCurrentOrder() {
+        currentOrderList.clear()
+        binder?.queryCurrentOrder(pair)
+    }
 }

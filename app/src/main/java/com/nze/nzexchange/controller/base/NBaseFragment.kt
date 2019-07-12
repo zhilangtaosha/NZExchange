@@ -132,6 +132,10 @@ abstract class NBaseFragment : BaseFragment() {
 
     }
 
+    open fun onInvisibleRequest(){
+        
+    }
+
     //每次 Fragment 对用户可见都会去请求
     open fun onVisibleRequest() {
        

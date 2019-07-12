@@ -29,7 +29,7 @@ interface IWebSoket {
 
     fun addAuthCallBack(key: String, mOnAuthCallBack: (rs: Boolean) -> Unit)
 
-    fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit)
+    fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean) -> Unit))
 
     fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit)
     fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit)
@@ -77,6 +77,11 @@ interface IWebSoket {
      * 市价不需要提交价格
      */
     fun marketDeal(pair: String, side: Int, amount: Double)
+
+    /**
+     * 取消订单
+     */
+    fun orderCancel(pair: String, id: Long)
 
     fun close()
 }

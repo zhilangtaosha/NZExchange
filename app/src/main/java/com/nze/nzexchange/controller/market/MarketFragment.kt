@@ -163,6 +163,17 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
         super.onDestroy()
     }
 
+    override fun onInvisibleRequest() {
+        super.onInvisibleRequest()
+        binder?.removeCallBack("market")
+    }
+
+    override fun onVisibleRequest() {
+        super.onVisibleRequest()
+        if (isBinder)
+            bindCallBack()
+    }
+
     var binder: SoketService.SoketBinder? = null
     var isBinder = false
 
@@ -176,54 +187,58 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
             Log.i("zwy", "market onServiceConnected")
             binder = service as SoketService.SoketBinder
             isBinder = true
-            binder?.addMarketCallBack("market") {
-                NLog.i("market resut")
-                mMarketList.addAll(it)
-                tabs.clear()
-                tabs.add("自选")
-                pages.clear()
-                pages.add(MarketOptionalFragment.newInstance(tabs[0]))
+            bindCallBack()
+            binder?.queryMarket()
+        }
+    }
+
+    fun bindCallBack() {
+        binder?.addMarketCallBack("market") {
+            NLog.i("MarketFragment market resut")
+            mMarketList.addAll(it)
+            tabs.clear()
+            tabs.add("自选")
+            pages.clear()
+            pages.add(MarketOptionalFragment.newInstance(tabs[0]))
+            mMarketList.forEach {
+                tabs.add(it.money)
+                pages.add(MarketContentFragment.newInstance(it.money))
+            }
+            Observable.create<Int> {
                 mMarketList.forEach {
-                    tabs.add(it.money)
-                    pages.add(MarketContentFragment.newInstance(it.money))
+                    val pairList = TransactionPairsBean.getListFromRankList(it.list.toMutableList())
+                    pairDao.addList(pairList)
                 }
-                Observable.create<Int> {
-                    mMarketList.forEach {
-                        val pairList = TransactionPairsBean.getListFromRankList(it.list.toMutableList())
-                        pairDao.addList(pairList)
-                    }
-                    it.onNext(1)
-                    it.onComplete()
-                }.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
+                it.onNext(1)
+                it.onComplete()
+            }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
 
-                        }
-                viewPager.offscreenPageLimit = tabs.size
-                val indicatorAdapter = MarketIndicatorAdapter(fragmentManager!!, activity!!, tabs, pages)
-                indicatorViewPager.adapter = indicatorAdapter
-                indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
-                    if (currentItem == 0 && !UserBean.isLogin()) {
-                        skipActivity(LoginActivity::class.java)
-                        indicatorViewPager.setCurrentItem(1, true)
-                    } else if (currentItem == 0 && UserBean.isLogin()) {
-                        (pages[currentItem] as MarketOptionalFragment).refreshData()
-                        searchIv.visibility = View.GONE
-                        editIv.visibility = View.VISIBLE
-                    } else if (currentItem != 0) {
-                        searchIv.visibility = View.VISIBLE
-                        editIv.visibility = View.GONE
                     }
-
+            viewPager.offscreenPageLimit = tabs.size
+            val indicatorAdapter = MarketIndicatorAdapter(fragmentManager!!, activity!!, tabs, pages)
+            indicatorViewPager.adapter = indicatorAdapter
+            indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
+                if (currentItem == 0 && !UserBean.isLogin()) {
+                    skipActivity(LoginActivity::class.java)
+                    indicatorViewPager.setCurrentItem(1, true)
+                } else if (currentItem == 0 && UserBean.isLogin()) {
+                    (pages[currentItem] as MarketOptionalFragment).refreshData()
+                    searchIv.visibility = View.GONE
+                    editIv.visibility = View.VISIBLE
+                } else if (currentItem != 0) {
+                    searchIv.visibility = View.VISIBLE
+                    editIv.visibility = View.GONE
                 }
-                indicatorViewPager.setCurrentItem(1, true)
-                if (pages.size > 2) {
-                    for (i in 1..pages.size - 1) {
-                        (pages[i] as MarketContentFragment).refreshData(it[i - 1].list.toMutableList())
-                    }
+
+            }
+            indicatorViewPager.setCurrentItem(1, true)
+            if (pages.size > 2) {
+                for (i in 1..pages.size - 1) {
+                    (pages[i] as MarketContentFragment).refreshData(it[i - 1].list.toMutableList())
                 }
             }
-            binder?.queryMarket()
         }
     }
 }

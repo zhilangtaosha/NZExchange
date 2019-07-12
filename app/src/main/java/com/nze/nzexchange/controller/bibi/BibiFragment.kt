@@ -101,21 +101,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val currentOrderAdapter by lazy {
         BibiCurentOrderAdapter(activity!!).apply {
             cancelClick = { position, item ->
-                //                OrderPendBean.cancelOrder(item.id, item.userId, currentTransactionPair?.id!!, null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
-//                        .compose(netTfWithDialog())
-//                        .subscribe({
-//                            if (it.success) {
-//                                orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
-//                            } else {
-//                                if (it.isCauseNotEmpty()) {
-//                                    AuthorityDialog.getInstance(activity!!)
-//                                            .show("取消当前委托需要完成以下设置，请检查"
-//                                                    , it.cause) {
-//
-//                                            }
-//                                }
-//                            }
-//                        }, onError)
+                binder?.orderCancel("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", item.id)
             }
         }
     }
@@ -378,7 +364,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     skipActivity(LoginActivity::class.java)
                     return
                 }
-                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity!!, BibiAllOrderActivity.FROM_BIBI)
+                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity!!, BibiAllOrderActivity.FROM_BIBI,"${currentTransactionPair?.currency}/${currentTransactionPair?.mainCurrency}")
             }
             R.id.tv_limit_bibi -> {
                 currentPopupType = POPUP_LIMIT
@@ -938,6 +924,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
                     })
             binder?.addMarketCallBack("bibi") {
+                NLog.i("BibiFragment market resut")
                 //获取所有交易对
                 currentTransactionPair = TransactionPairsBean()
                 currentTransactionPair!!.setValueFromRankBean(it[0].list[0])
@@ -953,14 +940,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 }
 
                 //获取交易对的挂单信息
-                RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
-                        .compose(netTfWithDialog())
-                        .subscribe({
-                            if (it.success) {
-                                restOrderBean = it.result
-                                switchType(currentType)
-                            }
-                        }, onError)
+//                RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
+//                        .compose(netTfWithDialog())
+//                        .subscribe({
+//                            if (it.success) {
+//                                restOrderBean = it.result
+//                                switchType(currentType)
+//                            }
+//                        }, onError)
             }
             binder?.addCurrentOrderCallBack("bibi", {
                 NLog.i("订单查询")
@@ -1005,15 +992,17 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                             queryCurrentOrder()
                     }
                 }
+            }, {
+                //取消订单
+
             })
             binder?.addLimitDealCallBack {
-                //                if (it) {
-//                    queryCurrentOrder()
-//                }
+                //下限价单
+
             }
             binder?.addMarketDealCallBack {
-                //                if (it)
-//                    queryCurrentOrder()
+                //下市价单
+
             }
             binder?.queryMarket()
 //            changePair()
