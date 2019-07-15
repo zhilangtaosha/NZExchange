@@ -33,6 +33,7 @@ interface IWebSoket {
 
     fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit)
     fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit)
+    fun addHistoryOrderCallBack(onQueryOrder: (MutableList<SoketOrderBean>) -> Unit)
 
     fun removeCallBack(key: String)
 
@@ -55,7 +56,9 @@ interface IWebSoket {
     /**
      * 查询当前订单
      */
-    fun queryCurrentOrder(pair: String)
+    fun queryCurrentOrder(pair: String, offset: Int, limit: Int)
+
+    fun queryHistoryOrder(pair: String, startTime: Long, endTime: Long, offset: Int, limit: Int, side: Int)
 
     /**
      * 订阅订单

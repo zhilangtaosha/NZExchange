@@ -63,6 +63,7 @@ class KLineParam {
         const val METHOD_LIMIT_DEAL = "order.limit"//挂限价单
         const val METHOD_MARKET_DEAL = "order.market"//挂限价单
         const val METHOD_ORDER_CANCEL = "order.cancel"//挂限价单
+        const val METHOD_ORDER_HISTORY = "order.history"//查询历史订单
 
         //副图类型
         const val STATUS_MA = "MA"
@@ -95,6 +96,7 @@ class KLineParam {
         const val DATA_LIMIT_DEAL = 10//挂限价单
         const val DATA_MARKET_DEAL = 11//挂市价单
         const val DATA_ORDER_CANCEL = 12//挂市价单
+        const val DATA_ORDER_HISTORY = 13//挂市价单
 
         //最近成交列表类型
         const val DEALS_SELL = "sell"
@@ -138,7 +140,7 @@ class KLineParam {
         val ID_LIMIT_DEAL: Int = 100006//挂限价单
         val ID_MARKET_DEAL: Int = 100007//挂限价单
         val ID_ORDER_CANCEL: Int = 100008//取消订单
-
+        val ID_ORDER_HISTORY: Int = 100009//查询历史订单
 
     }
 }

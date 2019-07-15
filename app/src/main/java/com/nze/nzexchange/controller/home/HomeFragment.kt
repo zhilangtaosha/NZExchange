@@ -138,8 +138,10 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                     bannerList.forEach {
                         imageUrls.add(it.imgUrl)
                     }
-                    mCarousel.setAdapter(carouselAdapter)
-                    mCarousel.star()
+                    if (imageUrls.size > 0) {
+                        mCarousel.setAdapter(carouselAdapter)
+                        mCarousel.star()
+                    }
 
                     val bulletinAdapter = SimpleBulletinAdapter(activity!!, noticeList)
                     bulletinView.setAdapter(bulletinAdapter)

@@ -40,6 +40,7 @@ import java.net.URLEncoder
  */
 class WebSoketImpl : IWebSoket {
 
+
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
     val gson: Gson by lazy { Gson() }
@@ -66,6 +67,8 @@ class WebSoketImpl : IWebSoket {
     var isAuth: Boolean = false
     //当前订单
     var orderRs: SoketOrderResultBean? = null
+    //历史订单
+    var orderHistoryRs: SoketOrderResultBean? = null
     //下单结果
     var dealRs: Boolean = false
     //订阅订单
@@ -115,6 +118,7 @@ class WebSoketImpl : IWebSoket {
     var mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)? = null
     var mOnLimitDeal: ((rs: Boolean) -> Unit)? = null
     var mOnMarketDeal: ((rs: Boolean) -> Unit)? = null
+    var mOnQueryHistoryOrder: ((orderList: MutableList<SoketOrderBean>) -> Unit)? = null
     //---------------------------------------------------------------------------------------------
     override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
         mOnOpenMap.put(key, onOpenCallback)
@@ -172,6 +176,10 @@ class WebSoketImpl : IWebSoket {
         this.mOnMarketDeal = onMarketDeal
     }
 
+    override fun addHistoryOrderCallBack(onQueryOrder: (MutableList<SoketOrderBean>) -> Unit) {
+        this.mOnQueryHistoryOrder = onQueryOrder
+    }
+
     override fun removeCallBack(key: String) {
         this.OnQueryKlineMap.remove(key)
         this.mOnSubscribeKlineMap.remove(key)
@@ -183,6 +191,7 @@ class WebSoketImpl : IWebSoket {
         this.mOnAuthMap.remove(key)
         this.mOnQueryCurrentOrderMap.remove(key)
         this.mOnSubscribeOrderMap.remove(key)
+        this.mOnQueryHistoryOrder = null
     }
 
     override fun removeCallBack2() {
@@ -311,11 +320,11 @@ class WebSoketImpl : IWebSoket {
         socket?.send(param)
     }
 
-    override fun queryCurrentOrder(pair: String) {
+    override fun queryCurrentOrder(pair: String, offset: Int, limit: Int) {
         val requestBean = SoketRequestBean.create(KLineParam.METHOD_QUERY_ORDER, KLineParam.ID_ORDER)
         requestBean.params.add(pair)
-        requestBean.params.add(0)
-        requestBean.params.add(20)
+        requestBean.params.add(offset)
+        requestBean.params.add(limit)
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
         NLog.i("queryCurrentOrder>>$param")
         socket?.send(param)
@@ -358,6 +367,20 @@ class WebSoketImpl : IWebSoket {
         requestBean.params.add(id)
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
         NLog.i("orderCancel>>$param")
+        socket?.send(param)
+    }
+
+
+    override fun queryHistoryOrder(pair: String, startTime: Long, endTime: Long, offset: Int, limit: Int, side: Int) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_ORDER_HISTORY, KLineParam.ID_ORDER_HISTORY)
+        requestBean.params.add(pair)
+        requestBean.params.add(startTime)
+        requestBean.params.add(endTime)
+        requestBean.params.add(offset)
+        requestBean.params.add(limit)
+        requestBean.params.add(side)
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("queryHistoryOrder>>$param")
         socket?.send(param)
     }
 
@@ -458,6 +481,10 @@ class WebSoketImpl : IWebSoket {
                             KLineParam.ID_ORDER_CANCEL -> {
                                 mOrderCancelRs = queryBean.error == null
                                 it.onNext(KLineParam.DATA_ORDER_CANCEL)
+                            }
+                            KLineParam.ID_ORDER_HISTORY -> {
+                                orderHistoryRs = gson.fromJson<SoketOrderResultBean>(queryBean.result.toString(), SoketOrderResultBean::class.java)
+                                it.onNext(KLineParam.DATA_ORDER_HISTORY)
                             }
                         }
                     } catch (e: Exception) {
@@ -659,6 +686,9 @@ class WebSoketImpl : IWebSoket {
                             }
                             KLineParam.DATA_ORDER_CANCEL -> {
                                 mOnCurrentOrderCancel?.invoke(mOrderCancelRs)
+                            }
+                            KLineParam.DATA_ORDER_HISTORY -> {
+                                mOnQueryHistoryOrder?.invoke(orderHistoryRs!!.records.toMutableList())
                             }
                         }
                     }, {

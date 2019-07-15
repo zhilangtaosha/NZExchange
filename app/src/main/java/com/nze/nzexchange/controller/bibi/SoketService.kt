@@ -43,6 +43,14 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
+        override fun addHistoryOrderCallBack(onQueryOrder: (MutableList<SoketOrderBean>) -> Unit) {
+            webSoket.addHistoryOrderCallBack(onQueryOrder)
+        }
+
+        override fun queryHistoryOrder(pair: String, startTime: Long, endTime: Long, offset: Int, limit: Int, side: Int) {
+            webSoket.queryHistoryOrder(pair, startTime, endTime, offset, limit, side)
+        }
+
         override fun orderCancel(pair: String, id: Long) {
             webSoket.orderCancel(pair, id)
         }
@@ -71,8 +79,8 @@ class SoketService : Service() {
             webSoket.addCurrentOrderCallBack(key, onQueryOrder, onSubscribeOrder, mOnCurrentOrderCancel)
         }
 
-        override fun queryCurrentOrder(pair: String) {
-            webSoket.queryCurrentOrder(pair)
+        override fun queryCurrentOrder(pair: String, offset: Int, limit: Int) {
+            webSoket.queryCurrentOrder(pair, offset, limit)
         }
 
         override fun subscribeOrder(pair: String) {

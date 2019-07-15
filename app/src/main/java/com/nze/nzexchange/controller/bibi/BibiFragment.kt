@@ -99,7 +99,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         }
     }
     val currentOrderAdapter by lazy {
-        BibiCurentOrderAdapter(activity!!).apply {
+        BibiCurrentOrderAdapter(activity!!).apply {
             cancelClick = { position, item ->
                 binder?.orderCancel("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", item.id)
             }
@@ -364,7 +364,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     skipActivity(LoginActivity::class.java)
                     return
                 }
-                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity!!, BibiAllOrderActivity.FROM_BIBI,"${currentTransactionPair?.currency}/${currentTransactionPair?.mainCurrency}")
+                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity!!, BibiAllOrderActivity.FROM_BIBI, "${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
             }
             R.id.tv_limit_bibi -> {
                 currentPopupType = POPUP_LIMIT
@@ -1011,6 +1011,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     fun queryCurrentOrder() {
         currentOrderList.clear()
-        binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
+        binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20)
     }
 }

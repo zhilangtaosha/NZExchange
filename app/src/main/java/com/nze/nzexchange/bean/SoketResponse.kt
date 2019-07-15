@@ -78,6 +78,11 @@ data class SoketRankBean(//首页涨幅榜
     fun getMainCurrency(): String {
         return market.split("/")[1]
     }
+
+    fun getPair(): String {
+        return market.replace("/", "")
+    }
+
 }
 
 data class SoketMarketBean(//交易对
@@ -103,8 +108,12 @@ data class SoketOrderBean(//订单：当前委托订单、全部委托订单
         val source: String,
         val type: Int,//1表示限价单   2. 市价订单
         val user: Int,
-        val left: Double//剩余数量
-)
+        val left: Double,//剩余数量
+        var currency: String? = null,//交易币
+        var mainCurrency: String? = null//计价货币
+) {
+
+}
 
 data class SoketOrderResultBean(//订单返回结果
         val limit: Int,

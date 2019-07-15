@@ -1,24 +1,15 @@
 package com.nze.nzexchange.controller.bibi
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.TextView
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.HandicapBean
-import com.nze.nzexchange.bean.OrderPendBean
 import com.nze.nzexchange.bean.SoketOrderBean
-import com.nze.nzexchange.config.OrderStatus
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForPrice
-import com.nze.nzexchange.extend.removeE
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
-import com.nze.nzexchange.tools.getNColor
 import kotlinx.android.synthetic.main.lv_bibi_current_order.view.*
 
 /**
@@ -27,7 +18,7 @@ import kotlinx.android.synthetic.main.lv_bibi_current_order.view.*
  * @类 说 明: 当前委托列表
  * @创建时间：2018/12/4
  */
-class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiCurentOrderAdapter.ViewHolder>(mContext) {
+class BibiCurrentOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiCurrentOrderAdapter.ViewHolder>(mContext) {
     var mainCurrency: String? = null
     var currency: String? = null
 
@@ -56,9 +47,9 @@ class BibiCurentOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiC
             vh.amountKeyTv.text = "数量(${currency})"
         } else {
             vh.costValueTv.text = "市价"
-            if (item.side==2) {
+            if (item.side == 2) {
                 vh.amountKeyTv.text = "数量(${mainCurrency})"
-            }else{
+            } else {
                 vh.amountKeyTv.text = "数量(${currency})"
             }
         }
