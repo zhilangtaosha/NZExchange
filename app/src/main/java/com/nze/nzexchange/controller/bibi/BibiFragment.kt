@@ -888,129 +888,138 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             binder = service as SoketService.SoketBinder
             isBinder = true
 
-            binder?.addCallBack("bibi",
-                    {
-                        //查询k线
-
-                    },
-                    {
-                        //订阅k线
-
-                    },
-                    {
-                        //订阅今日行情
-                        lastCostTv.text = it.last.formatForPrice()
-                        lastPriceTv.text = "≈${it.last.mul(mainCurrencyPrice).formatForLegal()}CNY"
-                    },
-                    { mDepthBuyList, mDepthSellList ->
-                        mDepthSellList.sortBy { it.price }
-                        mDepthBuyList.sortByDescending { it.price }
-                        //订阅深度
-                        val buyList = mutableListOf<HandicapBean>()
-                        val saleList = mutableListOf<HandicapBean>()
-                        mDepthSellList.forEachIndexed { index, it ->
-                            saleList.add(HandicapBean(index + 1, it.price.formatForPrice(), it.volume.formatForCurrency(), ""))
-                        }
-                        mDepthBuyList.forEachIndexed { index, it ->
-                            buyList.add(HandicapBean(index + 1, it.price.formatForPrice(), it.volume.formatForCurrency(), ""))
-                        }
-                        handicapBuyAdapter.group = buyList.take(5).toMutableList()
-                        handicapBuyLv.adapter = handicapBuyAdapter
-                        handicapSaleAdapter.group = saleList.takeLast(5).toMutableList().asReversed()
-                        handicapSaleLv.adapter = handicapSaleAdapter
-                    },
-                    {
-                        //订阅最近成交列表
-
-                    })
-            binder?.addMarketCallBack("bibi") {
-                NLog.i("BibiFragment market resut")
-                //获取所有交易对
-                currentTransactionPair = TransactionPairsBean()
-                currentTransactionPair!!.setValueFromRankBean(it[0].list[0])
-                refreshLayout()
-                getPendingOrderInfo(currentTransactionPair?.id!!)
-                switchType(currentType)
-                changePair()
-                if (userBean != null) {
-                    //获取订单
-//                    orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
-                } else {
-                    showNODataView("当前没有登录")
-                }
-
-                //获取交易对的挂单信息
-//                RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
-//                        .compose(netTfWithDialog())
-//                        .subscribe({
-//                            if (it.success) {
-//                                restOrderBean = it.result
-//                                switchType(currentType)
-//                            }
-//                        }, onError)
-            }
-            binder?.addCurrentOrderCallBack("bibi", {
-                NLog.i("订单查询")
-                stopAllView()
-                if (it.size > 0) {
-                    currentOrderList.addAll(it)
-                    currentOrderAdapter.group = currentOrderList
-                    currentOrderLv.adapter = currentOrderAdapter
-                } else {
-                    showNODataView("当前没有委托单")
-                }
-                binder?.subscribeOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
-            }, {
-                NLog.i("订单更新")
-                when (it.event) {
-                    SoketSubscribeOrderBean.EVENT_DEAL -> {
-                        stopAllView()
-                        currentOrderList.add(0, it.order)
-                        currentOrderAdapter.addItem(0, it.order)
-                        currentOrderLv.adapter = currentOrderAdapter
-                    }
-                    SoketSubscribeOrderBean.EVENT_UPDATE -> {
-                        val i = currentOrderList.indexOfFirst { item ->
-                            item.id == it.order.id
-                        }
-                        if (i >= 0) {
-                            currentOrderList.set(i, it.order)
-                            currentOrderAdapter.setItem(i, it.order)
-                            currentOrderLv.adapter = currentOrderAdapter
-                        }
-                    }
-                    SoketSubscribeOrderBean.EVENT_FINISH -> {
-                        val i = currentOrderList.indexOfFirst { item ->
-                            item.id == it.order.id
-                        }
-                        if (i >= 0) {
-                            currentOrderList.removeAt(i)
-                            currentOrderAdapter.removeItem(i)
-                        }
-                        currentOrderLv.adapter = currentOrderAdapter
-                        if (currentOrderList.size < 20)
-                            queryCurrentOrder()
-                    }
-                }
-            }, {
-                //取消订单
-
-            })
-            binder?.addLimitDealCallBack {
-                //下限价单
-
-            }
-            binder?.addMarketDealCallBack {
-                //下市价单
-
-            }
+            addCallBack()
             binder?.queryMarket()
-//            changePair()
+        }
+    }
+
+    fun addCallBack() {
+        binder?.addCallBack("bibi",
+                {
+                    //查询k线
+
+                },
+                {
+                    //订阅k线
+
+                },
+                {
+                    //订阅今日行情
+                    lastCostTv.text = it.last.formatForPrice()
+                    lastPriceTv.text = "≈${it.last.mul(mainCurrencyPrice).formatForLegal()}CNY"
+                },
+                { mDepthBuyList, mDepthSellList ->
+                    mDepthSellList.sortBy { it.price }
+                    mDepthBuyList.sortByDescending { it.price }
+                    //订阅深度
+                    val buyList = mutableListOf<HandicapBean>()
+                    val saleList = mutableListOf<HandicapBean>()
+                    mDepthSellList.forEachIndexed { index, it ->
+                        saleList.add(HandicapBean(index + 1, it.price.formatForPrice(), it.volume.formatForCurrency(), ""))
+                    }
+                    mDepthBuyList.forEachIndexed { index, it ->
+                        buyList.add(HandicapBean(index + 1, it.price.formatForPrice(), it.volume.formatForCurrency(), ""))
+                    }
+                    handicapBuyAdapter.group = buyList.take(5).toMutableList()
+                    handicapBuyLv.adapter = handicapBuyAdapter
+                    handicapSaleAdapter.group = saleList.takeLast(5).toMutableList().asReversed()
+                    handicapSaleLv.adapter = handicapSaleAdapter
+                },
+                {
+                    //订阅最近成交列表
+
+                })
+        binder?.addMarketCallBack("bibi") {
+            NLog.i("BibiFragment market resut")
+            //获取所有交易对
+            currentTransactionPair = TransactionPairsBean()
+            currentTransactionPair!!.setValueFromRankBean(it[0].list[0])
+            refreshLayout()
+            getPendingOrderInfo(currentTransactionPair?.id!!)
+            switchType(currentType)
+            changePair()
+            if (userBean != null) {
+                //获取订单
+//                    orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
+                queryCurrentOrder()
+            } else {
+                showNODataView("当前没有登录")
+            }
+
+        }
+        binder?.addCurrentOrderCallBack("bibi", {
+            NLog.i("订单查询")
+            stopAllView()
+            if (it.size > 0) {
+                currentOrderList.addAll(it)
+                currentOrderAdapter.group = currentOrderList
+                currentOrderLv.adapter = currentOrderAdapter
+            } else {
+                showNODataView("当前没有委托单")
+            }
+            binder?.subscribeOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
+        }, {
+            NLog.i("订单更新")
+            when (it.event) {
+                SoketSubscribeOrderBean.EVENT_DEAL -> {
+                    stopAllView()
+                    currentOrderList.add(0, it.order)
+                    currentOrderAdapter.addItem(0, it.order)
+                    currentOrderLv.adapter = currentOrderAdapter
+                }
+                SoketSubscribeOrderBean.EVENT_UPDATE -> {
+                    val i = currentOrderList.indexOfFirst { item ->
+                        item.id == it.order.id
+                    }
+                    if (i >= 0) {
+                        currentOrderList.set(i, it.order)
+                        currentOrderAdapter.setItem(i, it.order)
+                        currentOrderLv.adapter = currentOrderAdapter
+                    }
+                }
+                SoketSubscribeOrderBean.EVENT_FINISH -> {
+                    val i = currentOrderList.indexOfFirst { item ->
+                        item.id == it.order.id
+                    }
+                    if (i >= 0) {
+                        currentOrderList.removeAt(i)
+                        currentOrderAdapter.removeItem(i)
+                    }
+                    currentOrderLv.adapter = currentOrderAdapter
+                    if (currentOrderList.size < 20)
+                        queryCurrentOrder()
+                }
+            }
+        }, {
+            //取消订单
+
+        })
+        binder?.addLimitDealCallBack {
+            //下限价单
+
+        }
+        binder?.addMarketDealCallBack {
+            //下市价单
+
         }
     }
 
     fun queryCurrentOrder() {
         currentOrderList.clear()
         binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20)
+    }
+
+    override fun onInvisibleRequest() {
+        binder?.removeCallBack("bibi")
+        super.onInvisibleRequest()
+    }
+
+
+    override fun onVisibleRequest() {
+        super.onVisibleRequest()
+        if (isBinder) {
+            addCallBack()
+            queryCurrentOrder()
+        }
     }
 }

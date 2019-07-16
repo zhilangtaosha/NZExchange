@@ -46,6 +46,16 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                 status = it.orderStatus
                 transactionType = it.tradeType
 //                orderTracking(it.currency, it.mainCurrency, userBean?.userId, it.orderStatus, it.tradeType)
+                if (!currency.isNullOrEmpty() && !mainCurrency.isNullOrEmpty()) {
+                    pair = "${currency}${mainCurrency}"
+                } else {
+                    pair = "*"
+                }
+                if (mSelect == SELECT_CURRENT) {
+                    queryCurrentOrder()
+                } else {
+                    queryHistoryOrder()
+                }
                 this.dismiss()
             }
         }
@@ -55,11 +65,12 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     val orderAdapter: BibiAllOrderAdapter by lazy {
         BibiAllOrderAdapter(this).apply {
             cancelClick = { position, item ->
+
             }
         }
     }
-    val historyAdapter: BibiAllOrderAdapter by lazy {
-        BibiAllOrderAdapter(this)
+    val historyAdapter: BibiHistoryOrderAdapter by lazy {
+        BibiHistoryOrderAdapter(this)
     }
     val SELECT_CURRENT = 1
     val SELECT_HISTORY = 2
@@ -162,6 +173,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
             queryCurrentOrder()
         } else {
             mHistoryPage++
+            queryHistoryOrder()
         }
     }
 
@@ -291,8 +303,16 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     }, BackpressureStrategy.DROP)
                             .compose(netTfWithDialog())
                             .subscribe {
-                                historyAdapter.group = it
-                                listView.adapter = historyAdapter
+                                if (mHistoryPage == 0) {
+                                    historyOrderList.clear()
+                                    historyOrderList.addAll(it)
+                                    historyAdapter.group = it
+                                    listView.adapter = historyAdapter
+                                } else {
+                                    historyOrderList.addAll(it)
+                                    historyAdapter.addItems(it)
+                                    ptrLv.onPullUpRefreshComplete()
+                                }
                             }
 
                 } else {
@@ -321,6 +341,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
             }
 
         } else {
+            mHistoryPage = 0
             queryHistoryOrder()
         }
     }
@@ -330,7 +351,6 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     }
 
     fun queryHistoryOrder() {
-        historyOrderList.clear()
-        binder?.queryHistoryOrder(pair, 0, 0, 0, 20, 0)
+        binder?.queryHistoryOrder(pair, 0, 0, mHistoryPage * 20, 20, 0)
     }
 }

@@ -6,11 +6,9 @@ import android.widget.TextView
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.SoketOrderBean
 import com.nze.nzexchange.controller.base.NBaseAda
-import com.nze.nzexchange.extend.formatForCurrency
-import com.nze.nzexchange.extend.formatForPrice
-import com.nze.nzexchange.extend.setTxtColor
+import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.TimeTool
-import kotlinx.android.synthetic.main.lv_bibi_current_order.view.*
+import kotlinx.android.synthetic.main.lv_bibi_history_order.view.*
 
 /**
  * @author: zwy
@@ -18,13 +16,13 @@ import kotlinx.android.synthetic.main.lv_bibi_current_order.view.*
  * @类 说 明: 当前委托列表
  * @创建时间：2018/12/4
  */
-class BibiAllOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiAllOrderAdapter.ViewHolder>(mContext) {
+class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiHistoryOrderAdapter.ViewHolder>(mContext) {
     var mainCurrency: String? = null
     var currency: String? = null
 
     var cancelClick: ((position: Int, item: SoketOrderBean) -> Unit)? = null
 
-    override fun setLayout(): Int = R.layout.lv_bibi_current_order
+    override fun setLayout(): Int = R.layout.lv_bibi_history_order
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
@@ -37,29 +35,43 @@ class BibiAllOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiAllO
             vh.statusTv.text = "买入"
         }
         vh.pairTv.text = "${item.currency}/${item.mainCurrency}"
-//        val split = item.market.split("/")
-//        val currency = split[0]
-//        val mainCurrency = split[1]
-        vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, (item.ctime * 1000).toLong())
 
-        vh.costKeyTv.text = "价格(${item.mainCurrency})"
-        if (item.type == 1) {
-            vh.costValueTv.text = item.price.formatForPrice()
-            vh.amountKeyTv.text = "数量(${item.currency})"
-        } else {
-            vh.costValueTv.text = "市价"
-            if (item.side == 2) {
-                vh.amountKeyTv.text = "数量(${item.mainCurrency})"
+        vh.entrustPriceKey.text = "委托价(${item.mainCurrency})"
+
+        vh.transactionTotalKey.text = "成交总额(${item.mainCurrency})"
+        vh.transactionPriceKey.text = "成交均价(${item.mainCurrency})"
+
+
+        vh.timeValue.text = TimeTool.format(TimeTool.PATTERN2, (item.ctime * 1000).toLong())
+
+        if (item.type == 1) {//限价
+            //委托价格
+            vh.entrustPriceValue.text = item.price.formatForCurrency()
+            //成交均价
+            if (item.deal_stock != 0.0) {
+                vh.transactionPriceValue.text = item.deal_money.divByFloor(item.deal_stock, 8).formatForCurrency()
             } else {
-                vh.amountKeyTv.text = "数量(${item.currency})"
+                vh.transactionPriceValue.text = "0"
+            }
+            vh.entrustAmountKey.text = "委托量(${item.currency})"
+            vh.transactionAmountKey.text = "成交量(${item.currency})"
+        } else {//市价
+            vh.entrustPriceValue.text = "市价"
+            vh.transactionPriceValue.text = "市价"
+            if (item.side == 2) {
+                vh.entrustAmountKey.text = "委托量(${item.mainCurrency})"
+                vh.transactionAmountKey.text = "成交量(${item.mainCurrency})"
+            } else {
+                vh.entrustAmountKey.text = "委托量(${item.currency})"
+                vh.transactionAmountKey.text = "成交量(${item.currency})"
             }
         }
 
 
-        vh.amountValueTv.text = item.amount.formatForCurrency()
+        vh.entrustAmountValue.text = item.amount.formatForCurrency()
+        vh.transactionTotalValue.text = item.deal_money.formatForCurrency()
 
-        vh.realAmountKeyTv.text = "实际成交(${item.currency})"
-        vh.realAmountValueTv.text = item.deal_stock.formatForCurrency()
+        vh.transactionAmountValue.text = item.deal_stock.formatForCurrency()
 
 //        when (item.status) {
 //            OrderStatus.COMPLETED -> {
@@ -98,15 +110,19 @@ class BibiAllOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiAllO
     }
 
     class ViewHolder(val view: View) {
-        val timeTv: TextView = view.tv_time_lbco
-        val pairTv: TextView = view.tv_pair_lbco
         val statusTv: TextView = view.tv_status_lbco
+        val pairTv: TextView = view.tv_pair_lbco
         val cancelTv: TextView = view.tv_cancel_lbco
-        val costKeyTv: TextView = view.tv_cost_key_lbco
-        val costValueTv: TextView = view.tv_cost_value_lbco
-        val amountKeyTv: TextView = view.tv_amount_key_lbco
-        val amountValueTv: TextView = view.tv_amount_value_lbco
-        val realAmountKeyTv: TextView = view.tv_real_amount_key_lbco
-        val realAmountValueTv: TextView = view.tv_real_amount_value_lbco
+        val entrustPriceKey: TextView = view.tv_entrust_price_key_lbco//委托价
+        val entrustAmountKey: TextView = view.tv_entrust_amount_value_lbco//委托数量
+        val timeValue: TextView = view.tv_time_value_lbco
+        val entrustPriceValue: TextView = view.tv_entrust_price_value_lbco
+        val entrustAmountValue: TextView = view.tv_entrust_amount_value_lbco
+        val transactionTotalKey: TextView = view.tv_transaction_total_key_lbco//成交总额
+        val transactionPriceKey: TextView = view.tv_transaction_price_key_lbco//成交均价
+        val transactionAmountKey: TextView = view.tv_transaction_amount_key_lbco//成交量
+        val transactionTotalValue: TextView = view.tv_transaction_total_value_lbco
+        val transactionPriceValue: TextView = view.tv_transaction_price_value_lbco
+        val transactionAmountValue: TextView = view.tv_transaction_amount_value_lbco
     }
 }

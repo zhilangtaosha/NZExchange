@@ -120,9 +120,9 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
         val bean: AllOrderFilterBean = AllOrderFilterBean()
         val currency = buyCurrencyEt.getContent()
         val mainCurrency = unitCurrencyTv.text.toString()
-        if (currency.isNullOrEmpty())
+        if (!currency.isNullOrEmpty())
             bean.currency = currency
-        if (mainCurrency.isNullOrEmpty())
+        if (!mainCurrency.isNullOrEmpty())
             bean.mainCurrency = mainCurrency
 
         statusList.forEach {
@@ -139,9 +139,9 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
         styleList.forEach {
             if (it.isChecked) {
                 bean.tradeType = if (it.text == "买入") {
-                    1
+                    2
                 } else {
-                    0
+                    1
                 }
             }
         }

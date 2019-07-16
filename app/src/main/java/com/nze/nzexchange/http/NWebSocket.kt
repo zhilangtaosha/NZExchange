@@ -4,7 +4,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.*
 
 /**
  * @author: zwy
@@ -13,6 +16,43 @@ import java.util.concurrent.TimeUnit
  * @创建时间：2019/1/17
  */
 class NWebSocket(var url: String, var listener: WebSocketListener) {
+    private lateinit var okClient: OkHttpClient
+
+    init {
+        val xtm: X509TrustManager = object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+
+            }
+
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+            }
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                val x509Certificates = arrayOf<X509Certificate>()
+                return x509Certificates
+            }
+
+        }
+        var sslContext: SSLContext? = null
+        sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, arrayOf<TrustManager>(xtm), SecureRandom())
+
+        val noVerify = object : HostnameVerifier {
+            override fun verify(hostname: String?, session: SSLSession?): Boolean {
+                return true
+            }
+
+        }
+        okClient = OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .sslSocketFactory(sslContext.socketFactory)
+                .hostnameVerifier(noVerify)
+                .build()
+
+    }
+
 
     val request = Request.Builder()
             .url(url)
@@ -24,18 +64,18 @@ class NWebSocket(var url: String, var listener: WebSocketListener) {
         build()
     }
 
+
     fun open(): WebSocket {
-        return client.newWebSocket(request, listener)
+        return okClient.newWebSocket(request, listener)
     }
 
     fun close() {
-        client.dispatcher().executorService().shutdown()
+        okClient.dispatcher().executorService().shutdown()
     }
 
 
     companion object {
 
-        const val K_URL = "ws://192.168.1.101:800"
         fun newInstance(url: String, listener: WebSocketListener): NWebSocket {
             return NWebSocket(url, listener)
         }

@@ -14,12 +14,20 @@
         android:textSize="15sp" />
 
     <TextView
+        android:id="@+id/tv_pair_lbco"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tv_status_lbco" />
+
+    <TextView
         android:id="@+id/tv_time_lbco"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_status_lbco"
         android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/tv_status_lbco"
+        android:layout_toRightOf="@+id/tv_pair_lbco"
         android:textColor="@color/color_FF7F8592"
         android:textSize="12sp" />
 

@@ -82,9 +82,9 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
             (context as Activity).finish()
         }
 
-       if(context is NBaseActivity) {
-           context.setWindowStatusBarColor(R.color.color_title_bg)
-       }
+        if (context is NBaseActivity) {
+            context.setWindowStatusBarColor(R.color.color_title_bg)
+        }
     }
 
     fun setTitle(resid: Int): CommonTopBar {
@@ -121,6 +121,14 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
         return this
     }
 
+
+    fun showRight(isHide: Boolean) {
+        if (isHide) {
+            mRightTv.visibility = View.INVISIBLE
+        } else {
+            mRightTv.visibility = View.INVISIBLE
+        }
+    }
 
     fun setBackGroud(color: Int): CommonTopBar {
         layout_root_ctb.setBackgroundColor(color)

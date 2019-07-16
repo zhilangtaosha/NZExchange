@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp">
+
+    <TextView
+        android:id="@+id/tv_status_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="卖出"
+        android:textColor="@color/color_FFFF4A5F"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_pair_lbco"
+        style="@style/tx15_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tv_status_lbco" />
+
+
+    <TextView
+        android:id="@+id/tv_cancel_lbco"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@+id/tv_status_lbco"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/shape_radius_2536_bg2"
+        android:gravity="center"
+        android:text="撤销"
+        android:textColor="@color/color_FF6D87A8"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/tv_time_key_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_status_lbco"
+        android:layout_marginTop="8dp"
+        android:text="时间"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_entrust_price_key_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_status_lbco"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="委托价(USDT)"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_entrust_amount_key_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_status_lbco"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="委托量(DTA)"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_time_value_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_key_lbco"
+        android:layout_marginTop="5dp"
+        android:text="0.12565"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_entrust_price_value_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_key_lbco"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="0.12565"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_entrust_amount_value_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_key_lbco"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:text="0.12565"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_transaction_total_key_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_value_lbco"
+        android:layout_marginTop="5dp"
+        android:text="成交总额"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_transaction_price_key_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_value_lbco"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="成交均价(USDT)"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_transaction_amount_key_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time_value_lbco"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:text="成交量(EOS)"
+        android:textColor="@color/color_FF7F8592"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_transaction_total_value_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_transaction_total_key_lbco"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="0dp"
+        android:text="0.12565"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_transaction_price_value_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_transaction_total_key_lbco"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="0dp"
+        android:text="0.12565"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_transaction_amount_value_lbco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_transaction_total_key_lbco"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="0dp"
+        android:text="0.12565"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+</RelativeLayout>

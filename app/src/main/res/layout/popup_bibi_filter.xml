@@ -77,7 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:text="订单状态" />
+            android:text="订单状态"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,7 +86,8 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
 
             <CheckBox
@@ -130,7 +132,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:text="订单类型" />
+            android:text="订单类型"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -138,7 +141,8 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <CheckBox
                 android:id="@+id/cb_buy_pbf"
