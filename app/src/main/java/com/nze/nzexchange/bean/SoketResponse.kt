@@ -132,3 +132,13 @@ data class SoketSubscribeOrderBean(//订单订阅返回
         val EVENT_FINISH = 3
     }
 }
+
+data class SoketAssetResultBean(
+        val currency: String,
+        val asset: SoketAssetBean
+)
+
+data class SoketAssetBean(
+        val available: String,
+        val freeze: String
+)

@@ -132,9 +132,9 @@ class BibiSideActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLis
             isBinder = true
             binder?.addMarketCallBack("market") {
                 NLog.i("market resut")
+                mMarketList.addAll(it)
                 if (UserBean.isLogin())
                     getOptionalFromNet()
-                mMarketList.addAll(it)
                 tabs.clear()
                 tabs.add("自选")
                 pages.clear()

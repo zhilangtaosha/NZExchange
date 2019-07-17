@@ -43,6 +43,18 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
+        override fun addAssetCallBack(key: String, queryCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit, subscribeCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit) {
+            webSoket.addAssetCallBack(key, queryCallBack, subscribeCallBack)
+        }
+
+        override fun queryAsset(list: List<String>) {
+            webSoket.queryAsset(list)
+        }
+
+        override fun subscribeAsset(list: List<String>) {
+            webSoket.subscribeAsset(list)
+        }
+
         override fun addHistoryOrderCallBack(onQueryOrder: (MutableList<SoketOrderBean>) -> Unit) {
             webSoket.addHistoryOrderCallBack(onQueryOrder)
         }

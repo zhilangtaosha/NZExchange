@@ -18,6 +18,7 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import org.json.JSONObject
 import zlc.season.rxdownload3.helper.fileName
 import java.math.BigDecimal
 import java.net.URLEncoder
@@ -39,7 +40,6 @@ import java.net.URLEncoder
  * @创建时间：2019/6/11
  */
 class WebSoketImpl : IWebSoket {
-
 
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
@@ -75,6 +75,8 @@ class WebSoketImpl : IWebSoket {
     var subscribeOrderRs: SoketSubscribeOrderBean? = null
     //取消订单
     var mOrderCancelRs: Boolean = false
+    //资产查询
+    var mAssetMap = hashMapOf<String, SoketAssetBean>()
     //--------------------------------------------------------------------------------------------------
     val mOnTodayMap: MutableMap<String, ((todayBean: SoketTodayBean) -> Unit)> by lazy {
         mutableMapOf<String, ((todayBean: SoketTodayBean) -> Unit)>()
@@ -114,6 +116,12 @@ class WebSoketImpl : IWebSoket {
 
     val mOnSubscribeOrderMap: MutableMap<String, ((order: SoketSubscribeOrderBean) -> Unit)> by lazy {
         mutableMapOf<String, ((order: SoketSubscribeOrderBean) -> Unit)>()
+    }
+    val mOnQueryAssetMap:MutableMap<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)> by lazy {
+        mutableMapOf<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)>()
+    }
+    val mOnSubscribeAssetMap:MutableMap<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)> by lazy {
+        mutableMapOf<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)>()
     }
     var mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)? = null
     var mOnLimitDeal: ((rs: Boolean) -> Unit)? = null
@@ -179,6 +187,12 @@ class WebSoketImpl : IWebSoket {
     override fun addHistoryOrderCallBack(onQueryOrder: (MutableList<SoketOrderBean>) -> Unit) {
         this.mOnQueryHistoryOrder = onQueryOrder
     }
+
+    override fun addAssetCallBack(key: String, queryCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit, subscribeCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit) {
+        this.mOnQueryAssetMap.put(key,queryCallBack)
+        this.mOnSubscribeAssetMap.put(key,subscribeCallBack)
+    }
+
 
     override fun removeCallBack(key: String) {
         this.OnQueryKlineMap.remove(key)
@@ -354,7 +368,7 @@ class WebSoketImpl : IWebSoket {
         val requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_DEAL, KLineParam.ID_MARKET_DEAL)
         requestBean.params.add(pair)
         requestBean.params.add(side)
-        requestBean.params.add(amount)
+        requestBean.params.add("${amount}")
         requestBean.params.add("Android")
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
         NLog.i("marketDeal>>$param")
@@ -381,6 +395,26 @@ class WebSoketImpl : IWebSoket {
         requestBean.params.add(side)
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
         NLog.i("queryHistoryOrder>>$param")
+        socket?.send(param)
+    }
+
+    override fun queryAsset(list: List<String>) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_QUERY_ASSET, KLineParam.ID_ASSET)
+        list.forEach {
+            requestBean.params.add(it)
+        }
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("queryAsset>>$param")
+        socket?.send(param)
+    }
+
+    override fun subscribeAsset(list: List<String>) {
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_SUBSCRIBE_ASSET)
+        list.forEach {
+            requestBean.params.add(it)
+        }
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("subscribeAsset>>$param")
         socket?.send(param)
     }
 
@@ -485,6 +519,20 @@ class WebSoketImpl : IWebSoket {
                             KLineParam.ID_ORDER_HISTORY -> {
                                 orderHistoryRs = gson.fromJson<SoketOrderResultBean>(queryBean.result.toString(), SoketOrderResultBean::class.java)
                                 it.onNext(KLineParam.DATA_ORDER_HISTORY)
+                            }
+                            KLineParam.ID_ASSET -> {
+                                mAssetMap.clear()
+//                                val assetList = mutableListOf<SoketAssetResultBean>()
+                                val result = JSONObject(queryBean.result.toString())
+                                val keys = result.keys()
+                                keys.forEach {
+                                    val obj = result.getJSONObject(it)
+                                    val assetBean = gson.fromJson<SoketAssetBean>(obj.toString(), SoketAssetBean::class.java)
+//                                    val rsBean = SoketAssetResultBean(it, assetBean)
+//                                    assetList.add(rsBean)
+                                    mAssetMap.put(it, assetBean)
+                                }
+                                it.onNext(KLineParam.DATA_ASSET_QUERY)
                             }
                         }
                     } catch (e: Exception) {
@@ -689,6 +737,9 @@ class WebSoketImpl : IWebSoket {
                             }
                             KLineParam.DATA_ORDER_HISTORY -> {
                                 mOnQueryHistoryOrder?.invoke(orderHistoryRs!!.records.toMutableList())
+                            }
+                            KLineParam.DATA_ASSET_QUERY -> {
+                                NLog.i(mAssetMap.toString())
                             }
                         }
                     }, {

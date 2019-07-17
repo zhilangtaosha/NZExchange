@@ -20,38 +20,29 @@ import kotlinx.android.synthetic.main.lv_market.view.*
  * @类 说 明:
  * @创建时间：2018/11/20
  */
-class MarkeOptionaltLvAdapter(mContext: Context) : NBaseAda<TransactionPairsBean, MarkeOptionaltLvAdapter.ViewHolder>(mContext) {
+class MarkeOptionaltLvAdapter(mContext: Context) : NBaseAda<SoketRankBean, MarkeOptionaltLvAdapter.ViewHolder>(mContext) {
 
-    var mainCurrencyLegal: Double? = null
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
 
     override fun setLayout(): Int = R.layout.lv_market
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
-    override fun initView(vh: ViewHolder, item: TransactionPairsBean, position: Int) {
-        vh.transactionTv.text = item.currency
-        vh.mainCurrencyTv.text = "/${item.mainCurrency}"
-        vh.exchangeTv.text = item.exchangeRate.formatForCurrency()
-        if (item.gain > 0) {
+    override fun initView(vh: ViewHolder, item: SoketRankBean, position: Int) {
+        vh.transactionTv.text = item.getCurrency()
+        vh.mainCurrencyTv.text = "/${item.getMainCurrency()}"
+        vh.exchangeTv.text = item.last.formatForCurrency()
+        if (item.change > 0) {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
-            vh.changeTv.text = "+${item.gain}%"
-        } else if (item.gain == 0.0) {
+            vh.changeTv.text = "+${item.change}%"
+        } else if (item.change == 0.0) {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
-            vh.changeTv.text = "${item.gain}%"
+            vh.changeTv.text = "${item.change}%"
         } else {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
-            vh.changeTv.text = "${item.gain}%"
+            vh.changeTv.text = "${item.change}%"
         }
         vh.total24Tv.text = "24h量 ${item.volume}"
-        if (mainCurrencyLegal != null) {
-            vh.costTv.text = "¥${item.exchangeRate.mul(mainCurrencyLegal!!).formatForLegal()}"
-        } else {
-            vh.costTv.text = "--"
-        }
+        vh.costTv.text = "¥${item.cny.formatForLegal()}"
 
 
     }

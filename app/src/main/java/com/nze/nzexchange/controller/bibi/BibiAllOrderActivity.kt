@@ -65,7 +65,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     val orderAdapter: BibiAllOrderAdapter by lazy {
         BibiAllOrderAdapter(this).apply {
             cancelClick = { position, item ->
-
+                binder?.orderCancel("${item.currency}${item.mainCurrency}", item.id)
             }
         }
     }

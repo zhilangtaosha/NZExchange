@@ -8,6 +8,7 @@ import com.nze.nzexchange.bean.SoketOrderBean
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.TimeTool
+import com.nze.nzexchange.tools.getNColor
 import kotlinx.android.synthetic.main.lv_bibi_history_order.view.*
 
 /**
@@ -17,11 +18,6 @@ import kotlinx.android.synthetic.main.lv_bibi_history_order.view.*
  * @创建时间：2018/12/4
  */
 class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, BibiHistoryOrderAdapter.ViewHolder>(mContext) {
-    var mainCurrency: String? = null
-    var currency: String? = null
-
-    var cancelClick: ((position: Int, item: SoketOrderBean) -> Unit)? = null
-
     override fun setLayout(): Int = R.layout.lv_bibi_history_order
 
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
@@ -73,39 +69,18 @@ class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, Bibi
 
         vh.transactionAmountValue.text = item.deal_stock.formatForCurrency()
 
-//        when (item.status) {
-//            OrderStatus.COMPLETED -> {
-//                vh.cancelTv.text = "已完成"
-//                vh.cancelTv.setTextColor(getNColor(R.color.color_common))
-//                vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
-//                vh.cancelTv.isClickable = false
-//            }
-//            OrderStatus.RESCINDED -> {
-//                vh.cancelTv.text = "已撤销"
-//                vh.cancelTv.setTextColor(getNColor(R.color.color_common))
-//                vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
-//                vh.cancelTv.isClickable = false
-//            }
-//            OrderStatus.NO_COMPLETE -> {
-//                vh.cancelTv.text = "撤销"
-//                vh.cancelTv.setTextColor(getNColor(R.color.color_main))
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//                    vh.cancelTv.background = ContextCompat.getDrawable(mContext, R.drawable.shape_radius_2536_bg2)
-//                } else {
-//                    vh.cancelTv.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.shape_radius_2536_bg2))
-//                }
-//                vh.cancelTv.isClickable = true
-//            }
-//        }
-        if (item.left == 0.0) {
-            vh.cancelTv.visibility = View.GONE
-        } else {
-            vh.cancelTv.visibility = View.VISIBLE
-        }
-        vh.cancelTv.setOnClickListener {
-            cancelClick?.invoke(position, item)
-        }
 
+        if (item.deal_stock==item.amount){
+            vh.cancelTv.text = "已完成"
+            vh.cancelTv.setTextColor(getNColor(R.color.color_common))
+            vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
+            vh.cancelTv.isClickable = false
+        }else{
+            vh.cancelTv.text = "已撤销"
+            vh.cancelTv.setTextColor(getNColor(R.color.color_common))
+            vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
+            vh.cancelTv.isClickable = false
+        }
 
     }
 
@@ -114,7 +89,7 @@ class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, Bibi
         val pairTv: TextView = view.tv_pair_lbco
         val cancelTv: TextView = view.tv_cancel_lbco
         val entrustPriceKey: TextView = view.tv_entrust_price_key_lbco//委托价
-        val entrustAmountKey: TextView = view.tv_entrust_amount_value_lbco//委托数量
+        val entrustAmountKey: TextView = view.tv_entrust_amount_key_lbco//委托数量
         val timeValue: TextView = view.tv_time_value_lbco
         val entrustPriceValue: TextView = view.tv_entrust_price_value_lbco
         val entrustAmountValue: TextView = view.tv_entrust_amount_value_lbco

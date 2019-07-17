@@ -304,6 +304,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             getPendingOrderInfo(currentTransactionPair?.id!!)
             if (userBean != null) {
                 queryCurrentOrder()
+                queryAsset()
             }
 //                orderPending(currentTransactionPair?.id!!, userBean?.userId)
             //切换交易对，切换盘口
@@ -317,6 +318,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 //            orderPending(currentTransactionPair?.id!!, userBean?.userId)
 
             queryCurrentOrder()
+            queryAsset()
         }
         if (eventCenter.eventCode == EventCode.CODE_TRADE_BIBI) {
             val type: Int = eventCenter.data as Int
@@ -328,8 +330,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             switchType(currentType)
             showNODataView("当前没有委托")
             currentOrderLv.adapter = currentOrderAdapter
-            loopAction?.close()
-            loopAction = null
         }
     }
 
@@ -548,6 +548,21 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             getEt.requestFocus()
             return false
         }
+        if (transactionType == TRANSACTIONTYPE_LIMIT) {
+            if (s.toDouble() < currentTransactionPair!!.minAmount) {
+                showToast("最小交易数量是${currentTransactionPair!!.minAmount}")
+                getEt.requestFocus()
+                return false
+            }
+        } else {
+            if (currentType == TYPE_BUY) {
+            } else {
+
+            }
+        }
+
+
+
         return true
     }
 
@@ -890,6 +905,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
             addCallBack()
             binder?.queryMarket()
+
         }
     }
 
@@ -1007,6 +1023,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     fun queryCurrentOrder() {
         currentOrderList.clear()
         binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20)
+    }
+
+    fun queryAsset() {
+        binder?.queryAsset(mutableListOf<String>().apply {
+            add(currentTransactionPair!!.currency)
+            add(currentTransactionPair!!.mainCurrency)
+        })
     }
 
     override fun onInvisibleRequest() {

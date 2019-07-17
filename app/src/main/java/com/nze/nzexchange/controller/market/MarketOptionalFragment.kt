@@ -14,6 +14,7 @@ import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
+import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
@@ -63,12 +64,13 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
         addActionLayout = rootView.layout_add_action_fmo
 
         ptrLv = rootView.plv_fmo
+        ptrLv.isPullRefreshEnabled = false
         ptrLv.setOnRefreshListener(this)
         val listView: ListView = ptrLv.refreshableView
         listView.adapter = lvAdapter
         listView.setOnItemClickListener { parent, view, position, id ->
-            startActivity(Intent(activity, KLineActivity::class.java)
-                    .putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, lvAdapter.getItem(position)))
+            //            startActivity(Intent(activity, KLineActivity::class.java)
+//                    .putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, lvAdapter.getItem(position)))
         }
 
 
@@ -82,9 +84,9 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
             userBean = UserBean.loadFromApp()
             refreshData()
         }
-        if (eventCenter.eventCode == EventCode.CODE_SELF_SELECT) {
-            refreshData()
-        }
+//        if (eventCenter.eventCode == EventCode.CODE_SELF_SELECT) {
+//            refreshData()
+//        }
     }
 
     override fun isBindEventBusHere(): Boolean = true
@@ -100,12 +102,22 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
     override fun getContainerTargetView(): View? = null
 
     fun refreshData() {
-        ptrLv.doPullRefreshing(true, 200)
+//        ptrLv.doPullRefreshing(true, 200)
     }
 
+    fun refreshData(marketList: MutableList<SoketRankBean>) {
+        if (marketList.size > 0) {
+            ptrLv.visibility = View.VISIBLE
+            addLayout.visibility = View.GONE
+            lvAdapter.group = marketList
+        } else {
+            ptrLv.visibility = View.GONE
+            addLayout.visibility = View.VISIBLE
+        }
+    }
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
-        getDataFromNet()
+//        getDataFromNet()
     }
 
     override fun onPullUpToRefresh(refreshView: PullToRefreshBase<ListView>?) {
@@ -113,45 +125,45 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
 
     var loopAction: NLoopAction? = null
     override fun getDataFromNet() {
-        CommonBibiP.getInstance(activity as NBaseActivity)
-                .currencyToLegal(mainCurrency!!, 1.0, {
-                    if (it.success) {
-                        lvAdapter.mainCurrencyLegal = it.result
-                    } else {
-                        lvAdapter.mainCurrencyLegal = 0.0
-                    }
-                }, onError)
-        if (loopAction == null)
-            loopAction = NLoopAction.getInstance((activity as NBaseActivity?)!!)
-        loopAction?.loop {
-            TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
-                    .map {
-                        it.apply {
-                            result.map {
-                                it.optional = 1
-                            }
-                        }
-                    }
-                    .compose(netTf())
-                    .subscribe({
-                        if (it.success) {
-                            val list = it.result
-                            if (list.size > 0) {
-                                ptrLv.visibility = View.VISIBLE
-                                addLayout.visibility = View.GONE
-                                lvAdapter.group = it.result
-                            } else {
-                                ptrLv.visibility = View.GONE
-                                addLayout.visibility = View.VISIBLE
-                            }
-                        }
-                        ptrLv.onPullDownRefreshComplete()
-                    }, {
-                        lvAdapter.clearGroup(true)
-                        ptrLv.onPullDownRefreshComplete()
-                        ptrLv.visibility = View.GONE
-                        addLayout.visibility = View.VISIBLE
-                    })
-        }
+//        CommonBibiP.getInstance(activity as NBaseActivity)
+//                .currencyToLegal(mainCurrency!!, 1.0, {
+//                    if (it.success) {
+//                        lvAdapter.mainCurrencyLegal = it.result
+//                    } else {
+//                        lvAdapter.mainCurrencyLegal = 0.0
+//                    }
+//                }, onError)
+//        if (loopAction == null)
+//            loopAction = NLoopAction.getInstance((activity as NBaseActivity?)!!)
+//        loopAction?.loop {
+//            TransactionPairsBean.getOptionalTransactionPair(userBean?.userId!!)
+//                    .map {
+//                        it.apply {
+//                            result.map {
+//                                it.optional = 1
+//                            }
+//                        }
+//                    }
+//                    .compose(netTf())
+//                    .subscribe({
+//                        if (it.success) {
+//                            val list = it.result
+//                            if (list.size > 0) {
+//                                ptrLv.visibility = View.VISIBLE
+//                                addLayout.visibility = View.GONE
+//                                lvAdapter.group = it.result
+//                            } else {
+//                                ptrLv.visibility = View.GONE
+//                                addLayout.visibility = View.VISIBLE
+//                            }
+//                        }
+//                        ptrLv.onPullDownRefreshComplete()
+//                    }, {
+//                        lvAdapter.clearGroup(true)
+//                        ptrLv.onPullDownRefreshComplete()
+//                        ptrLv.visibility = View.GONE
+//                        addLayout.visibility = View.VISIBLE
+//                    })
+//        }
     }
 }

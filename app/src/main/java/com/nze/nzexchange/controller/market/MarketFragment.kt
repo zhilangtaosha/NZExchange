@@ -15,10 +15,13 @@ import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.SoketMarketBean
+import com.nze.nzexchange.bean.SoketRankBean
 import com.nze.nzexchange.bean.TransactionPairsBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.bibi.BibiSideContentFragment
+import com.nze.nzexchange.controller.bibi.BibiSideOptionalFragment
 import com.nze.nzexchange.controller.bibi.SoketService
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.database.dao.impl.PairDaoImpl
@@ -93,6 +96,9 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
 
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
+        if (eventCenter.eventCode == EventCode.CODE_LOGIN_SUCCUSS || eventCenter.eventCode == EventCode.CODE_SELF_SELECT) {
+            getOptionalFromNet()
+        }
         if (eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
             indicatorViewPager.setCurrentItem(1, false)
         }
@@ -196,6 +202,8 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
         binder?.addMarketCallBack("market") {
             NLog.i("MarketFragment market resut")
             mMarketList.addAll(it)
+            if (UserBean.isLogin())
+                getOptionalFromNet()
             tabs.clear()
             tabs.add("自选")
             pages.clear()
@@ -241,4 +249,34 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
             }
         }
     }
+
+    val optionalList: MutableList<SoketRankBean> by lazy { mutableListOf<SoketRankBean>() }
+    fun getOptionalFromNet() {
+        TransactionPairsBean.getOptionalTransactionPair(UserBean.loadFromApp()?.userId!!)
+                .map {
+                    it.apply {
+                        if (this.success) {
+                            optionalList.clear()
+                            mMarketList.forEach { mb ->
+                                mb.list.forEach {
+                                    it.optional = 0
+                                    result.forEach { pb ->
+                                        if (it.market == pb.transactionPair) {
+                                            it.optional = 1
+                                            optionalList.add(it)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (it.success) {
+                        (pages[0] as MarketOptionalFragment).refreshData(optionalList)
+                    }
+                }, onError)
+    }
+
 }
