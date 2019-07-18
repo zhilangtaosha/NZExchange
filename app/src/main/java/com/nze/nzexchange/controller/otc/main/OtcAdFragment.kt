@@ -166,7 +166,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
         FindSellBean.getFromNet(UserBean.loadFromApp()?.userId!!, page, PAGE_SIZE)
                 .compose(netTf())
                 .subscribe({
-                    //                    stopAllView()
+                    stopAllView()
                     val rList = it.result
                     mTotal = it.totalSize
                     isRefresh = false
@@ -192,7 +192,6 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
                             }
                         }
                         RrefreshType.PULL_UP -> {
-//                            findSellList.addAll(rList)
                             if (rList.size > 0)
                                 adAdapter.addItems(rList)
                             ptrLv.onPullUpRefreshComplete()

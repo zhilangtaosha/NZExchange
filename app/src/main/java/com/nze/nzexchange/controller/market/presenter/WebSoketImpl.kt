@@ -76,7 +76,7 @@ class WebSoketImpl : IWebSoket {
     //取消订单
     var mOrderCancelRs: Boolean = false
     //资产查询
-    var mAssetMap = hashMapOf<String, SoketAssetBean>()
+    val mAssetMap = hashMapOf<String, SoketAssetBean>()
     //--------------------------------------------------------------------------------------------------
     val mOnTodayMap: MutableMap<String, ((todayBean: SoketTodayBean) -> Unit)> by lazy {
         mutableMapOf<String, ((todayBean: SoketTodayBean) -> Unit)>()
@@ -117,10 +117,10 @@ class WebSoketImpl : IWebSoket {
     val mOnSubscribeOrderMap: MutableMap<String, ((order: SoketSubscribeOrderBean) -> Unit)> by lazy {
         mutableMapOf<String, ((order: SoketSubscribeOrderBean) -> Unit)>()
     }
-    val mOnQueryAssetMap:MutableMap<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)> by lazy {
+    val mOnQueryAssetMap: MutableMap<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)> by lazy {
         mutableMapOf<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)>()
     }
-    val mOnSubscribeAssetMap:MutableMap<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)> by lazy {
+    val mOnSubscribeAssetMap: MutableMap<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)> by lazy {
         mutableMapOf<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)>()
     }
     var mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)? = null
@@ -189,8 +189,8 @@ class WebSoketImpl : IWebSoket {
     }
 
     override fun addAssetCallBack(key: String, queryCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit, subscribeCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit) {
-        this.mOnQueryAssetMap.put(key,queryCallBack)
-        this.mOnSubscribeAssetMap.put(key,subscribeCallBack)
+        this.mOnQueryAssetMap.put(key, queryCallBack)
+        this.mOnSubscribeAssetMap.put(key, subscribeCallBack)
     }
 
 
@@ -205,6 +205,8 @@ class WebSoketImpl : IWebSoket {
         this.mOnAuthMap.remove(key)
         this.mOnQueryCurrentOrderMap.remove(key)
         this.mOnSubscribeOrderMap.remove(key)
+        this.mOnQueryAssetMap.remove(key)
+        this.mOnSubscribeAssetMap.remove(key)
         this.mOnQueryHistoryOrder = null
     }
 
@@ -522,14 +524,11 @@ class WebSoketImpl : IWebSoket {
                             }
                             KLineParam.ID_ASSET -> {
                                 mAssetMap.clear()
-//                                val assetList = mutableListOf<SoketAssetResultBean>()
                                 val result = JSONObject(queryBean.result.toString())
                                 val keys = result.keys()
                                 keys.forEach {
                                     val obj = result.getJSONObject(it)
                                     val assetBean = gson.fromJson<SoketAssetBean>(obj.toString(), SoketAssetBean::class.java)
-//                                    val rsBean = SoketAssetResultBean(it, assetBean)
-//                                    assetList.add(rsBean)
                                     mAssetMap.put(it, assetBean)
                                 }
                                 it.onNext(KLineParam.DATA_ASSET_QUERY)
@@ -654,7 +653,7 @@ class WebSoketImpl : IWebSoket {
                                 NLog.i("deals.update出错>>${e.message}")
                             }
                         }
-                        KLineParam.SUBSCRIBE_ORDER -> {
+                        KLineParam.SUBSCRIBE_ORDER -> {//订阅当前委托单
                             try {
                                 val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
                                 val orderBean = gson.fromJson<SoketOrderBean>(rs[1].toString(), SoketOrderBean::class.java)
@@ -663,6 +662,20 @@ class WebSoketImpl : IWebSoket {
                             } catch (e: Exception) {
                                 NLog.i("order.update出错>>${e.message}")
                             }
+                        }
+                        KLineParam.SUBSCRIBE_ASSET -> {//订阅资产
+                            mAssetMap.clear()
+                            val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
+                            rs.forEach {
+                                val result = JSONObject(it.toString())
+                                val keys = result.keys()
+                                keys.forEach {
+                                    val obj = result.getJSONObject(it)
+                                    val assetBean = gson.fromJson<SoketAssetBean>(obj.toString(), SoketAssetBean::class.java)
+                                    mAssetMap.put(it, assetBean)
+                                }
+                            }
+                            it.onNext(KLineParam.DATA_ASSET_SUBSCRIBE)
                         }
                     }
                 }
@@ -739,7 +752,14 @@ class WebSoketImpl : IWebSoket {
                                 mOnQueryHistoryOrder?.invoke(orderHistoryRs!!.records.toMutableList())
                             }
                             KLineParam.DATA_ASSET_QUERY -> {
-                                NLog.i(mAssetMap.toString())
+                                mOnQueryAssetMap.forEach {
+                                    it.value.invoke(mAssetMap)
+                                }
+                            }
+                            KLineParam.DATA_ASSET_SUBSCRIBE -> {
+                                mOnSubscribeAssetMap.forEach {
+                                    it.value.invoke(mAssetMap)
+                                }
                             }
                         }
                     }, {

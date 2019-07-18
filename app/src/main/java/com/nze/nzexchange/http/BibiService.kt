@@ -142,7 +142,8 @@ interface BibiService {
             @Field("tokenUserKey") tokenUserKey: String,
             @Field("curBuspwUcode") curBuspwUcode: String,
             @Field("checkcodeId") checkcodeId: String,
-            @Field("checkcodeVal") checkcodeVal: String
+            @Field("checkcodeVal") checkcodeVal: String,
+            @Field("inputAddressLabel") inputAddressLabel: String?
     ): Flowable<Result<Any>>
 
 

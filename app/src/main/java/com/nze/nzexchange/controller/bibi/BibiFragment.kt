@@ -146,7 +146,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     private var userBean: UserBean? = NzeApp.instance.userBean
 
 
-    private val itemDepth: MutableList<String> = mutableListOf<String>("1", "2", "3", "4", "5", "6", "7", "8")
+    private val itemDepth: MutableList<String> = mutableListOf<String>("1", "2", "3", "4", "5", "6")
     private val depthPopup: CommonListPopup by lazy {
         CommonListPopup(activity, POPUP_DEPTH).apply {
             onItemClick = this@BibiFragment
@@ -180,6 +180,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     val currentOrderList: MutableList<SoketOrderBean> by lazy { mutableListOf<SoketOrderBean>() }
+    val mAssetMap = hashMapOf<String, SoketAssetBean>()
 
     companion object {
         @JvmStatic
@@ -264,8 +265,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (type == TYPE_BUY) {
             buyTv.isSelected = true
             saleTv.isSelected = false
-            availableTv.setTextFromHtml("可用<font color=\"#0DA287\">${restOrderBean?.mainCurrency?.available?.formatForCurrency()
-                    ?: "--"}${currentTransactionPair?.mainCurrency ?: "--"}</font>")
+//            availableTv.setTextFromHtml("可用<font color=\"#0DA287\">${mAssetMap[currentTransactionPair?.mainCurrency]?.available?.formatForCurrency()
+//                    ?: "--"}${currentTransactionPair?.mainCurrency ?: "--"}</font>")
             buyIsb.visibility = View.VISIBLE
             saleIsb.visibility = View.GONE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_9d81_bg)!!)
@@ -280,8 +281,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         } else {
             buyTv.isSelected = false
             saleTv.isSelected = true
-            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${restOrderBean?.currency?.available?.formatForCurrency()
-                    ?: "--"}${currentTransactionPair?.currency ?: "--"}</font>")
+//            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${mAssetMap[currentTransactionPair?.currency]?.available?.formatForCurrency()
+//                    ?: "--"}${currentTransactionPair?.currency ?: "--"}</font>")
             buyIsb.visibility = View.GONE
             saleIsb.visibility = View.VISIBLE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_4a5f_bg)!!)
@@ -290,9 +291,20 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             buyIsb.setProgress(0F)
             getEt.hint = "数量(${currentTransactionPair?.currency})"
         }
+        refreshAsset()
         getEt.setText("")
         if (userBean == null)
             transactionBtn.text = "登录"
+    }
+
+    fun refreshAsset() {
+        if (currentType == TYPE_BUY) {
+            availableTv.setTextFromHtml("可用<font color=\"#0DA287\">${mAssetMap[currentTransactionPair?.mainCurrency]?.available?.formatForCurrency()
+                    ?: "--"}${currentTransactionPair?.mainCurrency ?: "--"}</font>")
+        } else {
+            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${mAssetMap[currentTransactionPair?.currency]?.available?.formatForCurrency()
+                    ?: "--"}${currentTransactionPair?.currency ?: "--"}</font>")
+        }
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -316,8 +328,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             userBean = UserBean.loadFromApp()
             getPendingOrderInfo(currentTransactionPair?.id!!)
 //            orderPending(currentTransactionPair?.id!!, userBean?.userId)
-
-            queryCurrentOrder()
             queryAsset()
         }
         if (eventCenter.eventCode == EventCode.CODE_TRADE_BIBI) {
@@ -383,7 +393,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     if (!checkPrice()) return
                 }
                 if (!checkNum()) {
-                    showToast("请填写交易数量")
+
                     return
                 }
                 CheckPermission.getInstance()
@@ -545,19 +555,30 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     fun checkNum(): Boolean {
         val s = getEt.getContent()
         if (s.isNullOrEmpty() || (s.isNotEmpty() && s.toDouble() <= 0)) {
+            showToast("请填写交易数量")
             getEt.requestFocus()
             return false
         }
+        val amount = s.toDouble()
         if (transactionType == TRANSACTIONTYPE_LIMIT) {
-            if (s.toDouble() < currentTransactionPair!!.minAmount) {
+            if (amount < currentTransactionPair!!.minAmount) {
                 showToast("最小交易数量是${currentTransactionPair!!.minAmount}")
                 getEt.requestFocus()
                 return false
             }
         } else {
             if (currentType == TYPE_BUY) {
+                if (amount > mAssetMap[currentTransactionPair!!.mainCurrency]!!.available) {
+                    showToast("当前${currentTransactionPair!!.mainCurrency}可用余额为${mAssetMap[currentTransactionPair!!.mainCurrency]!!.available}")
+                    getEt.requestFocus()
+                    return false
+                }
             } else {
-
+                if (amount > mAssetMap[currentTransactionPair!!.currency]!!.available) {
+                    showToast("当前${currentTransactionPair!!.currency}可用余额为${mAssetMap[currentTransactionPair!!.currency]!!.available}")
+                    getEt.requestFocus()
+                    return false
+                }
             }
         }
 
@@ -767,14 +788,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 }, {
                     priceTv.text = "≈0CNY"
                 })
-        RestOrderBean.getPendingOrderInfo(currencyId, userBean?.userId)
-                .compose(netTfWithDialog())
-                .subscribe({
-                    if (it.success) {
-                        restOrderBean = it.result
-                        switchType(currentType)
-                    }
-                }, onError)
+//        RestOrderBean.getPendingOrderInfo(currencyId, userBean?.userId)
+//                .compose(netTfWithDialog())
+//                .subscribe({
+//                    if (it.success) {
+//                        restOrderBean = it.result
+//                        switchType(currentType)
+//                    }
+//                }, onError)
     }
 
     /**
@@ -889,7 +910,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         handicapBuyLv.adapter = handicapBuyAdapter
         handicapSaleAdapter.clearGroup(true)
         handicapSaleLv.adapter = handicapSaleAdapter
-        binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_2, "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
+        binder?.subscribeDepthAndToday(KLineParam.AMOUNT_DEPTH_5, KLineParam.DEPTH_1, "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}")
     }
 
     val connection = object : ServiceConnection {
@@ -1002,8 +1023,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         currentOrderAdapter.removeItem(i)
                     }
                     currentOrderLv.adapter = currentOrderAdapter
-                    if (currentOrderList.size < 20)
+                    if (currentOrderList.size < 20) {
                         queryCurrentOrder()
+                    }
                 }
             }
         }, {
@@ -1011,13 +1033,27 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         })
         binder?.addLimitDealCallBack {
-            //下限价单
-
+            //下限价单00
         }
         binder?.addMarketDealCallBack {
             //下市价单
 
         }
+
+        binder?.addAssetCallBack("bibi", {
+            mAssetMap.clear()
+            mAssetMap.putAll(it)
+            switchType(currentType)
+            binder?.subscribeAsset(mutableListOf<String>().apply {
+                add(currentTransactionPair!!.currency)
+                add(currentTransactionPair!!.mainCurrency)
+            })
+
+        }, {
+            mAssetMap.clear()
+            mAssetMap.putAll(it)
+            refreshAsset()
+        })
     }
 
     fun queryCurrentOrder() {
@@ -1030,6 +1066,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             add(currentTransactionPair!!.currency)
             add(currentTransactionPair!!.mainCurrency)
         })
+
     }
 
     override fun onInvisibleRequest() {

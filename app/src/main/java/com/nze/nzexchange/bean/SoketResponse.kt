@@ -139,6 +139,6 @@ data class SoketAssetResultBean(
 )
 
 data class SoketAssetBean(
-        val available: String,
-        val freeze: String
+        val available: Double,
+        val freeze: Double
 )

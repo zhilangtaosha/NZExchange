@@ -83,6 +83,7 @@ class KLineParam {
         const val SUBSCRIBE_DEALS = "deals.update"//最近成交列表
         const val SUBSCRIBE_DEPTH = "depth.update"//深度
         const val SUBSCRIBE_ORDER = "order.update"//订单订阅和通知
+        const val SUBSCRIBE_ASSET = "asset.update"//资产订阅和通知
 
         //返回数据类型
         const val DATA_KLINE_QUERY = 0
@@ -118,12 +119,12 @@ class KLineParam {
         const val KLINE_TYPE_ONE_MON = 2592000
 
         //深度
-        const val DEPTH_1 = "0.1"
-        const val DEPTH_2 = "0.01"
-        const val DEPTH_3 = "0.001"
-        const val DEPTH_4 = "0.0001"
-        const val DEPTH_5 = "0.00001"
-        const val DEPTH_6 = "0.000001"
+        const val DEPTH_1 = "0"
+        const val DEPTH_2 = "1"
+        const val DEPTH_3 = "2"
+        const val DEPTH_4 = "3"
+        const val DEPTH_5 = "4"
+        const val DEPTH_6 = "5"
         const val DEPTH_7 = "0.0000001"
         const val DEPTH_8 = "0.00000001"
 

@@ -12,16 +12,20 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.extend.setTextFromHtml
 
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.MainCurrencyBean
 import com.nze.nzexchange.bean.OtcAssetBean
+import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
+import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.otc.main.*
 import com.nze.nzexchange.controller.otc.tradelist.TradeListActivity
@@ -68,6 +72,8 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
 
     private val sideData = mutableListOf<MainCurrencyBean>()
     private var mCurrentTokenId: String? = null
+    val otcList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
+    var userBean = UserBean.loadFromApp()
 
     companion object {
         @JvmStatic
@@ -147,8 +153,11 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
-        if (eventCenter.eventCode == EventCode.CODE_NO_LOGIN)
+        if (eventCenter.eventCode == EventCode.CODE_NO_LOGIN) {
             indicatorViewPager.setCurrentItem(currentItem, false)
+            userBean = UserBean.loadFromApp()
+            getOtcAsset()
+        }
         if (eventCenter.eventCode == EventCode.CODE_CHANGE_OTC_CURRENCY) {
             mCurrentTokenId = eventCenter.data as String
             sideData.forEach {
@@ -235,6 +244,20 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
         mMainCurrencyBean = sideData.get(position)
         moreTv.setText(mMainCurrencyBean!!.tokenSymbol)
         changeAva(currentItem)
+    }
+
+    fun getOtcAsset() {
+        UserAssetBean.getUserAssets(userBean?.userId!!, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    stopAllView()
+                    if (it.success) {
+                        otcList.clear()
+                        otcList.addAll(it.result)
+                    }
+                }, {
+                    NLog.i("未获取到OTC资产数据")
+                })
     }
 }
 

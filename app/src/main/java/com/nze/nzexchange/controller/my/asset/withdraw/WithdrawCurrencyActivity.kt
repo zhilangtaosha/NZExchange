@@ -106,7 +106,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 verifyValueEt.hint = "请输入邮箱证码"
                 verifyAccount = it.userEmail
             }
-            amountEt.addTextChangedListener(EditTextJudgeNumberWatcher(amountEt,userAssetBean!!.decimalPrec))
+            amountEt.addTextChangedListener(EditTextJudgeNumberWatcher(amountEt, userAssetBean!!.decimalPrec))
         }
         selectCurrencyIv.setOnClickListener(this)
         qcodeIv.setOnClickListener(this)
@@ -312,9 +312,13 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
             verifyValueEt.setText("")
             return
         }
+        var label: String? = null
+        if (userAssetBean?.currency == "EOS") {
+            label = labelEt.getContent()
+        }
         NRetrofit.instance
                 .bibiService()
-                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount.toDouble().sub(feeRate), "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd, checkcodeId!!, verifyValueEt.getContent())
+                .sendTransaction(userBean?.userId!!, userAssetBean?.currency!!, address, amount.toDouble().sub(feeRate), "123456", null, userBean!!.tokenReqVo.tokenUserId, userBean!!.tokenReqVo.tokenUserKey, pwd, checkcodeId!!, verifyValueEt.getContent(), label)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {
