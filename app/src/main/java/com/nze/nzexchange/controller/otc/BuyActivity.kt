@@ -25,6 +25,7 @@ import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.ViewFactory
 import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
 import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
+import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import kotlinx.android.synthetic.main.activity_buy.*
 import org.greenrobot.eventbus.EventBus
@@ -79,6 +80,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
         intent?.let {
             type = it.getIntExtra(OtcContentFragment.PARAM_TYPE, OtcContentFragment.TYPE_BUY)!!
             orderPoolBean = it.getParcelableExtra(IntentConstant.PARAM_ORDER_POOL)
+            userAssetBean = it.getParcelableExtra(IntentConstant.PARAM_ASSET)
         }
         if (type == OtcContentFragment.TYPE_BUY) {
             ctb_ab.setTitle("买入${CurrencyTool.getCurrency(orderPoolBean.tokenId)}")
@@ -139,7 +141,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                         flag = false
                         var value = ""
                         if (it.isNotEmpty() && price > 0.0)
-                            value = DoubleMath.divByFloor(it.toString().toDouble(), price, 8).formatForCurrency()
+                            value = DoubleMath.divByFloor(it.toString().toDouble(), price, 8).format(userAssetBean!!.decimalPrec)
                         numEt.setText(value)
                     } else {
                         flag = true
@@ -148,8 +150,12 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
 
         tv_all_ab.setOnClickListener(this)
         btn_cancle_ab.setOnClickListener(this)
+        if (userAssetBean == null) {
+            getOtcAsset()
+        } else {
+            numEt.addTextChangedListener(EditTextJudgeNumberWatcher(numEt, userAssetBean!!.decimalPrec))
+        }
 
-        getOtcAsset()
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -212,7 +218,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                                 })
                     }
                 } else {//卖
-                    if (amount>userAssetBean?.available!!){
+                    if (amount > userAssetBean?.available!!) {
                         showToast("当前可用资产为${userAssetBean?.available!!}")
                         return
                     }
@@ -243,6 +249,7 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                         }
                         if (filter.size > 0) {
                             userAssetBean = filter[0]
+                            numEt.addTextChangedListener(EditTextJudgeNumberWatcher(numEt, userAssetBean!!.decimalPrec))
                         }
                     } else {
                         if (it.isCauseNotEmpty()) {

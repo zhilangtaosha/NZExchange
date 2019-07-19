@@ -1,5 +1,7 @@
 package com.nze.nzexchange.controller.otc.main
 
+import com.nze.nzexchange.bean.UserAssetBean
+
 /**
  * @author: zwy
  * @email: zhouweiyong55@163.com
@@ -9,4 +11,6 @@ package com.nze.nzexchange.controller.otc.main
 interface IOtcView {
 
     fun refresh(tokenId: String?)
+
+    fun setOtcAsset(userAssetBean: UserAssetBean)
 }

@@ -10,10 +10,11 @@ import com.nze.nzeframework.widget.pulltorefresh.PullToRefreshListView
 import com.nze.nzeframework.widget.pulltorefresh.internal.PullToRefreshBase
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OrderPoolBean
+import com.nze.nzexchange.bean.Result
+import com.nze.nzexchange.bean.UserAssetBean
+import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseFragment
-import com.nze.nzexchange.bean.Result
-import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.tools.getNColor
 import io.reactivex.Flowable
@@ -35,6 +36,7 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
     }
     val list: MutableList<OrderPoolBean> by lazy { mutableListOf<OrderPoolBean>() }
     private var userBean = UserBean.loadFromApp()
+    var userAssetBean: UserAssetBean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +99,11 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
     override fun refresh(tokenId: String?) {
         this.tokenId = tokenId
         ptrLv.doPullRefreshing(true, 200)
+    }
+
+    override fun setOtcAsset(userAssetBean: UserAssetBean) {
+        this.userAssetBean = userAssetBean
+        buyAdapter.userAssetBean = userAssetBean
     }
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {

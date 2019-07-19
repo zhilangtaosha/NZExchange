@@ -74,6 +74,7 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     private var mCurrentTokenId: String? = null
     val otcList: ArrayList<UserAssetBean> by lazy { ArrayList<UserAssetBean>() }
     var userBean = UserBean.loadFromApp()
+    var userAssetBean: UserAssetBean? = null
 
     companion object {
         @JvmStatic
@@ -254,6 +255,15 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
                     if (it.success) {
                         otcList.clear()
                         otcList.addAll(it.result)
+                        otcList.forEach {
+                            if (it.currency == mMainCurrencyBean?.tokenSymbol) {
+                                userAssetBean = it
+                                return@forEach
+                            }
+                        }
+                        pages.forEach {
+                            (it as IOtcView).setOtcAsset(userAssetBean!!)
+                        }
                     }
                 }, {
                     NLog.i("未获取到OTC资产数据")

@@ -26,6 +26,7 @@ import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_bibi_all_order.*
+import kotlinx.android.synthetic.main.activity_buy_confirm.*
 
 class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListener<ListView> {
 
@@ -110,7 +111,8 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         }
 
         if (from == FROM_BIBI) {
-            topBar.setTitle("全部委托")
+            topBar.showRight(true)
+            topBar.setTitle("全部订单")
         } else {
             topBar.setTitle("订单管理")
         }
@@ -131,10 +133,16 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
 
         listView.adapter = orderAdapter
         currentTv.setOnClickListener {
+            if (from == FROM_BIBI) {
+                topBar.showRight(true)
+            }
             mSelect = SELECT_CURRENT
             select(mSelect)
         }
         historyTv.setOnClickListener {
+            if (from == FROM_BIBI) {
+                topBar.showRight(false)
+            }
             mSelect = SELECT_HISTORY
             select(mSelect)
         }

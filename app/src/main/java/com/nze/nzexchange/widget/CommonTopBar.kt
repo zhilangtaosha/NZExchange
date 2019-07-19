@@ -126,7 +126,7 @@ class CommonTopBar(context: Context, attrs: AttributeSet?) : RelativeLayout(cont
         if (isHide) {
             mRightTv.visibility = View.INVISIBLE
         } else {
-            mRightTv.visibility = View.INVISIBLE
+            mRightTv.visibility = View.VISIBLE
         }
     }
 

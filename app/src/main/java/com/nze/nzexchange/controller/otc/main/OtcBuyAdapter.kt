@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OrderPoolBean
+import com.nze.nzexchange.bean.UserAssetBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.BaseAda
@@ -24,6 +25,9 @@ import com.nze.nzexchange.tools.ViewFactory
 import kotlinx.android.synthetic.main.lv_buy_otc.view.*
 
 class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(mContext) {
+
+    var userAssetBean: UserAssetBean? = null
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var vh: ViewHolder? = null
         var cView: View? = null
@@ -71,7 +75,9 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
                     if (type == OtcContentFragment.TYPE_BUY) {
                         mContext.startActivity(Intent(mContext, BuyActivity::class.java)
                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
-                                .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
+                                .putExtra(IntentConstant.PARAM_ORDER_POOL, item)
+                                .putExtra(IntentConstant.PARAM_ASSET,userAssetBean)
+                        )
                     } else {
                         CheckPermission.getInstance()
                                 .commonCheck(mContext as NBaseActivity, CheckPermission.OTC_COMM_TRADE_BUY, "OTC购买需要完成以下设置，请检查", onPass = {
@@ -80,7 +86,6 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
                                             .putExtra(IntentConstant.PARAM_ORDER_POOL, item))
                                 })
                     }
-
                 } else {
                     (mContext as NBaseActivity).showToast("不能与自己交易哦~")
                 }

@@ -54,6 +54,7 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
             return UserBean.loadFromApp()
         }
     var mTotal = 0
+    var userAssetBean: UserAssetBean? = null
 
     companion object {
         @JvmStatic
@@ -134,6 +135,10 @@ class OtcAdFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshList
     override fun getContainerTargetView(): View? = ptrLv
     override fun refresh(tokenId: String?) {
         ptrLv.doPullRefreshing(true, 200)
+    }
+
+    override fun setOtcAsset(userAssetBean: UserAssetBean) {
+        this.userAssetBean = userAssetBean
     }
 
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {

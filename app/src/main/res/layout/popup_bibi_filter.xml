@@ -133,7 +133,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:text="订单类型"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -142,7 +142,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <CheckBox
                 android:id="@+id/cb_buy_pbf"
