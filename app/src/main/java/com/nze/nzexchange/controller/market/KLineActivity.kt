@@ -261,7 +261,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
         //默认展示分时图
         kChart.setMainDrawLine(true)
-        
+
 //        kChart.setRefreshListener {
 //            kChart.refreshEnd()
 //        }
@@ -540,6 +540,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
 
     override fun onDestroy() {
         super.onDestroy()
+        webSoketP.removeCallBack("kline")
         webSoketP.close()
     }
 

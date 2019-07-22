@@ -560,6 +560,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             return false
         }
         val amount = s.toDouble()
+        if (amount < currentTransactionPair!!.minAmount) {
+            showToast("最小交易数量是${currentTransactionPair!!.minAmount}")
+            getEt.requestFocus()
+            return false
+        }
         if (transactionType == TRANSACTIONTYPE_LIMIT) {
             if (amount < currentTransactionPair!!.minAmount) {
                 showToast("最小交易数量是${currentTransactionPair!!.minAmount}")
@@ -692,12 +697,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (!getEt.hasFocus())
             getEt.requestFocus()
         if (currentType == TYPE_BUY) {
-            if (transactionType == TRANSACTIONTYPE_LIMIT && restOrderBean != null && restOrderBean!!.mainCurrency != null) {
+            if (transactionType == TRANSACTIONTYPE_LIMIT && mAssetMap.size > 0) {
                 val give = giveEt.getContent()
                 if (give.isNotEmpty()) {
                     val price = give.toDouble()
 //                    val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
-                    val total = restOrderBean!!.mainCurrency!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), 8)
+                    val total = mAssetMap[currentTransactionPair!!.mainCurrency]!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), 8)
                     if (price > 0) {
                         val input = DoubleMath.divByFloor(total, price, currentTransactionPair?.stockPrec
                                 ?: 8).toString()
@@ -708,17 +713,17 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         getEt.setSelection(1)
                     }
                 }
-            } else if (transactionType == TRANSACTIONTYPE_MARKET && restOrderBean != null && restOrderBean!!.mainCurrency != null) {
+            } else if (transactionType == TRANSACTIONTYPE_MARKET && mAssetMap.size > 0) {
 //                val total = restOrderBean!!.mainCurrency!!.available * progress!! / 100
 //                val s = total.retain4ByFloor()
-                val s = restOrderBean!!.mainCurrency!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), currentTransactionPair?.stockPrec
+                val s = mAssetMap[currentTransactionPair!!.mainCurrency]!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), currentTransactionPair?.stockPrec
                         ?: 8).toString()
                 getEt.setText(s)
                 getEt.setSelection(s.length)
             }
         } else {
-            if (restOrderBean != null && restOrderBean!!.currency != null) {
-                val s = restOrderBean!!.currency!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), currentTransactionPair?.stockPrec
+            if (mAssetMap.size > 0) {
+                val s = mAssetMap[currentTransactionPair!!.currency]!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), currentTransactionPair?.stockPrec
                         ?: 8).retain4ByFloor()
                 getEt.setText(s)
                 getEt.setSelection(s.length)
@@ -742,10 +747,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             moreTv.text = it.transactionPair
             if (transactionType == TRANSACTIONTYPE_LIMIT) {
                 giveEt.hint = "价格(${it.mainCurrency})"
-                giveEt.setText(it.exchangeRate.format(DecimalDigitTool.getDigit(it.moneyPrec)))
                 if (giveWatcher != null)
                     giveEt.removeTextChangedListener(giveWatcher)
                 giveWatcher = EditTextJudgeNumberWatcher(giveEt, it.moneyPrec)
+                giveEt.setText(it.exchangeRate.format(DecimalDigitTool.getDigit(it.moneyPrec)))
                 giveEt.addTextChangedListener(giveWatcher)
                 if (getWatcher != null)
                     getEt.removeTextChangedListener(getWatcher)
@@ -979,6 +984,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 //获取订单
 //                    orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                 queryCurrentOrder()
+                queryAsset()
             } else {
                 showNODataView("当前没有登录")
             }
@@ -1034,10 +1040,11 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         })
         binder?.addLimitDealCallBack {
             //下限价单00
+            showToast("下单成功")
         }
         binder?.addMarketDealCallBack {
             //下市价单
-
+            showToast("下单成功")
         }
 
         binder?.addAssetCallBack("bibi", {
@@ -1080,6 +1087,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (isBinder) {
             addCallBack()
             queryCurrentOrder()
+            queryAsset()
         }
     }
 }

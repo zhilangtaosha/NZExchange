@@ -135,6 +135,7 @@ class RechargeCurrencyActivity : NBaseActivity(), View.OnClickListener {
             coinAddressIv.setImageBitmap(codeBitmap)
             coinAddressTv.text = it.address
             eosAddressTv.text = it.address
+            labelTv.text = it.addressLabel
 
             assetP.currencyWithdrawAndRechargeInfo(it.currency, {
                 if (it.success) {

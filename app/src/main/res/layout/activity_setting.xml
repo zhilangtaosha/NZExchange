@@ -26,6 +26,39 @@
             android:paddingRight="15dp">
 
             <RelativeLayout
+                android:id="@+id/layout_language_set"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="语言"
+                    android:textColor="@color/color_FFA3AAB9"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_language_set"
+                    style="@style/tx15_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableRight="@mipmap/right_arrow"
+                    android:drawablePadding="10dp"
+                    android:text="人民币" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_line" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/layout_money_type_set"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"

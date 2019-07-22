@@ -222,7 +222,7 @@ class WebSoketImpl : IWebSoket {
         queryKline(type, pattern)
         subscribeToday()
         subscribeDeals()
-        subscribeDepth(KLineParam.AMOUNT_DEPTH_100, KLineParam.DEPTH_8)
+        subscribeDepth(KLineParam.AMOUNT_DEPTH_100, KLineParam.DEPTH_1)
     }
 
 
@@ -643,7 +643,6 @@ class WebSoketImpl : IWebSoket {
                         }
                         KLineParam.SUBSCRIBE_DEALS -> {//最近成交列表
                             try {
-
                                 val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
                                 val dealList: Array<SoketDealBean> = gson.fromJson<Array<SoketDealBean>>(rs[1].toString(), Array<SoketDealBean>::class.java)
                                 mDealList.addAll(dealList)
@@ -664,7 +663,7 @@ class WebSoketImpl : IWebSoket {
                             }
                         }
                         KLineParam.SUBSCRIBE_ASSET -> {//订阅资产
-                            mAssetMap.clear()
+//                            mAssetMap.clear()
                             val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
                             rs.forEach {
                                 val result = JSONObject(it.toString())

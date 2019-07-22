@@ -1,18 +1,18 @@
 <resources>
     <string name="app_name">AUSCOIN</string>
-    <string name="setting_language_auto">跟随系统</string>
+    <string name="setting_language_auto">Follow System</string>
     <string name="setting_language_english">English</string>
     <string name="setting_simplified_chinese">简体中文</string>
     <string name="setting_traditional_chinese">繁體中文</string>
 
-    <string name="tab_home">首页</string>
-    <string name="tab_market">行情</string>
-    <string name="tab_bibi">币币</string>
+
+    <string name="tab_home">Home</string>
+    <string name="tab_market">Markets</string>
+    <string name="tab_bibi">Currency trading</string>
     <string name="tab_otc">OTC</string>
-    <string name="tab_my">我的</string>
+    <string name="tab_my">Mine</string>
 
 
     <string name="trust_price">委托价</string>
     <string name="trust_quantity">委托量</string>
-
 </resources>

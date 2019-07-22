@@ -9,6 +9,9 @@ import android.os.IBinder
 import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.View
+import android.widget.EditText
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.tool.NLog
@@ -39,12 +42,13 @@ import kotlinx.android.synthetic.main.activity_bibi_side.*
 
 class BibiSideActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionListener {
 
-
+    private val editText: EditText by lazy { cet_search_abs }
     private lateinit var viewPager: ViewPager
     private lateinit var scrollIndicatorView: ScrollIndicatorView
     private lateinit var indicatorViewPager: IndicatorViewPager
     private val mainCurrencyList: MutableList<TransactionPairsBean> = mutableListOf()
     private val mMarketList: MutableList<SoketMarketBean> by lazy { mutableListOf<SoketMarketBean>() }
+    private val mSearchList: MutableList<SoketMarketBean> by lazy { mutableListOf<SoketMarketBean>() }
     val pairDao by lazy { PairDaoImpl() }
     private val tabs by lazy {
         mutableListOf<String>()
@@ -74,6 +78,25 @@ class BibiSideActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLis
 
 
         indicatorViewPager = IndicatorViewPager(scrollIndicatorView, viewPager)
+
+        RxTextView.textChanges(editText)
+                .map { text ->
+                    mSearchList.clear()
+                    mMarketList.forEach {
+                        val l = it.list.filter {
+                            it.market.contains(text.toString().toUpperCase()) || it.market.contains(text.toString().toLowerCase())
+                        }
+                        mSearchList.add(SoketMarketBean(it.money, l))
+                    }
+                    mSearchList
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    for (i in 1..pages.size - 1) {
+                        (pages[i] as BibiSideContentFragment).refreshData(it[i - 1].list.toMutableList())
+                    }
+                }
 
     }
 
@@ -113,6 +136,7 @@ class BibiSideActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLis
 
 
     override fun onDestroy() {
+        binder?.removeCallBack("market")
         unbindService(connection)
         super.onDestroy()
     }
@@ -130,48 +154,52 @@ class BibiSideActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLis
             Log.i("zwy", "onServiceConnected")
             binder = service as SoketService.SoketBinder
             isBinder = true
-            binder?.addMarketCallBack("market") {
-                NLog.i("market resut")
-                mMarketList.addAll(it)
-                if (UserBean.isLogin())
-                    getOptionalFromNet()
-                tabs.clear()
-                tabs.add("自选")
-                pages.clear()
-                pages.add(BibiSideOptionalFragment.newInstance(tabs[0]))
-                mMarketList.forEach {
-                    tabs.add(it.money)
-                    pages.add(BibiSideContentFragment.newInstance(it.money))
-                }
-                Observable.create<Int> {
-                    mMarketList.forEach {
-                        val pairList = TransactionPairsBean.getListFromRankList(it.list.toMutableList())
-                        pairDao.addList(pairList)
-                    }
-                    it.onNext(1)
-                    it.onComplete()
-                }.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
+            addCallBack()
+            binder?.queryMarket()
+        }
+    }
 
-                        }
-                viewPager.offscreenPageLimit = tabs.size
-                val indicatorAdapter = MarketIndicatorAdapter(supportFragmentManager, this@BibiSideActivity, tabs, pages)
-                indicatorViewPager.adapter = indicatorAdapter
-                indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
-                    if (currentItem == 0 && !UserBean.isLogin()) {
-                        skipActivity(LoginActivity::class.java)
-                        indicatorViewPager.setCurrentItem(1, true)
-                    }
+    fun addCallBack() {
+        binder?.addMarketCallBack("market") {
+            NLog.i("market resut")
+            mMarketList.addAll(it)
+            if (UserBean.isLogin())
+                getOptionalFromNet()
+            tabs.clear()
+            tabs.add("自选")
+            pages.clear()
+            pages.add(BibiSideOptionalFragment.newInstance(tabs[0]))
+            mMarketList.forEach {
+                tabs.add(it.money)
+                pages.add(BibiSideContentFragment.newInstance(it.money))
+            }
+            Observable.create<Int> {
+                mMarketList.forEach {
+                    val pairList = TransactionPairsBean.getListFromRankList(it.list.toMutableList())
+                    pairDao.addList(pairList)
                 }
-                indicatorViewPager.setCurrentItem(1, true)
-                if (pages.size > 2) {
-                    for (i in 1..pages.size - 1) {
-                        (pages[i] as BibiSideContentFragment).refreshData(it[i - 1].list.toMutableList())
+                it.onNext(1)
+                it.onComplete()
+            }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+
                     }
+            viewPager.offscreenPageLimit = tabs.size
+            val indicatorAdapter = MarketIndicatorAdapter(supportFragmentManager, this@BibiSideActivity, tabs, pages)
+            indicatorViewPager.adapter = indicatorAdapter
+            indicatorViewPager.setOnIndicatorPageChangeListener { preItem, currentItem ->
+                if (currentItem == 0 && !UserBean.isLogin()) {
+                    skipActivity(LoginActivity::class.java)
+                    indicatorViewPager.setCurrentItem(1, true)
                 }
             }
-            binder?.queryMarket()
+            indicatorViewPager.setCurrentItem(1, true)
+            if (pages.size > 2) {
+                for (i in 1..pages.size - 1) {
+                    (pages[i] as BibiSideContentFragment).refreshData(it[i - 1].list.toMutableList())
+                }
+            }
         }
     }
 

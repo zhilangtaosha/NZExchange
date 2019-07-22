@@ -30,6 +30,7 @@ import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.formatForPrice
 import com.nze.nzexchange.extend.mul
 import com.nze.nzexchange.http.CRetrofit
+import com.nze.nzexchange.tools.selectlanguage.MultiLanguageUtil
 import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_setting.*
@@ -39,6 +40,8 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
 
 
     val topBar: CommonTopBar by lazy { ctb_set }
+    val languageLayout: RelativeLayout by lazy { layout_language_set }
+    val languageTv: TextView by lazy { tv_language_set }
     val moneyTypeLayout: RelativeLayout by lazy { layout_money_type_set }
     val moneyTypeTv: TextView by lazy { tv_money_type_set }
     val exchangeRateTv: TextView by lazy { tv_exchange_rate_set }
@@ -70,6 +73,7 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
         styleModeLayout.setOnClickListener(this)
         editionLayout.setOnClickListener(this)
         logoutBtn.setOnCommonClick(this)
+        languageLayout.setOnClickListener(this)
 
 
     }
@@ -101,6 +105,9 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.layout_language_set -> {
+                skipActivity(SelectLanguageActivity::class.java)
+            }
             R.id.layout_money_type_set -> {
                 skipActivity(MoneyTypeSetActivity::class.java)
             }
@@ -148,5 +155,8 @@ class SettingActivity : NBaseActivity(), View.OnClickListener {
         }
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        languageTv.text = MultiLanguageUtil.getInstance().getLanguageName(this)
+    }
 }

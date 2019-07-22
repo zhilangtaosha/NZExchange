@@ -12,6 +12,7 @@ import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.tools.AppFrontBackTool
 import com.nze.nzexchange.tools.CrashHandler
 import com.nze.nzexchange.tools.download.CustomSqliteActor
+import com.nze.nzexchange.tools.selectlanguage.MultiLanguageUtil
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import org.greenrobot.eventbus.EventBus
 import zlc.season.rxdownload3.core.DownloadConfig
@@ -47,6 +48,7 @@ class NzeApp : BaseApplication() {
                 .addExtension(ApkOpenExtension::class.java)
 
         DownloadConfig.init(builder)
+        MultiLanguageUtil.init(this)
     }
 
     override fun attachBaseContext(base: Context?) {

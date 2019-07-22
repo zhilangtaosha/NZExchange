@@ -53,7 +53,7 @@ class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, Bibi
             vh.transactionAmountKey.text = "成交量(${item.currency})"
         } else {//市价
             vh.entrustPriceValue.text = "市价"
-            vh.transactionPriceValue.text = "市价"
+//            vh.transactionPriceValue.text = "市价"
             if (item.side == 2) {
                 vh.entrustAmountKey.text = "委托量(${item.mainCurrency})"
                 vh.transactionAmountKey.text = "成交量(${item.mainCurrency})"

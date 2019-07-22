@@ -25,6 +25,7 @@ import android.graphics.Color
 import android.os.Bundle
 import com.nze.nzexchange.BuildConfig
 import com.nze.nzexchange.tools.CrashHandler
+import com.nze.nzexchange.tools.selectlanguage.MultiLanguageUtil
 
 
 abstract class NBaseActivity : BaseActivity() {
@@ -178,5 +179,9 @@ abstract class NBaseActivity : BaseActivity() {
                 window.attributes = attributes
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(MultiLanguageUtil.attachBaseContext(newBase))
     }
 }
