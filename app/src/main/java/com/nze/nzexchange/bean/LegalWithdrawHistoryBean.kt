@@ -29,9 +29,9 @@ data class LegalWithdrawHistoryBean(
         ////状态码 100 处理中 101 第一次审核中 102 第二次审核中 990审核完成 9901审失败
         val pickfundStatus: Int,
         val pickfundStatusStr: String,
-        val pickfundToinfo1: String,
-        val pickfundToinfo2: String,
-        val pickfundToinfo3: String,
+        val pickfundToinfo1: String?,
+        val pickfundToinfo2: String?,
+        val pickfundToinfo3: String?,
         val pickfundUpdateTime: Long,
         val pickfundUpdateTimeStr: String,
         val pickfundUpdateUser: String?,

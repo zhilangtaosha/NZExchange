@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.view.View
 import android.widget.ListView
+import android.widget.TextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzexchange.R
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_select_currency.*
 class SelectCurrencyActivity : NBaseActivity() {
     val listView: ListView by lazy { lv_currency_asc }
     val currencyAdapter: SelectCurrencyAdapter by lazy { SelectCurrencyAdapter(this) }
+    val cancelTv: TextView by lazy { tv_cancel_asc }
 
     val currencyList: MutableList<String>
             by lazy { mutableListOf<String>() }
@@ -65,6 +67,10 @@ class SelectCurrencyActivity : NBaseActivity() {
             getOtcAsset()
         } else {
             getBibiAsset()
+        }
+
+        cancelTv.setOnClickListener {
+            finish()
         }
     }
 

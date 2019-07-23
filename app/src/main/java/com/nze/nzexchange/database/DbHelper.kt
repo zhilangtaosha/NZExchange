@@ -16,6 +16,9 @@ class DbHelper private constructor(context: Context?, name: String?, factory: SQ
         val DB_NAME = "aus.db"
         val TAB_TRANSACTION_PAIR = "transaction_pair"
         val TAB_SEARCH_HISTORY = "search_history"
+        val TAB_MAIN_CURRENCY = "main_currency"
+        val TAB_RANK = "rank"
+
         @Volatile
         var instance: DbHelper? = null
 
@@ -58,6 +61,28 @@ class DbHelper private constructor(context: Context?, name: String?, factory: SQ
                 "statusInitTime integer," +
                 "statusUseTime integer)"
         db?.execSQL(transactionPairSql)
+
+        val mainCurrencySql = "create table $TAB_MAIN_CURRENCY(" +
+                "currency text primary key)"
+        db?.execSQL(mainCurrencySql)
+
+
+        val rankSql = "create table $TAB_RANK(" +
+                "market text primary key," +
+                "mainCurrency text," +
+                "deal real," +
+                "high real," +
+                "last real," +
+                "low real," +
+                "open real," +
+                "volume real," +
+                "cny real," +
+                "change real," +
+                "stock_prec integer," +
+                "money_prec integer," +
+                "min_amount real)"
+        db?.execSQL(rankSql)
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

@@ -103,8 +103,8 @@ class QuickLoginActivity : NBaseActivity() {
 
 
     override fun onDestroy() {
-        unbindService(connection)
         binder?.removeCallBack("quick")
+        unbindService(connection)
         super.onDestroy()
     }
 

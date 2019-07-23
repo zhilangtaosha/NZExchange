@@ -78,10 +78,10 @@ class WithdrawHistoryDetailActivity : NBaseActivity(), PayMethodView {
                     rejectTv.visibility = View.GONE
                     rejectIv.visibility = View.GONE
                     rejectTimeTv.visibility = View.GONE
-                    reasonKeyTv.text = "转出账户"
+                    reasonKeyTv.text = "转入账户"
                 }
                 990 -> {//"已完成"
-                    reasonKeyTv.text = "转出账户"
+                    reasonKeyTv.text = "转入账户"
                     rejectIv.setImageResource(R.mipmap.hook_icon3)
                     rejectTv.text = "提现完成"
                     rejectTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.auditDataFlowDataVos[2].flowTime)

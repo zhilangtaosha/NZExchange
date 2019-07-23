@@ -6,72 +6,46 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg"
     android:orientation="vertical"
-    tools:context=".controller.my.asset.recharge.RechargeDetailActivity">
+    tools:context=".controller.my.asset.withdraw.WithdrawDetailActivity">
 
     <com.nze.nzexchange.widget.CommonTopBar
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        app:tb_title_text="充值明细" />
+        app:tb_title_text="充币详情" />
+
+    <TextView
+        android:id="@+id/tv_recharge_amount_ard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:text="-1345.21USDT"
+        android:textColor="@color/color_FF6D87A8"
+        android:textSize="30sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:layout_marginRight="15dp">
 
         <TextView
             style="@style/tx15_aab9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="充值金额" />
+            android:text="类型" />
 
         <TextView
-            android:id="@+id/tv_currency_unit_ard"
-            style="@style/tx14_8592"
+            android:id="@+id/tv_style_ard"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="USDT" />
+            android:text="普通充币" />
 
-        <TextView
-            android:id="@+id/tv_currency_amount_ard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/tv_currency_unit_ard"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/tv_currency_unit_ard"
-            android:text="+1335.56"
-            android:textColor="@color/color_FF7386A5"
-            android:textSize="16sp" />
-    </RelativeLayout>
-
-    <include layout="@layout/common_line_margin15" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
-
-        <TextView
-            style="@style/tx15_aab9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="汇入时间" />
-
-        <TextView
-            android:id="@+id/tv_date_ard"
-            style="@style/tx15_8592"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="2018-12-23 20:40" />
     </RelativeLayout>
 
     <include layout="@layout/common_line_margin15" />
@@ -79,10 +53,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingTop="15dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="15dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/tv_address_key_ard"
@@ -90,18 +65,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="汇入地址" />
+            android:text="提币地址" />
 
         <TextView
             android:id="@+id/tv_address_ard"
-            style="@style/tx15_8592"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/tv_address_key_ard"
-            android:text="142536475uytgdfdssa13q" />
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_address_key_awd"
+            android:gravity="left"
+            android:text="31421314562347586fvcx243546gfsd" />
     </RelativeLayout>
 
     <include layout="@layout/common_line_margin15" />
@@ -109,9 +85,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:layout_marginRight="15dp">
 
         <TextView
             style="@style/tx15_aab9"
@@ -122,12 +98,100 @@
 
         <TextView
             android:id="@+id/tv_status_ard"
-            style="@style/tx15_87a8"
+            style="@style/tx14_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="已到账" />
+            android:text="已完成" />
+    </RelativeLayout>
+
+    <include layout="@layout/common_line_margin15" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_trade_id_key_ard"
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="区块编号" />
+
+        <TextView
+            android:id="@+id/tv_trade_id_ard"
+            style="@style/tx14_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_trade_id_key_awd"
+            android:gravity="right"
+            android:text="31421314562347586f" />
+    </RelativeLayout>
+
+    <include layout="@layout/common_line_margin15" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/tv_trade_hash_key_ard"
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="交易哈希" />
+
+        <TextView
+            android:id="@+id/tv_trade_hash_ard"
+            style="@style/tx14_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tv_trade_hash_key_awd"
+            android:gravity="left"
+            android:text="31421314562347586f" />
+    </RelativeLayout>
+
+    <include layout="@layout/common_line_margin15" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            style="@style/tx15_aab9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="日期" />
+
+        <TextView
+            android:id="@+id/tv_date_awd"
+            style="@style/tx14_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="2018/10/21 23:21:13" />
     </RelativeLayout>
 
     <include layout="@layout/common_line_margin15" />

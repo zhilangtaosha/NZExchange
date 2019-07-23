@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="普通" />
+            android:text="普通提币" />
     </RelativeLayout>
 
     <include layout="@layout/common_line_margin15" />

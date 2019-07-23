@@ -466,14 +466,14 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 skipActivity(MainActivity::class.java)
                 this@KLineActivity.finish()
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 2))
-                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 1))
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 2))
                 EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, pairsBean))
             }
             R.id.btn_sale_kline -> {
                 skipActivity(MainActivity::class.java)
                 this@KLineActivity.finish()
                 EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_REFRESH_MAIN_ACT, 2))
-                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 0))
+                EventBus.getDefault().post(EventCenter<Int>(EventCode.CODE_TRADE_BIBI, 1))
                 EventBus.getDefault().post(EventCenter<TransactionPairsBean>(EventCode.CODE_SELECT_TRANSACTIONPAIR, pairsBean))
             }
             R.id.tv_transaction_name_kline -> {

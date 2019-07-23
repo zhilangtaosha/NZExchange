@@ -110,6 +110,8 @@ class PrimaryAuthenticationActivity : NBaseActivity() {
                                     .putExtra(AuthenticationHomeActivity.INTENT_REAL_NAME_BEAN, realNameAuthenticationBean))
 
                             finish()
+                        } else {
+                            showToast(it.message)
                         }
                     }, onError)
         }

@@ -69,8 +69,10 @@ class MarketOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListe
         val listView: ListView = ptrLv.refreshableView
         listView.adapter = lvAdapter
         listView.setOnItemClickListener { parent, view, position, id ->
-            //            startActivity(Intent(activity, KLineActivity::class.java)
-//                    .putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, lvAdapter.getItem(position)))
+            var pairsBean = TransactionPairsBean()
+            pairsBean.setValueFromRankBean(lvAdapter.getItem(position)!!)
+            startActivity(Intent(activity, KLineActivity::class.java)
+                    .putExtra(IntentConstant.PARAM_TRANSACTION_PAIR, pairsBean))
         }
 
 

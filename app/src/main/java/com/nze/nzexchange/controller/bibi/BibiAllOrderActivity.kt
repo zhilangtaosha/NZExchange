@@ -251,8 +251,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                                     ptrLv.onPullUpRefreshComplete()
                                 }
                             }
-
-                } else if (mCurrentPage == 0 && orderList.size <= 0) {
+                } else if (mSelect == SELECT_CURRENT && mCurrentPage == 0 && orderList.size <= 0) {
                     showNODataView("当前没有委托单")
                     binder?.subscribeOrder(pair)
                 } else {
@@ -323,8 +322,10 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                                 }
                             }
 
-                } else {
+                } else if (mSelect == SELECT_HISTORY && mHistoryPage == 0 && orderList.size <= 0) {
                     showNODataView("当前没有委托单")
+                } else {
+                    ptrLv.onPullUpRefreshComplete()
                 }
             }
             binder?.queryMarket()

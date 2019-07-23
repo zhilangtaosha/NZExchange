@@ -995,7 +995,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             stopAllView()
             if (it.size > 0) {
                 currentOrderList.addAll(it)
-                currentOrderAdapter.group = currentOrderList
+                currentOrderAdapter.group = currentOrderList.take(20).toMutableList()
                 currentOrderLv.adapter = currentOrderAdapter
             } else {
                 showNODataView("当前没有委托单")
@@ -1029,7 +1029,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         currentOrderAdapter.removeItem(i)
                     }
                     currentOrderLv.adapter = currentOrderAdapter
-                    if (currentOrderList.size < 20) {
+                    if (currentOrderList.size <= 0) {
                         queryCurrentOrder()
                     }
                 }
