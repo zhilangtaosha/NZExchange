@@ -39,16 +39,16 @@ class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, Bibi
 
 
         vh.timeValue.text = TimeTool.format(TimeTool.PATTERN2, (item.ctime * 1000).toLong())
-
+        vh.transactionAmountKey.text = "成交量(${item.currency})"
+        if (item.deal_stock != 0.0) {//成交均价
+            vh.transactionPriceValue.text = item.deal_money.divByFloor(item.deal_stock, 8).formatForCurrency()
+        } else {
+            vh.transactionPriceValue.text = "0"
+        }
         if (item.type == 1) {//限价
             //委托价格
             vh.entrustPriceValue.text = item.price.formatForCurrency()
-            //成交均价
-            if (item.deal_stock != 0.0) {
-                vh.transactionPriceValue.text = item.deal_money.divByFloor(item.deal_stock, 8).formatForCurrency()
-            } else {
-                vh.transactionPriceValue.text = "0"
-            }
+
             vh.entrustAmountKey.text = "委托量(${item.currency})"
             vh.transactionAmountKey.text = "成交量(${item.currency})"
         } else {//市价
@@ -56,10 +56,8 @@ class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, Bibi
 //            vh.transactionPriceValue.text = "市价"
             if (item.side == 2) {
                 vh.entrustAmountKey.text = "委托量(${item.mainCurrency})"
-                vh.transactionAmountKey.text = "成交量(${item.mainCurrency})"
             } else {
                 vh.entrustAmountKey.text = "委托量(${item.currency})"
-                vh.transactionAmountKey.text = "成交量(${item.currency})"
             }
         }
 
@@ -70,18 +68,20 @@ class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, Bibi
         vh.transactionAmountValue.text = item.deal_stock.formatForCurrency()
 
 
-        if (item.deal_stock==item.amount){
+        if (item.deal_stock == item.amount) {
             vh.cancelTv.text = "已完成"
             vh.cancelTv.setTextColor(getNColor(R.color.color_common))
             vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
             vh.cancelTv.isClickable = false
-        }else{
+        } else {
             vh.cancelTv.text = "已撤销"
             vh.cancelTv.setTextColor(getNColor(R.color.color_common))
             vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
             vh.cancelTv.isClickable = false
         }
-
+        vh.view.setOnClickListener {
+            BibiHistoryDetailActivity.skip(mContext, item)
+        }
     }
 
     class ViewHolder(val view: View) {

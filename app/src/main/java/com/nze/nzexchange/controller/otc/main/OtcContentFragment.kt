@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_otc_content.view.*
 class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefreshListener<ListView> {
 
     lateinit var ptrLv: PullToRefreshListView
+    lateinit var listView: ListView
     private var type: Int = 0
     var tokenId: String? = null
     private val orderPoolList: MutableList<OrderPoolBean> by lazy {
@@ -64,12 +65,13 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
         ptrLv = rootView.plv_foc
         ptrLv.isPullLoadEnabled = true
         ptrLv.setOnRefreshListener(this)
-        val listView = ptrLv.refreshableView
+        listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))
         listView.dividerHeight = 1
 //        ptrLv.isScrollLoadEnabled = true
 
         listView.adapter = buyAdapter
+
 
     }
 
@@ -144,7 +146,7 @@ class OtcContentFragment : NBaseFragment(), IOtcView, PullToRefreshBase.OnRefres
 //                            buyAdapter.notifyDataSetChanged()
                             buyAdapter.addItems(rList)
                             ptrLv.onPullUpRefreshComplete()
-
+                            listView.scrollBy(0,-1)
                         }
                         else -> {
                         }

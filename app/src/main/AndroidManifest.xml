@@ -185,7 +185,8 @@
         <activity android:name=".controller.market.KLineTargetActivity" />
         <activity android:name=".controller.my.asset.legal.RechargeHistoryDetailActivity" />
         <activity android:name=".controller.my.asset.legal.WithdrawHistoryDetailActivity" />
-        <activity android:name=".controller.my.setting.SelectLanguageActivity"></activity>
+        <activity android:name=".controller.my.setting.SelectLanguageActivity" />
+        <activity android:name=".controller.bibi.BibiHistoryDetailActivity"></activity>
     </application>
 
 </manifest>

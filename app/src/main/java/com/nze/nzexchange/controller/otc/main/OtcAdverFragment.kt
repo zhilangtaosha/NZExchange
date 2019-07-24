@@ -19,11 +19,11 @@ import kotlinx.android.synthetic.main.fragment_otc_ad.view.*
 
 class OtcAdverFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<ListView>, AbsListView.OnScrollListener {
     override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-        if (userBean != null && mTotal > totalItemCount && firstVisibleItem + visibleItemCount >= totalItemCount - 2) {
-            RrefreshType.PULL_UP
-            page++
-            getData()
-        }
+//        if (userBean != null && mTotal > totalItemCount && firstVisibleItem + visibleItemCount >= totalItemCount - 3) {
+//            RrefreshType.PULL_UP
+//            page++
+//            getData()
+//        }
     }
 
     override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
@@ -31,6 +31,7 @@ class OtcAdverFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
 
     var mTotal = 0
     lateinit var ptrLv: PullToRefreshListView
+    lateinit var listView: ListView
     var userBean: UserBean? = null
         get() {
             return UserBean.loadFromApp()
@@ -38,6 +39,7 @@ class OtcAdverFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
     val adAdapter: OtcAdAdapter by lazy {
         OtcAdAdapter(activity!!)
     }
+    val list: MutableList<FindSellBean> by lazy { mutableListOf<FindSellBean>() }
 
     companion object {
         @JvmStatic
@@ -48,14 +50,14 @@ class OtcAdverFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
 
     override fun initView(rootView: View) {
         ptrLv = rootView.ptrlv_ad
-//        ptrLv.isPullLoadEnabled = true
+        ptrLv.isPullLoadEnabled = true
         ptrLv.setOnRefreshListener(this)
-        ptrLv.isScrollLoadEnabled = true
-        val listView = ptrLv.refreshableView
+//        ptrLv.isScrollLoadEnabled = true
+        listView = ptrLv.refreshableView
         listView.adapter = adAdapter
+        adAdapter.group = list
 
-
-        ptrLv.setOnScrollListener(this)
+//        ptrLv.setOnScrollListener(this)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
@@ -86,6 +88,7 @@ class OtcAdverFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
     override fun onPullDownToRefresh(refreshView: PullToRefreshBase<ListView>?) {
         page = 1
         refreshType = RrefreshType.PULL_DOWN
+        ptrLv.setHasMoreData(true)
         getData()
     }
 
@@ -103,24 +106,32 @@ class OtcAdverFragment : NBaseFragment(), PullToRefreshBase.OnRefreshListener<Li
                     mTotal = it.totalSize
                     when (refreshType) {
                         RrefreshType.INIT -> {
-                            adAdapter.group = rList
+//                            adAdapter.group = rList
+                            list.clear()
+                            list.addAll(rList)
                         }
                         RrefreshType.PULL_DOWN -> {
-                            adAdapter.group = rList
+                            list.clear()
+//                            adAdapter.group = rList
+                            list.addAll(rList)
                             ptrLv.onPullDownRefreshComplete()
+
                         }
                         RrefreshType.PULL_UP -> {
-                            adAdapter.addItems(rList)
-//                            ptrLv.onPullUpRefreshComplete()
+//                            adAdapter.addItems(rList)
+                            list.addAll(rList)
+                            ptrLv.onPullUpRefreshComplete()
+//                            listView.scrollBy(0,-100)
                         }
                         else -> {
                         }
                     }
                     if (adAdapter.count >= it.totalSize) {
                         ptrLv.setHasMoreData(false)
-                    } else {
-                        ptrLv.setHasMoreData(true)
                     }
+//                    else {
+//                        ptrLv.setHasMoreData(true)
+//                    }
                 }, {
                     ptrLv.onPullDownRefreshComplete()
                     ptrLv.onPullUpRefreshComplete()

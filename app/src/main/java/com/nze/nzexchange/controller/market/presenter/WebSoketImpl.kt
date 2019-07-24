@@ -336,11 +336,12 @@ class WebSoketImpl : IWebSoket {
         socket?.send(param)
     }
 
-    override fun queryCurrentOrder(pair: String, offset: Int, limit: Int) {
+    override fun queryCurrentOrder(pair: String, offset: Int, limit: Int, side: Int) {
         val requestBean = SoketRequestBean.create(KLineParam.METHOD_QUERY_ORDER, KLineParam.ID_ORDER)
         requestBean.params.add(pair)
         requestBean.params.add(offset)
         requestBean.params.add(limit)
+        requestBean.params.add(side)
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
         NLog.i("queryCurrentOrder>>$param")
         socket?.send(param)
@@ -503,8 +504,12 @@ class WebSoketImpl : IWebSoket {
                                 it.onNext(KLineParam.DATA_AUTH)
                             }
                             KLineParam.ID_ORDER -> {
-                                orderRs = gson.fromJson<SoketOrderResultBean>(queryBean.result.toString(), SoketOrderResultBean::class.java)
-                                it.onNext(KLineParam.DATA_CURRENT_ORDER_QUERY)
+                                try {
+                                    orderRs = gson.fromJson<SoketOrderResultBean>(queryBean.result.toString(), SoketOrderResultBean::class.java)
+                                    it.onNext(KLineParam.DATA_CURRENT_ORDER_QUERY)
+                                } catch (e: Exception) {
+                                    NLog.i("current order出错>>${e.message}")
+                                }
                             }
                             KLineParam.ID_LIMIT_DEAL -> {
                                 dealRs = queryBean.error == null

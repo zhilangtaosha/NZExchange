@@ -202,7 +202,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
         mutableListOf<String>(KLineParam.getMarketMyself(), KLineParam.MARKET_HUOBI)
     }
     private val marketTitle: Array<String> by lazy {
-        arrayOf("AUSCOIN", "HUOBI")
+        arrayOf("ADX", "HUOBI")
     }
 
     companion object {

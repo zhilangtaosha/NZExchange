@@ -52,7 +52,7 @@ class QuickLoginActivity : NBaseActivity() {
             loginNet("13043489996", "wqn123456")
         }
         btn9_aql.setOnClickListener {
-            loginNet("460717470@qq.com", "wqn123456")
+            loginNet("460717470@qq.com", "wqn12345")
         }
     }
 

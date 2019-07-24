@@ -91,8 +91,8 @@ class SoketService : Service() {
             webSoket.addCurrentOrderCallBack(key, onQueryOrder, onSubscribeOrder, mOnCurrentOrderCancel)
         }
 
-        override fun queryCurrentOrder(pair: String, offset: Int, limit: Int) {
-            webSoket.queryCurrentOrder(pair, offset, limit)
+        override fun queryCurrentOrder(pair: String, offset: Int, limit: Int, side: Int) {
+            webSoket.queryCurrentOrder(pair, offset, limit,side)
         }
 
         override fun subscribeOrder(pair: String) {

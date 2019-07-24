@@ -308,4 +308,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                     }
                 }, onError)
     }
+
+
+
 }

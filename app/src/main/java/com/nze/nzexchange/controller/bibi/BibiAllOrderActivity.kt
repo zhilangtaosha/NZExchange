@@ -136,6 +136,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
             if (from == FROM_BIBI) {
                 topBar.showRight(true)
             }
+            listView.adapter = orderAdapter
             mSelect = SELECT_CURRENT
             select(mSelect)
         }
@@ -143,6 +144,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
             if (from == FROM_BIBI) {
                 topBar.showRight(false)
             }
+            listView.adapter = historyAdapter
             mSelect = SELECT_HISTORY
             select(mSelect)
         }
@@ -191,8 +193,8 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     }
 
     override fun onDestroy() {
-        unbindService(connection)
         binder?.removeCallBack("order")
+        unbindService(connection)
         super.onDestroy()
     }
 
@@ -266,10 +268,21 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                         orderAdapter.addItem(0, it.order)
                     }
                     SoketSubscribeOrderBean.EVENT_UPDATE -> {
-                        val i = currentOrderList.indexOfFirst { item ->
-                            item.id == it.order.id
+//                        val i = currentOrderList.indexOfFirst { item ->
+//                            item.id == it.order.id
+//                        }
+                        var bean: SoketOrderBean? = null
+                        var i = -1
+                        currentOrderList.forEachIndexed { index, item ->
+                            if (item.id == it.order.id) {
+                                bean = item
+                                i = index
+                                return@forEachIndexed
+                            }
                         }
                         if (i >= 0) {
+                            it.order.currency = bean?.currency
+                            it.order.mainCurrency = bean?.mainCurrency
                             currentOrderList.set(i, it.order)
                             orderAdapter.setItem(i, it.order)
                         }
@@ -333,6 +346,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     }
 
     private fun select(select: Int) {
+        stopAllView()
         currentTv.isSelected = select == SELECT_CURRENT
         currentView.visibility = if (select == SELECT_CURRENT) View.VISIBLE else View.GONE
 
@@ -356,7 +370,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     }
 
     fun queryCurrentOrder() {
-        binder?.queryCurrentOrder(pair, mCurrentPage * 20, 20)
+        binder?.queryCurrentOrder(pair, mCurrentPage * 20, 20, 0)
     }
 
     fun queryHistoryOrder() {

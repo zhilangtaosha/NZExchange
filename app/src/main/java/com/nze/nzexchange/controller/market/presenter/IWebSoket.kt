@@ -34,7 +34,7 @@ interface IWebSoket {
     fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit)
     fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit)
     fun addHistoryOrderCallBack(onQueryOrder: (MutableList<SoketOrderBean>) -> Unit)
-    fun addAssetCallBack(key:String,queryCallBack: ((assetMap: HashMap<String, SoketAssetBean>) -> Unit), subscribeCallBack: ((assetMap: HashMap<String, SoketAssetBean>) -> Unit))
+    fun addAssetCallBack(key: String, queryCallBack: ((assetMap: HashMap<String, SoketAssetBean>) -> Unit), subscribeCallBack: ((assetMap: HashMap<String, SoketAssetBean>) -> Unit))
 
     fun removeCallBack(key: String)
 
@@ -57,7 +57,7 @@ interface IWebSoket {
     /**
      * 查询当前订单
      */
-    fun queryCurrentOrder(pair: String, offset: Int, limit: Int)
+    fun queryCurrentOrder(pair: String, offset: Int, limit: Int, side: Int)
 
     fun queryHistoryOrder(pair: String, startTime: Long, endTime: Long, offset: Int, limit: Int, side: Int)
 

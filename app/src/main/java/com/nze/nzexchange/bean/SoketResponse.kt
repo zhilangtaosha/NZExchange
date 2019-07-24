@@ -90,7 +90,7 @@ data class SoketMarketBean(//交易对
         val list: List<SoketRankBean>
 )
 
-
+@Parcelize
 data class SoketOrderBean(//订单：当前委托订单、全部委托订单
         val amount: Double,//挂单总数量
         val ctime: Long,//订单创建时间
@@ -111,7 +111,7 @@ data class SoketOrderBean(//订单：当前委托订单、全部委托订单
         val left: Double,//剩余数量
         var currency: String? = null,//交易币
         var mainCurrency: String? = null//计价货币
-) {
+) : Parcelable {
 
 }
 

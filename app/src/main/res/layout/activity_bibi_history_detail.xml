@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
+    tools:context=".controller.bibi.BibiHistoryDetailActivity">
+
+    <com.nze.nzexchange.widget.CommonTopBar
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:tb_title_text="订单详情" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:background="@color/color_title_bg"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/tv_status_lbco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="卖出"
+                    android:textColor="@color/color_FFFF4A5F"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_pair_lbco"
+                    style="@style/tx15_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/tv_status_lbco" />
+
+
+                <TextView
+                    android:id="@+id/tv_transaction_total_key_lbco"
+                    style="@style/tx13_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_status_lbco"
+                    android:layout_marginTop="5dp"
+                    android:text="成交总额" />
+
+                <TextView
+                    android:id="@+id/tv_transaction_price_key_lbco"
+                    style="@style/tx13_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_status_lbco"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:text="成交均价(USDT)" />
+
+                <TextView
+                    android:id="@+id/tv_transaction_amount_key_lbco"
+                    style="@style/tx13_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_status_lbco"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="5dp"
+                    android:text="成交量(EOS)" />
+
+                <TextView
+                    android:id="@+id/tv_transaction_total_value_lbco"
+                    style="@style/tx16_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_transaction_total_key_lbco"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="0.12565" />
+
+                <TextView
+                    android:id="@+id/tv_transaction_price_value_lbco"
+                    style="@style/tx16_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_transaction_total_key_lbco"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="0.12565" />
+
+                <TextView
+                    android:id="@+id/tv_transaction_amount_value_lbco"
+                    style="@style/tx16_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_transaction_total_key_lbco"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="0.12565" />
+
+                <TextView
+                    android:id="@+id/tv_fee_key_lbco"
+                    style="@style/tx13_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_transaction_total_value_lbco"
+                    android:layout_marginTop="5dp"
+                    android:text="手续费(USDT)" />
+
+                <TextView
+                    android:id="@+id/tv_point_card_key_lbco"
+                    style="@style/tx13_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_transaction_total_value_lbco"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:text="点卡消耗(pts)"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_fee_value_lbco"
+                    style="@style/tx16_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_fee_key_lbco"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="0.12565" />
+
+                <TextView
+                    android:id="@+id/tv_point_card_value_lbco"
+                    style="@style/tx16_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_fee_key_lbco"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="0.12565"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+
+                <TextView
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="时间" />
+
+                <TextView
+                    android:id="@+id/tv_date_abhd"
+                    style="@style/tx15_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="2018/12/10 23:12" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_line" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+
+                <TextView
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="成交价" />
+
+                <TextView
+                    android:id="@+id/tv_deal_price_abhd"
+                    style="@style/tx15_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="1.0000 USDT" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_line" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+
+                <TextView
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="成交量" />
+
+                <TextView
+                    android:id="@+id/tv_deal_amount_abhd"
+                    style="@style/tx15_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="21.033 BTC" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_line" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+
+                <TextView
+                    style="@style/tx15_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="手续费" />
+
+                <TextView
+                    android:id="@+id/tv_fee2_abhd"
+                    style="@style/tx15_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="1.0000 USDT" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_line" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -894,18 +894,26 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun onPause() {
         super.onPause()
-
+        NLog.i("bibi onPause")
+        binder?.removeCallBack("bibi")
     }
 
     override fun onResume() {
         super.onResume()
-        activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
+        if (!isBinder) {
+            activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
+        } else {
+            addCallBack()
+            queryCurrentOrder()
+            queryAsset()
+        }
     }
 
 
     override fun onDestroy() {
         activity!!.unbindService(connection)
         super.onDestroy()
+        NLog.i("bibi onDestroy")
     }
 
     fun changePair() {
@@ -995,7 +1003,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             stopAllView()
             if (it.size > 0) {
                 currentOrderList.addAll(it)
-                currentOrderAdapter.group = currentOrderList.take(20).toMutableList()
+                currentOrderAdapter.group = currentOrderList
                 currentOrderLv.adapter = currentOrderAdapter
             } else {
                 showNODataView("当前没有委托单")
@@ -1064,8 +1072,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     fun queryCurrentOrder() {
+        currentOrderAdapter.clearGroup(false)
         currentOrderList.clear()
-        binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20)
+        binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20, 0)
     }
 
     fun queryAsset() {
@@ -1077,7 +1086,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     override fun onInvisibleRequest() {
-        binder?.removeCallBack("bibi")
+//        binder?.removeCallBack("bibi")
         super.onInvisibleRequest()
     }
 

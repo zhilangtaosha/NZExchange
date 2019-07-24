@@ -24,9 +24,11 @@ import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
 import com.nze.nzexchange.controller.common.AuthorityDialog
 import com.nze.nzexchange.controller.login.LoginActivity
+import com.nze.nzexchange.controller.my.asset.presenter.AssetP
 import com.nze.nzexchange.controller.otc.main.*
 import com.nze.nzexchange.controller.otc.tradelist.TradeListActivity
 import com.nze.nzexchange.controller.transfer.CapitalTransferActivity
@@ -41,7 +43,7 @@ import kotlinx.android.synthetic.main.fragment_otc.view.*
 
 class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemClickListener {
 
-
+    val mAssetP: AssetP by lazy { AssetP(mBaseActivity as NBaseActivity) }
     lateinit var drawerLayout: DrawerLayout
     lateinit var moreTv: TextView
     lateinit var leftLayout: LinearLayout

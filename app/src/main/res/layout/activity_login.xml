@@ -23,7 +23,7 @@
         android:layout_below="@+id/tv_cancel_al"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="30dp"
-        android:text="登录AUSCoin"
+        android:text="登录ADX"
         android:textColor="@color/color_common"
         android:textSize="24sp" />
 

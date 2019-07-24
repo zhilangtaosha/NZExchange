@@ -20,7 +20,7 @@
             android:background="@color/color_FF181F27"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
-            android:text="AUSCoin Exchange" />
+            android:text="ADX Exchange" />
 
         <com.zhuang.zbannerlibrary.ZBanner
             android:id="@+id/carousel_home"
