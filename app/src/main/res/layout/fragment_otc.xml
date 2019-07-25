@@ -78,7 +78,7 @@
 
         <com.nze.nzexchange.widget.indicator.indicator.ScrollIndicatorView
             android:id="@+id/siv_otc"
-            android:layout_width="180dp"
+            android:layout_width="230dp"
             android:layout_height="47dp"
             android:fillViewport="false" />
 

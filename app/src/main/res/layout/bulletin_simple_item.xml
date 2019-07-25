@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:text="公告:" />
+        android:text="@string/the_announcement2" />
 
     <TextView
         android:id="@+id/tv_content"

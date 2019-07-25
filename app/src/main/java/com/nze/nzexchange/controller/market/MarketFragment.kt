@@ -124,7 +124,7 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
                     if (it.success) {
                         mainCurrencyList.addAll(it.result)
                         tabs.clear()
-                        tabs.add("自选")
+                        tabs.add(getString(R.string.favorites))
                         pages.clear()
                         pages.add(MarketOptionalFragment.newInstance(tabs[0]))
                         mainCurrencyList.forEach {

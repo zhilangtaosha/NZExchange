@@ -13,6 +13,7 @@ import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
+import com.nze.nzexchange.tools.getString
 import kotlinx.android.synthetic.main.lv_ad_otc.view.*
 
 class OtcAdAdapter(mContext: Context) : NBaseAda<FindSellBean, OtcAdAdapter.ViewHolder>(mContext) {
@@ -21,10 +22,10 @@ class OtcAdAdapter(mContext: Context) : NBaseAda<FindSellBean, OtcAdAdapter.View
         item.run {
             val tip = if (transactionType == FindSellBean.TRANSACTIONTYPE_BUY) {
                 vh.nameTv.setTxtColor(R.color.color_buy)
-                "购买"
+                "${getString(R.string.otc_buy)} "
             } else {
                 vh.nameTv.setTxtColor(R.color.color_sale)
-                "出售"
+                "${getString(R.string.otc_sell)} "
             }
             vh.nameTv.text = "${tip}${CurrencyTool.getCurrency(tokenId)}"
             vh.timeTv.text = TimeTool.format(TimeTool.PATTERN2, poolCreateTime)

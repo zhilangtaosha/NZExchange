@@ -55,7 +55,8 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     lateinit var viewPager: ViewPager
     lateinit var scrollIndicatorView: ScrollIndicatorView
     private var otcAdFragment: OtcAdFragment = OtcAdFragment.newInstance()
-    private val tabs = listOf<String>("购买", "出售", "广告")
+    //    private val tabs = listOf<String>("${getString(R.string.otc_buy)}", "${getString(R.string.otc_sell)}", "${getString(R.string.otc_adver)}")
+    private val tabs = mutableListOf<String>()
     private val pages = listOf<NBaseFragment>(OtcContentFragment.newInstance(OtcContentFragment.TYPE_BUY),
             OtcContentFragment.newInstance(OtcContentFragment.TYPE_SALE),
             otcAdFragment)
@@ -86,6 +87,9 @@ class OtcFragment : NBaseFragment(), View.OnClickListener, AdapterView.OnItemCli
     override fun getRootView(): Int = R.layout.fragment_otc
 
     override fun initView(rootView: View) {
+        tabs.add(getString(R.string.otc_buy))
+        tabs.add(getString(R.string.otc_sell))
+        tabs.add(getString(R.string.otc_adver))
         //title
         moreTv = rootView.more_market
         moreTv.setOnClickListener(this)

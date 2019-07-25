@@ -11,8 +11,60 @@
     <string name="tab_otc">OTC</string>
     <string name="tab_my">我的</string>
 
-
     <string name="trust_price">委托价</string>
     <string name="trust_quantity">委托量</string>
+    <!--首页-->
+    <string name="my_wallet">我的钱包</string>
+    <string name="legal_tender_top_up">法币充值</string>
+    <string name="help">帮助中心</string>
+    <string name="hot_trade_pairs">热门币对</string>
+    <string name="top_gainers">涨幅榜</string>
+    <string name="the_announcement">公告</string>
+    <string name="the_announcement2">公告:</string>
+    <!--行情页面-->
+    <string name="volume_24">24h量</string>
+    <string name="favorites">自选</string>
+    <!--币币交易页面-->
+    <string name="buy">买入</string>
+    <string name="sell">卖出</string>
+    <string name="dish">盘口</string>
+    <string name="market">市价</string>
+    <string name="price">价格</string>
+    <string name="limit">限价</string>
+    <string name="available">可用</string>
+    <string name="amount">数量</string>
+    <string name="total_money">交易额</string>
+    <string name="depth">深度</string>
+    <string name="k_line">K线</string>
+    <string name="default_d">默认</string>
+    <string name="search">搜索币对</string>
+    <string name="cancel">取消</string>
+    <string name="all_order">全部委托</string>
+    <string name="current_order">当前委托</string>
+    <string name="login">登录</string>
+
+    <!--OTC-->
+    <string name="otc_buy">购买</string>
+    <string name="otc_sell">出售</string>
+    <string name="otc_adver">广告</string>
+    <string name="otc_limit">限额</string>
+    <string name="otc_amount">数量</string>
+    <string name="otc_buy2">买入</string>
+    <string name="otc_sell2">卖出</string>
+    <string name="otc_cancel">撤销</string>
+    <string name="otc_entrust_price">委托价格</string>
+    <string name="otc_entrust_number">委托数量</string>
+    <string name="otc_have_volume">已成交量</string>
+
+    <!--我的-->
+    <string name="legal_tender_account">法币账户</string>
+    <string name="legal_tender_withdrawal">法币提现</string>
+    <string name="my_assets">我的资产</string>
+    <string name="order_management">订单管理</string>
+    <string name="my_payment">收款方式</string>
+    <string name="my_security">安全中心</string>
+    <string name="my_real_name">实名认证</string>
+    <string name="my_settings">设置</string>
+
 
 </resources>

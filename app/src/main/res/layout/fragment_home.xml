@@ -61,7 +61,7 @@
                     android:layout_centerInParent="true"
                     android:drawableLeft="@mipmap/my_wallet"
                     android:drawablePadding="4dp"
-                    android:text="我的钱包"
+                    android:text="@string/my_wallet"
                     android:textColor="@color/color_FFE7484A"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -83,7 +83,7 @@
                     android:layout_centerInParent="true"
                     android:drawableLeft="@mipmap/legal_transaction"
                     android:drawablePadding="4dp"
-                    android:text="法币充值"
+                    android:text="@string/legal_tender_top_up"
                     android:textColor="@color/color_FF337AE5"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -105,7 +105,7 @@
                     android:layout_centerInParent="true"
                     android:drawableLeft="@mipmap/help_center"
                     android:drawablePadding="4dp"
-                    android:text="帮助中心"
+                    android:text="@string/help"
                     android:textColor="@color/color_FFBD3EE9"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -118,7 +118,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="8dp"
-            android:text="热门币对" />
+            android:text="@string/hot_trade_pairs" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rview_home"
@@ -132,7 +132,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="5dp"
-            android:text="涨幅榜" />
+            android:text="@string/top_gainers" />
 
 
         <com.nze.nzexchange.widget.LinearLayoutAsListView

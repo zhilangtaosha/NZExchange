@@ -43,6 +43,10 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
+        override fun removeOrderCallBack(key: String) {
+            webSoket.removeOrderCallBack(key)
+        }
+
         override fun addAssetCallBack(key: String, queryCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit, subscribeCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit) {
             webSoket.addAssetCallBack(key, queryCallBack, subscribeCallBack)
         }

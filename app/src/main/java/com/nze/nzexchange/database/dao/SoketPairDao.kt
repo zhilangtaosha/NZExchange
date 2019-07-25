@@ -1,6 +1,7 @@
 package com.nze.nzexchange.database.dao
 
 import com.nze.nzexchange.bean.SoketMarketBean
+import com.nze.nzexchange.bean.SoketRankBean
 
 /**
  * @author: zwy
@@ -10,5 +11,11 @@ import com.nze.nzexchange.bean.SoketMarketBean
  */
 interface SoketPairDao {
 
-   fun add(mMarketList: MutableList<SoketMarketBean>)
+    fun add(mMarketList: MutableList<SoketMarketBean>)
+
+    fun getMainCurrency(): List<String>
+
+    fun getRankList(mainCurrency: String): List<SoketRankBean>
+
+    fun getRankBean(pair: String): SoketRankBean
 }

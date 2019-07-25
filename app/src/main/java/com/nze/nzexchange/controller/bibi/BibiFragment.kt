@@ -27,6 +27,7 @@ import com.nze.nzexchange.controller.common.*
 import com.nze.nzexchange.controller.common.presenter.CommonBibiP
 import com.nze.nzexchange.controller.login.LoginActivity
 import com.nze.nzexchange.controller.market.KLineActivity
+import com.nze.nzexchange.database.dao.impl.SoketPairDaoImpl
 import com.nze.nzexchange.extend.*
 import com.nze.nzexchange.tools.DecimalDigitTool
 import com.nze.nzexchange.tools.DoubleMath
@@ -40,6 +41,7 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_bibi.view.*
+import org.jetbrains.annotations.Nls
 
 class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnListPopupItemClick, OnSeekChangeListener {
 
@@ -182,6 +184,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val currentOrderList: MutableList<SoketOrderBean> by lazy { mutableListOf<SoketOrderBean>() }
     val mAssetMap = hashMapOf<String, SoketAssetBean>()
 
+
     companion object {
         @JvmStatic
         fun newInstance() = BibiFragment().apply {
@@ -227,9 +230,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val input = it.toString().toDouble()
                         val num = get.toDouble()
                         val total = DoubleMath.mul(input, num)
-                        totalTransactionTv.text = "交易额 ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "${getString(R.string.total_money)} ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || get.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
-                        totalTransactionTv.text = "交易额 0 ${currentTransactionPair?.mainCurrency?.getValue()
+                        totalTransactionTv.text = "${getString(R.string.total_money)} 0 ${currentTransactionPair?.mainCurrency?.getValue()
                                 ?: ""}"
                     }
                 }
@@ -243,13 +246,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         val input = it.toString().toDouble()
                         val price = give.toDouble()
                         val total = DoubleMath.mul(input, price)
-                        totalTransactionTv.text = "交易额 ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "${getString(R.string.total_money)} ${total.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     } else if ((it.isNullOrEmpty() || give.isNullOrEmpty()) && transactionType == TRANSACTIONTYPE_LIMIT) {
-                        totalTransactionTv.text = "交易额 0${currentTransactionPair?.mainCurrency?.getValue()
+                        totalTransactionTv.text = "${getString(R.string.total_money)} 0${currentTransactionPair?.mainCurrency?.getValue()
                                 ?: ""}"
                     } else if (it.isNotEmpty() && transactionType == TRANSACTIONTYPE_MARKET) {
                         val input = it.toString().toDouble()
-                        totalTransactionTv.text = "交易额 ${input.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
+                        totalTransactionTv.text = "${getString(R.string.total_money)} ${input.formatForCurrency()} ${currentTransactionPair?.mainCurrency}"
                     }
 
                 }
@@ -270,13 +273,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             buyIsb.visibility = View.VISIBLE
             saleIsb.visibility = View.GONE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_9d81_bg)!!)
-            transactionBtn.text = "买入${currentTransactionPair!!.currency}"
+            transactionBtn.text = "${getString(R.string.buy)}(${currentTransactionPair!!.currency})"
             seekbarValueTv.text = "${buyIsb.progress}%"
             saleIsb.setProgress(0F)
             if (transactionType == TRANSACTIONTYPE_LIMIT) {
-                getEt.hint = "数量(${currentTransactionPair?.currency})"
+                getEt.hint = "${getString(R.string.amount)}(${currentTransactionPair?.currency})"
             } else {
-                getEt.hint = "交易额(${currentTransactionPair?.mainCurrency})"
+                getEt.hint = "${getString(R.string.total_money)}(${currentTransactionPair?.mainCurrency})"
             }
         } else {
             buyTv.isSelected = false
@@ -286,23 +289,23 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             buyIsb.visibility = View.GONE
             saleIsb.visibility = View.VISIBLE
             transactionBtn.setBgByDrawable(ContextCompat.getDrawable(activity!!, R.drawable.selector_btn_4a5f_bg)!!)
-            transactionBtn.text = "卖出${currentTransactionPair!!.currency}"
+            transactionBtn.text = "${getString(R.string.sell)}(${currentTransactionPair!!.currency})"
             seekbarValueTv.text = "${saleIsb.progress}%"
             buyIsb.setProgress(0F)
-            getEt.hint = "数量(${currentTransactionPair?.currency})"
+            getEt.hint = "${getString(R.string.amount)}(${currentTransactionPair?.currency})"
         }
         refreshAsset()
         getEt.setText("")
         if (userBean == null)
-            transactionBtn.text = "登录"
+            transactionBtn.text = "${getString(R.string.login)}"
     }
 
     fun refreshAsset() {
         if (currentType == TYPE_BUY) {
-            availableTv.setTextFromHtml("可用<font color=\"#0DA287\">${mAssetMap[currentTransactionPair?.mainCurrency]?.available?.formatForCurrency()
+            availableTv.setTextFromHtml("${getString(R.string.available)}<font color=\"#0DA287\">${mAssetMap[currentTransactionPair?.mainCurrency]?.available?.formatForCurrency()
                     ?: "--"}${currentTransactionPair?.mainCurrency ?: "--"}</font>")
         } else {
-            availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">${mAssetMap[currentTransactionPair?.currency]?.available?.formatForCurrency()
+            availableTv.setTextFromHtml("${getString(R.string.available)}<font color=\"#FF4A5F\">${mAssetMap[currentTransactionPair?.currency]?.available?.formatForCurrency()
                     ?: "--"}${currentTransactionPair?.currency ?: "--"}</font>")
         }
     }
@@ -614,7 +617,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 priceTv.visibility = View.VISIBLE
                 giveEt.isFocusable = true
                 giveEt.isFocusableInTouchMode = true
-                giveEt.hint = "价格(${currentTransactionPair?.mainCurrency})"
+                giveEt.hint = "${getString(R.string.price)}(${currentTransactionPair?.mainCurrency})"
                 giveEt.setText(currentTransactionPair?.exchangeRate?.format(DecimalDigitTool.getDigit(currentTransactionPair?.moneyPrec
                         ?: 8)))
                 giveReduceTv.visibility = View.VISIBLE
@@ -623,13 +626,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     val price = giveEt.getContent().toDouble()
                     val num = getEt.getContent().toDouble()
                     val total = price.mul(num)
-                    totalTransactionTv.text = "交易额${total.formatForCurrency()}${currentTransactionPair?.mainCurrency}"
+                    totalTransactionTv.text = "${getString(R.string.total_money)}${total.formatForCurrency()}${currentTransactionPair?.mainCurrency}"
                 } catch (e: Exception) {
-                    totalTransactionTv.text = "交易额0${currentTransactionPair?.mainCurrency?.getValue()
+                    totalTransactionTv.text = "${getString(R.string.total_money)}0${currentTransactionPair?.mainCurrency?.getValue()
                             ?: ""}"
                 }
                 if (currentType == TYPE_BUY) {
-                    getEt.hint = "数量(${currentTransactionPair?.currency})"
+                    getEt.hint = "${getString(R.string.amount)}(${currentTransactionPair?.currency})"
                 }
                 TRANSACTIONTYPE_LIMIT
             } else {
@@ -643,7 +646,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
 //                totalTransactionTv.text = "交易额--${currentTransactionPair?.mainCurrency}"
                 if (currentType == TYPE_BUY) {
-                    getEt.hint = "交易额(${currentTransactionPair?.mainCurrency})"
+                    getEt.hint = "${getString(R.string.total_money)}(${currentTransactionPair?.mainCurrency})"
                 }
                 TRANSACTIONTYPE_MARKET
             }
@@ -659,7 +662,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             }
 
         } else {
-            depthTv.text = "深度$item"
+            depthTv.text = "${getString(R.string.depth)}$item"
             val pair = "${currentTransactionPair?.currency?.toUpperCase()}${currentTransactionPair?.mainCurrency?.toUpperCase()}"
             when (item) {
                 "1" -> {
@@ -742,11 +745,12 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     var giveWatcher: EditTextJudgeNumberWatcher? = null
     var getWatcher: EditTextJudgeNumberWatcher? = null
     private fun refreshLayout() {
+        NLog.i("bibifragment refresh")
         currentTransactionPair?.let {
             //            switchType(currentType)
             moreTv.text = it.transactionPair
             if (transactionType == TRANSACTIONTYPE_LIMIT) {
-                giveEt.hint = "价格(${it.mainCurrency})"
+                giveEt.hint = "${getString(R.string.price)}(${it.mainCurrency})"
                 if (giveWatcher != null)
                     giveEt.removeTextChangedListener(giveWatcher)
                 giveWatcher = EditTextJudgeNumberWatcher(giveEt, it.moneyPrec)
@@ -758,16 +762,16 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 getEt.addTextChangedListener(getWatcher)
             }
             if (transactionType == TRANSACTIONTYPE_LIMIT) {
-                getEt.hint = "数量(${currentTransactionPair?.currency})"
+                getEt.hint = "${getString(R.string.amount)}(${currentTransactionPair?.currency})"
             } else {
-                getEt.hint = "交易额(${currentTransactionPair?.mainCurrency})"
+                getEt.hint = "${getString(R.string.total_money)}(${currentTransactionPair?.mainCurrency})"
             }
             currentOrderAdapter.mainCurrency = it.mainCurrency
             currentOrderAdapter.currency = it.currency
             if (currentType == TYPE_BUY) {
-                availableTv.setTextFromHtml("可用<font color=\"#0DA287\">--${it.mainCurrency}</font>")
+                availableTv.setTextFromHtml("${getString(R.string.available)}<font color=\"#0DA287\">--${it.mainCurrency}</font>")
             } else {
-                availableTv.setTextFromHtml("可用<font color=\"#FF4A5F\">--${it.currency}</font>")
+                availableTv.setTextFromHtml("${getString(R.string.available)}<font color=\"#FF4A5F\">--${it.currency}</font>")
             }
 
         }
@@ -892,31 +896,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
 
-    override fun onPause() {
-        super.onPause()
-        NLog.i("bibi onPause")
-        binder?.removeCallBack("bibi")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!isBinder) {
-            activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
-        } else {
-            addCallBack()
-            queryCurrentOrder()
-            queryAsset()
-        }
-    }
-
-
-    override fun onDestroy() {
-        activity!!.unbindService(connection)
-        super.onDestroy()
-        NLog.i("bibi onDestroy")
-    }
-
     fun changePair() {
+        depthTv.text = "${getString(R.string.depth)}1"
         lastCostTv.text = "0"
         lastPriceTv.text = "0CNY"
         handicapBuyAdapter.clearGroup(true)
@@ -955,8 +936,9 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 },
                 {
                     //订阅今日行情
-                    lastCostTv.text = it.last.formatForPrice()
-                    lastPriceTv.text = "≈${it.last.mul(mainCurrencyPrice).formatForLegal()}CNY"
+                    NLog.i("today 今日行情")
+                    lastCostTv.text = it.last
+                    lastPriceTv.text = "≈${it.last.toDouble().mul(mainCurrencyPrice).formatForLegal()}CNY"
                 },
                 { mDepthBuyList, mDepthSellList ->
                     mDepthSellList.sortBy { it.price }
@@ -998,6 +980,33 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             }
 
         }
+
+        binder?.addLimitDealCallBack {
+            //下限价单00
+            showToast("下单成功")
+        }
+        binder?.addMarketDealCallBack {
+            //下市价单
+            showToast("下单成功")
+        }
+
+        binder?.addAssetCallBack("bibi", {
+            mAssetMap.clear()
+            mAssetMap.putAll(it)
+            switchType(currentType)
+            binder?.subscribeAsset(mutableListOf<String>().apply {
+                add(currentTransactionPair!!.currency)
+                add(currentTransactionPair!!.mainCurrency)
+            })
+
+        }, {
+            mAssetMap.clear()
+            mAssetMap.putAll(it)
+            refreshAsset()
+        })
+    }
+
+    fun addOrderCallBack() {
         binder?.addCurrentOrderCallBack("bibi", {
             NLog.i("订单查询")
             stopAllView()
@@ -1046,29 +1055,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             //取消订单
 
         })
-        binder?.addLimitDealCallBack {
-            //下限价单00
-            showToast("下单成功")
-        }
-        binder?.addMarketDealCallBack {
-            //下市价单
-            showToast("下单成功")
-        }
-
-        binder?.addAssetCallBack("bibi", {
-            mAssetMap.clear()
-            mAssetMap.putAll(it)
-            switchType(currentType)
-            binder?.subscribeAsset(mutableListOf<String>().apply {
-                add(currentTransactionPair!!.currency)
-                add(currentTransactionPair!!.mainCurrency)
-            })
-
-        }, {
-            mAssetMap.clear()
-            mAssetMap.putAll(it)
-            refreshAsset()
-        })
     }
 
     fun queryCurrentOrder() {
@@ -1085,8 +1071,32 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        NLog.i("bibi onPause")
+        binder?.removeOrderCallBack("bibi")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isBinder) {
+            activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
+        } else {
+            addOrderCallBack()
+            queryCurrentOrder()
+            queryAsset()
+        }
+    }
+
+
+    override fun onDestroy() {
+        activity!!.unbindService(connection)
+        super.onDestroy()
+        NLog.i("bibi onDestroy")
+    }
+
     override fun onInvisibleRequest() {
-//        binder?.removeCallBack("bibi")
+        binder?.removeCallBack("bibi")
         super.onInvisibleRequest()
     }
 
@@ -1095,6 +1105,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         super.onVisibleRequest()
         if (isBinder) {
             addCallBack()
+            addOrderCallBack()
             queryCurrentOrder()
             queryAsset()
         }

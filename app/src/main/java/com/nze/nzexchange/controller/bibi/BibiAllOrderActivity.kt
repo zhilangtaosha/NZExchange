@@ -39,6 +39,8 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     var mainCurrency: String? = null
     var status: Int? = null
     var transactionType: Int? = null
+    var mCurrentPair = "*"
+    var mHistoryPair = "*"
     val filterPopup by lazy {
         BibiFilterPopup(this).apply {
             onFilterClick = {
@@ -47,14 +49,20 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                 status = it.orderStatus
                 transactionType = it.tradeType
 //                orderTracking(it.currency, it.mainCurrency, userBean?.userId, it.orderStatus, it.tradeType)
-                if (!currency.isNullOrEmpty() && !mainCurrency.isNullOrEmpty()) {
-                    pair = "${currency}${mainCurrency}"
-                } else {
-                    pair = "*"
-                }
+
                 if (mSelect == SELECT_CURRENT) {
+                    if (!currency.isNullOrEmpty() && !mainCurrency.isNullOrEmpty()) {
+                        mCurrentPair = "${currency}${mainCurrency}"
+                    } else {
+                        mCurrentPair = "*"
+                    }
                     queryCurrentOrder()
                 } else {
+                    if (!currency.isNullOrEmpty() && !mainCurrency.isNullOrEmpty()) {
+                        mHistoryPair = "${currency}${mainCurrency}"
+                    } else {
+                        mHistoryPair = "*"
+                    }
                     queryHistoryOrder()
                 }
                 this.dismiss()
@@ -108,6 +116,8 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         intent.let {
             from = it.getIntExtra(FROM, FROM_BIBI)
             pair = it.getStringExtra(IntentConstant.PARAM_TRANSACTION_PAIR)
+            mCurrentPair = pair
+            mHistoryPair = pair
         }
 
         if (from == FROM_BIBI) {
@@ -370,10 +380,10 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     }
 
     fun queryCurrentOrder() {
-        binder?.queryCurrentOrder(pair, mCurrentPage * 20, 20, 0)
+        binder?.queryCurrentOrder(mCurrentPair, mCurrentPage * 20, 20, 0)
     }
 
     fun queryHistoryOrder() {
-        binder?.queryHistoryOrder(pair, 0, 0, mHistoryPage * 20, 20, 0)
+        binder?.queryHistoryOrder(mHistoryPair, 0, 0, mHistoryPage * 20, 20, 0)
     }
 }

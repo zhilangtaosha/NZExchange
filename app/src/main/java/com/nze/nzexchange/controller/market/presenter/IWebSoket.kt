@@ -38,6 +38,8 @@ interface IWebSoket {
 
     fun removeCallBack(key: String)
 
+    fun removeOrderCallBack(key: String)
+
     fun removeCallBack2()
 
     fun subscribeAllData(pair: String, type: Int, pattern: String)

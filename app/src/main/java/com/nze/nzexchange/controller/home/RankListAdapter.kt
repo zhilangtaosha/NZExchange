@@ -16,6 +16,7 @@ import com.nze.nzexchange.controller.market.KLineActivity
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.setTxtColor
+import com.nze.nzexchange.tools.getString
 import kotlinx.android.synthetic.main.abc_alert_dialog_material.view.*
 import kotlinx.android.synthetic.main.lv_rank_home.view.*
 
@@ -71,7 +72,7 @@ class RankListAdapter(mContext: Context) : BaseAda<SoketRankBean>(mContext) {
         val bean = getItem(position)!!
         vh.transactionPairTv.text = bean.market
         vh.exchangeTv.text = bean.last.formatForCurrency()
-        vh.total24Tv.text = "24h量 ${bean.volume}"
+        vh.total24Tv.text = "${getString(R.string.volume_24)} ${bean.volume}"
         if (bean.change > 0) {
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_up_bg)
             vh.changeTv.text = "+${bean.change}%"

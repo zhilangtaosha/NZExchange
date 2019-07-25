@@ -70,6 +70,27 @@ data class FinancialRecordBean(
     fun getStatus(): String {
         return if (type == 0) {
             "已完成"
+        } else if (type == 1) {
+            when (status) {
+                1001, 2001 -> "审核中"
+                1002, 2002 -> "成功"
+                1004, 2004 -> "失败"
+                else -> "出错"
+            }
+        } else if (type == 3) {
+            when (status) {
+                990 -> "支付成功"
+                9901 -> "支付失败"
+                100, 101, 102 -> "支付审核中"
+                else -> "出错"
+            }
+        } else if (type == 4) {
+            when (status) {
+                990 -> "取现成功"
+                9901 -> "取现失败"
+                100, 101, 102 -> "取现审核中"
+                else -> "出错"
+            }
         } else {
             when (status) {
                 1001, 2001 -> "审核中"
@@ -89,7 +110,7 @@ data class FinancialRecordBean(
 
         fun getFinancialRecord(
                 userId: String,
-                token: String,
+                token: String?,
                 from: String,
                 pageNumber: Int? = null,
                 pageSize: Int? = null

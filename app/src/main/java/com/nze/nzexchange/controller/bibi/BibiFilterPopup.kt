@@ -18,6 +18,7 @@ import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.AllOrderFilterBean
 import com.nze.nzexchange.bean.BibiFilterBean
 import com.nze.nzexchange.controller.base.BaseAda
+import com.nze.nzexchange.database.dao.impl.SoketPairDaoImpl
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.tools.dp2px
 import io.reactivex.Flowable
@@ -49,6 +50,7 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
     var onFilterClick: ((bean: AllOrderFilterBean) -> Unit)? = null
     val statusList: Array<CheckBox> = arrayOf(completeCb, noCompleteCb, cancelCb)
     val styleList: Array<CheckBox> = arrayOf(buyCb, saleCb)
+    val mSoketPairDao by lazy { SoketPairDaoImpl() }
 
     init {
         unitCurrencyTv.setOnClickListener {
@@ -61,9 +63,13 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
             }
             buyCurrencyEt.clearFocus()
         }
-
+        val list = mSoketPairDao.getMainCurrency()
+        val filterList = mutableListOf<BibiFilterBean>()
+        list.forEach {
+            filterList.add(BibiFilterBean(it))
+        }
         unitGv.adapter = unitAdapter
-        unitAdapter.group = BibiFilterBean.getList()
+        unitAdapter.group = filterList
         unitGv.setOnItemClickListener { parent, view, position, id ->
             unitAdapter.group = unitAdapter.group.mapIndexed { index, bibiFilterBean ->
                 bibiFilterBean.isChoice = index == position

@@ -307,11 +307,11 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                 },
                 {
                     //订阅今日行情
-                    costTv.text = it.last.formatForPrice()
+                    costTv.text = it.last
                     hightCostTv.text = it.high.formatForPrice()
                     lowCostTv.text = it.low.formatForPrice()
                     volumeTv.text = it.volume.retainInt()
-                    setPriceWave(it.open, it.last)
+                    setPriceWave(it.open, it.last.toDouble())
                 },
                 { mDepthBuyList, mDepthSellList ->
                     //订阅深度

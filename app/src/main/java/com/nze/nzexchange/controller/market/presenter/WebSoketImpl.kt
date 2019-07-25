@@ -7,6 +7,7 @@ import com.nze.nzeframework.ui.BaseActivityP
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.database.dao.impl.SoketPairDaoImpl
 import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.chart.KLineEntity
@@ -128,6 +129,9 @@ class WebSoketImpl : IWebSoket {
     var mOnMarketDeal: ((rs: Boolean) -> Unit)? = null
     var mOnQueryHistoryOrder: ((orderList: MutableList<SoketOrderBean>) -> Unit)? = null
     //---------------------------------------------------------------------------------------------
+    val mSoketPairDao by lazy { SoketPairDaoImpl() }
+
+
     override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
         mOnOpenMap.put(key, onOpenCallback)
         mOnCloseMap.put(key, onCloseCallback)
@@ -209,6 +213,12 @@ class WebSoketImpl : IWebSoket {
         this.mOnSubscribeAssetMap.remove(key)
         this.mOnQueryHistoryOrder = null
     }
+
+    override fun removeOrderCallBack(key: String) {
+        this.mOnQueryCurrentOrderMap.remove(key)
+        this.mOnSubscribeOrderMap.remove(key)
+    }
+
 
     override fun removeCallBack2() {
         this.mOnLimitDeal = null
@@ -494,6 +504,7 @@ class WebSoketImpl : IWebSoket {
                                         mMarketList.clear()
                                         mMarketList.addAll(marketList.toMutableList())
                                         it.onNext(KLineParam.DATA_MARKET_QUERY)
+                                        mSoketPairDao.add(mMarketList)
                                     }
                                 } catch (e: Exception) {
                                     NLog.i("market出错>>${e.message}")
@@ -509,6 +520,8 @@ class WebSoketImpl : IWebSoket {
                                     it.onNext(KLineParam.DATA_CURRENT_ORDER_QUERY)
                                 } catch (e: Exception) {
                                     NLog.i("current order出错>>${e.message}")
+                                    orderRs = SoketOrderResultBean(0, 0, 0, arrayListOf())
+                                    it.onNext(KLineParam.DATA_CURRENT_ORDER_QUERY)
                                 }
                             }
                             KLineParam.ID_LIMIT_DEAL -> {
@@ -524,8 +537,13 @@ class WebSoketImpl : IWebSoket {
                                 it.onNext(KLineParam.DATA_ORDER_CANCEL)
                             }
                             KLineParam.ID_ORDER_HISTORY -> {
-                                orderHistoryRs = gson.fromJson<SoketOrderResultBean>(queryBean.result.toString(), SoketOrderResultBean::class.java)
-                                it.onNext(KLineParam.DATA_ORDER_HISTORY)
+                                try {
+                                    orderHistoryRs = gson.fromJson<SoketOrderResultBean>(queryBean.result.toString(), SoketOrderResultBean::class.java)
+                                    it.onNext(KLineParam.DATA_ORDER_HISTORY)
+                                } catch (e: Exception) {
+                                    orderHistoryRs = SoketOrderResultBean(0, 0, 0, arrayListOf())
+                                    it.onNext(KLineParam.DATA_ORDER_HISTORY)
+                                }
                             }
                             KLineParam.ID_ASSET -> {
                                 mAssetMap.clear()
@@ -575,6 +593,7 @@ class WebSoketImpl : IWebSoket {
                                 val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
                                 mTodayBean = gson.fromJson<SoketTodayBean>(rs[1].toString(), SoketTodayBean::class.java)
                                 it.onNext(KLineParam.DATA_TODAY_SUBSCRIBE)
+                                NLog.i("today 发送到主线程 ${mTodayBean?.last}")
                             } catch (e: Exception) {
                                 NLog.i("today.update出错>>${e.message}")
                             }
@@ -701,6 +720,7 @@ class WebSoketImpl : IWebSoket {
                                 }
                             }
                             KLineParam.DATA_TODAY_SUBSCRIBE -> {
+                                NLog.i("today 主线程接收 ${mTodayBean?.last}")
                                 mOnTodayMap.forEach {
                                     it.value.invoke(mTodayBean!!)
                                 }

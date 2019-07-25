@@ -22,6 +22,7 @@ import com.nze.nzexchange.controller.otc.PublishActivity
 import com.nze.nzexchange.extend.setBg
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.ViewFactory
+import com.nze.nzexchange.tools.getString
 import kotlinx.android.synthetic.main.lv_buy_otc.view.*
 
 class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(mContext) {
@@ -54,9 +55,9 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
         item?.let {
 
             vh.orderNumTv.text = "${it.totalOrder}单"
-            vh.limitTv.text = "限额：${it.poolMinamount}-${it.poolMaxamount}CNY"
+            vh.limitTv.text = "${getString(R.string.otc_limit)}：${it.poolMinamount}-${it.poolMaxamount}CNY"
             vh.priceTv.text = "¥${it.poolPrice}"
-            vh.totalNumTv.text = "数量：${it.poolLeftamount}"
+            vh.totalNumTv.text = "${getString(R.string.otc_amount)}：${it.poolLeftamount}"
 
             it.accmoney
         }?.run {
@@ -76,7 +77,7 @@ class OtcBuyAdapter(mContext: Context, val type: Int) : BaseAda<OrderPoolBean>(m
                         mContext.startActivity(Intent(mContext, BuyActivity::class.java)
                                 .putExtra(OtcContentFragment.PARAM_TYPE, type)
                                 .putExtra(IntentConstant.PARAM_ORDER_POOL, item)
-                                .putExtra(IntentConstant.PARAM_ASSET,userAssetBean)
+                                .putExtra(IntentConstant.PARAM_ASSET, userAssetBean)
                         )
                     } else {
                         CheckPermission.getInstance()

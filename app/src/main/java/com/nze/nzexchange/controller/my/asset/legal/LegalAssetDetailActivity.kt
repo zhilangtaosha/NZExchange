@@ -113,7 +113,7 @@ class LegalAssetDetailActivity : NBaseActivity(), View.OnClickListener {
 
     //获取最近财务记录
     fun getFinancialRecord() {
-        FinancialRecordBean.getFinancialRecord(userBean!!.userId, LegalConfig.NAME, FinancialRecordBean.ACCOUNT_LEGAL)
+        FinancialRecordBean.getFinancialRecord(userBean!!.userId, null, FinancialRecordBean.ACCOUNT_LEGAL)
                 .compose(netTfWithDialog())
                 .subscribe({
                     if (it.success) {

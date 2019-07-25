@@ -145,7 +145,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
                 skipActivity(MyAssetActivity::class.java)
             }
             R.id.tv_order_manage_my -> {
-                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity, BibiAllOrderActivity.FROM_MY,"*")
+                BibiAllOrderActivity.toAllOrderActivity(mBaseActivity, BibiAllOrderActivity.FROM_MY, "*")
             }
             R.id.tv_pay_method_my -> {
                 startActivity(Intent(activity, SetPayMethodActivity::class.java)
@@ -188,7 +188,7 @@ class MyFragment : NBaseFragment(), View.OnClickListener {
             userNameTV.text = userBean?.userTag
         } else {
             userNameTV.isClickable = true
-            userNameTV.text = "登录"
+            userNameTV.text = getString(R.string.login)
         }
     }
 

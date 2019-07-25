@@ -27,7 +27,7 @@ data class SoketSubscribeBean(//订阅返回
 data class SoketTodayBean(//今日行情
         val deal: Double,
         val high: Double,
-        val last: Double,
+        val last: String,
         val low: Double,
         val open: Double,
         val volume: Double

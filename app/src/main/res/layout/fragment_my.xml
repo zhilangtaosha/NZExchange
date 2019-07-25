@@ -18,7 +18,7 @@
             android:background="@color/color_title_bg"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
-            android:text="登录"
+            android:text="@string/login"
             android:textColor="@color/color_FFA3AAB9" />
 
         <LinearLayout
@@ -72,7 +72,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="9dp"
-                    android:text="法币账户"
+                    android:text="@string/legal_tender_account"
                     android:textColor="@color/color_FF676C7A"
                     android:textSize="10sp" />
             </RelativeLayout>
@@ -92,7 +92,7 @@
                 android:gravity="center"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
-                android:text="法币充值"
+                android:text="@string/legal_tender_top_up"
                 android:textColor="@color/color_FF676C7A"
                 android:textSize="13sp" />
 
@@ -113,7 +113,7 @@
                 android:gravity="center"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
-                android:text="法币提现"
+                android:text="@string/legal_tender_withdrawal"
                 android:textColor="@color/color_FF676C7A"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -136,7 +136,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
-                android:text="我的资产"
+                android:text="@string/my_assets"
                 android:textColor="@color/color_FFA3AAB9" />
 
             <View
@@ -155,7 +155,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
-                android:text="订单管理"
+                android:text="@string/order_management"
                 android:textColor="@color/color_FFA3AAB9" />
 
             <View
@@ -174,7 +174,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
-                android:text="收款方式"
+                android:text="@string/my_payment"
                 android:textColor="@color/color_FFA3AAB9" />
         </LinearLayout>
 
@@ -195,7 +195,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
-                android:text="安全中心"
+                android:text="@string/my_security"
                 android:textColor="@color/color_FFA3AAB9" />
 
             <View
@@ -214,7 +214,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
-                android:text="实名认证"
+                android:text="@string/my_real_name"
                 android:textColor="@color/color_FFA3AAB9" />
 
             <View
@@ -233,7 +233,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
-                android:text="设置"
+                android:text="@string/my_settings"
                 android:textColor="@color/color_FFA3AAB9" />
         </LinearLayout>
     </LinearLayout>

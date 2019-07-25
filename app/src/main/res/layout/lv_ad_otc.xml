@@ -34,7 +34,7 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/shape_radius_2536_bg2"
         android:gravity="center"
-        android:text="撤销"
+        android:text="@string/otc_cancel"
         android:textColor="@color/color_FF6D87A8"
         android:textSize="11sp" />
 
@@ -49,7 +49,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="委托价格"
+            android:text="@string/otc_entrust_price"
             android:textColor="@color/color_FF7F8592"
             android:textSize="12sp" />
 
@@ -74,7 +74,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="委托数量"
+            android:text="@string/otc_entrust_number"
             android:textColor="@color/color_FF7F8592"
             android:textSize="12sp" />
 
@@ -99,7 +99,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已成交数量"
+            android:text="@string/otc_have_volume"
             android:textColor="@color/color_FF7F8592"
             android:textSize="12sp" />
 

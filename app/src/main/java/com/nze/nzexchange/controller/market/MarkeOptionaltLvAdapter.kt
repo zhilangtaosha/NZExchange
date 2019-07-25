@@ -12,6 +12,7 @@ import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.formatForLegal
 import com.nze.nzexchange.extend.mul
+import com.nze.nzexchange.tools.getString
 import kotlinx.android.synthetic.main.lv_market.view.*
 
 /**
@@ -41,7 +42,7 @@ class MarkeOptionaltLvAdapter(mContext: Context) : NBaseAda<SoketRankBean, Marke
             vh.changeTv.setBackgroundResource(R.drawable.shape_radius_down_bg)
             vh.changeTv.text = "${item.change}%"
         }
-        vh.total24Tv.text = "24h量 ${item.volume}"
+        vh.total24Tv.text = "${getString(R.string.volume_24)} ${item.volume}"
         vh.costTv.text = "¥${item.cny.formatForLegal()}"
 
 

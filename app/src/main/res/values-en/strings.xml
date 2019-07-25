@@ -15,4 +15,62 @@
 
     <string name="trust_price">委托价</string>
     <string name="trust_quantity">委托量</string>
+    <!--首页-->
+    <string name="my_wallet">My wallet</string>
+    <string name="legal_tender_top_up">Legal tender top-up</string>
+    <string name="help">Help</string>
+    <string name="hot_trade_pairs">Hot trade pairs</string>
+    <string name="top_gainers">Top Gainers</string>
+    <string name="the_announcement">The announcement</string>
+    <string name="the_announcement2">The announcement:</string>
+    <!--行情页面-->
+    <string name="volume_24">24h Vol</string>
+    <string name="favorites">Favorites</string>
+
+    <!--币币交易页面-->
+    <string name="buy">BUY</string>
+    <string name="sell">SELL</string>
+    <string name="dish">Dish</string>
+    <string name="market">Market</string>
+    <string name="price">Price</string>
+    <string name="limit">Limit</string>
+    <string name="available">Available</string>
+    <string name="amount">Amount</string>
+    <string name="total_money">Total</string>
+    <string name="depth">Depth</string>
+    <string name="k_line">Kline</string>
+    <string name="default_d">Default</string>
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
+    <string name="all_order">All</string>
+    <string name="current_order">Current</string>
+    <string name="login">Login</string>
+
+    <!--OTC-->
+    <string name="otc_buy">Buy</string>
+    <string name="otc_sell">Sell</string>
+    <string name="otc_adver">Advertising</string>
+    <string name="otc_limit">Limit</string>
+    <string name="otc_amount">Amount</string>
+    <string name="otc_buy2">Buy</string>
+    <string name="otc_sell2">Sell</string>
+    <string name="otc_cancel">Cancel</string>
+    <string name="otc_entrust_price">Entrust price</string>
+    <string name="otc_entrust_number">Entrust number</string>
+    <string name="otc_have_volume">Have volume</string>
+
+    <!--我的-->
+    <string name="legal_tender_account">Legal tender account</string>
+    <string name="legal_tender_withdrawal">Legal tender withdrawal</string>
+    <string name="my_assets">My assets</string>
+    <string name="order_management">Order Management</string>
+    <string name="my_payment">Payment</string>
+    <string name="my_security">Security</string>
+    <string name="my_real_name">Real-name authentication</string>
+    <string name="my_settings">Settings</string>
+
+
+
+
+
 </resources>
