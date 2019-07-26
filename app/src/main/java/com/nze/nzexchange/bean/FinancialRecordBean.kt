@@ -79,9 +79,9 @@ data class FinancialRecordBean(
             }
         } else if (type == 3) {
             when (status) {
-                990 -> "支付成功"
-                9901 -> "支付失败"
-                100, 101, 102 -> "支付审核中"
+                990 -> "充值成功"
+                9901 -> "充值失败"
+                100, 101, 102 -> "充值审核中"
                 else -> "出错"
             }
         } else if (type == 4) {

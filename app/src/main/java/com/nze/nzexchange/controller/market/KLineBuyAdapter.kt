@@ -23,8 +23,8 @@ class KLineBuyAdapter(mContext: Context) : NBaseAda<DepthDataBean, KLineBuyAdapt
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: DepthDataBean, position: Int) {
-        vh.amountTv.text = item.volume.formatForCurrency()
-        vh.priceTv.text = item.price.formatForPrice()
+        vh.amountTv.text = item.volueStr
+        vh.priceTv.text = item.priceStr
     }
 
 

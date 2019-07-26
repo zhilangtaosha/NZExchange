@@ -34,6 +34,8 @@ import java.util.function.Consumer
  * @创建时间：2018/12/5
  */
 class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
+    val pairTv: TextView = findViewById(R.id.tv_pair_pbf) as TextView
+    val pairLayout: LinearLayout = findViewById(R.id.layout_pair_pbf) as LinearLayout
     val buyCurrencyEt: EditText = findViewById(R.id.et_buy_currency_pbf) as EditText
     val unitCurrencyTv: TextView = findViewById(R.id.tv_unit_currency_pbf) as TextView
     val unitGv: GridView = findViewById(R.id.gv_pbf) as GridView
@@ -102,7 +104,6 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
                                         it.isChecked = false
                                     }
                     }
-
         }
     }
 
@@ -146,8 +147,10 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
             if (it.isChecked) {
                 bean.tradeType = if (it.text == "买入") {
                     2
-                } else {
+                } else if (it.text == "卖出") {
                     1
+                } else {
+                    0
                 }
             }
         }
@@ -175,6 +178,11 @@ class BibiFilterPopup(context: Activity?) : BasePopupWindow(context) {
 
     override fun initAnimaView(): View = findViewById(R.id.layout_anim)
 
+
+    fun showPair(isShow: Boolean) {
+        pairTv.visibility = if (isShow) View.VISIBLE else View.GONE
+        pairLayout.visibility = if (isShow) View.VISIBLE else View.GONE
+    }
 
     class UnitGvAdapter(mContext: Context) : BaseAda<BibiFilterBean>(mContext) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {

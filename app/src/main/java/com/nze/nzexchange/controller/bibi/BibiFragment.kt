@@ -947,10 +947,10 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     val buyList = mutableListOf<HandicapBean>()
                     val saleList = mutableListOf<HandicapBean>()
                     mDepthSellList.forEachIndexed { index, it ->
-                        saleList.add(HandicapBean(index + 1, it.price.formatForPrice(), it.volume.formatForCurrency(), ""))
+                        saleList.add(HandicapBean(index + 1, it.priceStr, it.volueStr, ""))
                     }
                     mDepthBuyList.forEachIndexed { index, it ->
-                        buyList.add(HandicapBean(index + 1, it.price.formatForPrice(), it.volume.formatForCurrency(), ""))
+                        buyList.add(HandicapBean(index + 1, it.priceStr, it.volueStr, ""))
                     }
                     handicapBuyAdapter.group = buyList.take(5).toMutableList()
                     handicapBuyLv.adapter = handicapBuyAdapter

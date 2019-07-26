@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.market.presenter
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivityP
 import com.nze.nzexchange.bean.*
@@ -19,10 +20,12 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import org.json.JSONArray
 import org.json.JSONObject
 import zlc.season.rxdownload3.helper.fileName
 import java.math.BigDecimal
 import java.net.URLEncoder
+import java.util.*
 
 /**
  * @author: zwy
@@ -600,18 +603,24 @@ class WebSoketImpl : IWebSoket {
                         }
                         KLineParam.SUBSCRIBE_DEPTH -> {//深度
                             try {
+                                val s = subscribeBean.params.toString()
+                                val sub = s.substring(s.indexOf(",")+1,s.lastIndexOf(","))
+                                val dbean = gson.fromJson<SoketDepthBean>(sub, SoketDepthBean::class.java)
+
                                 val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
                                 val isClear: Boolean = rs[0] as Boolean
                                 if (isClear) {
                                     mDepthSellList.clear()
                                     mDepthBuyList.clear()
                                 }
-                                mDepthBean = gson.fromJson<SoketDepthBean>(rs[1].toString(), SoketDepthBean::class.java)
-                                mDepthBean!!.asks?.forEach {
+//                                mDepthBean = gson.fromJson<SoketDepthBean>(rs[1].toString(), SoketDepthBean::class.java)
+                                dbean!!.asks?.forEach {
                                     //卖
                                     val bean = DepthDataBean()
-                                    bean.price = it[0]
-                                    bean.volume = it[1]
+                                    bean.price = it[0].toDouble()
+                                    bean.volume = it[1].toDouble()
+                                    bean.priceStr = it[0]
+                                    bean.volueStr = it[1]
                                     if (isClear) {
                                         mDepthSellList.add(bean)
                                     } else {
@@ -621,6 +630,7 @@ class WebSoketImpl : IWebSoket {
                                             }
                                             if (i > 0) {
                                                 mDepthSellList[i].volume = bean.volume
+                                                mDepthSellList[i].volueStr = bean.volueStr
                                             } else {
                                                 mDepthSellList.add(bean)
                                             }
@@ -632,11 +642,13 @@ class WebSoketImpl : IWebSoket {
                                         }
                                     }
                                 }
-                                mDepthBean!!.bids?.forEach {
+                                dbean!!.bids?.forEach {
                                     //买
                                     val bean = DepthDataBean()
-                                    bean.price = it[0]
-                                    bean.volume = it[1]
+                                    bean.price = it[0].toDouble()
+                                    bean.volume = it[1].toDouble()
+                                    bean.priceStr = it[0]
+                                    bean.volueStr = it[1]
                                     if (isClear) {
                                         mDepthBuyList.add(bean)
                                     } else {
@@ -645,6 +657,7 @@ class WebSoketImpl : IWebSoket {
                                             for (buy in mDepthBuyList) {
                                                 if (buy.price == bean.price) {
                                                     buy.volume = bean.volume
+                                                    buy.volueStr = bean.volueStr
                                                     isAdd = false
                                                     return@forEach
                                                 }
@@ -754,6 +767,8 @@ class WebSoketImpl : IWebSoket {
                                 }
                             }
                             KLineParam.DATA_CURRENT_ORDER_QUERY -> {
+                                if (orderRs == null)
+                                    orderRs = SoketOrderResultBean(0, 0, 0, arrayListOf())
                                 mOnQueryCurrentOrderMap.forEach {
                                     it.value.invoke(orderRs!!.records.toMutableList())
                                 }

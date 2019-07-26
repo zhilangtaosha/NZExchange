@@ -38,9 +38,12 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     var currency: String? = null
     var mainCurrency: String? = null
     var status: Int? = null
-    var transactionType: Int? = null
+    var transactionType: Int = 0
     var mCurrentPair = "*"
     var mHistoryPair = "*"
+    var mCurrentSide = 0
+    var mHistorySide = 0
+
     val filterPopup by lazy {
         BibiFilterPopup(this).apply {
             onFilterClick = {
@@ -56,6 +59,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     } else {
                         mCurrentPair = "*"
                     }
+                    mCurrentSide = transactionType
                     queryCurrentOrder()
                 } else {
                     if (!currency.isNullOrEmpty() && !mainCurrency.isNullOrEmpty()) {
@@ -63,6 +67,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     } else {
                         mHistoryPair = "*"
                     }
+                    mHistorySide = transactionType
                     queryHistoryOrder()
                 }
                 this.dismiss()
@@ -121,10 +126,11 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         }
 
         if (from == FROM_BIBI) {
-            topBar.showRight(true)
             topBar.setTitle("全部订单")
+            filterPopup.showPair(false)
         } else {
             topBar.setTitle("订单管理")
+            filterPopup.showPair(true)
         }
         filterPopup.setOnBeforeShowCallback { popupRootView, anchorView, hasShowAnima ->
             if (anchorView != null) {
@@ -143,17 +149,11 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
 
         listView.adapter = orderAdapter
         currentTv.setOnClickListener {
-            if (from == FROM_BIBI) {
-                topBar.showRight(true)
-            }
             listView.adapter = orderAdapter
             mSelect = SELECT_CURRENT
             select(mSelect)
         }
         historyTv.setOnClickListener {
-            if (from == FROM_BIBI) {
-                topBar.showRight(false)
-            }
             listView.adapter = historyAdapter
             mSelect = SELECT_HISTORY
             select(mSelect)
@@ -364,26 +364,31 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         historyView.visibility = if (select == SELECT_HISTORY) View.VISIBLE else View.GONE
         if (select == SELECT_CURRENT) {
             if (mMarketList.size > 0) {
-                if (orderAdapter.count > 0) {
-                    listView.adapter = orderAdapter
-                } else {
-                    queryCurrentOrder()
-                }
+//                if (orderAdapter.count > 0) {
+//                    listView.adapter = orderAdapter
+//                } else {
+                mCurrentPage = 0
+                mCurrentPair = "*"
+                mCurrentSide = 0
+                queryCurrentOrder()
+//                }
             } else {
                 binder?.queryMarket()
             }
 
         } else {
             mHistoryPage = 0
+            mHistoryPair = "*"
+            mHistorySide = 0
             queryHistoryOrder()
         }
     }
 
     fun queryCurrentOrder() {
-        binder?.queryCurrentOrder(mCurrentPair, mCurrentPage * 20, 20, 0)
+        binder?.queryCurrentOrder(mCurrentPair, mCurrentPage * 20, 20, mCurrentSide)
     }
 
     fun queryHistoryOrder() {
-        binder?.queryHistoryOrder(mHistoryPair, 0, 0, mHistoryPage * 20, 20, 0)
+        binder?.queryHistoryOrder(mHistoryPair, 0, 0, mHistoryPage * 20, 20, mHistorySide)
     }
 }

@@ -34,8 +34,8 @@ data class SoketTodayBean(//今日行情
 )
 
 data class SoketDepthBean(//深度
-        val asks: Array<Array<Double>>?,
-        val bids: Array<Array<Double>>?
+        val asks: Array<Array<String>>?,
+        val bids: Array<Array<String>>?
 )
 
 

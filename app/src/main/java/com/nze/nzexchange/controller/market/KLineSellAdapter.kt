@@ -24,10 +24,10 @@ class KLineSellAdapter(mContext: Context) : NBaseAda<DepthDataBean, KLineSellAda
     override fun createViewHold(convertView: View): ViewHolder = ViewHolder(convertView)
 
     override fun initView(vh: ViewHolder, item: DepthDataBean, position: Int) {
-        val v = item.volume.formatForCurrency()
+//        val v = item.volume.formatForCurrency()
 //        NLog.i("sell depth>>${item.price} ${item.volume} $v")
-        vh.amountTv.text = v
-        vh.priceTv.text = item.price.formatForPrice()
+        vh.amountTv.text = item.volueStr
+        vh.priceTv.text = item.priceStr
     }
 
 

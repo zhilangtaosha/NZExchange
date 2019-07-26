@@ -310,7 +310,7 @@ class KLineActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFra
                     costTv.text = it.last
                     hightCostTv.text = it.high.formatForPrice()
                     lowCostTv.text = it.low.formatForPrice()
-                    volumeTv.text = it.volume.retainInt()
+                    volumeTv.text = it.volume.toString()
                     setPriceWave(it.open, it.last.toDouble())
                 },
                 { mDepthBuyList, mDepthSellList ->

@@ -405,7 +405,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="left|center_vertical"
+                        android:gravity="center_horizontal|center_vertical"
                         android:text="买" />
 
                     <TextView
@@ -413,7 +413,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="left|center_vertical"
+                        android:gravity="center_horizontal|center_vertical"
                         android:text="卖" />
                 </LinearLayout>
 
