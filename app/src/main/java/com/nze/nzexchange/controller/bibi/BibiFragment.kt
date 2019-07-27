@@ -1074,14 +1074,16 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun onPause() {
         super.onPause()
         NLog.i("bibi onPause")
-        binder?.removeOrderCallBack("bibi")
+        binder?.removeCallBack("bibi")
     }
 
     override fun onResume() {
         super.onResume()
+        NLog.i("bibi onResume")
         if (!isBinder) {
             activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
         } else {
+            addCallBack()
             addOrderCallBack()
             queryCurrentOrder()
             queryAsset()
@@ -1096,6 +1098,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     }
 
     override fun onInvisibleRequest() {
+        NLog.i("bibi onInvisibleRequest")
         binder?.removeCallBack("bibi")
         super.onInvisibleRequest()
     }
@@ -1103,6 +1106,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun onVisibleRequest() {
         super.onVisibleRequest()
+        NLog.i("bibi onVisibleRequest")
         if (isBinder) {
             addCallBack()
             addOrderCallBack()

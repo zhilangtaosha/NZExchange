@@ -70,6 +70,7 @@ class DbHelper private constructor(context: Context?, name: String?, factory: SQ
         val rankSql = "create table $TAB_RANK(" +
                 "market text primary key," +
                 "mainCurrency text," +
+                "change real," +
                 "deal real," +
                 "high real," +
                 "last real," +
@@ -77,7 +78,6 @@ class DbHelper private constructor(context: Context?, name: String?, factory: SQ
                 "open real," +
                 "volume real," +
                 "cny real," +
-                "change real," +
                 "stock_prec integer," +
                 "money_prec integer," +
                 "min_amount real)"

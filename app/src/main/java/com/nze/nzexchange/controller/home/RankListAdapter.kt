@@ -87,10 +87,7 @@ class RankListAdapter(mContext: Context) : BaseAda<SoketRankBean>(mContext) {
 
         cView!!.setOnClickListener {
             val pair = TransactionPairsBean()
-            pair.transactionPair = bean.market
-            val split = bean.market.split("/")
-            pair.currency = split[0]
-            pair.mainCurrency = split[1]
+            pair.setValueFromRankBean(bean)
             KLineActivity.skip(mContext, pair)
         }
         return cView!!

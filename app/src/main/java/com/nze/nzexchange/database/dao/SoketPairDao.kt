@@ -15,7 +15,7 @@ interface SoketPairDao {
 
     fun getMainCurrency(): List<String>
 
-    fun getRankList(mainCurrency: String): List<SoketRankBean>
+    fun getRankList(): List<SoketRankBean>
 
     fun getRankBean(pair: String): SoketRankBean
 }

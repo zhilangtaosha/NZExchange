@@ -83,8 +83,35 @@ class SoketPairDaoImpl : SoketPairDao {
         return list
     }
 
-    override fun getRankList(mainCurrency: String): List<SoketRankBean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getRankList(): List<SoketRankBean> {
+        val dbHelper = DbHelper.getInstance(NzeApp.instance)
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("select * from ${DbHelper.TAB_RANK}", null)
+        val list = arrayListOf<SoketRankBean>()
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            val bean = SoketRankBean(
+                    cursor.getDouble(3),
+                    cursor.getDouble(4),
+                    cursor.getDouble(5),
+                    cursor.getDouble(6),
+                    cursor.getDouble(7),
+                    cursor.getDouble(8),
+                    cursor.getDouble(9),
+                    cursor.getInt(10),
+                    cursor.getInt(11),
+                    cursor.getDouble(12),
+                    0
+            )
+            bean.market = cursor.getString(0)
+            bean.mainCurrency2 = cursor.getString(1)
+            bean.change = cursor.getDouble(2)
+            list.add(bean)
+            cursor.moveToNext()
+        }
+        cursor.close()
+        db.close()
+        return list
     }
 
     override fun getRankBean(pair: String): SoketRankBean {

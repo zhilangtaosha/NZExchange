@@ -21,6 +21,7 @@ import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.config.RrefreshType
 import com.nze.nzexchange.controller.base.NBaseActivity
+import com.nze.nzexchange.database.dao.impl.SoketPairDaoImpl
 import com.nze.nzexchange.tools.getNColor
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.BackpressureStrategy
@@ -29,7 +30,7 @@ import kotlinx.android.synthetic.main.activity_bibi_all_order.*
 import kotlinx.android.synthetic.main.activity_buy_confirm.*
 
 class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListener<ListView> {
-
+    val mSoketPairDao by lazy { SoketPairDaoImpl() }
     val topBar: CommonTopBar by lazy { ctb_abao }
     val currentTv: TextView by lazy { tv_current_abao }
     val currentView: View by lazy { view_current_abao }
@@ -223,10 +224,10 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
             isBinder = true
 
 
-            binder?.addMarketCallBack("order") {
-                mMarketList.addAll(it)
-                queryCurrentOrder()
-            }
+//            binder?.addMarketCallBack("order") {
+//                mMarketList.addAll(it)
+//                queryCurrentOrder()
+//            }
             binder?.addCurrentOrderCallBack("order", { orderList ->
                 NLog.i("订单查询")
                 stopAllView()
@@ -235,13 +236,21 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     Flowable.create<MutableList<SoketOrderBean>>({
                         orderList.forEach { orderBean ->
                             run market@{
-                                mMarketList.forEach { marketBean ->
-                                    marketBean.list.forEach { rankBean ->
-                                        if (rankBean.getPair() == orderBean.market) {
-                                            orderBean.currency = rankBean.getCurrency()
-                                            orderBean.mainCurrency = rankBean.getMainCurrency()
-                                            return@market
-                                        }
+//                                mMarketList.forEach { marketBean ->
+//                                    marketBean.list.forEach { rankBean ->
+//                                        if (rankBean.getPair() == orderBean.market) {
+//                                            orderBean.currency = rankBean.getCurrency()
+//                                            orderBean.mainCurrency = rankBean.getMainCurrency()
+//                                            return@market
+//                                        }
+//                                    }
+//                                }
+                                val rankList = mSoketPairDao.getRankList()
+                                rankList.forEach { rankBean ->
+                                    if (rankBean.getPair() == orderBean.market) {
+                                        orderBean.currency = rankBean.getCurrency()
+                                        orderBean.mainCurrency = rankBean.getMainCurrency()
+                                        return@market
                                     }
                                 }
                             }
@@ -317,13 +326,22 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     Flowable.create<MutableList<SoketOrderBean>>({
                         orderList.forEach { orderBean ->
                             run market@{
-                                mMarketList.forEach { marketBean ->
-                                    marketBean.list.forEach { rankBean ->
-                                        if (rankBean.getPair() == orderBean.market) {
-                                            orderBean.currency = rankBean.getCurrency()
-                                            orderBean.mainCurrency = rankBean.getMainCurrency()
-                                            return@market
-                                        }
+//                                mMarketList.forEach { marketBean ->
+//                                    marketBean.list.forEach { rankBean ->
+//                                        if (rankBean.getPair() == orderBean.market) {
+//                                            orderBean.currency = rankBean.getCurrency()
+//                                            orderBean.mainCurrency = rankBean.getMainCurrency()
+//                                            return@market
+//                                        }
+//                                    }
+//                                }
+
+                                val rankList = mSoketPairDao.getRankList()
+                                rankList.forEach { rankBean ->
+                                    if (rankBean.getPair() == orderBean.market) {
+                                        orderBean.currency = rankBean.getCurrency()
+                                        orderBean.mainCurrency = rankBean.getMainCurrency()
+                                        return@market
                                     }
                                 }
                             }
@@ -351,7 +369,8 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     ptrLv.onPullUpRefreshComplete()
                 }
             }
-            binder?.queryMarket()
+//            binder?.queryMarket()
+            queryCurrentOrder()
         }
     }
 

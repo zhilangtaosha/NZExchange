@@ -42,7 +42,7 @@ data class SoketDepthBean(//深度
 data class SoketDealBean(//最近成交
         val amount: Double,
         val id: String,
-        val price: Double,
+        val price: String,
         val time: Double,
         val type: String
 )
@@ -70,6 +70,7 @@ data class SoketRankBean(//首页涨幅榜
         get() {
             return field.replace("-", "/")
         }
+    var mainCurrency2: String = ""
 
     fun getCurrency(): String {
         return market.split("/")[0]
