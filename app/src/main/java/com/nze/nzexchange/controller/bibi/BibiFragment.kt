@@ -1083,10 +1083,14 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         if (!isBinder) {
             activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
         } else {
-            addCallBack()
-            addOrderCallBack()
-            queryCurrentOrder()
-            queryAsset()
+            if (currentTransactionPair != null) {
+                addCallBack()
+                addOrderCallBack()
+                queryCurrentOrder()
+                queryAsset()
+            } else {
+                binder?.queryMarket()
+            }
         }
     }
 
@@ -1108,10 +1112,15 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         super.onVisibleRequest()
         NLog.i("bibi onVisibleRequest")
         if (isBinder) {
-            addCallBack()
-            addOrderCallBack()
-            queryCurrentOrder()
-            queryAsset()
+            if (currentTransactionPair != null) {
+                addCallBack()
+                addOrderCallBack()
+                queryCurrentOrder()
+                queryAsset()
+            } else {
+                binder?.queryMarket()
+            }
+
         }
     }
 }

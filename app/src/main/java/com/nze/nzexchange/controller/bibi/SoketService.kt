@@ -105,7 +105,7 @@ class SoketService : Service() {
 
         private val webSoket: IWebSoket by lazy { WebSoketImpl() }
 
-        override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
+        override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit)?, onCloseCallback: (() -> Unit)?) {
             webSoket.initSocket(key, marketUrl, onOpenCallback, onCloseCallback)
         }
 

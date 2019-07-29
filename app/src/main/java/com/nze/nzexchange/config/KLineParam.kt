@@ -66,6 +66,7 @@ class KLineParam {
         const val METHOD_ORDER_HISTORY = "order.history"//查询历史订单
         const val METHOD_QUERY_ASSET = "asset.query"//资产查询
         const val METHOD_SUBSCRIBE_ASSET = "asset.subscribe"//资产变更订阅/通知
+        const val METHOD_PING = "server.ping"//心跳
 
         //副图类型
         const val STATUS_MA = "MA"
@@ -147,6 +148,7 @@ class KLineParam {
         val ID_ORDER_CANCEL: Int = 100008//取消订单
         val ID_ORDER_HISTORY: Int = 100009//查询历史订单
         val ID_ASSET: Int = 100010//查询资产
+        val ID_PING: Int = 100011//心跳
 
     }
 }

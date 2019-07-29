@@ -28,6 +28,7 @@ import com.nze.nzexchange.widget.recyclerview.Divider
 import com.zhuang.zbannerlibrary.ZBanner
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
@@ -42,7 +43,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
     val legalTransactionLayout by lazy { rootView.layout_legal_transaction_home }
     val helpCenterLayout by lazy { rootView.layout_help_center_home }
 
-    lateinit var mHotAdapter: HotTransactionPairAdapter
+    var mHotAdapter: HotTransactionPairAdapter? = null
     val imageUrls: MutableList<String> = mutableListOf()
     val bannerList: MutableList<IndexImgs> = mutableListOf()
     val noticeList: MutableList<IndexNotices> = mutableListOf()
@@ -143,7 +144,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
                     }
 
                 }, onError)
-        
+
     }
 
     /**
@@ -210,6 +211,7 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
 
     var binder: SoketService.SoketBinder? = null
     var isBinder = false
+    var mIsVisible = true
 
     val connection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -232,38 +234,54 @@ class HomeFragment : NBaseFragment(), View.OnClickListener {
             }
             binder?.initSocket("home", KLineParam.getMarketMyself(), {
                 NLog.i("home open")
-                binder?.queryRank()
+                if (mIsVisible)
+                    binder?.queryRank()
             }, {})
         }
     }
 
+    var mRankDisposable: Disposable? = null
     fun refreshRank() {
-        Observable.create<Int> {
-            if (mPopularList.size > 0 && mRankList.size > 0) {
-                mPopularList.removeAt(0)
-                mPopularList.forEach { item ->
-                    mRankList.forEach {
-                        if (it.market == item.transactionPair) {
-                            item.gain = it.change
-                            item.cny = it.cny
+        try {
+            mRankDisposable = Observable.create<Int> {
+                if (mPopularList.size > 0 && mRankList.size > 0) {
+                    mPopularList.removeAt(0)
+                    mPopularList.forEach { item ->
+                        mRankList.forEach {
+                            if (it.market == item.transactionPair) {
+                                item.gain = it.change
+                                item.cny = it.cny
+                            }
                         }
                     }
-                }
-                it.onNext(1)
-            }
-            it.onComplete()
-        }.subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
                     mHotAdapter = HotTransactionPairAdapter(activity!!, mPopularList)
-                    mHotRView.adapter = mHotAdapter
+                    it.onNext(1)
                 }
+                it.onComplete()
+            }.subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        mHotRView.adapter = mHotAdapter
+                    }
+        } catch (e: Exception) {
+            NLog.i("Home error:" + e.message)
+        }
     }
 
 
+    override fun onInvisibleRequest() {
+        mIsVisible = false
+        if (!mRankDisposable?.isDisposed!!) {
+            mRankDisposable?.dispose()
+        }
+    }
+
     override fun onVisibleRequest() {
         super.onVisibleRequest()
-        NLog.i("HomeFragment....")
+        mIsVisible = true
         binder?.queryRank()
+        if (mHotAdapter != null) {
+            mHotRView.adapter = mHotAdapter
+        }
     }
 }

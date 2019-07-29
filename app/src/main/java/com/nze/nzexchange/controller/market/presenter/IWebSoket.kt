@@ -13,7 +13,7 @@ import com.nze.nzexchange.widget.depth.DepthDataBean
  */
 interface IWebSoket {
 
-    fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit))
+    fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit)?, onCloseCallback: (() -> Unit)?)
 
     fun addCallBack(key: String,
                     mOnQueryKlineCallback: ((kList: MutableList<KLineEntity>) -> Unit),

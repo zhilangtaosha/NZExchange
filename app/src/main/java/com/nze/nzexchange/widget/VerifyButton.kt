@@ -96,10 +96,12 @@ class VerifyButton : AppCompatTextView {
                 })
     }
 
-    fun stopVerify() {
+    fun stopVerify(content: String = "发送") {
         setTextColor(mTextColor)
-        text = "发送"
+        text = content
         isEnabled = true
+        if (mDisposable!=null&&!mDisposable?.isDisposed!!)
+            mDisposable?.dispose()
     }
 
     override fun onDetachedFromWindow() {

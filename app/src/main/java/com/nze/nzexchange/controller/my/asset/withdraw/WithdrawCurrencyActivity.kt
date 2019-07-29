@@ -256,6 +256,10 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
 
     fun refreshLayout() {
         userAssetBean?.let {
+            addressEt.setText("")
+            verifyValueEt.setText("")
+            amountEt.setText("")
+            verifyBtn.stopVerify("获取验证码")
             topBar.setTitle("${it.currency}提现")
             currencyTv.text = it.currency
             availableTv.text = "可提数量：${it.available.format(it.decimalPrec)} ${it.currency}"

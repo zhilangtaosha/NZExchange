@@ -1,5 +1,7 @@
 package com.nze.nzexchange.controller.market.presenter
 
+import android.os.Handler
+import android.os.Message
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
@@ -15,6 +17,7 @@ import com.nze.nzexchange.widget.chart.KLineEntity
 import com.nze.nzexchange.widget.depth.DepthDataBean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -45,6 +48,7 @@ import java.util.*
  */
 class WebSoketImpl : IWebSoket {
 
+    var mMarketUrl: String? = null
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
     val gson: Gson by lazy { Gson() }
@@ -135,9 +139,12 @@ class WebSoketImpl : IWebSoket {
     val mSoketPairDao by lazy { SoketPairDaoImpl() }
 
 
-    override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit), onCloseCallback: (() -> Unit)) {
-        mOnOpenMap.put(key, onOpenCallback)
-        mOnCloseMap.put(key, onCloseCallback)
+    override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit)?, onCloseCallback: (() -> Unit)?) {
+        this.mMarketUrl = marketUrl
+        if (onOpenCallback != null)
+            mOnOpenMap.put(key, onOpenCallback)
+        if (onCloseCallback != null)
+            mOnCloseMap.put(key, onCloseCallback)
         socket?.cancel()
         NLog.i("请求接口：$marketUrl")
         nWebSocket = NWebSocket.newInstance(marketUrl, wsListener)
@@ -434,6 +441,52 @@ class WebSoketImpl : IWebSoket {
         socket?.send(param)
     }
 
+    var isReconnnect = true
+    var subscribe: Disposable? = null
+    val mHandler: Handler = Handler()
+
+    val pingRunnable: Runnable = object : Runnable {
+        override fun run() {
+            checkHeart()
+        }
+    }
+
+    fun checkHeart() {
+        isReconnnect = true
+        val requestBean = SoketRequestBean.create(KLineParam.METHOD_PING, KLineParam.ID_PING)
+        val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
+        NLog.i("checkHeart>>$param")
+        socket?.send(param)
+        subscribe = Observable.create<Boolean> {
+            var i = 20
+            while (i > 0) {
+                if (!isReconnnect) {
+                    NLog.i("checkHeart postDelayed....${isReconnnect}")
+                    mHandler.postDelayed(pingRunnable, 60 * 1000)
+                    if (!subscribe?.isDisposed!!) {
+                        subscribe?.dispose()
+                    }
+                    break
+                } else {
+                    Thread.sleep(1000)
+                }
+                i--
+            }
+            it.onNext(isReconnnect)
+            it.onComplete()
+        }.subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (it) {
+                        NLog.i("checkHeart init....${isReconnnect}")
+                        mHandler.removeCallbacks(pingRunnable)
+                        if (mOnOpenMap.size > 0)
+                            this.mOnOpenMap.clear()
+                        initSocket("", mMarketUrl!!, null, null)
+                    }
+                }
+
+    }
 
     //----------------------------------------------------------------------------------------------
 
@@ -450,7 +503,7 @@ class WebSoketImpl : IWebSoket {
             mOnOpenMap.forEach {
                 it.value.invoke()
             }
-
+            checkHeart()
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
@@ -459,6 +512,8 @@ class WebSoketImpl : IWebSoket {
             mOnCloseMap.forEach {
                 it.value.invoke()
             }
+            mHandler.removeCallbacks(pingRunnable)
+            checkHeart()
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -559,6 +614,10 @@ class WebSoketImpl : IWebSoket {
                                 }
                                 it.onNext(KLineParam.DATA_ASSET_QUERY)
                             }
+                            KLineParam.ID_PING -> {
+                                isReconnnect = false
+                                it.onNext(-1000)
+                            }
                         }
                     } catch (e: Exception) {
                         NLog.i("query出错>>${e.message}")
@@ -604,7 +663,7 @@ class WebSoketImpl : IWebSoket {
                         KLineParam.SUBSCRIBE_DEPTH -> {//深度
                             try {
                                 val s = subscribeBean.params.toString()
-                                val sub = s.substring(s.indexOf(",")+1,s.lastIndexOf(","))
+                                val sub = s.substring(s.indexOf(",") + 1, s.lastIndexOf(","))
                                 val dbean = gson.fromJson<SoketDepthBean>(sub, SoketDepthBean::class.java)
 
                                 val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)

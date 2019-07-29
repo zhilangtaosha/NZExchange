@@ -59,6 +59,8 @@ class BibiHistoryDetailActivity : NBaseActivity() {
             } else {//买入
                 statusTv.setTxtColor(R.color.color_FF019D81)
                 statusTv.text = "买入"
+                feeValue2.text = "${it.deal_fee.formatForCurrency()} ${it.currency}"
+                feeKey.text = "手续费(${it.currency})"
             }
             transactionTotalKey.text = "成交总额(${it.mainCurrency})"
             transactionPriceKey.text = "成交均价(${it.mainCurrency})"
@@ -76,7 +78,7 @@ class BibiHistoryDetailActivity : NBaseActivity() {
 
             dateTv.text = TimeTool.format(TimeTool.PATTERN2, (it.ctime * 1000).toLong())
             feeValue.text = "${it.deal_fee.formatForCurrency()}"
-            feeValue2.text = "${it.deal_fee.formatForCurrency()} ${it.mainCurrency}"
+
 
         }
     }
