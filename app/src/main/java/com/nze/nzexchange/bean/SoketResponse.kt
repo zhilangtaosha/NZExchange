@@ -131,6 +131,8 @@ data class SoketSubscribeOrderBean(//订单订阅返回
         val EVENT_DEAL = 1
         val EVENT_UPDATE = 2
         val EVENT_FINISH = 3
+        val EVENT_CANCEL = 4
+
     }
 }
 

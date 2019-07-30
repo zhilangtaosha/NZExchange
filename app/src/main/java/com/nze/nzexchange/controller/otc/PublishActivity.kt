@@ -27,6 +27,7 @@ import com.nze.nzexchange.tools.DoubleMath
 import com.nze.nzexchange.tools.TextTool
 import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
 import com.nze.nzexchange.tools.editjudge.EditLegalWatcher
+import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
@@ -82,7 +83,6 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
             changLayout()
         }
         priceEt.addTextChangedListener(EditLegalWatcher(priceEt))
-        numEt.addTextChangedListener(EditCurrencyWatcher(numEt))
         moneyEt.addTextChangedListener(EditLegalWatcher(moneyEt))
         tv_num_unit_ap.text = currency
 
@@ -117,7 +117,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         }
                         if (currentType == TYPE_SALE && userAssetBean != null && num > userAssetBean!!.available) {
                             num = userAssetBean!!.available
-                            val s = num.formatForCurrency()
+                            val s = num.format( userAssetBean!!.decimalPrec)
                             numEt.setText(s)
                             numEt.setSelection(s.length)
                             showToast("只有${num}${currency}资产")
@@ -140,7 +140,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         var value = ""
                         val price = priceEt.text.toString()
                         if (it.isNotEmpty() && price.isNotEmpty()) {
-                            value = DoubleMath.divByFloor(it.toString().toDouble(), price.toDouble(), 8).formatForCurrency()
+                            value = DoubleMath.divByFloor(it.toString().toDouble(), price.toDouble(), userAssetBean!!.decimalPrec).toString()
                         }
                         numEt.setText(value)
                     } else {
@@ -296,6 +296,7 @@ class PublishActivity : NBaseActivity(), View.OnClickListener {
                         }
                         if (filter.size > 0) {
                             userAssetBean = filter[0]
+                            numEt.addTextChangedListener(EditTextJudgeNumberWatcher(numEt, userAssetBean!!.decimalPrec))
                         }
                     } else {
                         if (it.isCauseNotEmpty()) {

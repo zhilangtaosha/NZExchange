@@ -6,6 +6,7 @@ import android.widget.EditText
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.EventCenter
+import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.OrderPoolBean
@@ -140,8 +141,11 @@ class BuyActivity : NBaseActivity(), View.OnClickListener {
                     if (flag) {
                         flag = false
                         var value = ""
-                        if (it.isNotEmpty() && price > 0.0)
-                            value = DoubleMath.divByFloor(it.toString().toDouble(), price, 8).format(userAssetBean!!.decimalPrec)
+                        if (it.isNotEmpty() && price > 0.0) {
+                            val a = DoubleMath.divByFloor(it.toString().toDouble(), price, userAssetBean!!.decimalPrec)
+                            NLog.i("num>>>$a  限制》》${userAssetBean!!.decimalPrec}")
+                            value = a.toString()
+                        }
                         numEt.setText(value)
                     } else {
                         flag = true

@@ -919,6 +919,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             isBinder = true
 
             addCallBack()
+            addOrderCallBack()
             binder?.queryMarket()
 
         }
@@ -1050,10 +1051,34 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                         queryCurrentOrder()
                     }
                 }
+//                SoketSubscribeOrderBean.EVENT_CANCEL -> {
+//                    val i = currentOrderList.indexOfFirst { item ->
+//                        item.id == it.order.id
+//                    }
+//                    if (i >= 0) {
+//                        currentOrderList.removeAt(i)
+//                        currentOrderAdapter.removeItem(i)
+//                    }
+//                    currentOrderLv.adapter = currentOrderAdapter
+//                    if (currentOrderList.size <= 0) {
+//                        queryCurrentOrder()
+//                    }
+//                }
             }
-        }, {
-            //取消订单
-
+        }, { rs, bean ->
+            if (rs) {
+                val i = currentOrderList.indexOfFirst { item ->
+                    item.id == bean!!.id
+                }
+                if (i >= 0) {
+                    currentOrderList.removeAt(i)
+                    currentOrderAdapter.removeItem(i)
+                }
+                currentOrderLv.adapter = currentOrderAdapter
+                if (currentOrderList.size <= 0) {
+                    queryCurrentOrder()
+                }
+            }
         })
     }
 
@@ -1074,7 +1099,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun onPause() {
         super.onPause()
         NLog.i("bibi onPause")
-        binder?.removeCallBack("bibi")
+        binder?.removeCallBack3("bibi")
     }
 
     override fun onResume() {
@@ -1103,7 +1128,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
     override fun onInvisibleRequest() {
         NLog.i("bibi onInvisibleRequest")
-        binder?.removeCallBack("bibi")
+        binder?.removeCallBack3("bibi")
         super.onInvisibleRequest()
     }
 

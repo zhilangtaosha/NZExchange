@@ -83,6 +83,7 @@ class WebSoketImpl : IWebSoket {
     var subscribeOrderRs: SoketSubscribeOrderBean? = null
     //取消订单
     var mOrderCancelRs: Boolean = false
+    var mOrderCancelBean: SoketOrderBean? = null
     //资产查询
     val mAssetMap = hashMapOf<String, SoketAssetBean>()
     //--------------------------------------------------------------------------------------------------
@@ -131,7 +132,7 @@ class WebSoketImpl : IWebSoket {
     val mOnSubscribeAssetMap: MutableMap<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)> by lazy {
         mutableMapOf<String, ((assetMap: HashMap<String, SoketAssetBean>) -> Unit)>()
     }
-    var mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)? = null
+    var mOnCurrentOrderCancel: ((rs: Boolean, bean: SoketOrderBean?) -> Unit)? = null
     var mOnLimitDeal: ((rs: Boolean) -> Unit)? = null
     var mOnMarketDeal: ((rs: Boolean) -> Unit)? = null
     var mOnQueryHistoryOrder: ((orderList: MutableList<SoketOrderBean>) -> Unit)? = null
@@ -183,7 +184,7 @@ class WebSoketImpl : IWebSoket {
             key: String,
             onQueryOrder: (MutableList<SoketOrderBean>) -> Unit,
             onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit,
-            mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)
+            mOnCurrentOrderCancel: ((rs: Boolean, bean: SoketOrderBean?) -> Unit)
     ) {
         this.mOnQueryCurrentOrderMap.put(key, onQueryOrder)
         this.mOnSubscribeOrderMap.put(key, onSubscribeOrder)
@@ -224,9 +225,15 @@ class WebSoketImpl : IWebSoket {
         this.mOnQueryHistoryOrder = null
     }
 
-    override fun removeOrderCallBack(key: String) {
-        this.mOnQueryCurrentOrderMap.remove(key)
-        this.mOnSubscribeOrderMap.remove(key)
+    override fun removeCallBack3(key: String) {
+        when (key) {
+            "bibi" -> {
+                this.mOnQueryCurrentOrderMap.remove(key)
+                this.mOnSubscribeOrderMap.remove(key)
+                this.mOnMarketRankMap.remove(key)
+            }
+        }
+
     }
 
 
@@ -452,39 +459,44 @@ class WebSoketImpl : IWebSoket {
     }
 
     fun checkHeart() {
-        isReconnnect = true
+//        isReconnnect = true
         val requestBean = SoketRequestBean.create(KLineParam.METHOD_PING, KLineParam.ID_PING)
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
         NLog.i("checkHeart>>$param")
         socket?.send(param)
-        subscribe = Observable.create<Boolean> {
-            var i = 20
-            while (i > 0) {
-                if (!isReconnnect) {
-                    NLog.i("checkHeart postDelayed....${isReconnnect}")
-                    mHandler.postDelayed(pingRunnable, 60 * 1000)
-                    if (!subscribe?.isDisposed!!) {
-                        subscribe?.dispose()
-                    }
-                    break
-                } else {
-                    Thread.sleep(1000)
-                }
-                i--
-            }
-            it.onNext(isReconnnect)
-            it.onComplete()
-        }.subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (it) {
-                        NLog.i("checkHeart init....${isReconnnect}")
-                        mHandler.removeCallbacks(pingRunnable)
-                        if (mOnOpenMap.size > 0)
-                            this.mOnOpenMap.clear()
-                        initSocket("", mMarketUrl!!, null, null)
-                    }
-                }
+        mHandler.postDelayed(pingRunnable, 60 * 1000)
+//        subscribe = Observable.create<Boolean> {
+//            var i = 20
+//            while (i > 0) {
+//                if (!isReconnnect) {
+//                    NLog.i("checkHeart postDelayed....${isReconnnect}")
+//                    mHandler.postDelayed(pingRunnable, 60 * 1000)
+//                    if (!subscribe?.isDisposed!!) {
+//                        subscribe?.dispose()
+//                    }
+//                    break
+//                } else {
+//                    try {
+//                        Thread.sleep(1000)
+//                    } catch (e: Exception) {
+//                        mHandler.postDelayed(pingRunnable, 60 * 1000)
+//                    }
+//                }
+//                i--
+//            }
+//            it.onNext(isReconnnect)
+//            it.onComplete()
+//        }.subscribeOn(Schedulers.computation())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe {
+//                    if (it) {
+//                        NLog.i("checkHeart init....${it} ${isReconnnect}")
+//                        mHandler.removeCallbacks(pingRunnable)
+//                        if (mOnOpenMap.size > 0)
+//                            this.mOnOpenMap.clear()
+//                        initSocket("", mMarketUrl!!, null, null)
+//                    }
+//                }
 
     }
 
@@ -503,7 +515,7 @@ class WebSoketImpl : IWebSoket {
             mOnOpenMap.forEach {
                 it.value.invoke()
             }
-            checkHeart()
+//            checkHeart()
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
@@ -512,8 +524,9 @@ class WebSoketImpl : IWebSoket {
             mOnCloseMap.forEach {
                 it.value.invoke()
             }
-            mHandler.removeCallbacks(pingRunnable)
-            checkHeart()
+            if (mOnOpenMap.size > 0)
+                mOnOpenMap.clear()
+            initSocket("", mMarketUrl!!, null, null)
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -592,6 +605,8 @@ class WebSoketImpl : IWebSoket {
                             }
                             KLineParam.ID_ORDER_CANCEL -> {
                                 mOrderCancelRs = queryBean.error == null
+                                if (mOrderCancelRs)
+                                    mOrderCancelBean = gson.fromJson<SoketOrderBean>(queryBean.result.toString(), SoketOrderBean::class.java)
                                 it.onNext(KLineParam.DATA_ORDER_CANCEL)
                             }
                             KLineParam.ID_ORDER_HISTORY -> {
@@ -666,7 +681,7 @@ class WebSoketImpl : IWebSoket {
                                 val sub = s.substring(s.indexOf(",") + 1, s.lastIndexOf(","))
                                 val dbean = gson.fromJson<SoketDepthBean>(sub, SoketDepthBean::class.java)
 
-                                val rs = gson.fromJson<Array<Any>>(subscribeBean.params.toString(), Array<Any>::class.java)
+                                val rs = gson.fromJson<Array<Any>>(s, Array<Any>::class.java)
                                 val isClear: Boolean = rs[0] as Boolean
                                 if (isClear) {
                                     mDepthSellList.clear()
@@ -844,7 +859,11 @@ class WebSoketImpl : IWebSoket {
                                 }
                             }
                             KLineParam.DATA_ORDER_CANCEL -> {
-                                mOnCurrentOrderCancel?.invoke(mOrderCancelRs)
+                                if (mOrderCancelRs) {
+                                    mOnCurrentOrderCancel?.invoke(mOrderCancelRs, mOrderCancelBean)
+                                } else {
+                                    mOnCurrentOrderCancel?.invoke(mOrderCancelRs, null)
+                                }
                             }
                             KLineParam.DATA_ORDER_HISTORY -> {
                                 mOnQueryHistoryOrder?.invoke(orderHistoryRs!!.records.toMutableList())

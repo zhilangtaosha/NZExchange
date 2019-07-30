@@ -29,7 +29,7 @@ interface IWebSoket {
 
     fun addAuthCallBack(key: String, mOnAuthCallBack: (rs: Boolean) -> Unit)
 
-    fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean) -> Unit))
+    fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean,bean:SoketOrderBean?) -> Unit))
 
     fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit)
     fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit)
@@ -38,7 +38,7 @@ interface IWebSoket {
 
     fun removeCallBack(key: String)
 
-    fun removeOrderCallBack(key: String)
+    fun removeCallBack3(key: String)
 
     fun removeCallBack2()
 

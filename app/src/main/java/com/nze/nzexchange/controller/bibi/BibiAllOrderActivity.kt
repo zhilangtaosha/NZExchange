@@ -316,7 +316,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                         }
                     }
                 }
-            }, {
+            }, {rs,bean->
                 //取消订单
 
             })

@@ -120,7 +120,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                 .subscribe {
                     if (!it.isNullOrEmpty()) {
                         val amount = it.toString().toDouble()
-                        actualAmountTv.text = "${amount.sub(feeRate).format(userAssetBean!!.decimalPrec)} ${userAssetBean?.currency}"
+                        actualAmountTv.text = "${amount.sub(feeRate).formatForCurrency()} ${userAssetBean?.currency}"
 
                     } else {
                         actualAmountTv.text = "0 ${userAssetBean?.currency}"
@@ -275,7 +275,7 @@ class WithdrawCurrencyActivity : NBaseActivity(), View.OnClickListener, EasyPerm
                             val withdrawInfoBean = rs.result
                             feeLimitlowGet = withdrawInfoBean.feeLimitlowGet
                             feeRate = withdrawInfoBean.feeRate
-                            serviceChargeTv.text = "${feeRate.format(it.decimalPrec)}${it.currency}"
+                            serviceChargeTv.text = "${feeRate.formatForCurrency()} ${it.currency}"
                             tipTv.text = withdrawInfoBean.feeGetbiText
                         }
                     }, onError)

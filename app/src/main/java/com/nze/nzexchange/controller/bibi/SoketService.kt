@@ -43,8 +43,8 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
-        override fun removeOrderCallBack(key: String) {
-            webSoket.removeOrderCallBack(key)
+        override fun removeCallBack3(key: String) {
+            webSoket.removeCallBack3(key)
         }
 
         override fun addAssetCallBack(key: String, queryCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit, subscribeCallBack: (assetMap: HashMap<String, SoketAssetBean>) -> Unit) {
@@ -91,7 +91,7 @@ class SoketService : Service() {
             webSoket.marketDeal(pair, side, amount)
         }
 
-        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean) -> Unit)) {
+        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean,bean:SoketOrderBean?) -> Unit)) {
             webSoket.addCurrentOrderCallBack(key, onQueryOrder, onSubscribeOrder, mOnCurrentOrderCancel)
         }
 
