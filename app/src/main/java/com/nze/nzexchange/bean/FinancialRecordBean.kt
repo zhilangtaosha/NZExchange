@@ -1,6 +1,7 @@
 package com.nze.nzexchange.bean
 
 import com.google.android.gms.common.internal.AccountType
+import com.nze.nzexchange.bean.TransferRecordBean.Companion.ACCOUNT_LEGAL
 import com.nze.nzexchange.http.NRetrofit
 import io.reactivex.Flowable
 import retrofit2.http.Query
@@ -54,6 +55,10 @@ data class FinancialRecordBean(
                 }
                 }转入"
             }
+        } else if (type == 3) {
+            return "法币充值"
+        } else if (type == 4) {
+            return "法币取现"
         } else {//提币和充币
             return when (status) {
                 1001, 1002, 1003, 1004 -> {

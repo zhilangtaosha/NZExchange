@@ -1,6 +1,5 @@
 package com.nze.nzexchange.controller.my.asset.transfer
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -19,13 +18,10 @@ import com.nze.nzexchange.config.AccountType
 import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.AuthorityDialog
-import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.my.asset.SelectCurrencyActivity
 import com.nze.nzexchange.extend.format
-import com.nze.nzexchange.extend.formatForCurrency
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.http.NRetrofit
-import com.nze.nzexchange.tools.editjudge.EditCurrencyWatcher
 import com.nze.nzexchange.tools.editjudge.EditTextJudgeNumberWatcher
 import com.nze.nzexchange.validation.EmptyValidation
 import com.nze.nzexchange.widget.CommonButton
@@ -33,8 +29,6 @@ import com.nze.nzexchange.widget.CommonTopBar
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.activity_transfer.*
-import retrofit2.http.Field
-import java.util.function.BinaryOperator
 
 class TransferActivity : NBaseActivity(), View.OnClickListener {
 

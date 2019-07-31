@@ -2,6 +2,7 @@ package com.nze.nzexchange.bean
 
 import android.os.Parcelable
 import com.nze.nzexchange.http.NRetrofit
+import com.nze.nzexchange.tools.getString
 import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
 import retrofit2.http.Query
@@ -26,9 +27,27 @@ data class TransactionListBean(
         val txid: String?,
         val token: String?,
         val status: Int,
-        val type:Int,
+        val type: Int,
         val userId: String?
 ) : Parcelable {
+
+    fun getStatus(): String =
+            when (status) {
+                2001, 2002 -> {
+                    "充币到账通知"
+                }
+                2002 -> {
+                    "充币到账确认"
+                }
+                2004 -> {
+                    "充币到账取消"
+                }
+                else -> {
+                    "充币到账"
+                }
+            }
+
+
     companion object {
         fun getTransactionList(
                 userId: String,

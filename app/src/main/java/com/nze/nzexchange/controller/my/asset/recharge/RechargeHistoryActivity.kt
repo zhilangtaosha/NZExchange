@@ -54,6 +54,10 @@ class RechargeHistoryActivity : NBaseActivity(), PullToRefreshBase.OnRefreshList
         listView.adapter = rcvAdapter
         ptrLv.setOnRefreshListener(this)
 
+        listView.setOnItemClickListener { parent, view, position, id ->
+            RechargeDetailActivity.skip(this,rcvAdapter.getItem(position)!!)
+        }
+
         ptrLv.doPullRefreshing(true, 200)
 
     }

@@ -64,6 +64,7 @@ class BibiSideOptionalFragment : NBaseFragment(), PullToRefreshBase.OnRefreshLis
     override fun initView(rootView: View) {
         ptrLv = rootView.plv_foc
         ptrLv.isPullLoadEnabled = false
+        ptrLv.isPullRefreshEnabled=false
         ptrLv.setOnRefreshListener(this)
         val listView = ptrLv.refreshableView
         listView.divider = ColorDrawable(getNColor(R.color.color_line))

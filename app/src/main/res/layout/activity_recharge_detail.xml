@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="提币地址" />
+            android:text="充币地址" />
 
         <TextView
             android:id="@+id/tv_address_ard"
@@ -75,7 +75,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/tv_address_key_awd"
+            android:layout_toRightOf="@+id/tv_address_key_ard"
             android:gravity="left"
             android:text="31421314562347586fvcx243546gfsd" />
     </RelativeLayout>
@@ -163,7 +163,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/tv_trade_hash_key_awd"
+            android:layout_toRightOf="@+id/tv_trade_hash_key_ard"
             android:gravity="left"
             android:text="31421314562347586f" />
     </RelativeLayout>

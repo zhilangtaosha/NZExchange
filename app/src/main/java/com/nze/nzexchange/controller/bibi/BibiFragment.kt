@@ -320,6 +320,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             if (userBean != null) {
                 queryCurrentOrder()
                 queryAsset()
+                binder?.subscribeOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
             }
 //                orderPending(currentTransactionPair?.id!!, userBean?.userId)
             //切换交易对，切换盘口
@@ -332,6 +333,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             getPendingOrderInfo(currentTransactionPair?.id!!)
 //            orderPending(currentTransactionPair?.id!!, userBean?.userId)
             queryAsset()
+            binder?.subscribeOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
         }
         if (eventCenter.eventCode == EventCode.CODE_TRADE_BIBI) {
             val type: Int = eventCenter.data as Int
@@ -976,6 +978,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 //                    orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                 queryCurrentOrder()
                 queryAsset()
+                binder?.subscribeOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
             } else {
                 showNODataView("当前没有登录")
             }
@@ -1018,7 +1021,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             } else {
                 showNODataView("当前没有委托单")
             }
-            binder?.subscribeOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
+
         }, {
             NLog.i("订单更新")
             when (it.event) {

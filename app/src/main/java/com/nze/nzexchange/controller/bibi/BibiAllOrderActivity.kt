@@ -315,6 +315,18 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                             orderAdapter.removeItem(i)
                         }
                     }
+                    SoketSubscribeOrderBean.EVENT_CANCEL -> {
+                        val i = currentOrderList.indexOfFirst { item ->
+                            item.id == it.order.id
+                        }
+                        if (i >= 0) {
+                            currentOrderList.removeAt(i)
+                            orderAdapter.removeItem(i)
+                        }
+                        if (currentOrderList.size <= 0) {
+                            queryCurrentOrder()
+                        }
+                    }
                 }
             }, {rs,bean->
                 //取消订单
