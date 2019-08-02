@@ -702,7 +702,7 @@ class WebSoketImpl : IWebSoket {
                                             val i = mDepthSellList.indexOfFirst {
                                                 it.price == bean.price
                                             }
-                                            if (i > 0) {
+                                            if (i >= 0) {
                                                 mDepthSellList[i].volume = bean.volume
                                                 mDepthSellList[i].volueStr = bean.volueStr
                                             } else {

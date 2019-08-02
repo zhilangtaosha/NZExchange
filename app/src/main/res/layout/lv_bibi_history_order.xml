@@ -24,12 +24,14 @@
 
     <TextView
         android:id="@+id/tv_cancel_lbco"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_alignBottom="@+id/tv_status_lbco"
         android:layout_alignParentRight="true"
         android:background="@drawable/shape_radius_2536_bg2"
         android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:text="撤销"
         android:textColor="@color/color_FF6D87A8"
         android:textSize="11sp" />

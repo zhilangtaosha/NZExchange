@@ -45,9 +45,12 @@ data class LegalRechargeBean(
         val userIdAudit: Any
 ) {
     companion object {
-        val TYPE_BPAY = "bpay转账"
-        val TYPE_BANK = "银行卡转账"
-        val TYPE_OSKO = "澳洲银行卡 osko 转账"
+        //        val TYPE_BPAY = "bpay转账"
+//        val TYPE_BANK = "银行卡转账"
+//        val TYPE_OSKO = "澳洲银行卡 osko 转账"
+        val TYPE_BPAY = "bpay"
+        val TYPE_BANK = "bank"
+        val TYPE_OSKO = "osko"
 
 
         fun getLegalCode(): Flowable<Result<String>> {

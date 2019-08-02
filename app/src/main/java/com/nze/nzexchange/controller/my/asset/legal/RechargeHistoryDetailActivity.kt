@@ -74,20 +74,23 @@ class RechargeHistoryDetailActivity : NBaseActivity() {
                     if (rs.success) {
                         companyPayList.addAll(rs.result)
                         when (it.checkpayType) {
-                            "bpay转账" -> {
+                            LegalRechargeBean.TYPE_BPAY -> {
                                 bankTv.setDrawables(R.mipmap.bpay_icon, null, null, null)
                                 val bpay = companyPayList[1]
                                 rejectReasonTv.text = "BPAY账号(${bpay.contShow3})"
+                                bankTv.text = bpay.contShow1
                             }
-                            "银行卡转账" -> {
+                            LegalRechargeBean.TYPE_BANK -> {
                                 bankTv.setDrawables(R.mipmap.bank_icon, null, null, null)
                                 val bank = companyPayList[2]
                                 rejectReasonTv.text = "${bank.contShow1}(${bank.contShow3})"
+                                bankTv.text = bank.contShow1
                             }
-                            "澳洲银行卡 osko 转账" -> {
+                            LegalRechargeBean.TYPE_OSKO -> {
                                 bankTv.setDrawables(R.mipmap.osko_icon, null, null, null)
                                 val osko = companyPayList[0]
                                 rejectReasonTv.text = "OSKO账号(${osko.contShow3})"
+                                bankTv.text = osko.contShow1
                             }
                         }
                     } else {

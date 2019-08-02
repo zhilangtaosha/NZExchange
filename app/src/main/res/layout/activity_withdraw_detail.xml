@@ -75,7 +75,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/tv_address_key_awd"
-            android:gravity="left"
+            android:gravity="right"
             android:text="31421314562347586fvcx243546gfsd" />
     </RelativeLayout>
 
@@ -189,7 +189,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/tv_trade_hash_key_awd"
-            android:gravity="left"
+            android:gravity="right"
             android:text="31421314562347586f" />
     </RelativeLayout>
 

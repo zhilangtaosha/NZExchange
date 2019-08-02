@@ -340,11 +340,13 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             switchType(type)
         }
         if (eventCenter.eventCode == EventCode.CODE_LOGOUT_SUCCESS) {
-            userBean = UserBean.loadFromApp()
+            NLog.i("bibi 退出登录")
+            userBean = null
             restOrderBean = null
+            mAssetMap.clear()
             switchType(currentType)
             showNODataView("当前没有委托")
-            currentOrderLv.adapter = currentOrderAdapter
+//            currentOrderLv.adapter = currentOrderAdapter
         }
     }
 
@@ -957,7 +959,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                     }
                     handicapBuyAdapter.group = buyList.take(5).toMutableList()
                     handicapBuyLv.adapter = handicapBuyAdapter
-                    handicapSaleAdapter.group = saleList.takeLast(5).toMutableList().asReversed()
+                    handicapSaleAdapter.group = saleList.asReversed().takeLast(5).toMutableList()
                     handicapSaleLv.adapter = handicapSaleAdapter
                 },
                 {
@@ -1088,14 +1090,16 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     fun queryCurrentOrder() {
         currentOrderAdapter.clearGroup(false)
         currentOrderList.clear()
-        binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20, 0)
+        if (userBean != null)
+            binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20, 0)
     }
 
     fun queryAsset() {
-        binder?.queryAsset(mutableListOf<String>().apply {
-            add(currentTransactionPair!!.currency)
-            add(currentTransactionPair!!.mainCurrency)
-        })
+        if (userBean != null)
+            binder?.queryAsset(mutableListOf<String>().apply {
+                add(currentTransactionPair!!.currency)
+                add(currentTransactionPair!!.mainCurrency)
+            })
 
     }
 

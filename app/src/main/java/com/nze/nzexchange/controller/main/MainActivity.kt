@@ -17,6 +17,7 @@ import com.nze.nzeframework.netstatus.NetUtils
 import com.nze.nzeframework.tool.ActivityManager
 import com.nze.nzeframework.tool.EventCenter
 import com.nze.nzeframework.ui.BaseActivity
+import com.nze.nzexchange.NzeApp
 import com.nze.nzexchange.R
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
@@ -70,6 +71,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
             mHandler.sendEmptyMessageDelayed(0, 1000)
             return
         }
+        NzeApp.instance.mCrashApi?.onExit()
         super.onBackPressed()
     }
 
@@ -111,7 +113,7 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         }
     }
 
-    override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = TransitionMode.RIGHT
+    override fun getOverridePendingTransitionMode(): BaseActivity.TransitionMode = TransitionMode.DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

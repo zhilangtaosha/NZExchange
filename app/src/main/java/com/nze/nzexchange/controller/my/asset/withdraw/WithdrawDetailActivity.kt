@@ -65,6 +65,17 @@ class WithdrawDetailActivity : NBaseActivity() {
             tradeIdTv.text = it.blockNo
             tradeHashTv.text = it.txid
             dateTv.text = TimeTool.format(TimeTool.PATTERN6, it.createTime)
+            when (it.status) {
+                1001 -> {//提币审核
+                    statusTv.text = "审核中"
+                }
+                1002 -> {
+                    statusTv.text = "已完成"
+                }
+                1004 -> {
+                    statusTv.text = "提币失败"
+                }
+            }
         }
     }
 

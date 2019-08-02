@@ -58,7 +58,11 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     if (!currency.isNullOrEmpty() && !mainCurrency.isNullOrEmpty()) {
                         mCurrentPair = "${currency}${mainCurrency}"
                     } else {
-                        mCurrentPair = "*"
+                        if (from == FROM_BIBI) {
+                            mCurrentPair = pair
+                        } else {
+                            mCurrentPair = "*"
+                        }
                     }
                     mCurrentSide = transactionType
                     queryCurrentOrder()
@@ -66,7 +70,11 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     if (!currency.isNullOrEmpty() && !mainCurrency.isNullOrEmpty()) {
                         mHistoryPair = "${currency}${mainCurrency}"
                     } else {
-                        mHistoryPair = "*"
+                        if (from == FROM_BIBI) {
+                            mHistoryPair = pair
+                        } else {
+                            mHistoryPair = "*"
+                        }
                     }
                     mHistorySide = transactionType
                     queryHistoryOrder()
@@ -236,7 +244,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     Flowable.create<MutableList<SoketOrderBean>>({
                         orderList.forEach { orderBean ->
                             run market@{
-//                                mMarketList.forEach { marketBean ->
+                                //                                mMarketList.forEach { marketBean ->
 //                                    marketBean.list.forEach { rankBean ->
 //                                        if (rankBean.getPair() == orderBean.market) {
 //                                            orderBean.currency = rankBean.getCurrency()
@@ -328,7 +336,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                         }
                     }
                 }
-            }, {rs,bean->
+            }, { rs, bean ->
                 //取消订单
 
             })
@@ -338,7 +346,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
                     Flowable.create<MutableList<SoketOrderBean>>({
                         orderList.forEach { orderBean ->
                             run market@{
-//                                mMarketList.forEach { marketBean ->
+                                //                                mMarketList.forEach { marketBean ->
 //                                    marketBean.list.forEach { rankBean ->
 //                                        if (rankBean.getPair() == orderBean.market) {
 //                                            orderBean.currency = rankBean.getCurrency()
@@ -394,23 +402,31 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
         historyTv.isSelected = select == SELECT_HISTORY
         historyView.visibility = if (select == SELECT_HISTORY) View.VISIBLE else View.GONE
         if (select == SELECT_CURRENT) {
-            if (mMarketList.size > 0) {
+//            if (mMarketList.size > 0) {
 //                if (orderAdapter.count > 0) {
 //                    listView.adapter = orderAdapter
 //                } else {
-                mCurrentPage = 0
-                mCurrentPair = "*"
-                mCurrentSide = 0
-                queryCurrentOrder()
-//                }
+            mCurrentPage = 0
+            mCurrentSide = 0
+            if (from == FROM_BIBI) {
+                mCurrentPair = pair
             } else {
-                binder?.queryMarket()
+                mCurrentPair = "*"
             }
+            queryCurrentOrder()
+//                }
+//            } else {
+//                binder?.queryMarket()
+//            }
 
         } else {
             mHistoryPage = 0
-            mHistoryPair = "*"
             mHistorySide = 0
+            if (from == FROM_BIBI) {
+                mHistoryPair = pair
+            } else {
+                mHistoryPair = "*"
+            }
             queryHistoryOrder()
         }
     }

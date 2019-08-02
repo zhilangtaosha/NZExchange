@@ -66,19 +66,21 @@ class BibiHistoryOrderAdapter(mContext: Context) : NBaseAda<SoketOrderBean, Bibi
         vh.transactionTotalValue.text = item.deal_money.formatForCurrency()
 
         vh.transactionAmountValue.text = item.deal_stock.formatForCurrency()
+        vh.cancelTv.setTextColor(getNColor(R.color.color_common))
+        vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
+        vh.cancelTv.text = item.getStatus()
 
-
-        if (item.deal_stock == item.amount) {
-            vh.cancelTv.text = "已完成"
-            vh.cancelTv.setTextColor(getNColor(R.color.color_common))
-            vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
-            vh.cancelTv.isClickable = false
-        } else {
-            vh.cancelTv.text = "已撤销"
-            vh.cancelTv.setTextColor(getNColor(R.color.color_common))
-            vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
-            vh.cancelTv.isClickable = false
-        }
+//        if (item.deal_stock == item.amount) {
+//            vh.cancelTv.text = "已完成"
+//            vh.cancelTv.setTextColor(getNColor(R.color.color_common))
+//            vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
+//            vh.cancelTv.isClickable = false
+//        } else {
+//            vh.cancelTv.text = "已撤销"
+//            vh.cancelTv.setTextColor(getNColor(R.color.color_common))
+//            vh.cancelTv.setBackgroundColor(getNColor(R.color.transparent))
+//            vh.cancelTv.isClickable = false
+//        }
         vh.view.setOnClickListener {
             BibiHistoryDetailActivity.skip(mContext, item)
         }

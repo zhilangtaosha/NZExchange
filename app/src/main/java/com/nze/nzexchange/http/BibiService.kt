@@ -234,4 +234,7 @@ interface BibiService {
     fun getCurrencyWithdrawInfo(
             @Field("tokenName") tokenName: String
     ): Flowable<Result<CurrencyWithdrawInfoBean>>
+
+
+    
 }

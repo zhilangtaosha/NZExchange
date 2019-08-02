@@ -36,7 +36,17 @@ data class FinancialRecordBean(
     fun getType(currentType: String): String {
         var s = ""
         if (type == 0) {//划转
-            return if (from == currentType) {
+            return if (from == null) {
+                when (status) {
+                    1001, 1002, 1003, 1004,1005 -> {
+                        "提币"
+                    }
+                    2001, 2002, 2004 -> {
+                        "充币"
+                    }
+                    else -> ""
+                }
+            } else if (from == currentType) {
                 "转到${
                 when (to) {
                     ACCOUNT_LEGAL -> "法币账户"
@@ -74,12 +84,21 @@ data class FinancialRecordBean(
 
     fun getStatus(): String {
         return if (type == 0) {
-            "已完成"
+            if (from == null) {
+                when (status) {
+                    1001, 2001,1005 -> "审核中"
+                    1002, 2002 -> "成功"
+                    1003, 1004, 2003, 2004 -> "失败"
+                    else -> "出错"
+                }
+            } else {
+                "已完成"
+            }
         } else if (type == 1) {
             when (status) {
                 1001, 2001 -> "审核中"
                 1002, 2002 -> "成功"
-                1004, 2004 -> "失败"
+                1003, 1004, 2003, 2004 -> "失败"
                 else -> "出错"
             }
         } else if (type == 3) {

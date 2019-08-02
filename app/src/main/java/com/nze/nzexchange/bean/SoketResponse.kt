@@ -60,6 +60,7 @@ data class SoketRankBean(//首页涨幅榜
         val money_prec: Int,// 计价币小数位数
         val min_amount: Double,//最小交易数量
         var optional: Int = 0
+
 ) {
     var change: Double = 0.0
         get() {
@@ -83,6 +84,7 @@ data class SoketRankBean(//首页涨幅榜
     fun getPair(): String {
         return market.replace("/", "")
     }
+
 
 }
 
@@ -111,9 +113,16 @@ data class SoketOrderBean(//订单：当前委托订单、全部委托订单
         val user: Int,
         val left: Double,//剩余数量
         var currency: String? = null,//交易币
-        var mainCurrency: String? = null//计价货币
+        var mainCurrency: String? = null,//计价货币
+        val state: Int
 ) : Parcelable {
-
+    fun getStatus(): String {
+        return when (state) {
+            0 -> "全部成交"
+            1 -> "撤销"
+            else -> "全部成交"
+        }
+    }
 }
 
 data class SoketOrderResultBean(//订单返回结果

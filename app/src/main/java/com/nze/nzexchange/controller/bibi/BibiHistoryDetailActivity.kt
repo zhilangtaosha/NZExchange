@@ -56,12 +56,15 @@ class BibiHistoryDetailActivity : NBaseActivity() {
             if (it.side == 1) {//；卖出
                 statusTv.setTxtColor(R.color.color_FFFF4A5F)
                 statusTv.text = "卖出"
+                feeValue2.text = "${it.deal_fee.formatForCurrency()} ${it.mainCurrency}"
+                feeKey.text = "手续费(${it.mainCurrency})"
             } else {//买入
                 statusTv.setTxtColor(R.color.color_FF019D81)
                 statusTv.text = "买入"
+                feeValue2.text = "${it.deal_fee.formatForCurrency()} ${it.currency}"
+                feeKey.text = "手续费(${it.currency})"
             }
-            feeValue2.text = "${it.deal_fee.formatForCurrency()} ${it.currency}"
-            feeKey.text = "手续费(${it.currency})"
+
             transactionTotalKey.text = "成交总额(${it.mainCurrency})"
             transactionPriceKey.text = "成交均价(${it.mainCurrency})"
             transactionAmountKey.text = "成交量(${it.currency})"

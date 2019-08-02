@@ -13,6 +13,7 @@ import com.nze.nzexchange.tools.AppFrontBackTool
 import com.nze.nzexchange.tools.CrashHandler
 import com.nze.nzexchange.tools.download.CustomSqliteActor
 import com.nze.nzexchange.tools.selectlanguage.MultiLanguageUtil
+import com.uc.crashsdk.export.CrashApi
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import org.greenrobot.eventbus.EventBus
 import zlc.season.rxdownload3.core.DownloadConfig
@@ -25,6 +26,7 @@ class NzeApp : BaseApplication() {
     var userBean: UserBean? = null
     var activityNumber: Int = 0
     var isFirst: Boolean = true
+    var mCrashApi: CrashApi? = null
 
     companion object {
         lateinit var instance: NzeApp;
@@ -49,7 +51,10 @@ class NzeApp : BaseApplication() {
 
         DownloadConfig.init(builder)
         MultiLanguageUtil.init(this)
+        val isDebug: Boolean = true
+        mCrashApi = CrashApi.createInstanceEx(applicationContext, "adx1", isDebug)
     }
+
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
