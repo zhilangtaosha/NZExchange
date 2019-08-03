@@ -63,7 +63,7 @@ class CrashHandler private constructor() : Thread.UncaughtExceptionHandler {
     override fun uncaughtException(t: Thread?, e: Throwable?) {
         NLog.i("出错了。。。")
         try {
-            saveToFile(e!!)
+//            saveToFile(e!!)
         } catch (e: Exception) {
         } finally {
             e?.printStackTrace()

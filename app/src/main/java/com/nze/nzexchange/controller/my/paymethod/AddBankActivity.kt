@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.my.paymethod
 
 import android.content.Context
 import android.content.Intent
+import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -14,9 +15,11 @@ import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.config.EventCode
 import com.nze.nzexchange.config.IntentConstant
+import com.nze.nzexchange.config.PayMethod
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.FundPasswordPopup
 import com.nze.nzexchange.controller.my.authentication.AuthenticationHomeActivity
+import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodPresenter
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.getValue
 import com.nze.nzexchange.validation.EmptyValidation
@@ -28,6 +31,7 @@ import org.greenrobot.eventbus.EventBus
  * 添加银行卡
  */
 class AddBankActivity : NBaseActivity() {
+    val payMethodP by lazy { PayMethodPresenter(this) }
     val nameValueTv: TextView by lazy { tv_name_value_aac }
     val cartNoValueEt: EditText by lazy { et_cardno_value_aac }
     val bankValueEt: EditText by lazy { et_bank_value_aac }
@@ -70,6 +74,19 @@ class AddBankActivity : NBaseActivity() {
         saveBtn.setOnCommonClick {
             fundPopup.showPopupWindow()
         }
+
+        payMethodP.getTransaction(userBean!!)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (!it.success) {
+                        showToast(it.message)
+                        saveBtn.visibility = View.GONE
+                        addressValueEt.inputType = InputType.TYPE_NULL
+                        cartNoValueEt.inputType = InputType.TYPE_NULL
+                        bankValueEt.inputType = InputType.TYPE_NULL
+
+                    }
+                }, onError)
     }
 
     fun setPayMethod(pwd: String) {

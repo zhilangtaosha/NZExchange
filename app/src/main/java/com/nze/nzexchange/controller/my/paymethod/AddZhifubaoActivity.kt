@@ -3,6 +3,7 @@ package com.nze.nzexchange.controller.my.paymethod
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.*
 import com.nze.nzeframework.netstatus.NetUtils
@@ -27,6 +28,7 @@ import com.nze.nzexchange.config.IntentConstant
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.common.CommonListPopup
 import com.nze.nzexchange.controller.common.FundPasswordPopup
+import com.nze.nzexchange.controller.my.paymethod.presenter.PayMethodPresenter
 import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.getValue
 import com.nze.nzexchange.tools.FileTool
@@ -43,7 +45,7 @@ import java.io.File
 
 class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, InvokeListener, View.OnClickListener {
 
-
+    val pmp by lazy { PayMethodPresenter(this) }
     var type: Int = IntentConstant.TYPE_ZHIFUBAO
     val cardNoValueEt: EditText by lazy { et_cardno_value_aaz }
     val saveBtn: CommonButton by lazy {
@@ -157,6 +159,15 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
             addLayout.isClickable = false
         }
 
+        pmp.getTransaction(userBean!!)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (!it.success) {
+                        showToast(it.message)
+                        saveBtn.visibility = View.GONE
+                        cardNoValueEt.inputType = InputType.TYPE_NULL
+                    }
+                }, onError)
     }
 
     override fun onClick(v: View?) {

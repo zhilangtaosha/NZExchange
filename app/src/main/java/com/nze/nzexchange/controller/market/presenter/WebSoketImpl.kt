@@ -138,6 +138,7 @@ class WebSoketImpl : IWebSoket {
     var mOnQueryHistoryOrder: ((orderList: MutableList<SoketOrderBean>) -> Unit)? = null
     //---------------------------------------------------------------------------------------------
     val mSoketPairDao by lazy { SoketPairDaoImpl() }
+    val mAllCommandMap: MutableMap<String, String> by lazy { mutableMapOf<String, String>() }
 
 
     override fun initSocket(key: String, marketUrl: String, onOpenCallback: (() -> Unit)?, onCloseCallback: (() -> Unit)?) {
@@ -160,6 +161,7 @@ class WebSoketImpl : IWebSoket {
             mOnDepthCallback: (mDepthBuyList: MutableList<DepthDataBean>, mDepthSellList: MutableList<DepthDataBean>) -> Unit,
             mOnDealCallback: (dealList: MutableList<SoketDealBean>) -> Unit
     ) {
+
         this.OnQueryKlineMap.put(key, mOnQueryKlineCallback)
         this.mOnSubscribeKlineMap.put(key, mOnSubscribeKlineCallback)
         this.mOnTodayMap.put(key, mOnTodayCallback)
@@ -515,7 +517,7 @@ class WebSoketImpl : IWebSoket {
             mOnOpenMap.forEach {
                 it.value.invoke()
             }
-//            checkHeart()
+            checkHeart()
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
@@ -526,7 +528,9 @@ class WebSoketImpl : IWebSoket {
             }
             if (mOnOpenMap.size > 0)
                 mOnOpenMap.clear()
-            initSocket("", mMarketUrl!!, null, null)
+            initSocket("recontect", mMarketUrl!!, {
+
+            }, null)
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {

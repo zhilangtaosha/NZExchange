@@ -26,7 +26,7 @@ import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_legal_withdraw.*
 
-class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
+class LegalWithdrawActivity : NBaseActivity() {
     val topBar: CommonTopBar by lazy { ctb_alw }
     val bankCardTv: TextView by lazy { tv_bank_card_alw }
     val limitTv: TextView by lazy { tv_limit_alw }
@@ -39,7 +39,7 @@ class LegalWithdrawActivity : NBaseActivity(), PayMethodView {
     val feeTv: TextView by lazy { tv_fee_alw }
     val nextBtn: CommonButton by lazy { btn_next }
     var userBean = UserBean.loadFromApp()
-    val pmp: PayMethodPresenter by lazy { PayMethodPresenter(this, this) }
+    val pmp: PayMethodPresenter by lazy { PayMethodPresenter(this) }
     var verifyCode: String? = null
     var verifyId: String? = null
     val verifyPopup by lazy {

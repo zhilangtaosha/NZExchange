@@ -236,5 +236,9 @@ interface BibiService {
     ): Flowable<Result<CurrencyWithdrawInfoBean>>
 
 
-    
+    @FormUrlEncoded
+    @POST("checkIsInTransaction")
+    fun getTransaction(
+            @Field("userId") userId: String
+    ): Flowable<Result<Any>>
 }

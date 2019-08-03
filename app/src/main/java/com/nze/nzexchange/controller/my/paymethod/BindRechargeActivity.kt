@@ -22,8 +22,7 @@ import kotlinx.android.synthetic.main.activity_bind_recharge.*
 /**
  * 绑定充值方式
  */
-class BindRechargeActivity : NBaseActivity(), AuthenticationView, PayMethodView, AdapterView.OnItemClickListener {
-
+class BindRechargeActivity : NBaseActivity(), AuthenticationView, AdapterView.OnItemClickListener {
 
     val lv: ListView by lazy { lv_abr }
     val list = PayMethodBean.getLegalPayList()
@@ -32,7 +31,7 @@ class BindRechargeActivity : NBaseActivity(), AuthenticationView, PayMethodView,
         SetPayMethodAdapter(this)
     }
     val authenticationP by lazy { AuthenticationP(this, this) }
-    val payMehodP by lazy { PayMethodPresenter(this, this) }
+    val payMehodP by lazy { PayMethodPresenter(this) }
 
 
     var userBean = UserBean.loadFromApp()
@@ -57,6 +56,7 @@ class BindRechargeActivity : NBaseActivity(), AuthenticationView, PayMethodView,
                 .commonCheck(this, CheckPermission.SET_PAY_METHOD, "设置收款方式需要完成以下设置，请检查", onReject = {
                     finish()
                 })
+
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -94,7 +94,7 @@ class BindRechargeActivity : NBaseActivity(), AuthenticationView, PayMethodView,
             }
         }, onError)
     }
-    
+
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {
     }

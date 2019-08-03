@@ -2,6 +2,7 @@ package com.nze.nzexchange.controller.my.paymethod
 
 import android.content.Context
 import android.content.Intent
+import android.text.InputType
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -21,8 +22,8 @@ import com.nze.nzexchange.extend.getContent
 import com.nze.nzexchange.extend.getValue
 import kotlinx.android.synthetic.main.activity_add_osko.*
 
-class AddOskoActivity : NBaseActivity(), PayMethodView {
-    val pmp by lazy { PayMethodPresenter(this, this) }
+class AddOskoActivity : NBaseActivity() {
+    val pmp by lazy { PayMethodPresenter(this) }
     val nameTv: TextView by lazy { tv_name_value_aao }
     val accountEt: EditText by lazy { et_account_aao }
     val saveBtn: Button by lazy { btn_save_aao }
@@ -69,6 +70,16 @@ class AddOskoActivity : NBaseActivity(), PayMethodView {
         saveBtn.setOnClickListener {
             fundPopup.showPopupWindow()
         }
+
+        pmp.getTransaction(userBean!!)
+                .compose(netTfWithDialog())
+                .subscribe({
+                    if (!it.success) {
+                        showToast(it.message)
+                        saveBtn.visibility = View.GONE
+                        accountEt.inputType = InputType.TYPE_NULL
+                    }
+                }, onError)
     }
 
     override fun <T> onEventComming(eventCenter: EventCenter<T>) {

@@ -1,31 +1,30 @@
 package com.nze.nzexchange.controller.base
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
+import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.content.ContextCompat
 import android.view.MotionEvent
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.kaopiz.kprogresshud.KProgressHUD
+import com.nze.nzeframework.BuildConfig
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzeframework.ui.BaseActivity
 import com.nze.nzexchange.config.RrefreshType
+import com.nze.nzexchange.tools.CrashHandler
+import com.nze.nzexchange.tools.selectlanguage.MultiLanguageUtil
 import com.trello.rxlifecycle2.android.ActivityEvent
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import android.app.Activity
-import android.graphics.Color
-import android.os.Bundle
-import com.nze.nzexchange.BuildConfig
-import com.nze.nzexchange.tools.CrashHandler
-import com.nze.nzexchange.tools.selectlanguage.MultiLanguageUtil
 
 
 abstract class NBaseActivity : BaseActivity() {

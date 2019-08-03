@@ -22,7 +22,7 @@ import com.nze.nzexchange.widget.CommonButton
 import com.nze.nzexchange.widget.CommonTopBar
 import kotlinx.android.synthetic.main.activity_legal_recharge.*
 
-class LegalRechargeActivity : NBaseActivity(), PayMethodView {
+class LegalRechargeActivity : NBaseActivity() {
     val topBar: CommonTopBar by lazy { ctb_alr }
     val rechargeMode: TextView by lazy { tv_recharge_mode_alr }
     val amountEt: EditText by lazy {
@@ -62,7 +62,7 @@ class LegalRechargeActivity : NBaseActivity(), PayMethodView {
             }
         }
     }
-    val payMehodP by lazy { PayMethodPresenter(this, this) }
+    val payMehodP by lazy { PayMethodPresenter(this) }
     var userBean = UserBean.loadFromApp()
     var payMethodBean: SetPayMethodBean? = null
     var checkpayAccount: String? = null

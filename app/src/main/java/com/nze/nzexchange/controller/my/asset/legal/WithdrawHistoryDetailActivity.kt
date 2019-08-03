@@ -20,8 +20,8 @@ import com.nze.nzexchange.extend.setDrawables
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.activity_withdraw_reject.*
 
-class WithdrawHistoryDetailActivity : NBaseActivity(), PayMethodView {
-    val payMehodP: PayMethodPresenter by lazy { PayMethodPresenter(this, this) }
+class WithdrawHistoryDetailActivity : NBaseActivity() {
+    val payMehodP: PayMethodPresenter by lazy { PayMethodPresenter(this) }
     val bankTv: TextView by lazy { tv_bank_aws }
     val amountTv: TextView by lazy { tv_amount_aws }
     val statusTv: TextView by lazy { tv_status_aws }

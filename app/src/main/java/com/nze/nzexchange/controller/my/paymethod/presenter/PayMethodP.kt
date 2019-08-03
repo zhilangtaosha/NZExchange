@@ -1,11 +1,14 @@
 package com.nze.nzexchange.controller.my.paymethod.presenter
 
-import com.nze.nzeframework.ui.BaseActivityPresenter
+import com.nze.nzeframework.ui.BaseActivityP
+import com.nze.nzexchange.bean.Result
 import com.nze.nzexchange.bean.SetPayMethodBean
 import com.nze.nzexchange.bean.UserBean
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.extend.OnErrorRs
 import com.nze.nzexchange.extend.OnSuccessRs
+import com.nze.nzexchange.http.NRetrofit
+import io.reactivex.Flowable
 
 /**
  * @author: zwy
@@ -13,7 +16,7 @@ import com.nze.nzexchange.extend.OnSuccessRs
  * @类 说 明:
  * @创建时间：2019/5/16
  */
-class PayMethodPresenter(activity: NBaseActivity, mIView: PayMethodView) : BaseActivityPresenter<PayMethodView>(activity, mIView) {
+class PayMethodPresenter(activity: NBaseActivity) : BaseActivityP(activity) {
 
     /**
      * 设置付款方式
@@ -70,6 +73,14 @@ class PayMethodPresenter(activity: NBaseActivity, mIView: PayMethodView) : BaseA
             return true
         }
         return false
+    }
+
+    fun getTransaction(userBean: UserBean): Flowable<Result<Any>> {
+        return Flowable.defer {
+            NRetrofit.instance
+                    .bibiService()
+                    .getTransaction(userBean.userId)
+        }
     }
 }
 
