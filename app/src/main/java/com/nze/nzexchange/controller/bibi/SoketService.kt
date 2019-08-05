@@ -5,10 +5,8 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.nze.nzexchange.bean.*
-import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.market.presenter.IWebSoket
 import com.nze.nzexchange.controller.market.presenter.WebSoketImpl
-import com.nze.nzexchange.http.NWebSocket
 import com.nze.nzexchange.widget.chart.KLineEntity
 import com.nze.nzexchange.widget.depth.DepthDataBean
 
@@ -43,6 +41,14 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
+        override fun addBibiMarketCallBack(onMarketRankCallback: (marketList: MutableList<SoketMarketBean>) -> Unit) {
+            webSoket.addBibiMarketCallBack(onMarketRankCallback)
+        }
+
+        override fun queryBibiMarket() {
+            webSoket.queryBibiMarket()
+        }
+
         override fun removeCallBack3(key: String) {
             webSoket.removeCallBack3(key)
         }
@@ -71,11 +77,11 @@ class SoketService : Service() {
             webSoket.orderCancel(pair, id)
         }
 
-        override fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit) {
+        override fun addLimitDealCallBack(onLimitDeal: (rs: WsBibiTradeBean) -> Unit) {
             webSoket.addLimitDealCallBack(onLimitDeal)
         }
 
-        override fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit) {
+        override fun addMarketDealCallBack(onMarketDeal: (rs: WsBibiTradeBean) -> Unit) {
             webSoket.addMarketDealCallBack(onMarketDeal)
         }
 
@@ -91,12 +97,12 @@ class SoketService : Service() {
             webSoket.marketDeal(pair, side, amount)
         }
 
-        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean,bean:SoketOrderBean?) -> Unit)) {
+        override fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean, bean: SoketOrderBean?) -> Unit)) {
             webSoket.addCurrentOrderCallBack(key, onQueryOrder, onSubscribeOrder, mOnCurrentOrderCancel)
         }
 
-        override fun queryCurrentOrder(pair: String, offset: Int, limit: Int, side: Int) {
-            webSoket.queryCurrentOrder(pair, offset, limit,side)
+        override fun queryCurrentOrder(key: String, pair: String, offset: Int, limit: Int, side: Int) {
+            webSoket.queryCurrentOrder(key, pair, offset, limit, side)
         }
 
         override fun subscribeOrder(pair: String) {

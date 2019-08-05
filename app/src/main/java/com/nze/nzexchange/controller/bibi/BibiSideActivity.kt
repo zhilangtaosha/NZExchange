@@ -160,7 +160,7 @@ class BibiSideActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLis
     }
 
     fun addCallBack() {
-        binder?.addMarketCallBack("market") {
+        binder?.addMarketCallBack("side") {
             NLog.i("market resut")
             mMarketList.addAll(it)
             if (UserBean.isLogin())

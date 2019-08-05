@@ -3,15 +3,11 @@ package com.nze.nzexchange.controller.market
 import android.content.Context
 import android.view.View
 import android.widget.TextView
-import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.R
-import com.nze.nzexchange.bean.NewDealBean
 import com.nze.nzexchange.bean.SoketDealBean
-import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.controller.base.NBaseAda
 import com.nze.nzexchange.extend.formatForCurrency
-import com.nze.nzexchange.extend.formatForPrice
 import com.nze.nzexchange.extend.setTxtColor
 import com.nze.nzexchange.tools.TimeTool
 import kotlinx.android.synthetic.main.lv_new_deal_kline.view.*

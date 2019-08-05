@@ -432,7 +432,7 @@ class BibiAllOrderActivity : NBaseActivity(), PullToRefreshBase.OnRefreshListene
     }
 
     fun queryCurrentOrder() {
-        binder?.queryCurrentOrder(mCurrentPair, mCurrentPage * 20, 20, mCurrentSide)
+        binder?.queryCurrentOrder("order", mCurrentPair, mCurrentPage * 20, 20, mCurrentSide)
     }
 
     fun queryHistoryOrder() {

@@ -295,6 +295,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             getEt.hint = "${getString(R.string.amount)}(${currentTransactionPair?.currency})"
         }
         refreshAsset()
+
+
         getEt.setText("")
         if (userBean == null)
             transactionBtn.text = "${getString(R.string.login)}"
@@ -730,8 +732,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             }
         } else {
             if (mAssetMap.size > 0) {
-                val s = mAssetMap[currentTransactionPair!!.currency]!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), currentTransactionPair?.stockPrec
-                        ?: 8).retain4ByFloor()
+                val s = mAssetMap[currentTransactionPair!!.currency]!!.available.mul(progress!!.toDouble()).divByFloor(100.toDouble(), 8).formatForCurrency()
                 getEt.setText(s)
                 getEt.setSelection(s.length)
             }
@@ -924,7 +925,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
             addCallBack()
             addOrderCallBack()
-            binder?.queryMarket()
+            binder?.queryBibiMarket()
 
         }
     }
@@ -989,11 +990,19 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
         binder?.addLimitDealCallBack {
             //下限价单00
-            showToast("下单成功")
+            if (it.success) {
+                showToast("下单成功")
+            } else {
+                showToast(it.getMsg())
+            }
         }
         binder?.addMarketDealCallBack {
             //下市价单
-            showToast("下单成功")
+            if (it.success) {
+                showToast("下单成功")
+            } else {
+                showToast(it.getMsg())
+            }
         }
 
         binder?.addAssetCallBack("bibi", {
@@ -1091,7 +1100,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         currentOrderAdapter.clearGroup(false)
         currentOrderList.clear()
         if (userBean != null)
-            binder?.queryCurrentOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20, 0)
+            binder?.queryCurrentOrder("bibi","${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20, 0)
     }
 
     fun queryAsset() {
@@ -1106,24 +1115,25 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     override fun onPause() {
         super.onPause()
         NLog.i("bibi onPause")
-        binder?.removeCallBack3("bibi")
+//        binder?.removeCallBack3("bibi")
     }
 
     override fun onResume() {
         super.onResume()
         NLog.i("bibi onResume")
-        if (!isBinder) {
-            activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
-        } else {
-            if (currentTransactionPair != null) {
-                addCallBack()
-                addOrderCallBack()
-                queryCurrentOrder()
-                queryAsset()
-            } else {
-                binder?.queryMarket()
-            }
-        }
+//        if (!isBinder) {
+        activity!!.bindService(Intent(activity, SoketService::class.java), connection, Context.BIND_AUTO_CREATE)
+//        }
+//        else {
+//            if (currentTransactionPair != null) {
+//                addCallBack()
+//                addOrderCallBack()
+//                queryCurrentOrder()
+//                queryAsset()
+//            } else {
+//                binder?.queryMarket()
+//            }
+//        }
     }
 
 
@@ -1150,7 +1160,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 queryCurrentOrder()
                 queryAsset()
             } else {
-                binder?.queryMarket()
+                binder?.queryBibiMarket()
             }
 
         }

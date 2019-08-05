@@ -69,35 +69,40 @@ class RechargeHistoryDetailActivity : NBaseActivity() {
             applyTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.checkpayCreateTime)
             processTimeTv.text = TimeTool.format(TimeTool.PATTERN2, it.checkpayCreateTime)
 
-            if (it.checkpayStatus == 101 || it.checkpayStatus == 102 || it.checkpayStatus == 990) {
-                legalP.getCompanyPaymethod({ rs ->
-                    if (rs.success) {
-                        companyPayList.addAll(rs.result)
-                        when (it.checkpayType) {
-                            LegalRechargeBean.TYPE_BPAY -> {
-                                bankTv.setDrawables(R.mipmap.bpay_icon, null, null, null)
-                                val bpay = companyPayList[1]
-                                rejectReasonTv.text = "BPAY账号(${bpay.contShow3})"
-                                bankTv.text = bpay.contShow1
-                            }
-                            LegalRechargeBean.TYPE_BANK -> {
-                                bankTv.setDrawables(R.mipmap.bank_icon, null, null, null)
-                                val bank = companyPayList[2]
-                                rejectReasonTv.text = "${bank.contShow1}(${bank.contShow3})"
-                                bankTv.text = bank.contShow1
-                            }
-                            LegalRechargeBean.TYPE_OSKO -> {
-                                bankTv.setDrawables(R.mipmap.osko_icon, null, null, null)
-                                val osko = companyPayList[0]
-                                rejectReasonTv.text = "OSKO账号(${osko.contShow3})"
-                                bankTv.text = osko.contShow1
-                            }
+//            if (it.checkpayStatus == 101 || it.checkpayStatus == 102 || it.checkpayStatus == 990) {
+            legalP.getCompanyPaymethod({ rs ->
+                if (rs.success) {
+                    companyPayList.addAll(rs.result)
+                    var account = ""
+                    when (it.checkpayType) {
+                        LegalRechargeBean.TYPE_BPAY -> {
+                            bankTv.setDrawables(R.mipmap.bpay_icon, null, null, null)
+                            val bpay = companyPayList[1]
+                            account = "BPAY账号(${bpay.contShow3})"
+                            bankTv.text = bpay.contShow1
                         }
-                    } else {
-                        showToast(rs.message)
+                        LegalRechargeBean.TYPE_BANK -> {
+                            bankTv.setDrawables(R.mipmap.bank_icon, null, null, null)
+                            val bank = companyPayList[2]
+                            account = "${bank.contShow1}(${bank.contShow3})"
+                            bankTv.text = bank.contShow1
+                        }
+                        LegalRechargeBean.TYPE_OSKO -> {
+                            bankTv.setDrawables(R.mipmap.osko_icon, null, null, null)
+                            val osko = companyPayList[0]
+                            account = "OSKO账号(${osko.contShow3})"
+                            bankTv.text = osko.contShow1
+                        }
                     }
-                }, onError)
-            }
+                    if (it.checkpayStatus == 101 || it.checkpayStatus == 102 || it.checkpayStatus == 990) {
+                        rejectReasonTv.text = account
+                    }
+
+                } else {
+                    showToast(rs.message)
+                }
+            }, onError)
+//            }
             when (it.checkpayStatus) {
                 100 -> {//"待审核"
 

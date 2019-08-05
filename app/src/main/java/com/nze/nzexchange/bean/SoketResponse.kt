@@ -13,9 +13,14 @@ import java.math.BigDecimal
  */
 
 data class SoketQueryBean(//查询返回
-        val error: Any?,
+        val error: SoketErrorBean?,
         val result: Any?,
         val id: Int?
+)
+
+data class SoketErrorBean(
+        val code:Int,
+        val message:String
 )
 
 data class SoketSubscribeBean(//订阅返回

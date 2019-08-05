@@ -166,6 +166,8 @@ class AddZhifubaoActivity : NBaseActivity(), TakePhoto.TakeResultListener, Invok
                         showToast(it.message)
                         saveBtn.visibility = View.GONE
                         cardNoValueEt.inputType = InputType.TYPE_NULL
+                        addLayout.isClickable = false
+                        closeIv.visibility = View.GONE
                     }
                 }, onError)
     }

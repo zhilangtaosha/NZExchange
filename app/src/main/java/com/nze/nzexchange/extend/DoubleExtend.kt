@@ -170,4 +170,3 @@ fun Double.divByFloor(b: Double, len: Int): Double {
     return (this.toBigDecimal().divide(b.toBigDecimal(), len, BigDecimal.ROUND_FLOOR)).toDouble()
 }
 
-

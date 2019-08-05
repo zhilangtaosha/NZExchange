@@ -26,13 +26,15 @@ interface IWebSoket {
     fun addRankCallBak(key: String, mOnQueryRankCallback: ((rankList: MutableList<SoketRankBean>) -> Unit))
 
     fun addMarketCallBack(key: String, onMarketRankCallback: ((marketList: MutableList<SoketMarketBean>) -> Unit))
+    //币币交易页面获取市场行情
+    fun addBibiMarketCallBack(onMarketRankCallback: ((marketList: MutableList<SoketMarketBean>) -> Unit))
 
     fun addAuthCallBack(key: String, mOnAuthCallBack: (rs: Boolean) -> Unit)
 
-    fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean,bean:SoketOrderBean?) -> Unit))
+    fun addCurrentOrderCallBack(key: String, onQueryOrder: (MutableList<SoketOrderBean>) -> Unit, onSubscribeOrder: (order: SoketSubscribeOrderBean) -> Unit, mOnCurrentOrderCancel: ((rs: Boolean, bean: SoketOrderBean?) -> Unit))
 
-    fun addLimitDealCallBack(onLimitDeal: (rs: Boolean) -> Unit)
-    fun addMarketDealCallBack(onMarketDeal: (rs: Boolean) -> Unit)
+    fun addLimitDealCallBack(onLimitDeal: (rs: WsBibiTradeBean) -> Unit)
+    fun addMarketDealCallBack(onMarketDeal: (rs: WsBibiTradeBean) -> Unit)
     fun addHistoryOrderCallBack(onQueryOrder: (MutableList<SoketOrderBean>) -> Unit)
     fun addAssetCallBack(key: String, queryCallBack: ((assetMap: HashMap<String, SoketAssetBean>) -> Unit), subscribeCallBack: ((assetMap: HashMap<String, SoketAssetBean>) -> Unit))
 
@@ -51,6 +53,8 @@ interface IWebSoket {
     fun queryRank()
 
     fun queryMarket()
+    //币币交易页面获取市场行情
+    fun queryBibiMarket()
     /**
      * 身份认证
      */
@@ -59,7 +63,8 @@ interface IWebSoket {
     /**
      * 查询当前订单
      */
-    fun queryCurrentOrder(pair: String, offset: Int, limit: Int, side: Int)
+    fun queryCurrentOrder(key:String,pair: String, offset: Int, limit: Int, side: Int)
+
 
     fun queryHistoryOrder(pair: String, startTime: Long, endTime: Long, offset: Int, limit: Int, side: Int)
 

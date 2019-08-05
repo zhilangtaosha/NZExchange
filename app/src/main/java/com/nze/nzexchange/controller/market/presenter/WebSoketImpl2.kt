@@ -1,15 +1,12 @@
 package com.nze.nzexchange.controller.market.presenter
 
-import android.view.View
 import com.google.gson.Gson
 import com.nze.nzeframework.tool.NLog
 import com.nze.nzexchange.bean.*
 import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.config.KLineParam
 import com.nze.nzexchange.config.KLineRequestBean
-import com.nze.nzexchange.extend.retainInt
 import com.nze.nzexchange.http.NWebSocket
-import com.nze.nzexchange.tools.TimeTool
 import com.nze.nzexchange.widget.chart.DataHelper
 import com.nze.nzexchange.widget.chart.KLineEntity
 import com.nze.nzexchange.widget.depth.DepthDataBean
@@ -20,7 +17,6 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
-import kotlin.text.Typography.quote
 
 /**
  * @author: zwy

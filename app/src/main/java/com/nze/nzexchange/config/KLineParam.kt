@@ -103,6 +103,7 @@ class KLineParam {
         const val DATA_ORDER_HISTORY = 13//挂市价单
         const val DATA_ASSET_QUERY = 14//资产查询
         const val DATA_ASSET_SUBSCRIBE = 15//资产订阅
+        const val DATA_BIBI_MARKET_QUERY = 16//查询币币交易页面行情
 
         //最近成交列表类型
         const val DEALS_SELL = "sell"
@@ -149,6 +150,8 @@ class KLineParam {
         val ID_ORDER_HISTORY: Int = 100009//查询历史订单
         val ID_ASSET: Int = 100010//查询资产
         val ID_PING: Int = 100011//心跳
+        val ID_BIBI_MARKET = 100012//币币交易行情
+        val ID_BIBI_ORDER = 100013//币币交易行情
 
     }
 }
