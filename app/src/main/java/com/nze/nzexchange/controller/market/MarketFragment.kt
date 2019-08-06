@@ -194,7 +194,7 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
             binder = service as SoketService.SoketBinder
             isBinder = true
             bindCallBack()
-            binder?.queryMarket()
+            binder?.queryMarket("market")
         }
     }
 

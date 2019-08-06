@@ -41,13 +41,7 @@ class SoketService : Service() {
     }
 
     class SoketBinder : Binder(), IWebSoket {
-        override fun addBibiMarketCallBack(onMarketRankCallback: (marketList: MutableList<SoketMarketBean>) -> Unit) {
-            webSoket.addBibiMarketCallBack(onMarketRankCallback)
-        }
 
-        override fun queryBibiMarket() {
-            webSoket.queryBibiMarket()
-        }
 
         override fun removeCallBack3(key: String) {
             webSoket.removeCallBack3(key)
@@ -164,8 +158,8 @@ class SoketService : Service() {
             webSoket.queryRank()
         }
 
-        override fun queryMarket() {
-            webSoket.queryMarket()
+        override fun queryMarket(key:String) {
+            webSoket.queryMarket(key)
         }
 
         override fun auth(token: String) {

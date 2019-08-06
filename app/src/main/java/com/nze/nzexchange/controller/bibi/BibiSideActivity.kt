@@ -155,7 +155,7 @@ class BibiSideActivity : NBaseActivity(), NBaseFragment.OnFragmentInteractionLis
             binder = service as SoketService.SoketBinder
             isBinder = true
             addCallBack()
-            binder?.queryMarket()
+            binder?.queryMarket("side")
         }
     }
 

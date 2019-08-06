@@ -62,7 +62,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".controller.main.MainActivity"
+            android:name=".controller.main.HomeActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -186,7 +186,8 @@
         <activity android:name=".controller.my.asset.legal.RechargeHistoryDetailActivity" />
         <activity android:name=".controller.my.asset.legal.WithdrawHistoryDetailActivity" />
         <activity android:name=".controller.my.setting.SelectLanguageActivity" />
-        <activity android:name=".controller.bibi.BibiHistoryDetailActivity"></activity>
+        <activity android:name=".controller.bibi.BibiHistoryDetailActivity" />
+        <activity android:name=".controller.main.MainActivity" />
     </application>
 
 </manifest>

@@ -36,6 +36,16 @@ import net.grandcentrix.tray.AppPreferences
 class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFragmentInteractionListener {
 
     val mFragmentManager: FragmentManager by lazy { supportFragmentManager }
+    val list: MutableList<NBaseFragment> by lazy {
+        mutableListOf<NBaseFragment>(
+                HomeFragment.newInstance(),
+                MarketFragment.newInstance(),
+                BibiFragment.newInstance(),
+                OtcFragment.newInstance(),
+                MyFragment.newInstance()
+        )
+    }
+    val fragmentAdapter: MainFragmentAdapter by lazy { MainFragmentAdapter(mFragmentManager, list) }
     var mCurrentTab = 0
     var mLastTab = 0
     var mLastFragment: NBaseFragment? = null
@@ -132,7 +142,8 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
         tab_otc_main.setOnClickListener(this)
         tab_my_main.setOnClickListener(this)
 //        initFragment()
-        selectTab(mCurrentTab)
+        selectTab(2)
+        selectTab(0)
 
         FingerprintHelper.init(this)//指纹解锁
     }
@@ -229,5 +240,6 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
             }
         }
     }
+
 
 }

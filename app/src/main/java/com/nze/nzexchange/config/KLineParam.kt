@@ -152,6 +152,7 @@ class KLineParam {
         val ID_PING: Int = 100011//心跳
         val ID_BIBI_MARKET = 100012//币币交易行情
         val ID_BIBI_ORDER = 100013//币币交易行情
+        val ID_SIDE_MARKET = 100014//币币侧边栏行情
 
     }
 }

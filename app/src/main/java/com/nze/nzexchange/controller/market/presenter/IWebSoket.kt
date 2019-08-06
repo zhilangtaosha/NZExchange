@@ -26,8 +26,7 @@ interface IWebSoket {
     fun addRankCallBak(key: String, mOnQueryRankCallback: ((rankList: MutableList<SoketRankBean>) -> Unit))
 
     fun addMarketCallBack(key: String, onMarketRankCallback: ((marketList: MutableList<SoketMarketBean>) -> Unit))
-    //币币交易页面获取市场行情
-    fun addBibiMarketCallBack(onMarketRankCallback: ((marketList: MutableList<SoketMarketBean>) -> Unit))
+
 
     fun addAuthCallBack(key: String, mOnAuthCallBack: (rs: Boolean) -> Unit)
 
@@ -52,9 +51,7 @@ interface IWebSoket {
 
     fun queryRank()
 
-    fun queryMarket()
-    //币币交易页面获取市场行情
-    fun queryBibiMarket()
+    fun queryMarket(key:String)
     /**
      * 身份认证
      */

@@ -15,7 +15,8 @@ data class WsBibiTradeBean(
     fun getMsg(): String {
         return when (code) {
             10 -> "余额不足"
-            11 -> "没有交易量"
+            11 -> "交易数量太小"
+            12 -> "没有足够交易量"
             else -> "交易失败"
         }
     }

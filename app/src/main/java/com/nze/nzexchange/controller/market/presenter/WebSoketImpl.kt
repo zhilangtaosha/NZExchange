@@ -41,7 +41,6 @@ import java.util.*
  */
 class WebSoketImpl : IWebSoket {
 
-
     var mMarketUrl: String? = null
     var nWebSocket: NWebSocket? = null
     var socket: WebSocket? = null
@@ -241,10 +240,8 @@ class WebSoketImpl : IWebSoket {
     }
 
     //--------------------------币币交易页面------------------------------------------------------------------------
-    override fun addBibiMarketCallBack(onMarketRankCallback: (marketList: MutableList<SoketMarketBean>) -> Unit) {
-    }
 
-    override fun queryBibiMarket() {
+    fun queryBibiMarket() {
         val requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_BIBI_MARKET)
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
         NLog.i("queryBibiMarket>>$param")
@@ -355,8 +352,23 @@ class WebSoketImpl : IWebSoket {
         socket?.send(param)
     }
 
-    override fun queryMarket() {
-        val requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_MARKET)
+    override fun queryMarket(key: String) {
+        var requestBean: SoketRequestBean? = null
+        when (key) {
+            "side" -> {
+                requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_SIDE_MARKET)
+            }
+            "market" -> {
+                requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_MARKET)
+            }
+            "bibi" -> {
+                requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_BIBI_MARKET)
+            }
+            else -> {
+                requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_MARKET)
+            }
+        }
+
         val param: String = gson.toJson(requestBean, SoketRequestBean::class.java)
         NLog.i("queryMarket>>$param")
         socket?.send(param)
@@ -591,16 +603,22 @@ class WebSoketImpl : IWebSoket {
                                     NLog.i("rank出错>>${e.message}")
                                 }
                             }
-                            KLineParam.ID_MARKET, KLineParam.ID_BIBI_MARKET -> {
+                            KLineParam.ID_MARKET, KLineParam.ID_BIBI_MARKET, KLineParam.ID_SIDE_MARKET -> {
                                 try {
                                     val marketList: Array<SoketMarketBean>? = gson.fromJson<Array<SoketMarketBean>>(queryBean.result.toString().replace("/", "-"), Array<SoketMarketBean>::class.java)
                                     if (marketList != null && marketList.size > 0) {
                                         mMarketList.clear()
                                         mMarketList.addAll(marketList.toMutableList())
-                                        if (queryBean.id == KLineParam.ID_BIBI_MARKET) {
-                                            it.onNext(KLineParam.ID_BIBI_MARKET)
-                                        } else {
-                                            it.onNext(KLineParam.ID_MARKET)
+                                        when (queryBean.id) {
+                                            KLineParam.ID_BIBI_MARKET -> {
+                                                it.onNext(KLineParam.ID_BIBI_MARKET)
+                                            }
+                                            KLineParam.ID_SIDE_MARKET -> {
+                                                it.onNext(KLineParam.ID_SIDE_MARKET)
+                                            }
+                                            KLineParam.ID_MARKET -> {
+                                                it.onNext(KLineParam.ID_MARKET)
+                                            }
                                         }
                                         mSoketPairDao.add(mMarketList)
                                     }
@@ -616,15 +634,14 @@ class WebSoketImpl : IWebSoket {
                                 try {
                                     orderRs = gson.fromJson<SoketOrderResultBean>(queryBean.result.toString(), SoketOrderResultBean::class.java)
                                     if (queryBean.id == KLineParam.ID_BIBI_ORDER) {
-
+                                        it.onNext(KLineParam.ID_BIBI_ORDER)
                                     } else {
-
+                                        it.onNext(KLineParam.ID_ORDER)
                                     }
-                                    it.onNext(KLineParam.DATA_CURRENT_ORDER_QUERY)
                                 } catch (e: Exception) {
                                     NLog.i("current order出错>>${e.message}")
                                     orderRs = SoketOrderResultBean(0, 0, 0, arrayListOf())
-                                    it.onNext(KLineParam.DATA_CURRENT_ORDER_QUERY)
+                                    it.onNext(KLineParam.ID_ORDER)
                                 }
                             }
                             KLineParam.ID_LIMIT_DEAL -> {
@@ -873,25 +890,31 @@ class WebSoketImpl : IWebSoket {
                                 }
                             }
                             KLineParam.ID_MARKET -> {
-                                mOnMarketRankMap.forEach {
-                                    if (it.key == "side" || it.key == "market")
-                                        it.value.invoke(mMarketList)
-                                }
+                                mOnMarketRankMap["market"]?.invoke(mMarketList)
                             }
                             KLineParam.ID_BIBI_MARKET -> {
                                 mOnMarketRankMap["bibi"]?.invoke(mMarketList)
+                            }
+                            KLineParam.ID_SIDE_MARKET -> {
+                                mOnMarketRankMap["side"]?.invoke(mMarketList)
                             }
                             KLineParam.DATA_AUTH -> {
                                 mOnAuthMap.forEach {
                                     it.value.invoke(isAuth)
                                 }
                             }
-                            KLineParam.DATA_CURRENT_ORDER_QUERY -> {
+                            KLineParam.ID_BIBI_ORDER -> {
                                 if (orderRs == null)
                                     orderRs = SoketOrderResultBean(0, 0, 0, arrayListOf())
-                                mOnQueryCurrentOrderMap.forEach {
-                                    it.value.invoke(orderRs!!.records.toMutableList())
-                                }
+                                mOnQueryCurrentOrderMap["bibi"]?.invoke(orderRs!!.records.toMutableList())
+//                                mOnQueryCurrentOrderMap.forEach {
+//                                    it.value.invoke(orderRs!!.records.toMutableList())
+//                                }
+                            }
+                            KLineParam.ID_ORDER -> {
+                                if (orderRs == null)
+                                    orderRs = SoketOrderResultBean(0, 0, 0, arrayListOf())
+                                mOnQueryCurrentOrderMap["order"]?.invoke(orderRs!!.records.toMutableList())
                             }
                             KLineParam.DATA_LIMIT_DEAL -> {//限价交易
                                 mOnLimitDeal?.invoke(mBibiTrade!!)

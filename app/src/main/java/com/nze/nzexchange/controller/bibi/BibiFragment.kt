@@ -87,7 +87,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val handicapSaleAdapter by lazy {
         HandicapAdapter(activity!!, HandicapAdapter.SALE).apply {
             onHandicapItemClick = {
-                giveEt.setText(it.cost.format(DecimalDigitTool.getDigit(currentTransactionPair?.moneyPrec
+                giveEt.setText(it.cost.toDouble().format(DecimalDigitTool.getDigit(currentTransactionPair?.moneyPrec
                         ?: 8)))
             }
         }
@@ -95,7 +95,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
     val handicapBuyAdapter by lazy {
         HandicapAdapter(activity!!, HandicapAdapter.BUY).apply {
             onHandicapItemClick = {
-                giveEt.setText(it.cost.format(DecimalDigitTool.getDigit(currentTransactionPair?.moneyPrec
+                giveEt.setText(it.cost.toDouble().format(DecimalDigitTool.getDigit(currentTransactionPair?.moneyPrec
                         ?: 8)))
             }
         }
@@ -298,6 +298,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
 
         getEt.setText("")
+        buyIsb.setProgress(0f)
         if (userBean == null)
             transactionBtn.text = "${getString(R.string.login)}"
     }
@@ -414,7 +415,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                                 0.0
                             }, "")
                         })
-
 
             }
             R.id.iv_kline_bibi -> {
@@ -802,98 +802,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 }, {
                     priceTv.text = "≈0CNY"
                 })
-//        RestOrderBean.getPendingOrderInfo(currencyId, userBean?.userId)
-//                .compose(netTfWithDialog())
-//                .subscribe({
-//                    if (it.success) {
-//                        restOrderBean = it.result
-//                        switchType(currentType)
-//                    }
-//                }, onError)
-    }
-
-    /**
-     * 获取所有计价货币，取第一个计价货币的第一个交易对作为默认交易对
-     */
-    private fun getTransactionPair() {
-        TransactionPairsBean.getAllTransactionPairs()
-                .compose(netTfWithDialog())
-                .flatMap {
-                    if (it.success) {
-                        val list = it.result
-                        if (list != null && list.size > 0) {
-                            //获取第一个计价货币的所有交易对
-                            if (currentTransactionPair == null) {
-                                TransactionPairsBean.getTransactionPairs(list[0].mainCurrency, userBean?.userId?.getValue())
-                                        .subscribeOn(Schedulers.io())
-                            } else {
-                                Flowable.empty()
-                            }
-                        } else {
-                            Flowable.error<String>(Throwable("没有交易对"))
-                        }
-                    } else {
-                        Flowable.error<String>(Throwable("请求失败"))
-                    }
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap {
-                    it as Result<MutableList<TransactionPairsBean>>
-                    if (it.success) {
-                        currentTransactionPair = it.result[0]
-                        refreshLayout()
-                        getPendingOrderInfo(currentTransactionPair?.id!!)
-                        switchType(currentType)
-                        changePair()
-                        if (userBean != null) {
-                            //获取订单
-//                            orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
-                        } else {
-                            showNODataView("当前没有登录")
-                        }
-
-                        //获取交易对的挂单信息
-                        RestOrderBean.getPendingOrderInfo(currentTransactionPair?.id!!, userBean?.userId)
-                                .subscribeOn(Schedulers.io())
-                    } else {
-                        Flowable.error<String>(Throwable("请求失败"))
-                    }
-
-                }.observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    it as Result<RestOrderBean>
-                    if (it.success) {
-                        restOrderBean = it.result
-                        switchType(currentType)
-                    }
-                }, onError)
-
-    }
-
-    var loopAction: NLoopAction? = null
-    /**
-     * 获取当前委托
-     */
-    private fun orderPending(currencyId: String, userId: String?) {
-        if (loopAction == null)
-            loopAction = NLoopAction.getInstance((activity as NBaseActivity?)!!)
-        loopAction?.loop {
-            OrderPendBean.orderPending(currencyId, userId)
-                    .compose(netTf())
-                    .subscribe({
-                        val list = it.result
-                        if (it.success && list != null && list.size > 0) {
-                            stopAllView()
-//                            currentOrderAdapter.group = it.result
-//                            currentOrderLv.adapter = currentOrderAdapter
-                        } else {
-                            showNODataView("当前没有委托")
-                        }
-                    }, {
-                        showNODataView("当前没有委托")
-                    })
-        }
-
     }
 
     private fun getKData() {
@@ -925,8 +833,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 
             addCallBack()
             addOrderCallBack()
-            binder?.queryBibiMarket()
 
+            binder?.queryMarket("bibi")
         }
     }
 
@@ -977,8 +885,6 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
             switchType(currentType)
             changePair()
             if (userBean != null) {
-                //获取订单
-//                    orderPending(currentTransactionPair?.id!!, userBean?.userId!!)
                 queryCurrentOrder()
                 queryAsset()
                 binder?.subscribeOrder("${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}")
@@ -1100,7 +1006,7 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
         currentOrderAdapter.clearGroup(false)
         currentOrderList.clear()
         if (userBean != null)
-            binder?.queryCurrentOrder("bibi","${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20, 0)
+            binder?.queryCurrentOrder("bibi", "${currentTransactionPair?.currency}${currentTransactionPair?.mainCurrency}", 0, 20, 0)
     }
 
     fun queryAsset() {
@@ -1134,6 +1040,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
 //                binder?.queryMarket()
 //            }
 //        }
+        getEt.setText("")
+        buyIsb.setProgress(0f)
     }
 
 
@@ -1160,9 +1068,8 @@ class BibiFragment : NBaseFragment(), View.OnClickListener, CommonListPopup.OnLi
                 queryCurrentOrder()
                 queryAsset()
             } else {
-                binder?.queryBibiMarket()
+                binder?.queryMarket("bibi")
             }
-
         }
     }
 }
