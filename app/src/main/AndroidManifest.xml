@@ -187,7 +187,6 @@
         <activity android:name=".controller.my.asset.legal.WithdrawHistoryDetailActivity" />
         <activity android:name=".controller.my.setting.SelectLanguageActivity" />
         <activity android:name=".controller.bibi.BibiHistoryDetailActivity" />
-        <activity android:name=".controller.main.MainActivity" />
     </application>
 
 </manifest>

@@ -153,6 +153,7 @@ class KLineParam {
         val ID_BIBI_MARKET = 100012//币币交易行情
         val ID_BIBI_ORDER = 100013//币币交易行情
         val ID_SIDE_MARKET = 100014//币币侧边栏行情
+        val ID_HOME_MARKET = 100015//首页行情
 
     }
 }

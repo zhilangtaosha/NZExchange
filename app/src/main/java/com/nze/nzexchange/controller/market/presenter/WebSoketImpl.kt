@@ -364,6 +364,9 @@ class WebSoketImpl : IWebSoket {
             "bibi" -> {
                 requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_BIBI_MARKET)
             }
+            "home" -> {
+                requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_HOME_MARKET)
+            }
             else -> {
                 requestBean = SoketRequestBean.create(KLineParam.METHOD_MARKET_RANK, KLineParam.ID_MARKET)
             }
@@ -603,7 +606,7 @@ class WebSoketImpl : IWebSoket {
                                     NLog.i("rank出错>>${e.message}")
                                 }
                             }
-                            KLineParam.ID_MARKET, KLineParam.ID_BIBI_MARKET, KLineParam.ID_SIDE_MARKET -> {
+                            KLineParam.ID_MARKET, KLineParam.ID_BIBI_MARKET, KLineParam.ID_SIDE_MARKET, KLineParam.ID_HOME_MARKET -> {
                                 try {
                                     val marketList: Array<SoketMarketBean>? = gson.fromJson<Array<SoketMarketBean>>(queryBean.result.toString().replace("/", "-"), Array<SoketMarketBean>::class.java)
                                     if (marketList != null && marketList.size > 0) {
@@ -618,6 +621,9 @@ class WebSoketImpl : IWebSoket {
                                             }
                                             KLineParam.ID_MARKET -> {
                                                 it.onNext(KLineParam.ID_MARKET)
+                                            }
+                                            KLineParam.ID_HOME_MARKET -> {
+                                                it.onNext(KLineParam.ID_HOME_MARKET)
                                             }
                                         }
                                         mSoketPairDao.add(mMarketList)
@@ -897,6 +903,9 @@ class WebSoketImpl : IWebSoket {
                             }
                             KLineParam.ID_SIDE_MARKET -> {
                                 mOnMarketRankMap["side"]?.invoke(mMarketList)
+                            }
+                            KLineParam.ID_HOME_MARKET -> {
+                                mOnMarketRankMap["home"]?.invoke(mMarketList)
                             }
                             KLineParam.DATA_AUTH -> {
                                 mOnAuthMap.forEach {

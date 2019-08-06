@@ -176,8 +176,9 @@ class MarketFragment : NBaseFragment(), View.OnClickListener {
 
     override fun onVisibleRequest() {
         super.onVisibleRequest()
-        if (isBinder)
+        if (isBinder){
             bindCallBack()
+        }
     }
 
     var binder: SoketService.SoketBinder? = null

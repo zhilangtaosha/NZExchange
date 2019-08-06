@@ -144,7 +144,6 @@ class MainActivity : NBaseActivity(), View.OnClickListener, NBaseFragment.OnFrag
 //        initFragment()
         selectTab(2)
         selectTab(0)
-
         FingerprintHelper.init(this)//指纹解锁
     }
 

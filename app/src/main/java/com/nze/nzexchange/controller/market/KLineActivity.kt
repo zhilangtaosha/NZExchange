@@ -15,6 +15,7 @@ import com.nze.nzexchange.bean2.ShenDubean
 import com.nze.nzexchange.config.*
 import com.nze.nzexchange.controller.base.NBaseActivity
 import com.nze.nzexchange.controller.base.NBaseFragment
+import com.nze.nzexchange.controller.main.HomeActivity
 import com.nze.nzexchange.controller.main.MainActivity
 import com.nze.nzexchange.controller.market.presenter.KLineP
 import com.nze.nzexchange.controller.market.presenter.WebSoketImpl
